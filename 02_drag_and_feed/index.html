@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+  <title>Feed the Animal - English for Toddlers</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      margin: 0;
+      padding: 0;
+    }
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Comic Sans MS', 'Fredoka One', 'Nunito', cursive, sans-serif;
+      background: radial-gradient(circle at center, #FFF8E1 0%, #FFE082 100%);
+      touch-action: none;
+    }
+    .hud {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      right: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 20;
+    }
+    .btn-back {
+      background: #FFF;
+      color: #FF5722;
+      border: 3px solid #FF5722;
+      border-radius: 50px;
+      padding: 10px 24px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      cursor: pointer;
+    }
+    .prompt-box {
+      background: white;
+      border: 4px solid #FFA000;
+      border-radius: 40px;
+      padding: 10px 28px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+      text-align: center;
+    }
+    .prompt-box h2 {
+      font-size: 1.5rem;
+      color: #E65100;
+    }
+    .prompt-box p {
+      font-size: 0.95rem;
+      color: #666;
+    }
+
+    /* Animal Stage */
+    .stage {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 65%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 5;
+    }
+    .animal-container {
+      position: relative;
+      width: min(240px, 34vh);
+      height: min(240px, 34vh);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .animal-container.hungry {
+      transform: scale(1.08);
+    }
+    /* Dynamic Belly Slapstick Scaling */
+    .animal-container.belly-level-1 {
+      transform: scale(1.08);
+    }
+    .animal-container.belly-level-2 {
+      transform: scale(1.18);
+    }
+    .animal-container.belly-full {
+      transform: scale(1.28);
+      animation: happyFullWiggle 1.2s infinite ease-in-out alternate;
+    }
+    @keyframes happyFullWiggle {
+      0% { transform: scale(1.28) rotate(-4deg); }
+      100% { transform: scale(1.28) rotate(4deg); }
+    }
+
+    .animal-svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 12px 20px rgba(0,0,0,0.15));
+    }
+    #eye-left, #eye-right {
+      transition: transform 0.08s ease-out;
+    }
+
+    /* Belly progress badge */
+    .belly-badge {
+      margin-top: 14px;
+      background: white;
+      border: 3.5px solid #FFA000;
+      border-radius: 30px;
+      padding: 6px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #E65100;
+      box-shadow: 0 6px 16px rgba(255, 160, 0, 0.2);
+      z-index: 10;
+    }
+    .belly-dots-row {
+      display: flex;
+      gap: 6px;
+    }
+    .belly-dot {
+      font-size: 1.3rem;
+      filter: grayscale(1) opacity(0.3);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.3), filter 0.3s;
+    }
+    .belly-dot.filled {
+      filter: none;
+      transform: scale(1.25);
+    }
+
+    /* Bear Thought Bubble (Mục tiêu khớp đúng) */
+    .bear-thought-bubble {
+      position: absolute;
+      top: -55px;
+      right: -25px;
+      background: white;
+      border: 4px solid #FFA000;
+      border-radius: 30px;
+      padding: 8px 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 8px 24px rgba(255, 160, 0, 0.25);
+      z-index: 20;
+      animation: thoughtBounce 2.5s infinite ease-in-out alternate;
+      cursor: pointer;
+    }
+    @keyframes thoughtBounce {
+      0% { transform: translateY(0) scale(1); }
+      100% { transform: translateY(-8px) scale(1.04); }
+    }
+    .thought-emoji {
+      font-size: 2.2rem;
+    }
+    .thought-word {
+      font-size: 1.35rem;
+      font-weight: bold;
+      color: #E65100;
+    }
+    .thought-speaker {
+      background: #FFF3E0;
+      border: 2px solid #FFB74D;
+      border-radius: 50%;
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.05rem;
+      cursor: pointer;
+    }
+
+    /* Floating hearts / stars */
+    .floating-fx {
+      position: absolute;
+      pointer-events: none;
+      font-size: 2.5rem;
+      animation: floatUp 1.2s forwards ease-out;
+      z-index: 15;
+    }
+    @keyframes floatUp {
+      0% { opacity: 1; transform: translateY(0) scale(0.5); }
+      100% { opacity: 0; transform: translateY(-120px) scale(1.5); }
+    }
+
+    /* Food Tray (Clean & Marshmallow Card Design) */
+    .tray {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 35%;
+      background: rgba(255, 255, 255, 0.92);
+      border-top: 6px solid #FFD54F;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      padding: 10px 20px;
+      box-shadow: 0 -8px 24px rgba(0,0,0,0.08);
+      z-index: 10;
+    }
+    .food-card {
+      width: 114px;
+      height: 128px;
+      background: linear-gradient(180deg, #FFFFFF 0%, #FFFDE7 100%);
+      border: 3.5px solid #FFD54F;
+      border-radius: 30px;
+      box-shadow: 0 10px 24px rgba(255, 160, 0, 0.18), 0 3px 6px rgba(0,0,0,0.06), inset 0 2px 4px rgba(255, 255, 255, 0.95);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: grab;
+      touch-action: none;
+      position: relative;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s;
+    }
+    .food-card:hover {
+      transform: translateY(-4px) scale(1.04);
+      box-shadow: 0 14px 28px rgba(255, 160, 0, 0.25), 0 4px 8px rgba(0,0,0,0.08), inset 0 2px 4px #FFF;
+    }
+    .food-card:active {
+      cursor: grabbing;
+      transform: scale(0.92) rotate(-3deg);
+    }
+    .food-card.target-shimmer {
+      border-color: #FF9800;
+      box-shadow: 0 0 22px rgba(255, 152, 0, 0.6), 0 10px 20px rgba(0,0,0,0.14), inset 0 2px 4px #FFF;
+      animation: targetShimmerPulse 1.8s infinite ease-in-out;
+    }
+    @keyframes targetShimmerPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+    .food-emoji {
+      font-size: 3.8rem;
+      pointer-events: none;
+      line-height: 1;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+    }
+    .food-label {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #37474F;
+      margin-top: 6px;
+      pointer-events: none;
+      letter-spacing: 0.3px;
+    }
+
+    /* Visual Ghost Hint Hand */
+    .ghost-hand-feed {
+      position: absolute;
+      font-size: 3.2rem;
+      pointer-events: none;
+      z-index: 150;
+      filter: drop-shadow(0 6px 12px rgba(0,0,0,0.3));
+      animation: handSlideToMouth 1.6s infinite ease-in-out;
+    }
+    @keyframes handSlideToMouth {
+      0% { opacity: 0; transform: translateY(0) scale(0.8); }
+      20% { opacity: 1; transform: translateY(0) scale(1); }
+      80% { opacity: 1; transform: translateY(-160px) scale(1); }
+      100% { opacity: 0; transform: translateY(-160px) scale(0.8); }
+    }
+
+    /* -------------------------------------------------------------
+       MODAL: FULL BELLY CELEBRATION (Chốt qua bài rực rỡ)
+       ------------------------------------------------------------- */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(10px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 200;
+      padding: 16px;
+    }
+    .celebration-card {
+      background: linear-gradient(135deg, #FFFFFF 0%, #FFFDF7 100%);
+      border: 6px solid #FFD54F;
+      border-radius: 44px;
+      padding: 34px 28px;
+      max-width: 520px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+      animation: popInModal 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes popInModal {
+      0% { transform: scale(0.6); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .modal-trophy-icon {
+      font-size: 5.6rem;
+      animation: floatTrophy 2s infinite ease-in-out alternate;
+    }
+    @keyframes floatTrophy {
+      0% { transform: translateY(0) rotate(-6deg); }
+      100% { transform: translateY(-14px) rotate(6deg); }
+    }
+    .modal-title {
+      font-size: 2.1rem;
+      color: #E65100;
+      margin: 12px 0 6px;
+    }
+    .modal-subtitle {
+      font-size: 1.25rem;
+      color: #5D4037;
+      margin-bottom: 24px;
+      line-height: 1.4;
+      font-weight: 700;
+    }
+    .btn-modal-action {
+      background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+      color: white;
+      border: 4px solid #FFE082;
+      border-radius: 50px;
+      padding: 15px 36px;
+      font-size: 1.35rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 10px 28px rgba(245, 124, 0, 0.4);
+      transition: transform 0.15s;
+    }
+    .btn-modal-action:active {
+      transform: scale(0.95);
+    }
+
+    /* Mobile Responsive Optimizations */
+    @media (max-width: 768px) and (orientation: portrait) {
+      .hud {
+        padding: 8px 12px;
+      }
+      .btn-back {
+        padding: 6px 14px;
+        font-size: 0.95rem;
+      }
+      .stage {
+        height: 60%;
+      }
+      .animal-container {
+        width: min(200px, 30vh);
+        height: min(200px, 30vh);
+      }
+      .bear-thought-bubble {
+        top: -46px;
+        right: -15px;
+        padding: 5px 12px;
+        gap: 6px;
+      }
+      .thought-emoji { font-size: 1.6rem; }
+      .thought-word { font-size: 1.1rem; }
+      .belly-badge {
+        margin-top: 8px;
+        padding: 4px 14px;
+        font-size: 0.9rem;
+      }
+      .tray {
+        height: 40%;
+        padding: 8px 10px;
+        gap: 10px;
+      }
+      .food-card {
+        width: min(100px, 28vw);
+        height: min(115px, 22vh);
+        border-radius: 22px;
+      }
+      .food-emoji { font-size: 2.8rem; }
+      .food-name { font-size: 0.95rem; }
+    }
+
+    @media (orientation: landscape) and (max-height: 520px) {
+      .hud {
+        position: absolute;
+        top: 4px;
+        left: 8px;
+        right: 8px;
+        padding: 2px 6px;
+        z-index: 40;
+      }
+      .btn-back {
+        padding: 4px 12px;
+        font-size: 0.85rem;
+      }
+      .stage {
+        left: 0;
+        top: 0;
+        width: 50%;
+        height: 100%;
+        justify-content: center;
+        padding-top: 30px;
+      }
+      .animal-container {
+        width: min(170px, 46vh);
+        height: min(170px, 46vh);
+      }
+      .bear-thought-bubble {
+        top: -38px;
+        right: -10px;
+        padding: 4px 10px;
+        gap: 6px;
+      }
+      .thought-emoji { font-size: 1.4rem; }
+      .thought-word { font-size: 1rem; }
+      .belly-badge {
+        margin-top: 6px;
+        padding: 3px 12px;
+        font-size: 0.82rem;
+      }
+      .tray {
+        left: 50%;
+        top: 0;
+        width: 50%;
+        height: 100%;
+        border-top: none;
+        border-left: 4px solid #FFD54F;
+        flex-direction: column;
+        justify-content: center;
+        gap: 8px;
+        padding: 36px 12px 10px;
+      }
+      .food-card {
+        width: min(190px, 42vw);
+        height: min(65px, 22vh);
+        flex-direction: row;
+        gap: 12px;
+        padding: 4px 14px;
+        border-radius: 20px;
+      }
+      .food-emoji { font-size: 2.2rem; }
+      .food-name { font-size: 1.05rem; }
+    }
+  </style>
+  <!-- SHARED MODULES -->
+  <link rel="stylesheet" href="../shared/styles.css">
+  <script src="../shared/audio.js"></script>
+  <script src="../shared/vocabulary.js"></script>
+  <script src="../shared/missions.js"></script>
+</head>
+<body>
+
+  <div class="hud">
+    <a href="../index.html" class="btn-back">⬅ Menu</a>
+    <!-- Shared Mission HUD will be injected here automatically by MissionEngine -->
+    <div style="width: 80px;"></div>
+  </div>
+
+  <div class="stage">
+    <div class="animal-container" id="animal">
+      <!-- Bear Thought Bubble: Khớp đúng món Gấu đang thèm -->
+      <div class="bear-thought-bubble" id="bear-thought" title="Chạm để nghe gọi món">
+        <span class="thought-emoji" id="thought-emoji">🍯</span>
+        <span class="thought-word" id="thought-word">Honey</span>
+        <div class="thought-speaker">🔊</div>
+      </div>
+
+      <!-- High Quality Scalable Cartoon Animal with Mouth Open/Close SVG -->
+      <svg class="animal-svg" viewBox="0 0 200 200">
+        <!-- SVG will be dynamically generated by getAnimalSvg -->
+      </svg>
+    </div>
+
+    <!-- Belly progress badge (Slapstick Belly Comedy) -->
+    <div class="belly-badge" id="belly-badge">
+      <span id="belly-status-text">🥣 Bụng đói meo nè!</span>
+      <div class="belly-dots-row">
+        <span class="belly-dot" id="bdot-1">⭐</span>
+        <span class="belly-dot" id="bdot-2">⭐</span>
+        <span class="belly-dot" id="bdot-3">⭐</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Food Items Tray (Marshmallow Cards) -->
+  <div class="tray" id="tray">
+    <!-- Food cards will be injected dynamically by JavaScript -->
+  </div>
+
+  <!-- MODAL: CELEBRATION FULL TUMMY (Chốt qua bài rực rỡ) -->
+  <div class="modal-overlay" id="modal-celebration">
+    <div class="celebration-card">
+      <div class="modal-trophy-icon" id="modal-icon">😋</div>
+      <h2 class="modal-title" id="modal-title">Bạn Nhỏ Đã No Nê!</h2>
+      <p class="modal-subtitle" id="modal-subtitle">Bạn nhỏ no căng bụng rồi! 😋</p>
+
+      <button type="button" class="btn-modal-action" id="btn-next-animal" onclick="advanceToNextAnimal()">
+        <span>🎉 Đút bạn tiếp theo ➜</span>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // -------------------------------------------------------------
+    // DRAG AND FEED LOGIC (High tolerance for 3yo toddlers)
+    // -------------------------------------------------------------
+    const animal = document.getElementById('animal');
+    let mouthClosed = document.getElementById('mouth-closed');
+    let mouthOpen = document.getElementById('mouth-open');
+    let eyesHappy = document.getElementById('eyes-happy');
+    let targetFood = null;
+    let feedCount = 0;
+
+    let activeDrag = null;
+    let initialX = 0, initialY = 0;
+
+    function openMouth() {
+      if (mouthClosed) mouthClosed.style.display = 'none';
+      if (mouthOpen) mouthOpen.style.display = 'block';
+      animal.classList.add('hungry');
+    }
+
+    function closeMouth() {
+      if (mouthClosed) mouthClosed.style.display = 'block';
+      if (mouthOpen) mouthOpen.style.display = 'none';
+      animal.classList.remove('hungry');
+    }
+
+    // -------------------------------------------------------------
+    // LIVING EYE TRACKING (Mắt liếc nhìn theo miếng thức ăn)
+    // -------------------------------------------------------------
+    function trackEyes(foodX, foodY) {
+      if (feedCount >= 3) return; // Mắt đang híp cười tít
+      const animalRect = animal.getBoundingClientRect();
+      const animalCenterX = animalRect.left + animalRect.width / 2;
+      const animalCenterY = animalRect.top + animalRect.height / 2;
+      const dx = foodX - animalCenterX;
+      const dy = foodY - animalCenterY;
+      const angle = Math.atan2(dy, dx);
+      const maxShift = 4;
+      const shiftX = Math.cos(angle) * maxShift;
+      const shiftY = Math.sin(angle) * maxShift;
+
+      const leftEye = document.getElementById('eye-left');
+      const rightEye = document.getElementById('eye-right');
+      if (leftEye) leftEye.style.transform = `translate(${shiftX}px, ${shiftY}px)`;
+      if (rightEye) rightEye.style.transform = `translate(${shiftX}px, ${shiftY}px)`;
+    }
+
+    function resetEyes() {
+      const leftEye = document.getElementById('eye-left');
+      const rightEye = document.getElementById('eye-right');
+      if (leftEye) leftEye.style.transform = 'translate(0px, 0px)';
+      if (rightEye) rightEye.style.transform = 'translate(0px, 0px)';
+    }
+
+    // -------------------------------------------------------------
+    // IDLE GHOST HINT HAND (Bàn tay trượt mẫu sau 3.8s)
+    // -------------------------------------------------------------
+    let idleHintTimer = null;
+    function scheduleIdleHint() {
+      if (idleHintTimer) clearTimeout(idleHintTimer);
+      idleHintTimer = setTimeout(() => {
+        showGhostHint();
+      }, 3800);
+    }
+
+    function hideGhostHint() {
+      if (idleHintTimer) clearTimeout(idleHintTimer);
+      const ghost = document.getElementById('ghost-hand-feed');
+      if (ghost) ghost.style.display = 'none';
+    }
+
+    function showGhostHint() {
+      if (!targetFood || feedCount >= 3) return;
+      const targetCard = document.querySelector('.food-card.target-shimmer');
+      if (!targetCard) return;
+
+      let ghost = document.getElementById('ghost-hand-feed');
+      if (!ghost) {
+        ghost = document.createElement('div');
+        ghost.id = 'ghost-hand-feed';
+        ghost.className = 'ghost-hand-feed';
+        ghost.innerText = '👆';
+        document.body.appendChild(ghost);
+      }
+
+      const cardRect = targetCard.getBoundingClientRect();
+      ghost.style.left = (cardRect.left + cardRect.width / 2 - 25) + 'px';
+      ghost.style.top = (cardRect.top - 15) + 'px';
+      ghost.style.display = 'block';
+
+      // Gentle animal audio reminder: Direct food keyword
+      if (window.ToddlerAudio) {
+        ToddlerAudio.speak(targetFood.name);
+      }
+
+      setTimeout(() => {
+        if (ghost) ghost.style.display = 'none';
+      }, 3200);
+    }
+
+    function executeFeeding(card, cardName, targetX, targetY) {
+      hideGhostHint();
+      openMouth();
+      const soundType = card.getAttribute('data-sound');
+      if (soundType === 'gulp') {
+        AudioEngine.playGulp();
+      } else {
+        AudioEngine.playCrunch();
+      }
+      AudioEngine.playCheer();
+
+      AudioEngine.speak(cardName + '! Yum!');
+
+      spawnFloatingFx('💖', targetX - 30, targetY - 60);
+      spawnFloatingFx('⭐', targetX + 30, targetY - 80);
+      spawnFloatingFx('🎉', targetX, targetY - 100);
+
+      animal.style.transform = 'scale(1.2) rotate(-5deg)';
+      setTimeout(() => {
+        closeMouth();
+        animal.style.transform = 'scale(1) rotate(0deg)';
+      }, 400);
+
+      resetCard(card);
+      resetEyes();
+
+      // Slapstick Belly Expansion Logic
+      feedCount++;
+      const currentStar = Math.min(3, feedCount);
+      const bdot = document.getElementById('bdot-' + currentStar);
+      if (bdot) bdot.classList.add('filled');
+
+      if (feedCount === 1) {
+        animal.className = 'animal-container belly-level-1';
+        document.getElementById('belly-status-text').innerText = '😋 Hơi no rồi đó!';
+      } else if (feedCount === 2) {
+        animal.className = 'animal-container belly-level-2';
+        document.getElementById('belly-status-text').innerText = '🥰 No căng bụng rồi!';
+      } else if (feedCount >= 3) {
+        animal.className = 'animal-container belly-full';
+        document.getElementById('belly-status-text').innerText = '🎉 No căng tròn xoe!';
+
+        // Mắt cười tít hạnh phúc
+        eyesHappy = document.getElementById('eyes-happy');
+        const leftEye = document.getElementById('eye-left');
+        const rightEye = document.getElementById('eye-right');
+        if (eyesHappy) eyesHappy.style.display = 'block';
+        if (leftEye) leftEye.style.display = 'none';
+        if (rightEye) rightEye.style.display = 'none';
+
+        // Funny Full Tummy Comedy
+        setTimeout(() => {
+          AudioEngine.playFanfare();
+          AudioEngine.speak('Full tummy! Yum!');
+          for (let i = 0; i < 6; i++) {
+            setTimeout(() => {
+              spawnFloatingFx(['💖', '⭐', '🍭', '🎉', '🥰'][i % 5], targetX + (Math.random() * 80 - 40), targetY - 60 - i * 20);
+            }, i * 140);
+          }
+
+          // Show celebration victory modal after 1.4s
+          setTimeout(() => {
+            const modal = document.getElementById('modal-celebration');
+            if (modal) {
+              document.getElementById('modal-title').innerText = `${activeChar.name} Đã No Nê! 😋`;
+              document.getElementById('modal-subtitle').innerText = `Bạn ${activeChar.name} no căng bụng rồi! 😋`;
+              modal.style.display = 'flex';
+            }
+          }, 1400);
+        }, 500);
+      }
+
+      if (window.MissionEngine && MissionEngine.recordAction) {
+        MissionEngine.recordAction();
+      }
+
+      if (feedCount >= 3) {
+        thoughtBubble.style.display = 'none';
+      } else {
+        setTimeout(() => {
+          pickNextTargetFood();
+        }, 800);
+      }
+    }
+
+    function attachDrag(card) {
+      card.addEventListener('pointerdown', (e) => {
+        hideGhostHint();
+        AudioEngine.init();
+        const word = card.getAttribute('data-name');
+
+        activeDrag = {
+          elem: card,
+          startX: e.clientX,
+          startY: e.clientY,
+          hasMoved: false
+        };
+
+        card.style.position = 'fixed';
+        card.style.zIndex = '100';
+        card.style.transform = 'scale(1.25)';
+        moveAt(e.clientX, e.clientY);
+        card.setPointerCapture(e.pointerId);
+      });
+
+      card.addEventListener('pointermove', (e) => {
+        if (!activeDrag || activeDrag.elem !== card) return;
+        const dx = Math.abs(e.clientX - activeDrag.startX);
+        const dy = Math.abs(e.clientY - activeDrag.startY);
+        if (dx > 8 || dy > 8) activeDrag.hasMoved = true;
+
+        moveAt(e.clientX, e.clientY);
+        trackEyes(e.clientX, e.clientY);
+
+        const animalRect = animal.getBoundingClientRect();
+        const cardRect = card.getBoundingClientRect();
+        const centerX = cardRect.left + cardRect.width / 2;
+        const centerY = cardRect.top + cardRect.height / 2;
+
+        const targetX = animalRect.left + animalRect.width / 2;
+        const targetY = animalRect.top + animalRect.height / 2 + 30;
+
+        const dist = Math.hypot(centerX - targetX, centerY - targetY);
+        const isNearMouth = (dist < 280 || centerY < window.innerHeight * 0.65);
+
+        if (isNearMouth) {
+          openMouth();
+        } else {
+          closeMouth();
+        }
+      });
+
+      card.addEventListener('pointerup', (e) => {
+        if (!activeDrag || activeDrag.elem !== card) return;
+        resetEyes();
+
+        const animalRect = animal.getBoundingClientRect();
+        const cardRect = card.getBoundingClientRect();
+        const centerX = cardRect.left + cardRect.width / 2;
+        const centerY = cardRect.top + cardRect.height / 2;
+
+        const targetX = animalRect.left + animalRect.width / 2;
+        const targetY = animalRect.top + animalRect.height / 2 + 30;
+
+        const dist = Math.hypot(centerX - targetX, centerY - targetY);
+        const cardName = card.getAttribute('data-name');
+        const isMatch = (cardName.toLowerCase() === targetFood.name.toLowerCase());
+
+        // 1. If child simply TAPPED the card (hasMoved === false)
+        if (!activeDrag.hasMoved) {
+          if (isMatch) {
+            // Animate card smoothly flying into animal's mouth!
+            card.style.transition = 'all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            card.style.left = (targetX - 55) + 'px';
+            card.style.top = (targetY - 55) + 'px';
+            card.style.transform = 'scale(0.8)';
+            setTimeout(() => {
+              card.style.transition = '';
+              executeFeeding(card, cardName, targetX, targetY);
+            }, 360);
+          } else {
+            // Biểu cảm lắc đầu hóm hỉnh khi chạm nhầm món
+            ToddlerAudio.playBoing();
+            ToddlerAudio.speak(targetFood.name);
+            card.style.transform = 'scale(1.15) rotate(8deg)';
+            setTimeout(() => {
+              card.style.transform = 'scale(1.15) rotate(-8deg)';
+              setTimeout(() => { resetCard(card); }, 150);
+            }, 150);
+          }
+          activeDrag = null;
+          return;
+        }
+
+        // 2. Dragged near mouth
+        const isNearMouth = (dist < 280 || centerY < window.innerHeight * 0.65);
+        if (isNearMouth) {
+          if (isMatch) {
+            executeFeeding(card, cardName, targetX, targetY);
+          } else {
+            closeMouth();
+            // Thú phụng phịu lắc đầu nguây nguẩy
+            animal.style.transform = 'scale(0.95) rotate(-14deg)';
+            setTimeout(() => { animal.style.transform = 'scale(0.95) rotate(14deg)'; }, 140);
+            setTimeout(() => { animal.style.transform = 'scale(1) rotate(0deg)'; }, 280);
+            ToddlerAudio.playBoing();
+            ToddlerAudio.speak(targetFood.name);
+            resetCard(card);
+          }
+        } else {
+          closeMouth();
+          resetCard(card);
+        }
+
+        activeDrag = null;
+      });
+    }
+
+    function moveAt(pageX, pageY) {
+      if (!activeDrag) return;
+      activeDrag.elem.style.left = pageX - 55 + 'px';
+      activeDrag.elem.style.top = pageY - 60 + 'px';
+    }
+
+    function resetCard(card) {
+      card.style.position = 'relative';
+      card.style.left = '0px';
+      card.style.top = '0px';
+      card.style.zIndex = '1';
+      card.style.transform = 'scale(1)';
+    }
+
+    function spawnFloatingFx(char, x, y) {
+      const fx = document.createElement('div');
+      fx.className = 'floating-fx';
+      fx.innerText = char;
+      fx.style.left = x + 'px';
+      fx.style.top = y + 'px';
+      document.body.appendChild(fx);
+      setTimeout(() => fx.remove(), 1200);
+    }
+
+    // -------------------------------------------------------------
+    // DYNAMIC 52-WEEK MULTI-CHARACTER & 80/20 FOOD TRAY
+    // -------------------------------------------------------------
+    const urlParams = new URLSearchParams(window.location.search);
+    const queryWeek = parseInt(urlParams.get('week'));
+    const currentWeek = queryWeek || ((window.MissionEngine && MissionEngine.getCurrentWeek) ? MissionEngine.getCurrentWeek() : 1);
+    const weekData = (window.ToddlerVocabulary) ? window.ToddlerVocabulary.build80_20Pack(currentWeek) : null;
+    let activeChar = (weekData && weekData.feedingChar) ? weekData.feedingChar : { id: 'bear', name: 'Bear', vnName: 'Gấu Bự', emoji: '🐻', voice: 'Grrr! I am Bear!' };
+
+    // Function to generate distinct high-quality SVG storybook face for all rotating animals
+    function getAnimalSvg(id) {
+      const defs = `
+        <defs>
+          <radialGradient id="blushGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#FF5252" stop-opacity="0.6"/>
+            <stop offset="100%" stop-color="#FF5252" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+      `;
+
+      if (id === 'rabbit') {
+        return defs + `
+          <!-- Rabbit Ears with plush curves -->
+          <path d="M 52 85 C 38 12 72 10 78 85 Z" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="4.5" stroke-linejoin="round"/>
+          <path d="M 58 80 C 48 24 68 22 72 80 Z" fill="#FF80AB"/>
+          <path d="M 148 85 C 162 12 128 10 122 85 Z" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="4.5" stroke-linejoin="round"/>
+          <path d="M 142 80 C 152 24 132 22 128 80 Z" fill="#FF80AB"/>
+
+          <!-- Head -->
+          <circle cx="100" cy="115" r="74" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="5"/>
+          <!-- Rosy Blushing Cheeks -->
+          <circle cx="50" cy="122" r="18" fill="url(#blushGlow)"/>
+          <circle cx="150" cy="122" r="18" fill="url(#blushGlow)"/>
+
+          <!-- Big Cute Sparkling Eyes -->
+          <g id="eye-left"><circle cx="68" cy="98" r="10" fill="#2D2118"/><circle cx="65" cy="95" r="4" fill="#FFF"/><circle cx="71" cy="101" r="1.8" fill="#FFF"/></g>
+          <g id="eye-right"><circle cx="132" cy="98" r="10" fill="#2D2118"/><circle cx="129" cy="95" r="4" fill="#FFF"/><circle cx="135" cy="101" r="1.8" fill="#FFF"/></g>
+          <g id="eyes-happy" style="display: none;"><path d="M 58 100 Q 68 88 78 100" stroke="#2D2118" stroke-width="4.5" fill="none" stroke-linecap="round"/><path d="M 122 100 Q 132 88 142 100" stroke="#2D2118" stroke-width="4.5" fill="none" stroke-linecap="round"/></g>
+
+          <!-- Nose & Mouth -->
+          <ellipse cx="100" cy="118" r="8" ry="6" fill="#FF80AB"/>
+          <g id="mouth-closed"><path d="M 92 126 Q 100 134 108 126" stroke="#2D2118" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+          <g id="mouth-open" style="display: none;"><ellipse cx="100" cy="138" r="22" ry="18" fill="#C2185B" stroke="#880E4F" stroke-width="3"/><path d="M 88 144 Q 100 152 112 144" fill="#FF80AB"/></g>
+        `;
+      }
+      if (id === 'cat') {
+        return defs + `
+          <!-- Cat Ears -->
+          <path d="M 34 80 C 26 40 46 22 72 58 Z" fill="#FFA726" stroke="#E65100" stroke-width="4.5" stroke-linejoin="round"/>
+          <path d="M 42 72 C 38 46 50 34 64 58 Z" fill="#FFCC80"/>
+          <path d="M 166 80 C 174 40 154 22 128 58 Z" fill="#FFA726" stroke="#E65100" stroke-width="4.5" stroke-linejoin="round"/>
+          <path d="M 158 72 C 162 46 150 34 136 58 Z" fill="#FFCC80"/>
+
+          <!-- Head -->
+          <circle cx="100" cy="115" r="74" fill="#FFA726" stroke="#E65100" stroke-width="5"/>
+          <!-- Rosy Cheeks -->
+          <circle cx="50" cy="124" r="18" fill="url(#blushGlow)"/>
+          <circle cx="150" cy="124" r="18" fill="url(#blushGlow)"/>
+
+          <!-- Big Cute Sparkling Eyes -->
+          <g id="eye-left"><circle cx="68" cy="98" r="10" fill="#2E7D32"/><circle cx="65" cy="95" r="4" fill="#FFF"/><circle cx="71" cy="101" r="1.8" fill="#FFF"/></g>
+          <g id="eye-right"><circle cx="132" cy="98" r="10" fill="#2E7D32"/><circle cx="129" cy="95" r="4" fill="#FFF"/><circle cx="135" cy="101" r="1.8" fill="#FFF"/></g>
+          <g id="eyes-happy" style="display: none;"><path d="M 58 100 Q 68 88 78 100" stroke="#E65100" stroke-width="4.5" fill="none" stroke-linecap="round"/><path d="M 122 100 Q 132 88 142 100" stroke="#E65100" stroke-width="4.5" fill="none" stroke-linecap="round"/></g>
+
+          <!-- Whiskers -->
+          <line x1="42" y1="120" x2="20" y2="116" stroke="#5D4037" stroke-width="3" stroke-linecap="round"/>
+          <line x1="42" y1="128" x2="20" y2="132" stroke="#5D4037" stroke-width="3" stroke-linecap="round"/>
+          <line x1="158" y1="120" x2="180" y2="116" stroke="#5D4037" stroke-width="3" stroke-linecap="round"/>
+          <line x1="158" y1="128" x2="180" y2="132" stroke="#5D4037" stroke-width="3" stroke-linecap="round"/>
+
+          <!-- Nose & Mouth -->
+          <polygon points="100,118 93,112 107,112" fill="#E91E63"/>
+          <g id="mouth-closed"><path d="M 90 126 Q 100 134 110 126" stroke="#2D2118" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+          <g id="mouth-open" style="display: none;"><ellipse cx="100" cy="136" r="20" ry="16" fill="#C2185B" stroke="#880E4F" stroke-width="3"/><path d="M 90 142 Q 100 150 110 142" fill="#FF80AB"/></g>
+        `;
+      }
+      if (id === 'monkey') {
+        return defs + `
+          <!-- Monkey Ears -->
+          <circle cx="34" cy="115" r="28" fill="#8D6E63" stroke="#5D4037" stroke-width="4.5"/><circle cx="34" cy="115" r="16" fill="#D7CCC8"/>
+          <circle cx="166" cy="115" r="28" fill="#8D6E63" stroke="#5D4037" stroke-width="4.5"/><circle cx="166" cy="115" r="16" fill="#D7CCC8"/>
+
+          <!-- Head & Muzzle -->
+          <circle cx="100" cy="115" r="72" fill="#8D6E63" stroke="#5D4037" stroke-width="5"/>
+          <ellipse cx="100" cy="126" r="50" ry="40" fill="#D7CCC8"/>
+          <!-- Rosy Cheeks -->
+          <circle cx="56" cy="126" r="16" fill="url(#blushGlow)"/>
+          <circle cx="144" cy="126" r="16" fill="url(#blushGlow)"/>
+
+          <!-- Big Cute Eyes -->
+          <g id="eye-left"><circle cx="74" cy="102" r="10" fill="#2D2118"/><circle cx="71" cy="99" r="4" fill="#FFF"/><circle cx="77" cy="105" r="1.8" fill="#FFF"/></g>
+          <g id="eye-right"><circle cx="126" cy="102" r="10" fill="#2D2118"/><circle cx="123" cy="99" r="4" fill="#FFF"/><circle cx="129" cy="105" r="1.8" fill="#FFF"/></g>
+          <g id="eyes-happy" style="display: none;"><path d="M 64 102 Q 74 90 84 102" stroke="#2D2118" stroke-width="4.5" fill="none" stroke-linecap="round"/><path d="M 116 102 Q 126 90 136 102" stroke="#2D2118" stroke-width="4.5" fill="none" stroke-linecap="round"/></g>
+
+          <!-- Nose dots & Mouth -->
+          <circle cx="95" cy="122" r="3.5" fill="#3E2723"/><circle cx="105" cy="122" r="3.5" fill="#3E2723"/>
+          <g id="mouth-closed"><path d="M 88 134 Q 100 144 112 134" stroke="#2D2118" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+          <g id="mouth-open" style="display: none;"><ellipse cx="100" cy="142" r="20" ry="16" fill="#C2185B" stroke="#880E4F" stroke-width="3"/><path d="M 90 148 Q 100 154 110 148" fill="#FF80AB"/></g>
+        `;
+      }
+      if (id === 'dog') {
+        return defs + `
+          <!-- Dog Floppy Ears -->
+          <ellipse cx="36" cy="85" rx="20" ry="42" fill="#795548" stroke="#4E342E" stroke-width="4.5" transform="rotate(-15 36 85)"/>
+          <ellipse cx="164" cy="85" rx="20" ry="42" fill="#795548" stroke="#4E342E" stroke-width="4.5" transform="rotate(15 164 85)"/>
+
+          <!-- Head & Muzzle -->
+          <circle cx="100" cy="115" r="72" fill="#FFA726" stroke="#E65100" stroke-width="5"/>
+          <ellipse cx="100" cy="130" r="34" ry="24" fill="#FFE0B2"/>
+          <circle cx="54" cy="126" r="16" fill="url(#blushGlow)"/>
+          <circle cx="146" cy="126" r="16" fill="url(#blushGlow)"/>
+
+          <!-- Big Cute Eyes -->
+          <g id="eye-left"><circle cx="70" cy="98" r="10" fill="#2D2118"/><circle cx="67" cy="95" r="4" fill="#FFF"/><circle cx="73" cy="101" r="1.8" fill="#FFF"/></g>
+          <g id="eye-right"><circle cx="130" cy="98" r="10" fill="#2D2118"/><circle cx="127" cy="95" r="4" fill="#FFF"/><circle cx="133" cy="101" r="1.8" fill="#FFF"/></g>
+          <g id="eyes-happy" style="display: none;"><path d="M 60 98 Q 70 86 80 98" stroke="#2D2118" stroke-width="4.5" fill="none" stroke-linecap="round"/><path d="M 120 98 Q 130 86 140 98" stroke="#2D2118" stroke-width="4.5" fill="none" stroke-linecap="round"/></g>
+
+          <!-- Nose & Mouth -->
+          <ellipse cx="100" cy="116" r="12" ry="8" fill="#2D2118"/>
+          <g id="mouth-closed"><path d="M 90 128 Q 100 136 110 128" stroke="#2D2118" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+          <g id="mouth-open" style="display: none;"><ellipse cx="100" cy="138" r="18" ry="16" fill="#C2185B" stroke="#880E4F" stroke-width="3"/><path d="M 92 144 Q 100 150 108 144" fill="#FF80AB"/></g>
+        `;
+      }
+      if (id === 'duck') {
+        return defs + `
+          <!-- Duck Head -->
+          <circle cx="100" cy="105" r="74" fill="#FFEE58" stroke="#FBC02D" stroke-width="5"/>
+          <circle cx="52" cy="116" r="18" fill="url(#blushGlow)"/>
+          <circle cx="148" cy="116" r="18" fill="url(#blushGlow)"/>
+
+          <!-- Big Sparkling Eyes -->
+          <g id="eye-left"><circle cx="70" cy="90" r="10" fill="#2D2118"/><circle cx="67" cy="87" r="4" fill="#FFF"/><circle cx="73" cy="93" r="1.8" fill="#FFF"/></g>
+          <g id="eye-right"><circle cx="130" cy="90" r="10" fill="#2D2118"/><circle cx="127" cy="87" r="4" fill="#FFF"/><circle cx="133" cy="93" r="1.8" fill="#FFF"/></g>
+          <g id="eyes-happy" style="display: none;"><path d="M 60 90 Q 70 78 80 90" stroke="#2D2118" stroke-width="4.5" fill="none" stroke-linecap="round"/><path d="M 120 90 Q 130 78 140 90" stroke="#2D2118" stroke-width="4.5" fill="none" stroke-linecap="round"/></g>
+
+          <!-- Duck Beak -->
+          <ellipse cx="100" cy="122" r="38" ry="18" fill="#FF9800" stroke="#E65100" stroke-width="4"/>
+          <g id="mouth-closed"><line x1="72" y1="122" x2="128" y2="122" stroke="#E65100" stroke-width="4" stroke-linecap="round"/></g>
+          <g id="mouth-open" style="display: none;"><ellipse cx="100" cy="126" r="22" ry="14" fill="#D84315"/></g>
+        `;
+      }
+      if (id === 'pig') {
+        return defs + `
+          <!-- Pig Ears -->
+          <polygon points="36,36 65,75 22,75" fill="#F48FB1" stroke="#D81B60" stroke-width="4.5" stroke-linejoin="round"/>
+          <polygon points="164,36 135,75 178,75" fill="#F48FB1" stroke="#D81B60" stroke-width="4.5" stroke-linejoin="round"/>
+
+          <!-- Head -->
+          <circle cx="100" cy="115" r="72" fill="#F8BBD0" stroke="#D81B60" stroke-width="5"/>
+          <circle cx="50" cy="120" r="18" fill="url(#blushGlow)"/>
+          <circle cx="150" cy="120" r="18" fill="url(#blushGlow)"/>
+
+          <!-- Big Cute Eyes -->
+          <g id="eye-left"><circle cx="68" cy="96" r="9" fill="#2D2118"/><circle cx="65" cy="93" r="3.8" fill="#FFF"/><circle cx="71" cy="99" r="1.6" fill="#FFF"/></g>
+          <g id="eye-right"><circle cx="132" cy="96" r="9" fill="#2D2118"/><circle cx="129" cy="93" r="3.8" fill="#FFF"/><circle cx="135" cy="99" r="1.6" fill="#FFF"/></g>
+          <g id="eyes-happy" style="display: none;"><path d="M 60 96 Q 68 86 76 96" stroke="#880E4F" stroke-width="4.5" fill="none" stroke-linecap="round"/><path d="M 124 96 Q 132 86 140 96" stroke="#880E4F" stroke-width="4.5" fill="none" stroke-linecap="round"/></g>
+
+          <!-- Pig Snout -->
+          <ellipse cx="100" cy="124" r="28" ry="20" fill="#F48FB1" stroke="#D81B60" stroke-width="3.5"/>
+          <ellipse cx="90" cy="122" r="5" ry="8" fill="#880E4F"/><ellipse cx="110" cy="122" r="5" ry="8" fill="#880E4F"/>
+          <g id="mouth-closed"><path d="M 92 135 Q 100 142 108 135" stroke="#880E4F" stroke-width="3.5" fill="none" stroke-linecap="round"/></g>
+          <g id="mouth-open" style="display: none;"><ellipse cx="100" cy="138" r="18" ry="14" fill="#880E4F"/></g>
+        `;
+      }
+      // Default: Cuddly Bear
+      return defs + `
+        <!-- Bear Ears -->
+        <circle cx="44" cy="46" r="28" fill="#8D6E63" stroke="#5D4037" stroke-width="5"/>
+        <circle cx="44" cy="46" r="16" fill="#FFCCBC"/>
+        <circle cx="156" cy="46" r="28" fill="#8D6E63" stroke="#5D4037" stroke-width="5"/>
+        <circle cx="156" cy="46" r="16" fill="#FFCCBC"/>
+
+        <!-- Head & Muzzle -->
+        <circle cx="100" cy="112" r="76" fill="#8D6E63" stroke="#5D4037" stroke-width="6"/>
+        <circle cx="50" cy="122" r="18" fill="url(#blushGlow)"/>
+        <circle cx="150" cy="122" r="18" fill="url(#blushGlow)"/>
+
+        <!-- Big Cute Eyes with Dual Sparkles -->
+        <g id="eye-left"><circle cx="68" cy="94" r="10" fill="#2D2118"/><circle cx="65" cy="91" r="4" fill="#FFF"/><circle cx="71" cy="97" r="1.8" fill="#FFF"/></g>
+        <g id="eye-right"><circle cx="132" cy="94" r="10" fill="#2D2118"/><circle cx="129" cy="91" r="4" fill="#FFF"/><circle cx="135" cy="97" r="1.8" fill="#FFF"/></g>
+        <g id="eyes-happy" style="display: none;"><path d="M 58 94 Q 68 82 78 94" stroke="#2D2118" stroke-width="4.5" fill="none" stroke-linecap="round"/><path d="M 122 94 Q 132 82 142 94" stroke="#2D2118" stroke-width="4.5" fill="none" stroke-linecap="round"/></g>
+
+        <!-- Snout & Nose -->
+        <ellipse cx="100" cy="128" r="36" ry="26" fill="#D7CCC8" stroke="#5D4037" stroke-width="4"/>
+        <ellipse cx="100" cy="116" r="12" ry="8" fill="#2D2118"/>
+        <ellipse cx="98" cy="114" r="3" ry="2" fill="#FFF" opacity="0.6"/>
+
+        <g id="mouth-closed"><path d="M 90 126 Q 100 136 110 126" stroke="#2D2118" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+        <g id="mouth-open" style="display: none;"><ellipse cx="100" cy="138" r="22" ry="18" fill="#C2185B" stroke="#880E4F" stroke-width="3"/><path d="M 88 144 Q 100 152 112 144" fill="#FF80AB"/></g>
+      `;
+    }
+
+    // Render active character SVG
+    const svgElem = document.querySelector('.animal-svg');
+    if (svgElem) {
+      svgElem.innerHTML = getAnimalSvg(activeChar.id);
+      mouthClosed = document.getElementById('mouth-closed');
+      mouthOpen = document.getElementById('mouth-open');
+      eyesHappy = document.getElementById('eyes-happy');
+    }
+
+    // Prepare Food List (4 Old familiar + 1 New)
+    const foodList = (weekData && weekData.foods) ? weekData.foods.map(f => ({ name: f.word, emoji: f.emoji, sound: f.soundType || 'crunch' })) : [
+      { name: 'Apple', emoji: '🍎', sound: 'crunch' },
+      { name: 'Banana', emoji: '🍌', sound: 'crunch' },
+      { name: 'Honey', emoji: '🍯', sound: 'gulp' },
+      { name: 'Milk', emoji: '🥛', sound: 'gulp' },
+      { name: 'Bread', emoji: '🍞', sound: 'crunch' }
+    ];
+
+    // Rebuild clean food tray (Marshmallow cards without clutter)
+    const trayElem = document.getElementById('tray');
+    if (trayElem) {
+      trayElem.innerHTML = '';
+      foodList.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'food-card';
+        card.setAttribute('data-name', item.name);
+        card.setAttribute('data-sound', item.sound || 'crunch');
+        const iconHtml = (window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon)
+          ? ToddlerVocabulary.renderWordIcon(item, 82, 'tray-food-icon')
+          : `<span class="food-emoji">${item.emoji}</span>`;
+        card.innerHTML = `
+          <div class="food-emoji-wrap" style="display: flex; justify-content: center; align-items: center; min-height: 84px; pointer-events: none;">${iconHtml}</div>
+          <span class="food-label">${item.name}</span>
+        `;
+        trayElem.appendChild(card);
+        attachDrag(card);
+      });
+    }
+
+    targetFood = foodList[foodList.length - 1]; // Start with the interesting/new item
+    const thoughtBubble = document.getElementById('bear-thought');
+    const thoughtEmoji = document.getElementById('thought-emoji');
+    const thoughtWord = document.getElementById('thought-word');
+
+    function updateThoughtBubble(item) {
+      if (!item) return;
+      if (thoughtEmoji) {
+        if (window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon) {
+          thoughtEmoji.innerHTML = ToddlerVocabulary.renderWordIcon(item, 52);
+        } else {
+          thoughtEmoji.innerText = item.emoji;
+        }
+      }
+      if (thoughtWord) thoughtWord.innerText = item.name;
+    }
+
+    // Đồng bộ ngay lập tức bóng thoại suy nghĩ với món ăn mục tiêu ban đầu
+    updateThoughtBubble(targetFood);
+
+    function updateTargetShimmer() {
+      document.querySelectorAll('.food-card').forEach(card => {
+        if (targetFood && card.getAttribute('data-name').toLowerCase() === targetFood.name.toLowerCase()) {
+          card.classList.add('target-shimmer');
+        } else {
+          card.classList.remove('target-shimmer');
+        }
+      });
+    }
+
+    // Kích hoạt viền sáng lấp lánh cho món mục tiêu
+    updateTargetShimmer();
+
+    function pickNextTargetFood() {
+      const others = foodList.filter(f => f.name !== targetFood.name);
+      targetFood = (others.length > 0) ? others[Math.floor(Math.random() * others.length)] : foodList[0];
+      updateThoughtBubble(targetFood);
+
+      updateTargetShimmer();
+      AudioEngine.speak(targetFood.name + '!');
+      scheduleIdleHint();
+    }
+
+    thoughtBubble.addEventListener('pointerdown', (e) => {
+      e.stopPropagation();
+      hideGhostHint();
+      AudioEngine.speak(targetFood.name + '!');
+      thoughtBubble.style.transform = 'scale(1.15)';
+      setTimeout(() => { thoughtBubble.style.transform = ''; }, 200);
+      scheduleIdleHint();
+    });
+
+    // Initialize Day 1 Mission
+    MissionEngine.initGameMission('mission_day_1', '.hud');
+
+    setTimeout(() => {
+      if (AudioEngine.speak && targetFood) {
+        AudioEngine.speak(`Hungry! ${targetFood.name} please!`);
+      }
+      scheduleIdleHint();
+    }, 600);
+
+    // -------------------------------------------------------------
+    // ADVANCE TO NEXT ANIMAL (Chốt qua bài & Đổi bạn thú mới)
+    // -------------------------------------------------------------
+    const animalRotationList = (window.ToddlerVocabulary && ToddlerVocabulary.FEEDING_CHARACTERS)
+      ? ToddlerVocabulary.FEEDING_CHARACTERS
+      : [
+          { id: 'bear', name: 'Bear', vnName: 'Gấu Bự', emoji: '🐻' },
+          { id: 'rabbit', name: 'Rabbit', vnName: 'Thỏ Trắng', emoji: '🐰' },
+          { id: 'cat', name: 'Cat', vnName: 'Mèo Con', emoji: '🐱' },
+          { id: 'dog', name: 'Dog', vnName: 'Cún Cưng', emoji: '🐶' },
+          { id: 'monkey', name: 'Monkey', vnName: 'Khỉ Con', emoji: '🐵' },
+          { id: 'pig', name: 'Pig', vnName: 'Heo Hồng', emoji: '🐷' }
+        ];
+
+    let currentAnimalIdx = 0;
+
+    function advanceToNextAnimal() {
+      const modal = document.getElementById('modal-celebration');
+      if (modal) modal.style.display = 'none';
+
+      feedCount = 0;
+      animal.className = 'animal-container';
+      document.getElementById('belly-status-text').innerText = '🥣 Bụng đói meo nè!';
+      for (let i = 1; i <= 3; i++) {
+        const bdot = document.getElementById('bdot-' + i);
+        if (bdot) bdot.classList.remove('filled');
+      }
+
+      // Khôi phục mắt mở to tròn
+      eyesHappy = document.getElementById('eyes-happy');
+      const leftEye = document.getElementById('eye-left');
+      const rightEye = document.getElementById('eye-right');
+      if (eyesHappy) eyesHappy.style.display = 'none';
+      if (leftEye) leftEye.style.display = 'block';
+      if (rightEye) rightEye.style.display = 'block';
+
+      // Chuyển sang bạn thú tiếp theo
+      currentAnimalIdx = (currentAnimalIdx + 1) % animalRotationList.length;
+      activeChar = animalRotationList[currentAnimalIdx];
+
+      // Cập nhật SVG khuôn mặt bạn mới
+      if (svgElem) {
+        svgElem.innerHTML = getAnimalSvg(activeChar.id);
+        mouthClosed = document.getElementById('mouth-closed');
+        mouthOpen = document.getElementById('mouth-open');
+        eyesHappy = document.getElementById('eyes-happy');
+      }
+
+      thoughtBubble.style.display = 'flex';
+      pickNextTargetFood();
+      AudioEngine.speak(`Hello! I am ${activeChar.name}! I am hungry!`);
+    }
+
+    window.advanceToNextAnimal = advanceToNextAnimal;
+  </script>
+</body>
+</html>

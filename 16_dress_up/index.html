@@ -1,0 +1,1575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+  <title>Dress Up Boutique - Sàn Diễn Thời Trang Kẹo Ngọt Của Bé</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      margin: 0;
+      padding: 0;
+    }
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Fredoka One', 'Nunito', cursive, sans-serif;
+      background: radial-gradient(circle at center, #FFF8E1 0%, #FFE082 45%, #FFCA28 100%);
+      touch-action: manipulation;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    /* Ambient Warm Glow & Floating Stars */
+    .bg-sparkle {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 1;
+      filter: blur(1px);
+      animation: floatSparkle 10s infinite ease-in-out alternate;
+    }
+    @keyframes floatSparkle {
+      0% { transform: translateY(0) scale(1); opacity: 0.35; }
+      100% { transform: translateY(-40px) scale(1.2); opacity: 0.75; }
+    }
+
+    /* -------------------------------------------------------------
+       TOP HUD: Back Button + Title Badge + Fashion Star Progress
+       ------------------------------------------------------------- */
+    .hud {
+      width: 100%;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 10px 18px 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 40;
+      gap: 12px;
+    }
+    .btn-back {
+      background: linear-gradient(135deg, #FF6F00 0%, #E65100 100%);
+      color: #FFF;
+      border: 3.5px solid #FFF;
+      border-radius: 50px;
+      padding: 9px 20px;
+      font-size: 1.15rem;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: 0 6px 16px rgba(230, 81, 0, 0.35);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .btn-back:active {
+      transform: scale(0.92);
+    }
+
+    .fashion-title-badge {
+      background: rgba(255, 255, 255, 0.95);
+      border: 3.5px solid #FFB300;
+      border-radius: 40px;
+      padding: 6px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 6px 18px rgba(255, 160, 0, 0.25);
+    }
+    .fashion-title-badge h2 {
+      font-size: 1.35rem;
+      color: #E65100;
+      letter-spacing: 0.5px;
+    }
+
+    /* Fashion 3-Stars Progress */
+    .hud-stars-box {
+      background: rgba(255, 255, 255, 0.9);
+      border: 3.5px solid #FFD54F;
+      border-radius: 36px;
+      padding: 6px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    }
+    .hud-star {
+      font-size: 1.7rem;
+      filter: grayscale(1) opacity(0.35);
+      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.35s;
+    }
+    .hud-star.earned {
+      filter: grayscale(0) opacity(1) drop-shadow(0 2px 8px rgba(255, 179, 0, 0.7));
+      animation: starPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes starPop {
+      0% { transform: scale(0.5); }
+      70% { transform: scale(1.35); }
+      100% { transform: scale(1); }
+    }
+
+    /* -------------------------------------------------------------
+       MAIN BOUTIQUE STAGE (Runway on Left + Wardrobe on Right)
+       ------------------------------------------------------------- */
+    .boutique-stage {
+      flex: 1;
+      width: 100%;
+      max-width: 1020px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 16px 10px;
+      position: relative;
+      z-index: 10;
+      gap: 20px;
+    }
+
+    /* -------------------------------------------------------------
+       LEFT: SPOTLIGHT CATWALK & CHARACTER DOLL PODIUM
+       ------------------------------------------------------------- */
+    .runway-area {
+      flex: 1;
+      height: 100%;
+      max-height: 520px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    /* Spotlight Visual Cones */
+    .spotlight-beam {
+      position: absolute;
+      top: -15px;
+      width: 260px;
+      height: 380px;
+      background: radial-gradient(ellipse at top, rgba(255, 255, 255, 0.65) 0%, rgba(255, 249, 196, 0.25) 55%, transparent 75%);
+      pointer-events: none;
+      z-index: 2;
+      animation: sweepSpotlight 4s infinite ease-in-out alternate;
+    }
+    @keyframes sweepSpotlight {
+      0% { transform: rotate(-8deg) scaleX(0.95); opacity: 0.7; }
+      100% { transform: rotate(8deg) scaleX(1.05); opacity: 0.95; }
+    }
+
+    /* Friend Switch Carousel Bar (Top of Runway) */
+    .friends-selector-bar {
+      display: flex;
+      gap: 8px;
+      z-index: 20;
+      background: rgba(255, 255, 255, 0.88);
+      padding: 6px 12px;
+      border-radius: 40px;
+      border: 3px solid #FFD54F;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+      max-width: 100%;
+      overflow-x: auto;
+    }
+    .btn-friend-pill {
+      background: white;
+      border: 3px solid #FFE082;
+      border-radius: 50%;
+      width: 46px;
+      height: 46px;
+      min-width: 46px;
+      font-size: 1.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.2s;
+    }
+    .btn-friend-pill:active {
+      transform: scale(0.9);
+    }
+    .btn-friend-pill.active {
+      background: linear-gradient(135deg, #FFF9C4 0%, #FFE082 100%);
+      border-color: #FF8F00;
+      transform: scale(1.18);
+      box-shadow: 0 6px 16px rgba(255, 143, 0, 0.35);
+    }
+
+    /* Character Doll Podium Centerpiece */
+    .character-podium {
+      position: relative;
+      width: 280px;
+      height: 350px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    /* Disco Podium Floor Base */
+    .podium-disc {
+      position: absolute;
+      bottom: 12px;
+      width: 250px;
+      height: 56px;
+      background: linear-gradient(135deg, #FFF 0%, #FFE082 50%, #FFB300 100%);
+      border: 4.5px solid #FFA000;
+      border-radius: 50%;
+      box-shadow: 0 14px 28px rgba(230, 81, 0, 0.3), inset 0 4px 10px rgba(255, 255, 255, 0.8);
+      z-index: 1;
+    }
+
+    /* Living Full-Body Structured Character Assembly */
+    .living-doll {
+      position: relative;
+      width: 220px;
+      height: 290px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 5;
+      transform-origin: bottom center;
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .living-doll.wiggle {
+      animation: dollWiggle 0.5s ease-in-out;
+    }
+    @keyframes dollWiggle {
+      0%, 100% { transform: rotate(0) scale(1); }
+      25% { transform: rotate(-6deg) scale(1.05); }
+      75% { transform: rotate(6deg) scale(1.05); }
+    }
+    .living-doll.runway-dance {
+      animation: dollRunwayDance 0.8s infinite alternate ease-in-out;
+    }
+    @keyframes dollRunwayDance {
+      0% { transform: translateY(0) rotate(-7deg) scale(1.06); }
+      100% { transform: translateY(-18px) rotate(7deg) scale(1.12); }
+    }
+
+    /* Structured Character Parts */
+    .char-head-box {
+      position: relative;
+      width: 140px;
+      height: 130px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+    .char-head-avatar {
+      font-size: 7.2rem;
+      filter: drop-shadow(0 8px 16px rgba(0,0,0,0.18));
+      line-height: 1;
+    }
+
+    .char-torso-box {
+      position: relative;
+      width: 130px;
+      height: 100px;
+      margin-top: -12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 8;
+    }
+    .char-body-base {
+      width: 86px;
+      height: 82px;
+      background: #FFE0B2;
+      border: 4px solid #FFB74D;
+      border-radius: 36px 36px 28px 28px;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.12);
+      transition: background 0.3s, border-color 0.3s;
+    }
+
+    .char-feet-box {
+      position: relative;
+      width: 120px;
+      height: 42px;
+      margin-top: -6px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 9;
+    }
+    .char-foot-left, .char-foot-right {
+      width: 38px;
+      height: 26px;
+      background: #FFE0B2;
+      border: 3.5px solid #FFB74D;
+      border-radius: 50%;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.14);
+      transition: background 0.3s, border-color 0.3s;
+    }
+
+    /* -------------------------------------------------------------
+       WORN CLOTHING EQUIPMENT OVERLAYS (Pixel-Perfect Alignment)
+       ------------------------------------------------------------- */
+    .worn-slot {
+      position: absolute;
+      pointer-events: none;
+      filter: drop-shadow(0 6px 12px rgba(0,0,0,0.25));
+      animation: popEquip 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes popEquip {
+      0% { transform: scale(0.2) translateY(-25px); opacity: 0; }
+      70% { transform: scale(1.2) translateY(4px); }
+      100% { transform: scale(1) translateY(0); opacity: 1; }
+    }
+
+    /* Hat: On top of head */
+    .slot-hat-worn {
+      top: -46px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 20;
+    }
+    .worn-hat-img {
+      width: 110px;
+      height: 110px;
+      object-fit: contain;
+      filter: drop-shadow(0 6px 14px rgba(0,0,0,0.3));
+    }
+
+    /* Glasses: Across face eye level */
+    .slot-glasses-worn {
+      top: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 22;
+    }
+    .worn-glasses-img {
+      width: 90px;
+      height: 60px;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.35));
+    }
+
+    /* Clothes: Snugly fitted over torso */
+    .slot-clothes-worn {
+      top: 2px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 15;
+    }
+    .worn-clothes-img {
+      width: 115px;
+      height: 105px;
+      object-fit: contain;
+      filter: drop-shadow(0 6px 14px rgba(0,0,0,0.25));
+    }
+
+    /* Shoes: Fitted on feet */
+    .slot-shoes-worn {
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 16;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .worn-shoes-img {
+      width: 100px;
+      height: 56px;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.25));
+    }
+
+    /* Prop/Accessory: Handheld floating nearby or Scarf around neck */
+    .slot-prop-worn {
+      top: 15px;
+      right: -25px;
+      z-index: 18;
+      animation: propBob 2s infinite ease-in-out alternate;
+    }
+    .slot-prop-worn.is-scarf {
+      top: -16px;
+      left: 50%;
+      right: auto;
+      transform: translateX(-50%);
+      z-index: 17;
+      animation: none;
+    }
+    .worn-prop-img {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      filter: drop-shadow(0 6px 14px rgba(0,0,0,0.25));
+    }
+    .slot-prop-worn.is-scarf .worn-prop-img {
+      width: 95px;
+      height: 70px;
+    }
+    @keyframes propBob {
+      0% { transform: rotate(-5deg) translateY(0); }
+      100% { transform: rotate(10deg) translateY(-8px); }
+    }
+
+    /* Runway Bottom Controls (Fashion Show Button + Reset Button) */
+    .runway-controls {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      z-index: 30;
+      margin-top: 4px;
+    }
+    .btn-fashion-show {
+      background: linear-gradient(135deg, #FF4081 0%, #F50057 100%);
+      color: white;
+      border: 3.5px solid white;
+      border-radius: 40px;
+      padding: 12px 28px;
+      font-size: 1.25rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 8px 24px rgba(245, 0, 87, 0.4);
+      animation: pulseBtn 1.8s infinite ease-in-out;
+      transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes pulseBtn {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    .btn-fashion-show:active {
+      transform: scale(0.94);
+    }
+
+    .btn-clear-outfit {
+      background: white;
+      color: #E65100;
+      border: 3px solid #FFA000;
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      font-size: 1.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: transform 0.15s;
+    }
+    .btn-clear-outfit:active {
+      transform: scale(0.9);
+    }
+
+    /* -------------------------------------------------------------
+       RIGHT: 3D SWEET BOUTIQUE WARDROBE (Tabs + Item Grid)
+       ------------------------------------------------------------- */
+    .wardrobe-boutique {
+      width: 420px;
+      height: 100%;
+      max-height: 520px;
+      background: rgba(255, 255, 255, 0.95);
+      border: 5px solid #FFA000;
+      border-radius: 40px;
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 16px 36px rgba(230, 81, 0, 0.22);
+      backdrop-filter: blur(8px);
+      z-index: 25;
+    }
+
+    /* Category Filter Tabs (Marshmallow Pills) */
+    .wardrobe-tabs-bar {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      background: #FFF8E1;
+      padding: 5px;
+      border-radius: 30px;
+      border: 2px solid #FFE082;
+    }
+    .tab-pill {
+      flex: 1;
+      background: transparent;
+      border: none;
+      border-radius: 24px;
+      padding: 8px 4px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #795548;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .tab-pill.active {
+      background: linear-gradient(135deg, #FFA000 0%, #FF8F00 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(255, 143, 0, 0.35);
+      transform: scale(1.05);
+    }
+
+    /* 3D Marshmallow Clothes Items Grid */
+    .wardrobe-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      overflow-y: auto;
+      padding: 4px 2px;
+    }
+    .wardrobe-grid::-webkit-scrollbar {
+      width: 6px;
+    }
+    .wardrobe-grid::-webkit-scrollbar-thumb {
+      background: #FFD54F;
+      border-radius: 10px;
+    }
+
+    .wardrobe-card {
+      background: linear-gradient(135deg, #FFFFFF 0%, #FFFDF7 100%);
+      border: 3.5px solid #FFE082;
+      border-radius: 26px;
+      padding: 12px 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      cursor: pointer;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.06);
+      transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.15s, background 0.15s;
+      position: relative;
+    }
+    .wardrobe-card:active {
+      transform: scale(0.92);
+    }
+    .wardrobe-card.equipped {
+      background: #E8F5E9;
+      border-color: #4CAF50;
+      box-shadow: 0 6px 16px rgba(76, 175, 80, 0.25);
+    }
+    .wardrobe-card.equipped::after {
+      content: '✓';
+      position: absolute;
+      top: 6px;
+      right: 10px;
+      background: #4CAF50;
+      color: white;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      font-size: 0.85rem;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card-item-emoji {
+      font-size: 3.8rem;
+      line-height: 1.1;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.12));
+      pointer-events: none;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .wardrobe-card:active .card-item-emoji {
+      transform: scale(1.18);
+    }
+    .card-item-name {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #3E2723;
+      pointer-events: none;
+    }
+
+    /* Flying Item Animation Particle */
+    .flying-item-clone {
+      position: fixed;
+      z-index: 100;
+      font-size: 4.5rem;
+      pointer-events: none;
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      filter: drop-shadow(0 10px 20px rgba(255, 160, 0, 0.5));
+    }
+
+    /* -------------------------------------------------------------
+       MODAL 1: GRAND FASHION SHOW CELEBRATION (Victory & Next Friend)
+       ------------------------------------------------------------- */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(10px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 150;
+      padding: 16px;
+    }
+    .celebration-card {
+      background: linear-gradient(135deg, #FFFFFF 0%, #FFFDF7 100%);
+      border: 6px solid #FFD54F;
+      border-radius: 44px;
+      padding: 32px 28px;
+      max-width: 540px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+      animation: popInModal 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes popInModal {
+      0% { transform: scale(0.6); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .win-badge-icon {
+      font-size: 5.6rem;
+      animation: winBounce 2s infinite ease-in-out alternate;
+    }
+    @keyframes winBounce {
+      0% { transform: translateY(0) rotate(-6deg); }
+      100% { transform: translateY(-14px) rotate(6deg); }
+    }
+    .win-title {
+      font-size: 2.1rem;
+      color: #E65100;
+      margin: 12px 0 6px;
+    }
+    .win-subtitle {
+      font-size: 1.25rem;
+      color: #5D4037;
+      margin-bottom: 22px;
+      line-height: 1.4;
+      font-weight: 700;
+    }
+    .btn-next-friend {
+      background: linear-gradient(135deg, #FF4081 0%, #E91E63 100%);
+      color: white;
+      border: 4px solid #FF80AB;
+      border-radius: 50px;
+      padding: 15px 36px;
+      font-size: 1.35rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 10px 28px rgba(233, 30, 99, 0.4);
+      transition: transform 0.15s;
+    }
+    .btn-next-friend:active {
+      transform: scale(0.95);
+    }
+    .btn-close-modal {
+      background: transparent;
+      border: none;
+      color: #888;
+      font-size: 1.05rem;
+      font-weight: 800;
+      margin-top: 14px;
+      cursor: pointer;
+      text-decoration: underline;
+      display: block;
+      width: 100%;
+    }
+
+    /* Confetti Canvas */
+    #confetti-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 200;
+    }
+
+    @media (orientation: landscape) and (max-height: 520px) {
+      body, html {
+        padding: 2px 8px;
+        overflow: hidden;
+      }
+      .hud {
+        padding: 2px 8px;
+        margin-bottom: 2px;
+      }
+      .btn-back {
+        padding: 4px 12px;
+        font-size: 0.85rem;
+      }
+      .fashion-title-badge {
+        padding: 3px 12px;
+      }
+      .fashion-title-badge h2 {
+        font-size: 0.95rem;
+      }
+      .hud-stars-box {
+        padding: 3px 8px;
+      }
+      .boutique-stage {
+        padding: 2px 6px;
+        gap: 12px;
+        max-width: 100%;
+        height: calc(100vh - 55px);
+        max-height: 320px;
+        flex-direction: row;
+        box-sizing: border-box;
+      }
+      .runway-area {
+        width: 48%;
+        height: 100%;
+        max-height: 310px;
+        justify-content: center;
+      }
+      .character-podium {
+        width: min(220px, 42vw);
+        height: min(230px, 66vh);
+      }
+      .living-doll {
+        transform: scale(0.75);
+      }
+      .doll-controls-bar {
+        margin-top: 4px;
+        gap: 6px;
+      }
+      .btn-fashion-show {
+        padding: 5px 14px;
+        font-size: 0.85rem;
+      }
+      .btn-clear-outfit {
+        width: 34px;
+        height: 34px;
+        font-size: 1.1rem;
+      }
+      .wardrobe-boutique {
+        width: 50%;
+        max-width: 50vw;
+        height: 100%;
+        max-height: 310px;
+        box-sizing: border-box;
+        padding: 6px;
+      }
+      .wardrobe-tabs {
+        padding: 2px;
+        margin-bottom: 4px;
+      }
+      .tab-pill {
+        padding: 4px 2px;
+        font-size: 0.82rem;
+      }
+      .wardrobe-grid {
+        gap: 6px;
+        padding: 2px;
+      }
+      .wardrobe-card {
+        padding: 6px 4px;
+        border-radius: 16px;
+      }
+      .card-item-emoji {
+        font-size: 2.2rem;
+      }
+      .card-item-name {
+        font-size: 0.75rem;
+      }
+    }
+
+    @media (max-width: 780px) and (orientation: portrait) {
+      body, html {
+        height: auto;
+        min-height: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+      }
+      .hud {
+        padding: 8px 12px 4px;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+      }
+      .btn-back {
+        padding: 6px 14px;
+        font-size: 1rem;
+      }
+      .fashion-title-badge {
+        padding: 5px 14px;
+      }
+      .fashion-title-badge h2 {
+        font-size: 1.1rem;
+      }
+      .hud-stars-box {
+        padding: 4px 10px;
+      }
+      .boutique-stage {
+        flex-direction: column;
+        height: auto;
+        max-height: none;
+        padding: 4px 8px 30px;
+        gap: 16px;
+      }
+      .runway-area {
+        width: 100%;
+        max-height: none;
+        height: auto;
+      }
+      .character-podium {
+        width: 240px;
+        height: 290px;
+      }
+      .podium-disc {
+        width: 220px;
+        height: 48px;
+      }
+      .living-doll {
+        width: 190px;
+        height: 250px;
+        transform: scale(0.9);
+      }
+      .wardrobe-boutique {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        max-height: none;
+        padding: 14px 12px;
+        border-radius: 28px;
+        box-sizing: border-box;
+      }
+      .wardrobe-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        max-height: 340px;
+      }
+    }
+    @media (max-width: 420px) {
+      .wardrobe-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+
+  <!-- SHARED ENGINES -->
+  <link rel="stylesheet" href="../shared/styles.css">
+  <script src="../shared/vocabulary.js"></script>
+  <script src="../shared/audio.js"></script>
+  <script src="../shared/missions.js"></script>
+  <script src="../shared/affiliate_config.js"></script>
+</head>
+<body>
+
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Ambient Golden Sparkles -->
+  <div class="bg-sparkle" style="width: 120px; height: 120px; background: rgba(255, 255, 255, 0.4); top: 10%; left: 8%;"></div>
+  <div class="bg-sparkle" style="width: 180px; height: 180px; background: rgba(255, 238, 88, 0.3); bottom: 15%; right: 12%;"></div>
+
+  <!-- TOP HUD -->
+  <div class="hud">
+    <a href="../index.html" class="btn-back">⬅ Menu</a>
+    
+    <div class="fashion-title-badge">
+      <span style="font-size: 1.6rem;">👗</span>
+      <h2>Dress Up Boutique</h2>
+    </div>
+
+    <div class="hud-stars-box" id="hud-stars-box" title="Hoàn thành bộ đồ để nhận Huy Chương!">
+      <span class="hud-star" id="f-star-1"><img src="../assets/icons/star.png" style="width: 26px; height: 26px; object-fit: contain;" alt="⭐"></span>
+      <span class="hud-star" id="f-star-2"><img src="../assets/icons/star.png" style="width: 26px; height: 26px; object-fit: contain;" alt="⭐"></span>
+      <span class="hud-star" id="f-star-3"><img src="../assets/icons/star.png" style="width: 26px; height: 26px; object-fit: contain;" alt="⭐"></span>
+    </div>
+  </div>
+
+  <!-- MAIN STAGE -->
+  <div class="boutique-stage">
+
+    <!-- LEFT: RUNWAY AREA -->
+    <div class="runway-area">
+      <div class="spotlight-beam"></div>
+
+      <!-- Friend Switch Carousel (Top of Stage) -->
+      <div class="friends-selector-bar">
+        <button type="button" class="btn-friend-pill active" id="f-btn-0" onclick="selectFriend(0)" title="Baby"><img src="../assets/icons/baby.png" style="width: 30px; height: 30px; object-fit: contain; pointer-events: none;" alt="Baby"></button>
+        <button type="button" class="btn-friend-pill" id="f-btn-1" onclick="selectFriend(1)" title="Teddy Bear"><img src="../assets/icons/bear.png" style="width: 30px; height: 30px; object-fit: contain; pointer-events: none;" alt="Bear"></button>
+        <button type="button" class="btn-friend-pill" id="f-btn-2" onclick="selectFriend(2)" title="Kitty Cat"><img src="../assets/icons/cat.png" style="width: 30px; height: 30px; object-fit: contain; pointer-events: none;" alt="Cat"></button>
+        <button type="button" class="btn-friend-pill" id="f-btn-3" onclick="selectFriend(3)" title="Puppy Dog"><img src="../assets/icons/dog.png" style="width: 30px; height: 30px; object-fit: contain; pointer-events: none;" alt="Dog"></button>
+        <button type="button" class="btn-friend-pill" id="f-btn-4" onclick="selectFriend(4)" title="Little Bunny"><img src="../assets/icons/rabbit_face.png" style="width: 30px; height: 30px; object-fit: contain; pointer-events: none;" alt="Bunny"></button>
+        <button type="button" class="btn-friend-pill" id="f-btn-5" onclick="selectFriend(5)" title="Panda"><img src="../assets/icons/panda.png" style="width: 30px; height: 30px; object-fit: contain; pointer-events: none;" alt="Panda"></button>
+        <button type="button" class="btn-friend-pill" id="f-btn-6" onclick="selectFriend(6)" title="Baby Lion"><img src="../assets/icons/lion.png" style="width: 30px; height: 30px; object-fit: contain; pointer-events: none;" alt="Lion"></button>
+        <button type="button" class="btn-friend-pill" id="f-btn-7" onclick="selectFriend(7)" title="Cute Piggy"><img src="../assets/icons/pig.png" style="width: 30px; height: 30px; object-fit: contain; pointer-events: none;" alt="Piggy"></button>
+      </div>
+
+      <!-- Character Doll & Podium -->
+      <div class="character-podium">
+        <div class="living-doll" id="living-doll" onclick="tapCharacterDoll()">
+          
+          <!-- Head with Worn Hat & Glasses -->
+          <div class="char-head-box">
+            <span class="char-head-avatar" id="doll-avatar"><img src="../assets/icons/baby.png" style="width: 105px; height: 105px; object-fit: contain; pointer-events: none;" alt="Baby"></span>
+            <span class="worn-slot slot-hat-worn" id="worn-hat"></span>
+            <span class="worn-slot slot-glasses-worn" id="worn-glasses"></span>
+          </div>
+
+          <!-- Torso with Worn Clothes -->
+          <div class="char-torso-box">
+            <div class="char-body-base" id="doll-body"></div>
+            <span class="worn-slot slot-clothes-worn" id="worn-clothes"></span>
+            <span class="worn-slot slot-prop-worn" id="worn-prop"></span>
+          </div>
+
+          <!-- Feet with Worn Shoes -->
+          <div class="char-feet-box">
+            <div class="char-foot-left" id="doll-foot-l"></div>
+            <div class="char-foot-right" id="doll-foot-r"></div>
+            <span class="worn-slot slot-shoes-worn" id="worn-shoes"></span>
+          </div>
+
+        </div>
+
+        <div class="podium-disc"></div>
+      </div>
+
+      <!-- Runway Bottom Controls -->
+      <div class="runway-controls">
+        <button type="button" class="btn-fashion-show" id="btn-fashion-show" onclick="triggerFashionRunwayShow()">
+          <span>💃</span>
+          <span>Trình Diễn Thời Trang 🎶</span>
+        </button>
+        <button type="button" class="btn-clear-outfit" id="btn-clear" onclick="clearCurrentOutfit()" title="Cởi đồ thử lại">
+          <span>🧺</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- RIGHT: 3D SWEET BOUTIQUE WARDROBE -->
+    <div class="wardrobe-boutique">
+      
+      <!-- Category Tabs -->
+      <div class="wardrobe-tabs-bar">
+        <button type="button" class="tab-pill active" onclick="switchCategory('hat')" id="tab-hat">
+          <span>🧢</span>
+          <span>Mũ</span>
+        </button>
+        <button type="button" class="tab-pill" onclick="switchCategory('clothes')" id="tab-clothes">
+          <span>👕</span>
+          <span>Áo Váy</span>
+        </button>
+        <button type="button" class="tab-pill" onclick="switchCategory('shoes')" id="tab-shoes">
+          <span>👟</span>
+          <span>Giày</span>
+        </button>
+        <button type="button" class="tab-pill" onclick="switchCategory('prop')" id="tab-prop">
+          <span>✨</span>
+          <span>Phụ Kiện</span>
+        </button>
+      </div>
+
+      <!-- Items Grid -->
+      <div class="wardrobe-grid" id="wardrobe-grid">
+        <!-- Injected dynamically by JS -->
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- MODAL: CELEBRATION RUNWAY -->
+  <div class="modal-overlay" id="modal-celebration">
+    <div class="celebration-card">
+      <div class="win-badge-icon">👑</div>
+      <h2 class="win-title" id="win-title">Nhà Thiết Kế Nhí!</h2>
+      <p class="win-subtitle" id="win-subtitle">Bé đã phối đồ thật sành điệu cho bạn nhỏ! Bạn nhỏ vui sướng nhảy múa reo vang!</p>
+
+      <button type="button" class="btn-next-friend" onclick="goToNextFriend()">
+        <span>🎉 Mặc Cho Bạn Tiếp Theo ➜</span>
+      </button>
+
+      <button type="button" class="btn-close-modal" onclick="closeCelebrationModal()">
+        Ở lại ngắm bạn nhỏ tiếp
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // -------------------------------------------------------------
+    // SAFE AUDIO FALLBACK & SYNTHESIZER
+    // -------------------------------------------------------------
+    const AudioEngine = window.ToddlerAudio || {};
+
+    // Web Audio Synthesizer for fabric swoosh, zip, and sparkle pops
+    function playSwooshZipSound() {
+      try {
+        if (!AudioEngine.ctx) AudioEngine.init();
+        const ctx = AudioEngine.ctx;
+        if (!ctx) return;
+
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(420, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.15);
+
+        gain.gain.setValueAtTime(0.28, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.2);
+      } catch (e) {}
+    }
+
+    function playSparkleSound() {
+      if (AudioEngine.playChime) {
+        AudioEngine.playChime();
+      } else if (AudioEngine.playPop) {
+        AudioEngine.playPop();
+      }
+    }
+
+    // -------------------------------------------------------------
+    // CHARACTERS WITH ADAPTIVE BODY COLORS & STYLING (8 Bạn nhỏ khắp năm)
+    // -------------------------------------------------------------
+    const friendList = [
+      {
+        id: 'baby',
+        name: 'Baby',
+        vnName: 'Em Bé',
+        emoji: '👶',
+        bodyColor: '#FFE0B2',
+        borderColor: '#FFB74D',
+        voice: 'Hello Baby!'
+      },
+      {
+        id: 'bear',
+        name: 'Teddy Bear',
+        vnName: 'Chú Gấu',
+        emoji: '🐻',
+        bodyColor: '#BCAAA4',
+        borderColor: '#8D6E63',
+        voice: 'Hello Teddy Bear!'
+      },
+      {
+        id: 'cat',
+        name: 'Kitty Cat',
+        vnName: 'Mèo Con',
+        emoji: '🐱',
+        bodyColor: '#FFF9C4',
+        borderColor: '#FFE082',
+        voice: 'Hello Kitty Cat!'
+      },
+      {
+        id: 'dog',
+        name: 'Puppy Dog',
+        vnName: 'Cún Cưng',
+        emoji: '🐶',
+        bodyColor: '#FFE082',
+        borderColor: '#FFA000',
+        voice: 'Hello Puppy Dog!'
+      },
+      {
+        id: 'rabbit',
+        name: 'Little Bunny',
+        vnName: 'Thỏ Trắng',
+        emoji: '🐰',
+        icon: 'rabbit_face',
+        bodyColor: '#F8BBD0',
+        borderColor: '#F06292',
+        voice: 'Hello Little Bunny!'
+      },
+      {
+        id: 'panda',
+        name: 'Panda',
+        vnName: 'Gấu Trúc',
+        emoji: '🐼',
+        bodyColor: '#CFD8DC',
+        borderColor: '#78909C',
+        voice: 'Hello Panda!'
+      },
+      {
+        id: 'lion',
+        name: 'Baby Lion',
+        vnName: 'Sư Tử Nhí',
+        emoji: '🦁',
+        bodyColor: '#FFE082',
+        borderColor: '#FFB300',
+        voice: 'Hello Baby Lion!'
+      },
+      {
+        id: 'pig',
+        name: 'Cute Piggy',
+        vnName: 'Heo Hồng',
+        emoji: '🐷',
+        bodyColor: '#F8BBD0',
+        borderColor: '#EC407A',
+        voice: 'Hello Cute Piggy!'
+      }
+    ];
+
+    // -------------------------------------------------------------
+    // BOUTIQUE WARDROBE CATALOG (Rich, 4 Distinct Categories - 3D Fluent Icons)
+    // -------------------------------------------------------------
+    const wardrobeCatalog = {
+      hat: [
+        { id: 'cap', name: 'Cap', icon: 'cap', emoji: '🧢', voice: 'Cool Cap!' },
+        { id: 'sun_hat', name: 'Sun Hat', icon: 'sun_hat', emoji: '👒', voice: 'Sunny Sun Hat!' },
+        { id: 'party_hat', name: 'Party Hat', icon: 'party_hat', emoji: '🎉', voice: 'Party Hat!' },
+        { id: 'crown', name: 'Crown', icon: 'crown', emoji: '👑', voice: 'Golden Crown!' },
+        { id: 'top_hat', name: 'Top Hat', icon: 'top_hat', emoji: '🎩', voice: 'Fancy Top Hat!' },
+        { id: 'ribbon', name: 'Ribbon', icon: 'ribbon', emoji: '🎀', voice: 'Pretty Ribbon!' }
+      ],
+      clothes: [
+        { id: 'shirt', name: 'T-Shirt', icon: 'shirt', emoji: '👕', voice: 'Blue T-Shirt!' },
+        { id: 'dress', name: 'Pink Dress', icon: 'dress', emoji: '👗', voice: 'Princess Dress!' },
+        { id: 'coat', name: 'Warm Coat', icon: 'coat', emoji: '🧥', voice: 'Cozy Coat!' },
+        { id: 'jacket', name: 'Cool Jacket', icon: 'jacket', emoji: '🦺', voice: 'Cool Jacket!' },
+        { id: 'vest', name: 'Smart Vest', icon: 'vest', emoji: '🦺', voice: 'Smart Vest!' },
+        { id: 'pajamas', name: 'Pajamas', icon: 'pajamas', emoji: '👘', voice: 'Comfy Pajamas!' }
+      ],
+      shoes: [
+        { id: 'shoes', name: 'Sneakers', icon: 'shoes', emoji: '👟', voice: 'Running Shoes!' },
+        { id: 'boots', name: 'Boots', icon: 'boots', emoji: '🥾', voice: 'Warm Boots!' },
+        { id: 'ballet_shoes', name: 'Ballet Shoes', icon: 'ballet_shoes', emoji: '🩰', voice: 'Ballet Shoes!' },
+        { id: 'socks', name: 'Cozy Socks', icon: 'socks', emoji: '🧦', voice: 'Warm Socks!' }
+      ],
+      prop: [
+        { id: 'sunglasses', name: 'Sunglasses', icon: 'sunglasses', emoji: '🕶️', voice: 'Cool Sunglasses!' },
+        { id: 'wand', name: 'Magic Wand', icon: 'wand', emoji: '🪄', voice: 'Magic Wand!' },
+        { id: 'balloon', name: 'Balloon', icon: 'balloon', emoji: '🎈', voice: 'Red Balloon!' },
+        { id: 'candy', name: 'Lollipop', icon: 'candy', emoji: '🍭', voice: 'Sweet Lollipop!' },
+        { id: 'scarf', name: 'Scarf', icon: 'scarf', emoji: '🧣', voice: 'Warm Scarf!' }
+      ]
+    };
+
+    // -------------------------------------------------------------
+    // GAME STATE & HUD PROGRESS
+    // -------------------------------------------------------------
+    let currentFriendIdx = 0;
+    let currentCategory = 'hat';
+    let currentOutfits = {
+      hat: null,
+      clothes: null,
+      shoes: null,
+      prop: null
+    };
+    let completedFriendsCount = 0;
+    const TARGET_STARS = 3;
+
+    // DOM References
+    const dollAvatar = document.getElementById('doll-avatar');
+    const dollBody = document.getElementById('doll-body');
+    const dollFootL = document.getElementById('doll-foot-l');
+    const dollFootR = document.getElementById('doll-foot-r');
+    const livingDoll = document.getElementById('living-doll');
+
+    const wornHat = document.getElementById('worn-hat');
+    const wornGlasses = document.getElementById('worn-glasses');
+    const wornClothes = document.getElementById('worn-clothes');
+    const wornShoes = document.getElementById('worn-shoes');
+    const wornProp = document.getElementById('worn-prop');
+
+    const wardrobeGrid = document.getElementById('wardrobe-grid');
+    const modalCelebration = document.getElementById('modal-celebration');
+
+    // -------------------------------------------------------------
+    // RENDER WARDROBE CATEGORY ITEMS
+    // -------------------------------------------------------------
+    function switchCategory(cat) {
+      currentCategory = cat;
+      document.querySelectorAll('.tab-pill').forEach(btn => {
+        btn.classList.toggle('active', btn.id === `tab-${cat}`);
+      });
+      playSwooshZipSound();
+      renderWardrobeGrid();
+    }
+
+    function renderWardrobeGrid() {
+      wardrobeGrid.innerHTML = '';
+      const items = wardrobeCatalog[currentCategory] || [];
+
+      items.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'wardrobe-card';
+        
+        // Check if currently equipped
+        const isEquipped = (currentOutfits[currentCategory] && currentOutfits[currentCategory].id === item.id);
+        if (isEquipped) {
+          card.classList.add('equipped');
+        }
+
+        const iconPath = `../assets/icons/${item.icon || item.id}.png`;
+        const iconHtml = `
+          <img src="${iconPath}" 
+               alt="${item.name}" 
+               class="wardrobe-card-3d-img" 
+               style="width: 58px; height: 58px; object-fit: contain; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.15)); pointer-events: none;" 
+               onerror="this.outerHTML='<span class=\\'card-item-emoji\\' style=\\'font-size: 2.4rem;\\'>${item.emoji}</span>'">
+        `;
+
+        card.innerHTML = `
+          ${iconHtml}
+          <span class="card-item-name">${item.name}</span>
+        `;
+
+        card.addEventListener('pointerdown', (e) => handleEquipItem(item, card, e));
+        card.addEventListener('click', (e) => handleEquipItem(item, card, e));
+
+        wardrobeGrid.appendChild(card);
+      });
+    }
+
+    // -------------------------------------------------------------
+    // EQUIP ITEM WITH FLYING PARTICLE ANIMATION
+    // -------------------------------------------------------------
+    let lastTapTime = 0;
+    function handleEquipItem(item, cardElem, evt) {
+      if (Date.now() - lastTapTime < 220) return;
+      lastTapTime = Date.now();
+
+      // Audio feedback
+      playSwooshZipSound();
+      if (AudioEngine.speakWord) {
+        AudioEngine.speakWord(item.voice || item.name);
+      } else if (AudioEngine.speak) {
+        AudioEngine.speak(item.voice || item.name);
+      }
+
+      // Flying particle effect from card to character
+      createFlyingParticle(item, cardElem);
+
+      // Equip state
+      currentOutfits[currentCategory] = item;
+      renderDollOutfit();
+      renderWardrobeGrid();
+
+      // Wiggle doll in joy
+      livingDoll.classList.remove('wiggle');
+      void livingDoll.offsetWidth;
+      livingDoll.classList.add('wiggle');
+    }
+
+    function createFlyingParticle(item, sourceCard) {
+      const rect = sourceCard.getBoundingClientRect();
+      const clone = document.createElement('div');
+      clone.className = 'flying-item-clone';
+      const iconPath = `../assets/icons/${item.icon || item.id}.png`;
+      clone.innerHTML = `<img src="${iconPath}" style="width: 50px; height: 50px; object-fit: contain;" onerror="this.outerHTML='${item.emoji}'">`;
+      clone.style.left = `${rect.left + rect.width / 2 - 25}px`;
+      clone.style.top = `${rect.top + rect.height / 2 - 25}px`;
+      document.body.appendChild(clone);
+
+      // Target character center
+      const dollRect = livingDoll.getBoundingClientRect();
+      const targetX = dollRect.left + dollRect.width / 2 - 25;
+      const targetY = dollRect.top + dollRect.height / 2 - 25;
+
+      setTimeout(() => {
+        clone.style.left = `${targetX}px`;
+        clone.style.top = `${targetY}px`;
+        clone.style.transform = 'scale(1.2) rotate(15deg)';
+        clone.style.opacity = '0.9';
+      }, 20);
+
+      setTimeout(() => {
+        clone.remove();
+        playSparkleSound();
+      }, 520);
+    }
+
+    // -------------------------------------------------------------
+    // RENDER WORN ITEMS ON CHARACTER DOLL (3D Graphics)
+    // -------------------------------------------------------------
+    function renderDollOutfit() {
+      // Hat slot
+      if (currentOutfits.hat) {
+        wornHat.innerHTML = `<img src="../assets/icons/${currentOutfits.hat.icon || currentOutfits.hat.id}.png" class="worn-item-img worn-hat-img" alt="${currentOutfits.hat.name}" onerror="this.outerHTML='<span style=\\'font-size: 5rem;\\'>${currentOutfits.hat.emoji}</span>'">`;
+        wornHat.style.display = 'block';
+      } else {
+        wornHat.innerHTML = '';
+        wornHat.style.display = 'none';
+      }
+
+      // Clothes slot
+      if (currentOutfits.clothes) {
+        wornClothes.innerHTML = `<img src="../assets/icons/${currentOutfits.clothes.icon || currentOutfits.clothes.id}.png" class="worn-item-img worn-clothes-img" alt="${currentOutfits.clothes.name}" onerror="this.outerHTML='<span style=\\'font-size: 5rem;\\'>${currentOutfits.clothes.emoji}</span>'">`;
+        wornClothes.style.display = 'block';
+      } else {
+        wornClothes.innerHTML = '';
+        wornClothes.style.display = 'none';
+      }
+
+      // Shoes slot
+      if (currentOutfits.shoes) {
+        wornShoes.innerHTML = `<img src="../assets/icons/${currentOutfits.shoes.icon || currentOutfits.shoes.id}.png" class="worn-item-img worn-shoes-img" alt="${currentOutfits.shoes.name}" onerror="this.outerHTML='<span style=\\'font-size: 4rem;\\'>${currentOutfits.shoes.emoji}</span>'">`;
+        wornShoes.style.display = 'block';
+      } else {
+        wornShoes.innerHTML = '';
+        wornShoes.style.display = 'none';
+      }
+
+      // Prop / Glasses slot
+      if (currentOutfits.prop) {
+        if (currentOutfits.prop.id === 'sunglasses') {
+          wornGlasses.innerHTML = `<img src="../assets/icons/${currentOutfits.prop.icon || currentOutfits.prop.id}.png" class="worn-item-img worn-glasses-img" alt="${currentOutfits.prop.name}" onerror="this.outerHTML='<span style=\\'font-size: 3.8rem;\\'>${currentOutfits.prop.emoji}</span>'">`;
+          wornGlasses.style.display = 'block';
+          wornProp.innerHTML = '';
+          wornProp.style.display = 'none';
+          wornProp.classList.remove('is-scarf');
+        } else {
+          wornGlasses.innerHTML = '';
+          wornGlasses.style.display = 'none';
+          if (currentOutfits.prop.id === 'scarf') {
+            wornProp.classList.add('is-scarf');
+          } else {
+            wornProp.classList.remove('is-scarf');
+          }
+          wornProp.innerHTML = `<img src="../assets/icons/${currentOutfits.prop.icon || currentOutfits.prop.id}.png" class="worn-item-img worn-prop-img" alt="${currentOutfits.prop.name}" onerror="this.outerHTML='<span style=\\'font-size: 3.6rem;\\'>${currentOutfits.prop.emoji}</span>'">`;
+          wornProp.style.display = 'block';
+        }
+      } else {
+        wornGlasses.innerHTML = '';
+        wornGlasses.style.display = 'none';
+        wornProp.innerHTML = '';
+        wornProp.style.display = 'none';
+        wornProp.classList.remove('is-scarf');
+      }
+    }
+
+    // -------------------------------------------------------------
+    // CLEAR / TAKE OFF OUTFIT
+    // -------------------------------------------------------------
+    function clearCurrentOutfit() {
+      playSwooshZipSound();
+      currentOutfits = { hat: null, clothes: null, shoes: null, prop: null };
+      renderDollOutfit();
+      renderWardrobeGrid();
+      if (AudioEngine.speak) {
+        AudioEngine.speak('Ready to dress up again!');
+      }
+    }
+
+    // -------------------------------------------------------------
+    // SWITCH FRIEND CAROUSEL
+    // -------------------------------------------------------------
+    function selectFriend(idx) {
+      currentFriendIdx = idx;
+      const friend = friendList[idx];
+
+      // Update pills
+      document.querySelectorAll('.btn-friend-pill').forEach((btn, i) => {
+        btn.classList.toggle('active', i === idx);
+      });
+
+      // Update doll visual appearance
+      const iconName = friend.icon || friend.id;
+      dollAvatar.innerHTML = `<img src="../assets/icons/${iconName}.png" style="width: 105px; height: 105px; object-fit: contain; pointer-events: none;" alt="${friend.name}" onerror="this.outerHTML='${friend.emoji}'">`;
+      dollBody.style.background = friend.bodyColor;
+      dollBody.style.borderColor = friend.borderColor;
+      dollFootL.style.background = friend.bodyColor;
+      dollFootL.style.borderColor = friend.borderColor;
+      dollFootR.style.background = friend.bodyColor;
+      dollFootR.style.borderColor = friend.borderColor;
+
+      livingDoll.classList.remove('runway-dance');
+
+      // Clear previous outfit for fresh styling
+      clearCurrentOutfit();
+
+      // Greet friend
+      if (AudioEngine.speak) {
+        AudioEngine.speak(friend.voice);
+      }
+    }
+
+    function tapCharacterDoll() {
+      livingDoll.classList.remove('wiggle');
+      void livingDoll.offsetWidth;
+      livingDoll.classList.add('wiggle');
+      playSparkleSound();
+      const friend = friendList[currentFriendIdx];
+      const equippedCount = Object.values(currentOutfits).filter(Boolean).length;
+      if (equippedCount >= 1) {
+        triggerFashionRunwayShow();
+      } else {
+        if (AudioEngine.speak) {
+          AudioEngine.speak(`Hello! Dress me up!`);
+        }
+      }
+    }
+
+    // -------------------------------------------------------------
+    // RUNWAY SHOW & FASHION CELEBRATION
+    // -------------------------------------------------------------
+    function triggerFashionRunwayShow() {
+      const equippedCount = Object.values(currentOutfits).filter(Boolean).length;
+      const friend = friendList[currentFriendIdx];
+
+      if (equippedCount < 1) {
+        if (AudioEngine.speak) {
+          AudioEngine.speak(`Pick a hat or dress for ${friend.name} first!`);
+        }
+        return;
+      }
+
+      // Runway Dance Animation
+      livingDoll.classList.add('runway-dance');
+      if (AudioEngine.playFanfare) {
+        AudioEngine.playFanfare();
+      } else if (AudioEngine.playWin) {
+        AudioEngine.playWin();
+      }
+
+      // Announce outfit items in English Motherese
+      const itemsNamed = Object.values(currentOutfits).filter(Boolean).map(i => i.name).join(' and ');
+      if (AudioEngine.speak) {
+        AudioEngine.speak(`Wonderful! Look at ${friend.name} in the ${itemsNamed}! So stylish!`);
+      }
+
+      // Launch Confetti
+      launchCelebrationConfetti();
+
+      // Increment progress star
+      completedFriendsCount = Math.min(TARGET_STARS, completedFriendsCount + 1);
+      updateStarsHud();
+
+      // Record Saturday Mission Action (Hoàn thành nhiệm vụ Ngày 6 & Mở khóa Sticker)
+      if (window.MissionEngine && MissionEngine.recordAction) {
+        MissionEngine.recordAction();
+      }
+
+      // Chỉ hiển thị modal nội bộ nếu MissionEngine không kích hoạt Modal chiến thắng (tránh đè nhau)
+      setTimeout(() => {
+        if (!window.MissionEngine || !MissionEngine.isCompleted) {
+          document.getElementById('win-title').innerText = `✨ ${friend.name} So Stylish!`;
+          document.getElementById('win-subtitle').innerText = `Bé đã phối đồ thật đẹp cho bạn ${friend.vnName}! Bạn nhỏ đang biểu diễn thời trang trên sàn catwalk!`;
+          modalCelebration.style.display = 'flex';
+        }
+      }, 1400);
+    }
+
+    function goToNextFriend() {
+      modalCelebration.style.display = 'none';
+      livingDoll.classList.remove('runway-dance');
+      const nextIdx = (currentFriendIdx + 1) % friendList.length;
+      selectFriend(nextIdx);
+    }
+
+    function closeCelebrationModal() {
+      modalCelebration.style.display = 'none';
+    }
+
+    function updateStarsHud() {
+      for (let i = 1; i <= TARGET_STARS; i++) {
+        const star = document.getElementById(`f-star-${i}`);
+        if (star) {
+          star.classList.toggle('earned', i <= completedFriendsCount);
+        }
+      }
+    }
+
+    // -------------------------------------------------------------
+    // CONFETTI FIREWORKS
+    // -------------------------------------------------------------
+    function launchCelebrationConfetti() {
+      const canvas = document.getElementById('confetti-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const colors = ['#FF4081', '#FFD54F', '#40C4FF', '#69F0AE', '#FF6E40', '#E040FB'];
+      const particles = [];
+      for (let i = 0; i < 90; i++) {
+        particles.push({
+          x: canvas.width / 2,
+          y: canvas.height * 0.45,
+          vx: (Math.random() - 0.5) * 16,
+          vy: (Math.random() - 0.8) * 16,
+          size: Math.random() * 9 + 5,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rotation: Math.random() * 360,
+          dRotation: (Math.random() - 0.5) * 12,
+          alpha: 1
+        });
+      }
+
+      function render() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let alive = false;
+        particles.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.38;
+          p.rotation += p.dRotation;
+          p.alpha -= 0.012;
+
+          if (p.alpha > 0) {
+            alive = true;
+            ctx.save();
+            ctx.globalAlpha = p.alpha;
+            ctx.translate(p.x, p.y);
+            ctx.rotate((p.rotation * Math.PI) / 180);
+            ctx.fillStyle = p.color;
+            ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+            ctx.restore();
+          }
+        });
+        if (alive) {
+          requestAnimationFrame(render);
+        } else {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+      }
+      render();
+    }
+
+    function renderFriendsSelector() {
+      const bar = document.querySelector('.friends-selector-bar');
+      if (!bar) return;
+      bar.innerHTML = '';
+      friendList.forEach((fr, idx) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'btn-friend-pill' + (idx === currentFriendIdx ? ' active' : '');
+        btn.id = `f-btn-${idx}`;
+        btn.title = fr.name;
+        const iconName = fr.icon || fr.id;
+        btn.innerHTML = `<img src="../assets/icons/${iconName}.png" style="width: 30px; height: 30px; object-fit: contain; pointer-events: none;" alt="${fr.name}" onerror="this.outerHTML='${fr.emoji}'">`;
+        btn.onclick = () => selectFriend(idx);
+        bar.appendChild(btn);
+      });
+    }
+
+    // -------------------------------------------------------------
+    // INITIALIZATION & SATURDAY MISSION SYNC
+    // -------------------------------------------------------------
+    function initDressUpGame() {
+      // Initialize Saturday Mission
+      if (window.MissionEngine && MissionEngine.initGameMission) {
+        MissionEngine.initGameMission('mission_day_6', '.hud');
+      }
+
+      renderFriendsSelector();
+      selectFriend(0);
+      renderWardrobeGrid();
+    }
+
+    if (document.readyState === 'loading') {
+      window.addEventListener('DOMContentLoaded', initDressUpGame);
+    } else {
+      initDressUpGame();
+    }
+  </script>
+</body>
+</html>

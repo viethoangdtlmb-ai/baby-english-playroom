@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+  <title>Stack, Rocket & Crash - Xây Tháp & Xô Đổ (Chuẩn 52 Tuần)</title>
+  
+  <link rel="stylesheet" href="../shared/styles.css">
+  <script src="../shared/vocabulary.js"></script>
+  <script src="../shared/audio.js"></script>
+  <script src="../shared/missions.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      margin: 0;
+      padding: 0;
+    }
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Comic Sans MS', 'Fredoka One', 'Nunito', cursive, sans-serif;
+      background: radial-gradient(circle at 50% 25%, #E1F5FE 0%, #FFF9C4 55%, #C8E6C9 100%);
+      touch-action: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px;
+    }
+
+    /* Floating Clouds & Sky BG */
+    .bg-sky-cloud {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 50px;
+      pointer-events: none;
+      z-index: 1;
+      filter: blur(1px);
+      animation: floatCloudSlow 28s infinite linear;
+    }
+    .cld-1 { width: 150px; height: 50px; top: 10%; left: -180px; animation-duration: 30s; }
+    .cld-2 { width: 190px; height: 60px; top: 20%; left: -220px; animation-duration: 36s; animation-delay: 10s; }
+    @keyframes floatCloudSlow {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(calc(100vw + 350px)); }
+    }
+
+    /* Top HUD */
+    .hud {
+      width: 100%;
+      max-width: 1050px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 30;
+    }
+    .btn-back {
+      background: #FFF;
+      color: #0288D1;
+      border: 3.5px solid #29B6F6;
+      border-radius: 50px;
+      padding: 10px 24px;
+      font-size: 1.2rem;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: 0 4px 14px rgba(2, 136, 209, 0.2);
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+    .btn-back:active { transform: scale(0.94); }
+
+    /* Center Mode Selector Pill (Icon first, no adult text clutter) */
+    .mode-selector {
+      background: white;
+      border: 4px solid #FFA726;
+      border-radius: 40px;
+      padding: 6px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 6px 18px rgba(255, 167, 38, 0.25);
+    }
+    .mode-tab-btn {
+      background: transparent;
+      border: none;
+      border-radius: 30px;
+      padding: 8px 18px;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #795548;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .mode-tab-btn.active {
+      background: linear-gradient(135deg, #FFA726 0%, #FB8C00 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(251, 140, 0, 0.35);
+      transform: scale(1.05);
+    }
+
+    /* Stacking Stage Arena */
+    .stage-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 650px;
+      height: 68%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      z-index: 10;
+      touch-action: none;
+    }
+
+    /* Tower Stacking Column (Grows Upwards) */
+    .tower-column {
+      width: 270px;
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: center;
+      justify-content: flex-start;
+      margin-bottom: 8px;
+      transform-origin: bottom center;
+      transition: transform 0.2s ease-out;
+      cursor: pointer;
+      z-index: 15;
+    }
+
+    /* Jelly Wobble Animations (Càng lên cao càng lắc lư) */
+    .tower-column.wobble-mild {
+      animation: towerWobbleMild 0.8s infinite alternate ease-in-out;
+    }
+    @keyframes towerWobbleMild {
+      0% { transform: rotate(-3deg) translateX(-6px); }
+      100% { transform: rotate(3deg) translateX(6px); }
+    }
+
+    .tower-column.wobble-wild {
+      animation: towerWobbleWild 0.5s infinite alternate ease-in-out;
+    }
+    @keyframes towerWobbleWild {
+      0% { transform: rotate(-7deg) translateX(-14px); }
+      100% { transform: rotate(7deg) translateX(14px); }
+    }
+
+    /* 3D Toy Block Design */
+    .block {
+      width: 250px;
+      height: 72px;
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: white;
+      box-shadow: 0 10px 0 rgba(0,0,0,0.18), 0 14px 28px rgba(0,0,0,0.14);
+      border: 4px solid rgba(255,255,255,0.6);
+      margin-bottom: 8px;
+      position: relative;
+      cursor: pointer;
+      animation: blockDropIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      letter-spacing: 0.5px;
+    }
+    @keyframes blockDropIn {
+      0% { transform: translateY(-420px) scale(0.6); opacity: 0; }
+      70% { transform: translateY(12px) scale(1.08, 0.9); opacity: 1; }
+      85% { transform: translateY(-6px) scale(0.96, 1.04); }
+      100% { transform: translateY(0) scale(1, 1); opacity: 1; }
+    }
+
+    /* Rocket Nose Tip styling for Top Block */
+    .block.rocket-tip {
+      clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+      height: 85px;
+      width: 210px;
+      border-radius: 20px 20px 8px 8px;
+    }
+
+    /* Crash fling animation */
+    .block.crashed {
+      animation: none !important;
+      transition: transform 0.75s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.75s !important;
+      pointer-events: none;
+    }
+
+    /* Rocket Exhaust Flames */
+    .exhaust-flames {
+      position: absolute;
+      bottom: -65px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 4rem;
+      line-height: 1;
+      display: none;
+      filter: drop-shadow(0 0 14px #FF5722);
+      animation: flameFlicker 0.15s infinite alternate;
+      z-index: 5;
+    }
+    @keyframes flameFlicker {
+      0% { transform: translateX(-50%) scale(0.9); }
+      100% { transform: translateX(-50%) scale(1.25); }
+    }
+
+    /* Rocket Blastoff Stage Animation */
+    .tower-column.blastoff-rocket {
+      animation: rocketTakeoff 1.8s cubic-bezier(0.25, 1, 0.5, 1) forwards !important;
+    }
+    @keyframes rocketTakeoff {
+      0% { transform: translateY(0) scale(1); }
+      25% { transform: translateY(25px) scale(0.95); }
+      40% { transform: translateY(-80px) scale(1.1); }
+      100% { transform: translateY(-850px) scale(1.35); opacity: 0; }
+    }
+
+    /* Grassy Wooden Ground Platform */
+    .ground-platform {
+      width: 100%;
+      max-width: 520px;
+      height: 28px;
+      background: linear-gradient(180deg, #81C784 0%, #43A047 100%);
+      border: 4px solid #2E7D32;
+      border-radius: 20px;
+      box-shadow: 0 10px 24px rgba(46, 125, 50, 0.35);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+    .ground-decor {
+      font-size: 1.5rem;
+      position: absolute;
+      top: -20px;
+    }
+
+    /* Bursting Stars FX */
+    .star-pop-fx {
+      position: absolute;
+      font-size: 2.8rem;
+      pointer-events: none;
+      z-index: 100;
+      animation: starBurst 1s forwards ease-out;
+    }
+    @keyframes starBurst {
+      0% { opacity: 1; transform: translate(0, 0) scale(0.3) rotate(0deg); }
+      50% { opacity: 1; transform: translate(var(--tx), var(--ty)) scale(1.3) rotate(180deg); }
+      100% { opacity: 0; transform: translate(var(--tx), calc(var(--ty) + 50px)) scale(0.8) rotate(360deg); }
+    }
+
+    /* Idle Ghost Hint Hand */
+    .ghost-hand-stack {
+      position: absolute;
+      font-size: 4rem;
+      pointer-events: none;
+      z-index: 150;
+      filter: drop-shadow(0 8px 16px rgba(0,0,0,0.3));
+      display: none;
+    }
+    .ghost-hand-stack.tap-hint {
+      animation: ghostTapFloor 1.4s infinite ease-in-out;
+    }
+    @keyframes ghostTapFloor {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(22px) scale(0.9); }
+    }
+    .ghost-hand-stack.crash-hint {
+      animation: ghostSwipeCrash 1.2s infinite ease-in-out;
+    }
+    @keyframes ghostSwipeCrash {
+      0% { transform: translateX(40px) scale(1); }
+      50% { transform: translateX(-40px) scale(1.15) rotate(-15deg); }
+      100% { transform: translateX(40px) scale(1); }
+    }
+
+    /* Bottom Prompt Pill (Friendly Toddler Banner) */
+    .prompt-footer-pill {
+      background: white;
+      border: 3.5px solid #FFA726;
+      border-radius: 36px;
+      padding: 10px 32px;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #E65100;
+      box-shadow: 0 6px 18px rgba(255, 167, 38, 0.22);
+      margin-bottom: 8px;
+      z-index: 20;
+      letter-spacing: 0.3px;
+      text-align: center;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Sky Clouds -->
+  <div class="bg-sky-cloud cld-1"></div>
+  <div class="bg-sky-cloud cld-2"></div>
+
+  <!-- HUD with Back, Mode Tabs & Mission Tracker -->
+  <div class="hud">
+    <a href="../index.html" class="btn-back">⬅ Menu</a>
+
+    <!-- Visual Mode Selector -->
+    <div class="mode-selector">
+      <button type="button" class="mode-tab-btn active" id="tab-numbers" onclick="switchMode('numbers')">
+        <span>🔢 Tháp Số</span>
+      </button>
+      <button type="button" class="mode-tab-btn" id="tab-rocket" onclick="switchMode('rocket')">
+        <span>🚀 Tên Lửa</span>
+      </button>
+    </div>
+
+    <!-- Empty placeholder for Mission Tracker -->
+    <div style="width: 80px;"></div>
+  </div>
+
+  <!-- Stacking Arena (Chạm bất kỳ đâu trên màn hình để đặt khối) -->
+  <div class="stage-wrapper" id="stage-wrapper">
+    <!-- Tower Stacking Column -->
+    <div class="tower-column" id="tower-column">
+      <!-- Blocks will stack from bottom to top -->
+      <div class="exhaust-flames" id="exhaust-flames">🔥💨</div>
+    </div>
+
+    <!-- Ground Platform -->
+    <div class="ground-platform" id="ground-platform">
+      <span class="ground-decor" style="left: 15px;">🌸</span>
+      <span class="ground-decor" style="right: 15px;">🌼</span>
+    </div>
+
+    <!-- Ghost Hint Hand -->
+    <div class="ghost-hand-stack" id="ghost-hand-stack">👆</div>
+  </div>
+
+  <!-- Bottom Guidance Pill -->
+  <div class="prompt-footer-pill" id="prompt-footer-pill">
+    👆 Chạm để xây tháp!
+  </div>
+
+  <script>
+    // -------------------------------------------------------------
+    // STACK, ROCKET & CRASH LOGIC (100% Natural Touch for 3yo)
+    // -------------------------------------------------------------
+    // Single Source of Truth Audio
+    const AudioEngine = window.AudioEngine || window.ToddlerAudio || {};
+
+    let currentMode = 'numbers'; // 'numbers' | 'rocket'
+    let isBusy = false;
+    let roundCompletedCount = 0;
+
+    // 1. Thư viện 5 Chủ đề Tháp Khối Gỗ (Số đếm, Chữ cái, Màu sắc, Bạn thú, Trái cây)
+    const towerThemes = [
+      {
+        name: 'Số Đếm 1 - 5',
+        intro: 'Count the blocks! One, two, three!',
+        blocks: [
+          { num: 'ONE', count: 1, color: '#FF5252', icon: '🍎' },
+          { num: 'TWO', count: 2, color: '#FFA726', icon: '🍌' },
+          { num: 'THREE', count: 3, color: '#FFCA28', icon: '🍯' },
+          { num: 'FOUR', count: 4, color: '#66BB6A', icon: '🥛' },
+          { num: 'FIVE', count: 5, color: '#42A5F5', icon: '🍞' }
+        ]
+      },
+      {
+        name: 'Chữ Cái Vàng A - E',
+        intro: 'Alphabet tower! A, B, C, D, E!',
+        blocks: [
+          { num: 'A - APPLE', count: 'A', color: '#E91E63', icon: '🍎' },
+          { num: 'B - BALL', count: 'B', color: '#9C27B0', icon: '⚽' },
+          { num: 'C - CAT', count: 'C', color: '#3F51B5', icon: '🐱' },
+          { num: 'D - DOG', count: 'D', color: '#00BCD4', icon: '🐶' },
+          { num: 'E - ELEPHANT', count: 'E', color: '#4CAF50', icon: '🐘' }
+        ]
+      },
+      {
+        name: 'Sắc Màu Cầu Vồng',
+        intro: 'Rainbow colors! Red, Blue, Yellow!',
+        blocks: [
+          { num: 'RED', count: '🔴', color: '#FF5252', icon: '🍓' },
+          { num: 'BLUE', count: '🔵', color: '#448AFF', icon: '🐬' },
+          { num: 'YELLOW', count: '🟡', color: '#FFD600', icon: '⭐' },
+          { num: 'GREEN', count: '🟢', color: '#69F0AE', icon: '🐸' },
+          { num: 'PURPLE', count: '🟣', color: '#B388FF', icon: '🍇' }
+        ]
+      },
+      {
+        name: 'Bạn Thú Đáng Yêu',
+        intro: 'Animal friends tower! Cat, Dog, Duck!',
+        blocks: [
+          { num: 'PUPPY', count: '🐶', color: '#FFA726', icon: '🐾' },
+          { num: 'KITTY', count: '🐱', color: '#FF80AB', icon: '💖' },
+          { num: 'DUCKY', count: '🦆', color: '#FFD54F', icon: '🌊' },
+          { num: 'PIGGY', count: '🐷', color: '#F48FB1', icon: '🌸' },
+          { num: 'BEAR', count: '🐻', color: '#8D6E63', icon: '🍯' }
+        ]
+      },
+      {
+        name: 'Trái Cây Tươi Ngon',
+        intro: 'Yummy fruits tower! Apple, Banana!',
+        blocks: [
+          { num: 'APPLE', count: '🍎', color: '#FF5252', icon: '✨' },
+          { num: 'BANANA', count: '🍌', color: '#FFD600', icon: '💛' },
+          { num: 'ORANGE', count: '🍊', color: '#FF9800', icon: '☀️' },
+          { num: 'STRAWBERRY', count: '🍓', color: '#E91E63', icon: '🌸' },
+          { num: 'GRAPES', count: '🍇', color: '#9C27B0', icon: '🍇' }
+        ]
+      }
+    ];
+    let currentThemeIdx = 0;
+
+    // 2. Chế độ Tên Lửa Vũ Trụ 5 Tầng
+    const rocketBlocks = [
+      { name: 'ENGINE', num: '1', color: '#78909C', icon: '⛽' },
+      { name: 'BODY', num: '2', color: '#42A5F5', icon: '🚀' },
+      { name: 'WINDOW', num: '3', color: '#FFCA28', icon: '👨‍🚀' },
+      { name: 'WINGS', num: '4', color: '#26A69A', icon: '🛸' },
+      { name: 'ROCKET NOSE', num: '5', color: '#FF1744', icon: '⭐', isTip: true }
+    ];
+
+    let currentStack = [];
+
+    const towerColumn = document.getElementById('tower-column');
+    const stageWrapper = document.getElementById('stage-wrapper');
+    const promptPill = document.getElementById('prompt-footer-pill');
+    const exhaustFlames = document.getElementById('exhaust-flames');
+    const ghostHand = document.getElementById('ghost-hand-stack');
+
+    function getActivePool() {
+      return (currentMode === 'numbers') ? towerThemes[currentThemeIdx].blocks : rocketBlocks;
+    }
+
+    // -------------------------------------------------------------
+    // CHUYỂN CHẾ ĐỘ THÁP (MODE SWITCHING)
+    // -------------------------------------------------------------
+    function switchMode(newMode) {
+      if (currentMode === newMode || isBusy) return;
+      currentMode = newMode;
+
+      document.getElementById('tab-numbers').classList.toggle('active', currentMode === 'numbers');
+      document.getElementById('tab-rocket').classList.toggle('active', currentMode === 'rocket');
+
+      resetTowerClean();
+
+      if (currentMode === 'numbers') {
+        promptPill.innerText = '👆 Chạm để xây tháp!';
+        AudioEngine.speak('Count the blocks! One, two, three!');
+      } else {
+        promptPill.innerText = '🚀 Chạm để lắp tên lửa!';
+        AudioEngine.speak('Build the Rocket! Tap to build!');
+      }
+      scheduleIdleHint();
+    }
+
+    // -------------------------------------------------------------
+    // THÊM KHỐI MỚI (ADD BLOCK WITH DELIGHTFUL PHYSICS)
+    // -------------------------------------------------------------
+    function addNextBlock() {
+      if (isBusy) return;
+      hideGhostHint();
+      AudioEngine.init();
+
+      const pool = getActivePool();
+
+      // Nếu đã đủ 5 khối: Kích hoạt Xô đổ hoặc Phóng tên lửa
+      if (currentStack.length >= pool.length) {
+        if (currentMode === 'rocket') {
+          launchRocketSequence();
+        } else {
+          crashTowerWithFun();
+        }
+        return;
+      }
+
+      const idx = currentStack.length;
+      const bInfo = pool[idx];
+
+      const blockElem = document.createElement('div');
+      blockElem.className = 'block';
+      if (bInfo.isTip) blockElem.classList.add('rocket-tip');
+      blockElem.style.background = bInfo.color;
+
+      const blockWord = (currentMode === 'numbers') ? (bInfo.num.split(' - ').pop() || bInfo.num) : (bInfo.name || '');
+      const iconHtml = (window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon && blockWord)
+        ? ToddlerVocabulary.renderWordIcon(blockWord.toLowerCase(), 36)
+        : `<span>${bInfo.icon}</span>`;
+
+      if (currentMode === 'numbers') {
+        blockElem.innerHTML = `<span>${bInfo.count}.</span> <span>${bInfo.num}</span> ${iconHtml}`;
+      } else {
+        blockElem.innerHTML = `<span>${bInfo.name}</span> ${iconHtml}`;
+      }
+
+      towerColumn.appendChild(blockElem);
+      currentStack.push(blockElem);
+
+      // Âm thanh gõ gỗ & Phát âm Motherese
+      if (window.ToddlerAudio) {
+        ToddlerAudio.playXylophone(400 + idx * 80);
+        ToddlerAudio.speak(currentMode === 'numbers' ? `${bInfo.num}!` : `${bInfo.name}!`);
+      }
+
+      // Càng cao càng rung rinh (Jelly Wobble Tension)
+      updateTowerWobble();
+
+      // Cập nhật biểu ngữ hướng dẫn
+      if (currentStack.length >= pool.length) {
+        if (currentMode === 'rocket') {
+          promptPill.innerText = '🚀 Tên Lửa Hoàn Thành! Chạm để PHÓNG NGAY!';
+          AudioEngine.speak('Rocket ready! Tap to blast off!');
+        } else {
+          promptPill.innerText = '💥 Chạm xô đổ tháp nào!';
+          AudioEngine.speak('So tall! Tap to crash!');
+        }
+        scheduleIdleHint();
+      } else {
+        promptPill.innerText = `🏗️ Tầng ${currentStack.length}! Chạm xây tiếp nhé!`;
+        scheduleIdleHint();
+      }
+    }
+
+    function updateTowerWobble() {
+      towerColumn.classList.remove('wobble-mild', 'wobble-wild');
+      if (currentStack.length === 3) {
+        towerColumn.classList.add('wobble-mild');
+      } else if (currentStack.length >= 4) {
+        towerColumn.classList.add('wobble-wild');
+      }
+    }
+
+    // -------------------------------------------------------------
+    // XÔ ĐỔ THÁP HÀI HƯỚC (SLAPSTICK EXPLOSIVE CRASH)
+    // -------------------------------------------------------------
+    function crashTowerWithFun() {
+      if (isBusy || currentStack.length === 0) return;
+      isBusy = true;
+      hideGhostHint();
+      towerColumn.classList.remove('wobble-mild', 'wobble-wild');
+
+      // Âm thanh đổ rầm rầm vui nhộn
+      if (window.ToddlerAudio) {
+        ToddlerAudio.playCrash();
+        ToddlerAudio.speak('Crash! Boom! Fall down! Hahaha!');
+      }
+
+      promptPill.innerText = '🎉 Đổ ầm rồi! Hahaha! Chạm để xây tháp mới nhé!';
+
+      // Bắn pháo hoa ngôi sao tung tóe
+      const rect = towerColumn.getBoundingClientRect();
+      spawnStarExplosion(rect.left + rect.width / 2, rect.top + rect.height / 2);
+
+      // Các khối văng tứ tung và xoay vòng bật nảy
+      currentStack.forEach((block, i) => {
+        block.classList.add('crashed');
+        const angle = (Math.random() - 0.5) * 160;
+        const tx = (Math.random() - 0.5) * 380;
+        const ty = 80 + Math.random() * 120;
+
+        block.style.transform = `translate(${tx}px, ${ty}px) rotate(${angle}deg) scale(0.9)`;
+        block.style.opacity = '0';
+      });
+
+      recordRoundWin();
+
+      setTimeout(() => {
+        resetTowerClean(true);
+        isBusy = false;
+        scheduleIdleHint();
+      }, 1400);
+    }
+
+    // -------------------------------------------------------------
+    // PHÓNG TÊN LỬA VŨ TRỤ (ROCKET BLAST-OFF COUNTDOWN)
+    // -------------------------------------------------------------
+    function launchRocketSequence() {
+      if (isBusy || currentStack.length === 0) return;
+      isBusy = true;
+      hideGhostHint();
+      towerColumn.classList.remove('wobble-mild', 'wobble-wild');
+
+      // Phụt lửa và bốc khói
+      exhaustFlames.style.display = 'block';
+
+      promptPill.innerText = '🚀 3... 2... 1... BLAST OFF! 🌟';
+
+      if (window.ToddlerAudio) {
+        ToddlerAudio.playFanfare();
+        ToddlerAudio.speak('Three! Two! One! Blast off! Rocket fly high!');
+      }
+
+      // Rung lắc tên lửa chuẩn bị vút bay
+      towerColumn.style.animation = 'flameFlicker 0.15s infinite alternate';
+
+      setTimeout(() => {
+        towerColumn.style.animation = '';
+        towerColumn.classList.add('blastoff-rocket');
+
+        // Bắn ngôi sao theo đuôi tên lửa
+        const rect = towerColumn.getBoundingClientRect();
+        spawnStarExplosion(rect.left + rect.width / 2, rect.bottom);
+
+        recordRoundWin();
+
+        setTimeout(() => {
+          exhaustFlames.style.display = 'none';
+          resetTowerClean(false);
+          towerColumn.classList.remove('blastoff-rocket');
+          promptPill.innerText = '✨ Tên lửa bay vào vũ trụ rồi! Xếp tháp mới nào!';
+          isBusy = false;
+          scheduleIdleHint();
+        }, 1800);
+      }, 1000);
+    }
+
+    function resetTowerClean(advanceTheme = false) {
+      towerColumn.innerHTML = '';
+      towerColumn.appendChild(exhaustFlames);
+      towerColumn.classList.remove('wobble-mild', 'wobble-wild');
+      currentStack = [];
+
+      if (advanceTheme && currentMode === 'numbers') {
+        currentThemeIdx = (currentThemeIdx + 1) % towerThemes.length;
+        const nextTheme = towerThemes[currentThemeIdx];
+        if (promptPill) {
+          promptPill.innerText = `✨ Tháp mới: ${nextTheme.name}! Chạm để xây nào!`;
+        }
+        setTimeout(() => {
+          if (window.ToddlerAudio) ToddlerAudio.speak(nextTheme.intro);
+        }, 300);
+      } else {
+        if (promptPill) {
+          promptPill.innerText = (currentMode === 'numbers')
+            ? `👆 Chạm xây Tháp: ${towerThemes[currentThemeIdx].name}!`
+            : '🚀 Chạm màn hình để lắp ráp Tên Lửa!';
+        }
+      }
+    }
+
+    // -------------------------------------------------------------
+    // GHI NHẬN TIẾN ĐỘ & MỞ KHÓA STICKER (MISSION ENGINE)
+    // -------------------------------------------------------------
+    function recordRoundWin() {
+      roundCompletedCount++;
+      if (window.MissionEngine && MissionEngine.recordAction) {
+        MissionEngine.recordAction();
+      }
+    }
+
+    // Star explosion effect
+    function spawnStarExplosion(cx, cy) {
+      const items = ['⭐', '✨', '💖', '🍭', '🎉', '🌟'];
+      for (let i = 0; i < 16; i++) {
+        const fx = document.createElement('div');
+        fx.className = 'star-pop-fx';
+        fx.innerText = items[i % items.length];
+        const angle = (i / 16) * Math.PI * 2;
+        const dist = 80 + Math.random() * 90;
+        const tx = Math.cos(angle) * dist;
+        const ty = Math.sin(angle) * dist - 30;
+        fx.style.setProperty('--tx', `${tx}px`);
+        fx.style.setProperty('--ty', `${ty}px`);
+        fx.style.left = cx + 'px';
+        fx.style.top = cy + 'px';
+        document.body.appendChild(fx);
+        setTimeout(() => fx.remove(), 1100);
+      }
+    }
+
+    // -------------------------------------------------------------
+    // IDLE GHOST HINT HAND (Bàn tay chỉ dẫn tự nhiên)
+    // -------------------------------------------------------------
+    let idleTimer = null;
+    function scheduleIdleHint() {
+      hideGhostHint();
+      idleTimer = setTimeout(() => {
+        if (isBusy) return;
+        if (currentStack.length === 0) {
+          // Gợi ý chạm sàn để đặt khối đầu tiên
+          ghostHand.className = 'ghost-hand-stack tap-hint';
+          ghostHand.innerText = '👆';
+          ghostHand.style.left = '48%';
+          ghostHand.style.bottom = '120px';
+          ghostHand.style.display = 'block';
+          AudioEngine.speak('Tap to stack!');
+        } else if (currentStack.length >= 4) {
+          // Gợi ý hích tay xô đổ tháp
+          ghostHand.className = 'ghost-hand-stack crash-hint';
+          ghostHand.innerText = (currentMode === 'rocket') ? '👆🚀' : '👆💥';
+          ghostHand.style.left = '48%';
+          ghostHand.style.bottom = '260px';
+          ghostHand.style.display = 'block';
+          AudioEngine.speak(currentMode === 'rocket' ? 'Tap to blast off!' : 'Tap to crash!');
+        }
+      }, 3500);
+    }
+
+    function hideGhostHint() {
+      if (idleTimer) clearTimeout(idleTimer);
+      ghostHand.style.display = 'none';
+    }
+
+    // -------------------------------------------------------------
+    // NATURAL TOUCH INTERACTION (Chạm màn hình & Chạm tháp)
+    // -------------------------------------------------------------
+    function handleStageTap() {
+      if (isBusy) return;
+      hideGhostHint();
+
+      // Nếu đã đủ 5 khối -> Chạm để Xô đổ hoặc Phóng tên lửa
+      if (currentStack.length >= getActivePool().length) {
+        if (currentMode === 'rocket') {
+          launchRocketSequence();
+        } else {
+          crashTowerWithFun();
+        }
+      } else {
+        // Chưa đủ -> Thêm khối tiếp theo
+        addNextBlock();
+      }
+    }
+
+    // Lắng nghe tương tác chạm / click toàn màn hình
+    let lastTapTime = 0;
+    function onScreenTap(e) {
+      if (isBusy) return;
+      if (e && e.target && e.target.closest && e.target.closest('.hud')) return;
+      const now = Date.now();
+      if (now - lastTapTime < 250) return;
+      lastTapTime = now;
+      handleStageTap();
+    }
+
+    window.addEventListener('click', onScreenTap);
+    window.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'touch' || e.pointerType === 'pen') {
+        onScreenTap(e);
+      }
+    });
+
+    // Cử chỉ vuốt ngang (Swipe to knock over early)
+    let isSwiping = false;
+    let touchStartX = 0;
+    let touchStartY = 0;
+    stageWrapper.addEventListener('touchstart', (e) => {
+      if (e.touches && e.touches[0]) {
+        isSwiping = true;
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+      }
+    }, { passive: true });
+
+    stageWrapper.addEventListener('touchend', (e) => {
+      if (!isSwiping) return;
+      isSwiping = false;
+      if (e.changedTouches && e.changedTouches[0]) {
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        const dy = e.changedTouches[0].clientY - touchStartY;
+        // Vuốt ngang dứt khoát qua tháp để xô đổ sớm
+        if (Math.abs(dx) > 60 && Math.abs(dy) < 80 && currentStack.length >= 2) {
+          if (currentMode === 'rocket' && currentStack.length >= 5) {
+            launchRocketSequence();
+          } else {
+            crashTowerWithFun();
+          }
+        }
+      }
+    }, { passive: true });
+
+    // Expose helpers globally
+    window.handleStageTap = handleStageTap;
+    window.switchMode = switchMode;
+
+    // Tự động nạp sẵn khối khởi đầu để bé thấy nhân vật/khối ngay từ đầu
+    addNextBlock();
+
+    // Khởi động âm thanh khi bắt đầu
+    setTimeout(() => {
+      AudioEngine.speak('Count the blocks! Tap to build!');
+      scheduleIdleHint();
+    }, 600);
+  </script>
+</body>
+</html>

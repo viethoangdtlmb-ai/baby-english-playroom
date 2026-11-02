@@ -1,0 +1,2000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+  <title>🌟 Baby English Playroom - Học Tiếng Anh Cho Bé 3 Tuổi</title>
+  
+  <!-- SHARED STYLES & AUDIO/VOCABULARY LOGIC -->
+  <link rel="stylesheet" href="shared/styles.css">
+  <script src="shared/audio.js"></script>
+  <script src="shared/vocabulary.js"></script>
+  <script src="shared/missions.js"></script>
+  <script src="shared/affiliate_config.js"></script>
+  <script src="shared/profile.js"></script>
+  <script src="shared/certificate_engine.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      margin: 0;
+      padding: 0;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body, html {
+      width: 100%;
+      min-height: 100%;
+      font-family: var(--font-toddler, 'Fredoka', 'Nunito', cursive, sans-serif);
+      background: var(--toddler-canvas, #FFFDF7);
+      color: var(--toddler-choco, #3E2723);
+      touch-action: pan-y;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: max(16px, env(safe-area-inset-top)) 16px max(96px, env(safe-area-inset-bottom));
+    }
+
+    /* Top Utility Bar (Sound & Parent Gate) */
+    .top-bar {
+      width: 100%;
+      max-width: 1040px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding: 0 4px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .top-bar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .btn-top-util {
+      background: var(--toddler-surface, #FFFFFF);
+      border: 2.5px solid var(--toddler-border-soft, #FFE082);
+      border-radius: var(--radius-xl, 36px);
+      padding: 8px 18px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--toddler-choco, #3E2723);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      box-shadow: var(--shadow-soft, 0 8px 20px rgba(62,39,35,0.06));
+      transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .btn-top-util:active {
+      transform: scale(0.92);
+    }
+    .btn-parent-gate {
+      border-color: var(--toddler-mint, #26A69A);
+      color: var(--toddler-mint-dark, #00796B);
+      background: #E0F2F1;
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .badge-love {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #FCE4EC;
+      color: var(--toddler-berry-dark, #D81B60);
+      font-weight: 700;
+      font-size: 0.92rem;
+      padding: 6px 18px;
+      border-radius: 20px;
+      margin-bottom: 8px;
+      box-shadow: 0 2px 8px rgba(216, 27, 96, 0.12);
+    }
+    h1 {
+      font-size: 2.3rem;
+      font-weight: 700;
+      color: var(--toddler-berry-dark, #D81B60);
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--toddler-choco-muted, #6D4C41);
+      font-weight: 600;
+    }
+
+    /* 1. HERO FOCUS CARD (Tâm điểm chú ý duy nhất của bé) */
+    .hero-focus-container {
+      width: 100%;
+      max-width: 1040px;
+      margin-bottom: 24px;
+    }
+    .hero-focus-card {
+      background: linear-gradient(135deg, #FFFFFF 0%, #FFFDF5 100%);
+      border: 4.5px solid var(--toddler-sunshine, #FFA726);
+      border-radius: var(--radius-xl, 36px);
+      padding: 24px 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      box-shadow: var(--shadow-float, 0 14px 32px rgba(62,39,35,0.12));
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-tag {
+      background: var(--toddler-sunshine, #FFA726);
+      color: white;
+      font-size: 0.88rem;
+      font-weight: 700;
+      padding: 5px 18px;
+      border-radius: 18px;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .hero-avatar {
+      font-size: 5.2rem;
+      line-height: 1;
+      margin: 6px 0 10px;
+      filter: drop-shadow(0 8px 16px rgba(255, 167, 38, 0.3));
+      animation: heroBobbing 2.6s infinite ease-in-out;
+    }
+    @keyframes heroBobbing {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-8px) scale(1.06); }
+    }
+    .hero-title-en {
+      font-size: 1.85rem;
+      font-weight: 700;
+      color: var(--toddler-choco, #3E2723);
+      margin-bottom: 4px;
+      letter-spacing: 0.5px;
+    }
+    .hero-title-vn {
+      font-size: 1.1rem;
+      color: var(--toddler-choco-muted, #6D4C41);
+      margin-bottom: 16px;
+    }
+    .hero-stars-row {
+      display: flex;
+      gap: 8px;
+      font-size: 2.2rem;
+      margin-bottom: 18px;
+    }
+    .hero-btn-play {
+      background: linear-gradient(135deg, #FF6B8B 0%, #E91E63 100%);
+      color: white;
+      border: 4px solid #FF80AB;
+      border-radius: 44px;
+      padding: 16px 42px;
+      font-size: 1.35rem;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 10px 28px rgba(233, 30, 99, 0.4);
+      animation: btnPulse 2.2s infinite ease-in-out;
+      transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+      min-height: 68px;
+    }
+    @keyframes btnPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.04); }
+    }
+    .hero-btn-play:active {
+      transform: scale(0.93);
+    }
+
+    /* 2. 7-DAY JOURNEY ROADMAP STRIP */
+    .journey-section {
+      width: 100%;
+      max-width: 1040px;
+      background: var(--toddler-surface, #FFFFFF);
+      border: 3.5px solid var(--toddler-border-soft, #FFE082);
+      border-radius: var(--radius-xl, 36px);
+      padding: 22px 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-soft, 0 8px 20px rgba(62,39,35,0.06));
+    }
+    .journey-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      border-bottom: 2px dashed #FFE082;
+      padding-bottom: 10px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .journey-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--toddler-choco, #3E2723);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .streak-badge {
+      background: #FFF3E0;
+      color: #E65100;
+      border: 2px solid var(--toddler-sunshine, #FFA726);
+      border-radius: 20px;
+      padding: 5px 16px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .journey-strip {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+    }
+    @media (max-width: 768px) {
+      .journey-strip {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+    @media (max-width: 480px) {
+      .journey-strip {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    .journey-island {
+      background: #FFFDF7;
+      border: 3px solid #FFE082;
+      border-radius: var(--radius-lg, 28px);
+      padding: 12px 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      text-decoration: none;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s;
+      min-height: 128px;
+      justify-content: center;
+    }
+    .journey-island.active {
+      background: #FFF8E1;
+      border: 4px solid var(--toddler-sunshine, #FFA726);
+      box-shadow: 0 8px 20px rgba(255, 167, 38, 0.35);
+      transform: scale(1.05);
+    }
+    .journey-island.completed {
+      background: #E8F5E9;
+      border-color: #81C784;
+    }
+    .journey-island.catch-up {
+      background: #FFF3E0;
+      border: 3px dashed #FF9800;
+      box-shadow: 0 6px 16px rgba(255, 152, 0, 0.25);
+    }
+    .journey-island.catch-up:hover,
+    .journey-island.catch-up:active {
+      transform: translateY(-4px) scale(1.03);
+    }
+    .journey-island.locked {
+      background: #ECEFF1;
+      border-color: #CFD8DC;
+      opacity: 0.62;
+      cursor: not-allowed;
+    }
+    .island-day {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--toddler-choco-muted, #6D4C41);
+      margin-bottom: 4px;
+    }
+    .journey-island.active .island-day { color: #E65100; }
+    .journey-island.completed .island-day { color: #2E7D32; }
+    .journey-island.catch-up .island-day { color: #E65100; font-weight: 800; }
+    .journey-island.locked .island-day { color: #90A4AE; }
+    .island-icon {
+      font-size: 2.8rem;
+      margin: 2px 0;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.08));
+    }
+    .island-status {
+      font-size: 0.76rem;
+      font-weight: 700;
+      margin-top: 6px;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+    .journey-island.completed .island-status {
+      background: #4CAF50;
+      color: white;
+    }
+    .journey-island.active .island-status {
+      background: #FF5722;
+      color: white;
+    }
+    .journey-island.catch-up .island-status {
+      background: #FF9800;
+      color: white;
+      font-weight: 800;
+      animation: pulse-catchup 2s infinite ease-in-out;
+    }
+    @keyframes pulse-catchup {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.06); }
+    }
+    .journey-island.locked .island-status {
+      background: #B0BEC5;
+      color: white;
+    }
+
+    /* 3. STICKER ALBUM */
+    .sticker-section {
+      width: 100%;
+      max-width: 1040px;
+      background: var(--toddler-surface, #FFFFFF);
+      border: 3.5px solid var(--toddler-border-mint, #80CBC4);
+      border-radius: var(--radius-xl, 36px);
+      padding: 20px 24px;
+      margin-bottom: 28px;
+      box-shadow: var(--shadow-soft, 0 8px 20px rgba(62,39,35,0.06));
+    }
+    .sticker-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 14px;
+      border-bottom: 2px dashed #B2DFDB;
+      padding-bottom: 8px;
+    }
+    .sticker-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--toddler-mint-dark, #00796B);
+    }
+    .sticker-sub {
+      font-size: 0.9rem;
+      color: #607D8B;
+    }
+    .stickers-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 768px) {
+      .stickers-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+    .sticker-slot {
+      background: #E0F2F1;
+      border: 3px dashed #80CBC4;
+      border-radius: var(--radius-lg, 28px);
+      padding: 12px 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      min-height: 110px;
+      justify-content: center;
+    }
+    .sticker-slot.unlocked {
+      background: linear-gradient(180deg, #FFFFFF 0%, #FFFDE7 100%);
+      border: 3.5px solid var(--toddler-sunshine-gold, #FFC107);
+      box-shadow: 0 6px 16px rgba(255, 193, 7, 0.35);
+      cursor: pointer;
+    }
+    .sticker-slot.unlocked:active {
+      transform: scale(1.12) rotate(6deg);
+    }
+    .slot-icon {
+      font-size: 3rem;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+    }
+    .slot-name {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #00796B;
+      margin-top: 4px;
+      text-align: center;
+    }
+
+    /* 4. WEEKEND CHALLENGE BOX */
+    .weekend-challenge-box {
+      width: 100%;
+      max-width: 1040px;
+      margin-bottom: 28px;
+    }
+    .weekend-unlocked-card {
+      background: linear-gradient(135deg, #FFF8E1 0%, #FFE082 100%);
+      border: 4px solid var(--toddler-sunshine, #FFA726);
+      border-radius: var(--radius-xl, 36px);
+      padding: 22px 24px;
+      text-align: center;
+      box-shadow: var(--shadow-float);
+    }
+    .btn-start-weekend-test {
+      background: linear-gradient(135deg, #FF4081 0%, #F50057 100%);
+      color: white;
+      border: 3px solid #FF80AB;
+      border-radius: 35px;
+      padding: 14px 34px;
+      font-size: 1.25rem;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 8px 24px rgba(245, 0, 87, 0.35);
+      margin-top: 10px;
+      transition: transform 0.1s;
+    }
+    .btn-start-weekend-test:active { transform: scale(0.94); }
+
+    /* Quick Hub Jump Bar (Sticky Top Bar with Blur Glassmorphism) */
+    .quick-nav-bar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      width: 100%;
+      max-width: 1040px;
+      justify-content: center;
+      flex-wrap: wrap;
+      position: sticky;
+      top: 8px;
+      z-index: 700;
+      padding: 8px 14px;
+      background: rgba(255, 253, 247, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 40px;
+      box-shadow: 0 4px 18px rgba(62, 39, 35, 0.08);
+      border: 1.5px solid rgba(255, 224, 130, 0.5);
+    }
+    .quick-nav-pill {
+      background: var(--toddler-surface, #FFFFFF);
+      border: 3px solid var(--toddler-border-soft, #FFE082);
+      border-radius: 30px;
+      padding: 10px 24px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--toddler-choco, #3E2723);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: var(--shadow-soft, 0 6px 16px rgba(62,39,35,0.06));
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .quick-nav-pill.active {
+      background: linear-gradient(135deg, #FF6B8B 0%, #E91E63 100%);
+      color: white;
+      border-color: #FF80AB;
+      box-shadow: 0 8px 24px rgba(233, 30, 99, 0.4);
+      transform: scale(1.05);
+    }
+    .quick-nav-pill:active { transform: scale(0.94); }
+
+    /* 6. FLOATING BOTTOM ERGONOMIC DOCK BAR (Cố định đáy màn hình) */
+    .floating-bottom-dock {
+      position: fixed;
+      bottom: max(16px, env(safe-area-inset-bottom));
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 900;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 3.5px solid #FFE082;
+      border-radius: 44px;
+      padding: 6px 12px;
+      box-shadow: 0 10px 30px rgba(62, 39, 35, 0.18), 0 2px 6px rgba(0,0,0,0.06);
+      max-width: 95vw;
+      box-sizing: border-box;
+      user-select: none;
+      animation: dockFloatIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes dockFloatIn {
+      from { transform: translateX(-50%) translateY(40px); opacity: 0; }
+      to { transform: translateX(-50%) translateY(0); opacity: 1; }
+    }
+    .dock-btn {
+      background: transparent;
+      border: none;
+      border-radius: 30px;
+      padding: 7px 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-toddler, cursive);
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: var(--toddler-choco, #3E2723);
+      cursor: pointer;
+      transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+      white-space: nowrap;
+    }
+    .dock-btn:active {
+      transform: scale(0.92);
+    }
+    .dock-btn.active {
+      background: linear-gradient(135deg, #FF6B8B 0%, #E91E63 100%);
+      color: white;
+      box-shadow: 0 4px 14px rgba(233, 30, 99, 0.35);
+      transform: scale(1.04);
+    }
+    .dock-btn .dock-icon {
+      font-size: 1.25rem;
+      line-height: 1;
+    }
+    .dock-divider {
+      width: 1.5px;
+      height: 22px;
+      background: #FFE082;
+      margin: 0 2px;
+    }
+
+    /* 5. FREE PLAYROOM GRID (Anti-Slop: Visual First, No text clutter) */
+    .freeplay-section {
+      width: 100%;
+      max-width: 1040px;
+      box-sizing: border-box;
+    }
+    .freeplay-header {
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+      text-align: center;
+      margin: 10px 0 14px;
+    }
+    .freeplay-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--toddler-choco, #3E2723);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .freeplay-sub {
+      font-size: 0.95rem;
+      color: var(--toddler-choco-muted, #6D4C41);
+      margin-top: 4px;
+      font-weight: 600;
+    }
+    .filter-pills-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 14px 0 20px;
+      width: 100%;
+      max-width: 1040px;
+    }
+    .filter-pill {
+      background: #FFFFFF;
+      border: 2.5px solid var(--toddler-border-soft, #FFE082);
+      border-radius: 24px;
+      padding: 8px 18px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--toddler-choco, #3E2723);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .filter-pill.active {
+      background: var(--toddler-sunshine, #FFA726);
+      color: white;
+      border-color: #FF9800;
+      box-shadow: 0 6px 16px rgba(255, 152, 0, 0.35);
+      transform: scale(1.06);
+    }
+    .filter-pill:active { transform: scale(0.92); }
+
+    .game-card.hidden {
+      display: none !important;
+    }
+    .cluster-tag-badge {
+      font-size: 0.76rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 12px;
+      margin-bottom: 6px;
+      letter-spacing: 0.3px;
+    }
+    .tag-action { background: #FFEBEE; color: #D81B60; }
+    .tag-caring { background: #E8F5E9; color: #2E7D32; }
+    .tag-creativity { background: #FFF8E1; color: #E65100; }
+    .tag-focus { background: #E1F5FE; color: #0277BD; }
+    .game-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 18px;
+      width: 100%;
+      max-width: 1040px;
+      margin-bottom: 36px;
+    }
+    .game-card {
+      background: var(--toddler-surface, #FFFFFF);
+      border-radius: var(--radius-xl, 36px);
+      padding: 22px 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      text-decoration: none;
+      box-shadow: var(--shadow-soft, 0 8px 20px rgba(62,39,35,0.06));
+      border: 3.5px solid transparent;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s;
+      cursor: pointer;
+      position: relative;
+    }
+    .game-card:active {
+      transform: scale(0.93);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    /* Soft Thematic Borders (Khử 14 màu cầu vồng chói, gom thành 4 nhóm pastel) */
+    .theme-berry { border-color: #FF80AB; background: linear-gradient(180deg, #FFFFFF 0%, #FFF0F5 100%); }
+    .theme-sunshine { border-color: #FFD54F; background: linear-gradient(180deg, #FFFFFF 0%, #FFFDF0 100%); }
+    .theme-mint { border-color: #80CBC4; background: linear-gradient(180deg, #FFFFFF 0%, #F0FDF4 100%); }
+    .theme-sky { border-color: #81D4FA; background: linear-gradient(180deg, #FFFFFF 0%, #F0F9FF 100%); }
+
+    /* Featured Game Card */
+    .card-featured {
+      grid-column: 1 / -1;
+      border-color: var(--toddler-sunshine, #FFA726);
+      background: linear-gradient(135deg, #FFFFFF 0%, #FFF8E1 100%);
+      border-width: 4px;
+      padding: 24px 20px;
+    }
+
+    /* =============================================================
+       PREMIUM CLAYMORPHIC 3D TOY BADGES (Anti-Slop: Toca Boca & Sago Mini style)
+       Triệt tiêu 100% cảm giác emoji Windows thô cứng, viền đen dày
+       ============================================================= */
+    .toy-badge-disc {
+      width: 104px;
+      height: 104px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 4px 0 14px;
+      position: relative;
+      border: 4.5px solid rgba(255, 255, 255, 0.95);
+      box-shadow: 
+        0 12px 26px rgba(62, 39, 35, 0.14),
+        inset 0 4px 8px rgba(255, 255, 255, 0.85),
+        inset 0 -5px 10px rgba(0, 0, 0, 0.12);
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s;
+      flex-shrink: 0;
+    }
+    .toy-badge-disc::after {
+      content: '';
+      position: absolute;
+      top: 8px;
+      left: 18px;
+      width: 38px;
+      height: 16px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.1) 100%);
+      transform: rotate(-24deg);
+      pointer-events: none;
+    }
+    .game-card:hover .toy-badge-disc,
+    .game-card:active .toy-badge-disc {
+      transform: scale(1.08) rotate(4deg);
+      box-shadow: 
+        0 16px 32px rgba(62, 39, 35, 0.2),
+        inset 0 4px 8px rgba(255, 255, 255, 0.95),
+        inset 0 -5px 10px rgba(0, 0, 0, 0.15);
+    }
+    .card-featured .toy-badge-disc {
+      width: 124px;
+      height: 124px;
+    }
+    .badge-primary-icon {
+      font-size: 3.5rem;
+      line-height: 1;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.18));
+      transform: translateY(-1px);
+      z-index: 2;
+    }
+    .card-featured .badge-primary-icon {
+      font-size: 4.4rem;
+    }
+    .badge-companion-pin {
+      position: absolute;
+      bottom: -3px;
+      right: -3px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      border: 3px solid rgba(255, 255, 255, 0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18), inset 0 2px 4px rgba(255, 255, 255, 0.8);
+      z-index: 3;
+      animation: companionWiggle 3.2s infinite ease-in-out;
+    }
+    @keyframes companionWiggle {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      50% { transform: scale(1.12) rotate(12deg); }
+    }
+
+    /* Candy Claymorphic Gradients */
+    .disc-pink { background: radial-gradient(circle at 35% 30%, #FF80AB 0%, #FF4081 65%, #C51162 100%); }
+    .disc-amber { background: radial-gradient(circle at 35% 30%, #FFE082 0%, #FFA000 65%, #E65100 100%); }
+    .disc-mint { background: radial-gradient(circle at 35% 30%, #B9F6CA 0%, #00E676 60%, #009688 100%); }
+    .disc-sky { background: radial-gradient(circle at 35% 30%, #B3E5FC 0%, #29B6F6 65%, #0288D1 100%); }
+    .disc-purple { background: radial-gradient(circle at 35% 30%, #EA80FC 0%, #AA00FF 65%, #6A1B9A 100%); }
+    .disc-coral { background: radial-gradient(circle at 35% 30%, #FFAB91 0%, #FF5722 65%, #D84315 100%); }
+    .disc-sun { background: radial-gradient(circle at 35% 30%, #FFF59D 0%, #FFD600 65%, #FF8F00 100%); }
+
+    .card-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 4px;
+    }
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--toddler-choco, #3E2723);
+      margin-bottom: 4px;
+    }
+    .card-tag-pill {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--toddler-choco-muted, #6D4C41);
+      background: rgba(0,0,0,0.04);
+      padding: 3px 12px;
+      border-radius: 12px;
+      margin-top: 4px;
+    }
+
+    /* Footer Utility */
+    .footer-bar {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .btn-fullscreen {
+      background: white;
+      border: 2.5px solid var(--toddler-border-soft, #FFE082);
+      border-radius: 30px;
+      padding: 10px 24px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--toddler-choco, #3E2723);
+      cursor: pointer;
+      box-shadow: var(--shadow-soft);
+    }
+
+    /* Modal Parent Gate */
+    .gate-week-selector {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: center;
+      margin: 16px 0;
+    }
+    .gate-btn-nav {
+      background: #FFF3E0;
+      border: 2px solid var(--toddler-sunshine);
+      border-radius: 18px;
+      padding: 6px 16px;
+      font-weight: 700;
+      color: #E65100;
+      cursor: pointer;
+    }
+    .gate-week-label {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--toddler-choco);
+    }
+
+    /* Mobile Responsive Optimizations */
+    @media (max-width: 768px) {
+      .top-bar {
+        justify-content: center;
+        gap: 8px;
+      }
+      .top-bar-right {
+        justify-content: center;
+      }
+      h1 {
+        font-size: 1.85rem;
+      }
+      .subtitle {
+        font-size: 0.98rem;
+      }
+      .hero-focus-card {
+        padding: 18px 16px;
+      }
+      .hero-avatar {
+        font-size: 4.2rem;
+      }
+      .hero-title-en {
+        font-size: 1.5rem;
+      }
+      .hero-btn-play {
+        padding: 14px 28px;
+        font-size: 1.15rem;
+        min-height: 58px;
+      }
+      .journey-section {
+        padding: 16px 12px;
+      }
+      .sticker-section {
+        padding: 16px 12px;
+      }
+    }
+    @media (max-width: 860px) {
+      .game-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 12px;
+      }
+    }
+    @media (max-width: 680px) {
+      body, html {
+        padding: max(10px, env(safe-area-inset-top)) 8px max(36px, env(safe-area-inset-bottom));
+        max-width: 100vw;
+        overflow-x: hidden;
+      }
+      .game-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+      .game-card {
+        padding: 14px 6px;
+      }
+      .toy-badge-disc {
+        width: 78px;
+        height: 78px;
+        margin: 2px 0 8px;
+      }
+      .card-featured .toy-badge-disc {
+        width: 90px;
+        height: 90px;
+      }
+      .badge-primary-icon {
+        font-size: 2.6rem;
+      }
+      .card-featured .badge-primary-icon {
+        font-size: 3.2rem;
+      }
+      .badge-companion-pin {
+        width: 28px;
+        height: 28px;
+        font-size: 0.95rem;
+      }
+      .card-title {
+        font-size: 1.02rem;
+      }
+      .card-tag-pill {
+        font-size: 0.72rem;
+        padding: 2px 8px;
+      }
+      .btn-top-util {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+        gap: 5px;
+      }
+      .quick-nav-pill {
+        padding: 8px 16px;
+        font-size: 0.95rem;
+      }
+      .filter-pill {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+      }
+      .stickers-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+      .floating-bottom-dock {
+        padding: 5px 8px;
+        gap: 4px;
+        bottom: max(10px, env(safe-area-inset-bottom));
+      }
+      .dock-btn {
+        padding: 8px 12px;
+        min-height: 40px;
+        min-width: 40px;
+        justify-content: center;
+        font-size: 0.95rem;
+      }
+      .dock-icon {
+        font-size: 1.35rem;
+      }
+      .dock-btn .dock-text {
+        display: none;
+      }
+      .dock-btn.active .dock-text {
+        display: inline;
+      }
+    }
+    @media (max-width: 380px) {
+      .stickers-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .journey-strip {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+      }
+      .journey-island {
+        padding: 8px 4px;
+        min-height: 110px;
+      }
+      .island-icon {
+        font-size: 2.2rem;
+      }
+    }
+
+    @media (orientation: landscape) and (max-height: 520px) {
+      .top-bar {
+        margin-bottom: 8px;
+      }
+      .hero-focus-card {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 18px;
+        margin-bottom: 14px;
+        text-align: left;
+      }
+      .hero-badge-live {
+        margin-bottom: 4px;
+      }
+      .hero-avatar {
+        font-size: 2.8rem;
+        margin-bottom: 0;
+      }
+      .hero-title-en {
+        font-size: 1.25rem;
+      }
+      .hero-title-vn {
+        font-size: 0.85rem;
+      }
+      .hero-btn-play {
+        padding: 10px 22px;
+        min-height: 46px;
+        font-size: 1rem;
+      }
+      .journey-section {
+        padding: 12px 16px;
+        margin-bottom: 16px;
+      }
+      .journey-strip {
+        grid-template-columns: repeat(7, 1fr);
+        gap: 6px;
+      }
+      .journey-island {
+        padding: 6px 4px;
+        min-height: 85px;
+      }
+      .island-icon {
+        font-size: 1.8rem;
+      }
+      .island-day {
+        font-size: 0.72rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP BAR: SOUND, BABY PROFILE & PARENT GATE -->
+  <div class="top-bar">
+    <div class="bgm-volume-pill" id="bgm-volume-pill" title="Điều chỉnh âm lượng nhạc nền">
+      <button type="button" class="bgm-vol-btn" id="btn-toggle-sound" onclick="toggleMuteAudio()" title="Bật/Tắt nhạc nền">
+        <span id="sound-icon">🎵</span>
+      </button>
+      <input type="range" id="bgm-volume-slider" min="0" max="100" value="45" class="bgm-slider" oninput="changeBgmVolume(this.value)" title="Kéo để chỉnh to/nhỏ">
+      <span class="bgm-vol-text" id="vol-percent">45%</span>
+      <button type="button" class="bgm-track-next-btn" onclick="switchNextTrack()" title="Đổi bài nhạc khác">
+        <span>⏭️</span>
+        <span id="bgm-track-label">March</span>
+      </button>
+    </div>
+
+    <div class="top-bar-right">
+      <div id="baby-profile-widget"></div>
+      <button type="button" class="btn-top-util btn-parent-gate" id="btn-open-parent-gate" onclick="openParentGate()">
+        <span>🔒</span>
+        <span>Dành Cho Mẹ</span>
+      </button>
+    </div>
+  </div>
+
+  <header>
+    <div class="badge-love" id="header-baby-badge">🌸 Bé 3 Tuổi Cùng Mẹ Khám Phá</div>
+    <h1>🌟 Baby English Playroom</h1>
+    <p class="subtitle">Mỗi Ngày 1 Trò Chơi Mới & 1 Sticker Reo Vui!</p>
+  </header>
+
+  <!-- QUICK HUB NAV BAR (Công thái học trượt lướt êm ái giữa Bài học và Khu tự do) -->
+  <div class="quick-nav-bar">
+    <button type="button" class="quick-nav-pill active" id="nav-btn-daily" onclick="switchMainTab('daily', event)">
+      <span>🗺️ Bài Học Hôm Nay</span>
+    </button>
+    <button type="button" class="quick-nav-pill" id="nav-btn-free" onclick="switchMainTab('free', event)">
+      <span>🎡 Khu Vui Chơi Tự Do (15)</span>
+    </button>
+  </div>
+
+  <!-- 1. HERO FOCUS CARD (Tâm điểm số 1 của bé) -->
+  <div class="hero-focus-container" id="hero-focus-container">
+    <!-- Dynamic Hero Focus Card injected by JS -->
+  </div>
+
+  <!-- 2. 7-DAY JOURNEY ROADMAP STRIP -->
+  <div class="journey-section">
+    <div class="journey-header">
+      <div class="journey-title">
+        <span>🗺️</span>
+        <span id="journey-week-label">Hành Trình Khám Phá Tuần 1</span>
+      </div>
+      <div class="streak-badge" id="streak-badge">
+        <span>🔥</span>
+        <span id="streak-text">Ngày 1 Sẵn Sàng!</span>
+      </div>
+    </div>
+
+    <div class="journey-strip" id="roadmap-grid">
+      <!-- Dynamic 7 islands injected by JS -->
+    </div>
+
+    <!-- Weekend Challenge & Mom's Reward Banner -->
+    <div class="weekend-challenge-box" id="weekend-challenge-box">
+      <!-- Dynamic Weekend Test Card injected by JS -->
+    </div>
+  </div>
+
+  <!-- 3. STICKER ALBUM -->
+  <div class="sticker-section">
+    <div class="sticker-header">
+      <h3 class="sticker-title">📖 Sổ Dán Sticker Thần Kỳ Của Bé</h3>
+      <span class="sticker-sub">Chạm vào Sticker mở khóa để nghe bạn reo vui nhé</span>
+    </div>
+    <div class="stickers-grid" id="stickers-grid">
+      <!-- Dynamic Sticker slots injected by JS -->
+    </div>
+  </div>
+
+  <!-- 4. FREE PLAYROOM (Phân nhóm 4 cụm cảm xúc Montessori & Tránh quá tải thị giác) -->
+  <div class="freeplay-section" id="freeplay-section">
+    <div class="freeplay-header">
+      <h2 class="freeplay-title">
+        <span>🎡</span>
+        <span>Khu Vui Chơi Tự Do Của Bé</span>
+      </h2>
+      <p class="freeplay-sub">Chạm vào các chủ đề để chọn trò chơi bé thích nhất nhé</p>
+    </div>
+
+    <!-- Emotion / Thematic Filter Pills Bar -->
+    <div class="filter-pills-bar">
+      <button type="button" class="filter-pill active" onclick="filterPlayroom('all', this)">
+        <span>🎡 Tất Cả (15)</span>
+      </button>
+      <button type="button" class="filter-pill" onclick="filterPlayroom('action', this)">
+        <span>💥 Xả Năng Lượng</span>
+      </button>
+      <button type="button" class="filter-pill" onclick="filterPlayroom('caring', this)">
+        <span>🐾 Yêu Thương</span>
+      </button>
+      <button type="button" class="filter-pill" onclick="filterPlayroom('creativity', this)">
+        <span>🎨 Sáng Tạo</span>
+      </button>
+      <button type="button" class="filter-pill" onclick="filterPlayroom('focus', this)">
+        <span>🧠 Khám Phá</span>
+      </button>
+    </div>
+
+    <div class="game-grid">
+      <!-- Featured Game: Magic Word Mixer -->
+      <a href="12_mix_and_match/index.html" class="game-card card-featured" data-cluster="creativity" onclick="playGameAudio('Magic Word Mixer')">
+        <span class="cluster-tag-badge tag-creativity">🎨 Sáng Tạo Nổi Bật</span>
+        <div class="card-icon">
+          <div class="toy-badge-disc disc-purple">
+            <img src="assets/icons/party_hat.png" alt="Mix and Match" class="badge-primary-icon" style="width: 58px; height: 58px; object-fit: contain; filter: drop-shadow(0 6px 12px rgba(62,39,35,0.16));" onerror="this.outerHTML='<span class=\'badge-primary-icon\'>🎨</span>'">
+            <span class="badge-companion-pin"><img src="assets/icons/star.png" style="width: 22px; height: 22px; object-fit: contain;" alt="⭐"></span>
+          </div>
+        </div>
+        <div class="card-title">⭐ MÁY GHÉP TỪ KỲ DIỆU</div>
+        <div class="card-tag-pill">✨ Pha màu & ngắm bạn nhỏ nhảy múa!</div>
+      </a>
+
+      <!-- CỤM 1: 💥 XẢ NĂNG LƯỢNG (Action & Energy) -->
+      <a href="01_balloon_pop/index.html" class="game-card theme-berry" data-cluster="action" onclick="playGameAudio('Balloon Pop')">
+        <span class="cluster-tag-badge tag-action">💥 Xả Năng Lượng</span>
+        <div class="card-icon">
+          <div class="toy-badge-disc disc-pink">
+            <img src="assets/icons/balloon.png" alt="Balloon Pop" class="badge-primary-icon" style="width: 56px; height: 56px; object-fit: contain; filter: drop-shadow(0 6px 12px rgba(62,39,35,0.16));" onerror="this.outerHTML='<span class=\'badge-primary-icon\'>🎈</span>'">
+            <span class="badge-companion-pin"><img src="assets/icons/star.png" style="width: 20px; height: 20px; object-fit: contain;" alt="⭐"></span>
+          </div>
+        </div>
+        <div class="card-title">Balloon Pop</div>
+        <div class="card-tag-pill">Bắn nổ bóng màu</div>
+      </a>
+
+      <a href="18_bubble_bath/index.html" class="game-card theme-sky" data-cluster="action" onclick="playGameAudio('Bubble Bath')">
+        <span class="cluster-tag-badge tag-action">💥 Xả Năng Lượng</span>
+        <div class="card-icon">
+          <div class="toy-badge-disc disc-sky">
+            <img src="assets/icons/bath.png" alt="Bubble Bath" class="badge-primary-icon" style="width: 58px; height: 58px; object-fit: contain; filter: drop-shadow(0 6px 12px rgba(62,39,35,0.16));" onerror="this.outerHTML='<span class=\'badge-primary-icon\'>🛁</span>'">
+            <span class="badge-companion-pin"><img src="assets/icons/soap.png" style="width: 22px; height: 22px; object-fit: contain;" alt="🧼"></span>
+          </div>
+        </div>
+        <div class="card-title">Bubble Bath Pop</div>
+        <div class="card-tag-pill">Bồn tắm bọt biển</div>
+      </a>
+
+      <a href="05_stack_and_crash/index.html" class="game-card theme-sunshine" data-cluster="action" onclick="playGameAudio('Stack and Crash')">
+        <span class="cluster-tag-badge tag-action">💥 Xả Năng Lượng</span>
+        <div class="card-icon">
+          <div class="toy-badge-disc disc-amber">
+            <img src="assets/icons/rocket.png" alt="Stack and Crash" class="badge-primary-icon" style="width: 58px; height: 58px; object-fit: contain; filter: drop-shadow(0 6px 12px rgba(62,39,35,0.16));" onerror="this.outerHTML='<span class=\'badge-primary-icon\'>🏗️</span>'">
+            <span class="badge-companion-pin"><img src="assets/icons/block.png" style="width: 22px; height: 22px; object-fit: contain;" alt="🧱"></span>
+          </div>
+        </div>
+        <div class="card-title">Stack & Crash</div>
+        <div class="card-tag-pill">Xây và xô đổ tháp</div>
+      </a>
+
+      <a href="10_color_splash/index.html" class="game-card theme-mint" data-cluster="action" onclick="playGameAudio('Color Splash')">
+        <span class="cluster-tag-badge tag-action">💥 Xả Năng Lượng</span>
+        <div class="card-icon">
+          <div class="toy-badge-disc disc-coral">
+            <img src="assets/icons/crayon.png" alt="Color Splash" class="badge-primary-icon" style="width: 58px; height: 58px; object-fit: contain; filter: drop-shadow(0 6px 12px rgba(62,39,35,0.16));" onerror="this.outerHTML='<span class=\'badge-primary-icon\'>🎨</span>'">
+            <span class="badge-companion-pin"><img src="assets/icons/star.png" style="width: 20px; height: 20px; object-fit: contain;" alt="⭐"></span>
+          </div>
+        </div>
+        <div class="card-title">Color Splash</div>
+        <div class="card-tag-pill">Bắn sơn sắc màu</div>
+      </a>
+
+      <!-- CỤM 2: 🐾 YÊU THƯƠNG & CHĂM SÓC (Caring & Animals) -->
+      <a href="02_drag_and_feed/index.html" class="game-card theme-sunshine" data-cluster="caring" onclick="playGameAudio('Feed Friends')">
+        <span class="cluster-tag-badge tag-caring">🐾 Yêu Thương</span>
+        <div class="card-icon">
+          <div class="toy-badge-disc disc-sun">
+            <img src="assets/icons/bear.png" alt="Feed Friends" class="badge-primary-icon" style="width: 58px; height: 58px; object-fit: contain; filter: drop-shadow(0 6px 12px rgba(62,39,35,0.16));" onerror="this.outerHTML='<span class=\'badge-primary-icon\'>🐻</span>'">
+            <span class="badge-companion-pin"><img src="assets/icons/apple.png" style="width: 22px; height: 22px; object-fit: contain;" alt="🍎"></span>
+          </div>
+        </div>
+        <div class="card-title">Feed the Friends</div>
+        <div class="card-tag-pill">Cho bạn ăn no</div>
+      </a>
+
+      <a href="04_rub_to_clean/index.html" class="game-card theme-sky" data-cluster="caring" onclick="playGameAudio('Rub to Clean')">
+        <span class="cluster-tag-badge tag-caring">🐾 Yêu Thương</span>
+        <div class="card-icon">
+          <div class="toy-badge-disc disc-sky">
+            <img src="assets/icons/soap.png" alt="Rub to Clean" class="badge-primary-icon" style="width: 58px; height: 58px; object-fit: contain; filter: drop-shadow(0 6px 12px rgba(62,39,35,0.16));" onerror="this.outerHTML='<span class=\'badge-primary-icon\'>🧼</span>'">
+            <span class="badge-companion-pin"><img src="assets/icons/pig.png" style="width: 22px; height: 22px; object-fit: contain;" alt="🐷"></span>
+          </div>
+        </div>
+        <div class="card-title">Rub to Clean</div>
+        <div class="card-tag-pill">Tắm bạn sạch sẽ</div>
+      </a>
+
+      <a href="03_peek_a_boo/index.html" class="game-card theme-mint" data-cluster="caring" onclick="playGameAudio('Peek a boo')">
+        <span class="cluster-tag-badge tag-caring">🐾 Yêu Thương</span>
+        <div class="card-icon">
+          <div class="toy-badge-disc disc-mint">
+            <img src="assets/icons/box.png" alt="Peek a boo" class="badge-primary-icon" style="width: 58px; height: 58px; object-fit: contain; filter: drop-shadow(0 6px 12px rgba(62,39,35,0.16));" onerror="this.outerHTML='<span class=\'badge-primary-icon\'>🎁</span>'">
+            <span class="badge-companion-pin"><img src="assets/icons/ribbon.png" style="width: 22px; height: 22px; object-fit: contain;" alt="🎀"></span>
+          </div>
+        </div>
+        <div class="card-title">Peek-a-boo Box</div>
+        <div class="card-tag-pill">Mở hộp ú òa</div>
+      </a>
+
+      <a href="17_fruit_harvest/index.html" class="game-card theme-mint" data-cluster="caring" onclick="playGameAudio('Fruit Harvest')">
+        <span class="cluster-tag-badge tag-caring">🐾 Yêu Thương</span>
+        <div class="card-icon">
+          <div class="toy-badge-disc disc-mint">
+            <img src="assets/icons/tree.png" alt="Fruit Harvest" class="badge-primary-icon" style="width: 58px; height: 58px; object-fit: contain; filter: drop-shadow(0 6px 12px rgba(62,39,35,0.16));" onerror="this.outerHTML='<span class=\'badge-primary-icon\'>🌳</span>'">
+            <span class="badge-companion-pin"><img src="assets/icons/apple.png" style="width: 22px; height: 22px; object-fit: contain;" alt="🍎"></span>
+          </div>
+        </div>
+        <div class="card-title">Fruit Harvest</div>
+        <div class="card-tag-pill">Rung cây hái quả</div>
+      </a>
+
+      <!-- CỤM 3: 🎨 SÁNG TẠO & NGHỆ THUẬT (Creativity & Music) -->
+      <a href="06_animal_piano/index.html" class="game-card theme-berry" data-cluster="creativity" onclick="playGameAudio('Animal Piano')">
+        <span class="cluster-tag-badge tag-creativity">🎨 Sáng Tạo</span>
+        <div class="card-icon">
+          <div class="toy-badge-disc disc-pink">
+            <img src="assets/icons/bell.png" alt="Animal Piano" class="badge-primary-icon" style="width: 58px; height: 58px; object-fit: contain; filter: drop-shadow(0 6px 12px rgba(62,39,35,0.16));" onerror="this.outerHTML='<span class=\'badge-primary-icon\'>🎹</span>'">
+            <span class="badge-companion-pin"><img src="assets/icons/cat.png" style="width: 22px; height: 22px; object-fit: contain;" alt="🐱"></span>
+          </div>
+        </div>
+        <div class="card-title">Animal Piano</div>
+        <div class="card-tag-pill">Đàn nhạc 7 nốt</div>
+      </a>
+
+      <a href="16_dress_up/index.html" class="game-card theme-berry" data-cluster="creativity" onclick="playGameAudio('Dress Up Friends')">
+        <span class="cluster-tag-badge tag-creativity">🎨 Sáng Tạo</span>
+        <div class="card-icon">
+          <div class="toy-badge-disc disc-purple">
+            <img src="assets/icons/dress.png" alt="Dress Up Friends" class="badge-primary-icon" style="width: 58px; height: 58px; object-fit: contain; filter: drop-shadow(0 6px 12px rgba(62,39,35,0.16));" onerror="this.outerHTML='<span class=\'badge-primary-icon\'>👗</span>'">
+            <span class="badge-companion-pin"><img src="assets/icons/cap.png" style="width: 22px; height: 22px; object-fit: contain;" alt="🧢"></span>
+          </div>
+        </div>
+        <div class="card-title">Dress Up Friends</div>
+        <div class="card-tag-pill">Mặc đồ thời trang</div>
+      </a>
+
+      <!-- CỤM 4: 🧠 TINH MẮT & KHÁM PHÁ (Focus & Mind) -->
+      <a href="09_body_parts/index.html" class="game-card theme-sunshine" data-cluster="focus" onclick="playGameAudio('Body Parts')">
+        <span class="cluster-tag-badge tag-focus">🧠 Khám Phá</span>
+        <div class="card-icon">
+          <div class="toy-badge-disc disc-amber">
+            <img src="assets/icons/baby.png" alt="Body Parts" class="badge-primary-icon" style="width: 58px; height: 58px; object-fit: contain; filter: drop-shadow(0 6px 12px rgba(62,39,35,0.16));" onerror="this.outerHTML='<span class=\'badge-primary-icon\'>👶</span>'">
+            <span class="badge-companion-pin"><img src="assets/icons/ear.png" style="width: 22px; height: 22px; object-fit: contain;" alt="👂"></span>
+          </div>
+        </div>
+        <div class="card-title">Body Parts</div>
+        <div class="card-tag-pill">Chỉ mắt mũi miệng</div>
+      </a>
+
+      <a href="07_shadow_match/index.html" class="game-card theme-mint" data-cluster="focus" onclick="playGameAudio('Shadow Match')">
+        <span class="cluster-tag-badge tag-focus">🧠 Khám Phá</span>
+        <div class="card-icon">
+          <div class="toy-badge-disc disc-mint">
+            <img src="assets/icons/elephant.png" alt="Shadow Match" class="badge-primary-icon" style="width: 58px; height: 58px; object-fit: contain; filter: drop-shadow(0 6px 12px rgba(62,39,35,0.16));" onerror="this.outerHTML='<span class=\'badge-primary-icon\'>🧩</span>'">
+            <span class="badge-companion-pin"><img src="assets/icons/star.png" style="width: 20px; height: 20px; object-fit: contain;" alt="⭐"></span>
+          </div>
+        </div>
+        <div class="card-title">Shadow Match</div>
+        <div class="card-tag-pill">Khớp bóng đen</div>
+      </a>
+
+      <a href="11_find_the_word/index.html" class="game-card theme-sky" data-cluster="focus" onclick="playGameAudio('Listen and Tap')">
+        <span class="cluster-tag-badge tag-focus">🧠 Khám Phá</span>
+        <div class="card-icon">
+          <div class="toy-badge-disc disc-sky">
+            <img src="assets/icons/star.png" alt="Listen and Tap" class="badge-primary-icon" style="width: 58px; height: 58px; object-fit: contain; filter: drop-shadow(0 6px 12px rgba(62,39,35,0.16));" onerror="this.outerHTML='<span class=\'badge-primary-icon\'>🔍</span>'">
+            <span class="badge-companion-pin"><img src="assets/icons/apple.png" style="width: 22px; height: 22px; object-fit: contain;" alt="🍎"></span>
+          </div>
+        </div>
+        <div class="card-title">Listen & Tap</div>
+        <div class="card-tag-pill">Nghe và tìm hình</div>
+      </a>
+
+      <a href="08_car_tracing/index.html" class="game-card theme-sky" data-cluster="focus" onclick="playGameAudio('Find Way Home')">
+        <span class="cluster-tag-badge tag-focus">🧠 Khám Phá</span>
+        <div class="card-icon">
+          <div class="toy-badge-disc disc-coral">
+            <img src="assets/icons/rabbit_face.png" alt="Find Way Home" class="badge-primary-icon" style="width: 58px; height: 58px; object-fit: contain; filter: drop-shadow(0 6px 12px rgba(62,39,35,0.16));" onerror="this.outerHTML='<span class=\'badge-primary-icon\'>🐰</span>'">
+            <span class="badge-companion-pin"><img src="assets/icons/house.png" style="width: 22px; height: 22px; object-fit: contain;" alt="🏡"></span>
+          </div>
+        </div>
+        <div class="card-title">Find Way Home</div>
+        <div class="card-tag-pill">Tìm đường về nhà</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="footer-bar">
+    <button class="btn-fullscreen" onclick="toggleFullscreen()">📺 Bật Toàn Màn Hình (Fullscreen)</button>
+  </div>
+
+  <!-- PARENT GATE MODAL DIALOG -->
+  <div class="parent-gate-overlay" id="parent-gate-modal">
+    <div class="parent-gate-card">
+      <div class="parent-gate-title">
+        <span>🔒</span>
+        <span>Khu Vực Dành Cho Mẹ</span>
+      </div>
+      <p class="parent-gate-desc">Để bảo vệ bé không bấm nhầm, mẹ hãy giải phép tính đơn giản này nhé:</p>
+      
+      <div class="parent-gate-challenge" id="gate-question">2 + 3 = ?</div>
+      
+      <div class="parent-gate-input-row">
+        <input type="number" id="gate-answer" class="parent-gate-input" placeholder="?" autocomplete="off">
+      </div>
+
+      <div class="parent-gate-actions">
+        <button type="button" class="btn-gate-cancel" onclick="closeParentGate()">Hủy Bỏ</button>
+        <button type="button" class="btn-gate-submit" onclick="verifyParentGate()">Xác Nhận ➜</button>
+      </div>
+
+      <!-- Settings Panel (Show after correct answer) -->
+      <div id="parent-settings-panel" style="display: none; margin-top: 24px; text-align: left; border-top: 2px dashed #B2DFDB; padding-top: 16px;">
+        <h4 style="font-size: 1.15rem; color: #00796B; margin-bottom: 12px; text-align: center;">⚙️ Quản Trị Lộ Trình 52 Tuần</h4>
+        
+        <div class="gate-week-selector">
+          <button type="button" class="gate-btn-nav" onclick="changeWeek(-1)">◀ Tuần Trước</button>
+          <span class="gate-week-label" id="gate-week-display">Tuần 1</span>
+          <button type="button" class="gate-btn-nav" onclick="changeWeek(1)">Tuần Sau ▶</button>
+        </div>
+
+        <p style="font-size: 0.92rem; color: #555; text-align: center; margin-bottom: 16px;" id="gate-week-topic">Chủ đề: Khám Phá Bé Yêu</p>
+
+        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+          <button type="button" style="background: #FFF0F5; border: 2px solid #FF80AB; color: #D81B60; border-radius: 20px; padding: 8px 16px; font-weight: 700; cursor: pointer;" onclick="BabyProfile.openEditModal('')">
+            ✏️ Đổi Tên & Ảnh Bé
+          </button>
+          <button type="button" style="background: #FFF8E1; border: 2px solid #FFE082; color: #E65100; border-radius: 20px; padding: 8px 16px; font-weight: 700; cursor: pointer;" onclick="CertificateEngine.openCertificateModal(MissionEngine.getCurrentWeek())">
+            🏅 Xem & Tải Bằng Khen
+          </button>
+          <button type="button" style="background: #FFEBEE; border: 2px solid #FFCDD2; color: #C62828; border-radius: 20px; padding: 8px 16px; font-weight: 700; cursor: pointer;" onclick="resetWeekProgress()">
+            🔄 Đặt lại tiến độ tuần này
+          </button>
+          <button type="button" style="background: #E0F2F1; border: 2px solid #80CBC4; color: #00695C; border-radius: 20px; padding: 8px 16px; font-weight: 700; cursor: pointer;" onclick="closeParentGate()">
+            ✅ Xong & Quay lại
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let isSoundMuted = false;
+    let gateAnswerExpected = 0;
+
+    function toggleMuteAudio() {
+      if (window.ToddlerAudio) {
+        const isEnabled = ToddlerAudio.toggleBGM();
+        updateAudioButtonUi(isEnabled);
+        if (isEnabled) {
+          ToddlerAudio.playPop();
+        }
+      }
+    }
+
+    function changeBgmVolume(val) {
+      const vol = parseFloat(val) / 100;
+      if (window.ToddlerAudio && ToddlerAudio.setBgmVolume) {
+        ToddlerAudio.setBgmVolume(vol);
+      }
+      const percentEl = document.getElementById('vol-percent');
+      if (percentEl) percentEl.innerText = `${Math.round(val)}%`;
+      const icon = document.getElementById('sound-icon');
+      if (icon) {
+        if (val == 0) icon.innerText = '🔇';
+        else if (val < 35) icon.innerText = '🔈';
+        else if (val < 70) icon.innerText = '🔉';
+        else icon.innerText = '🔊';
+      }
+    }
+
+    function switchNextTrack() {
+      if (window.ToddlerAudio && ToddlerAudio.nextTrack) {
+        const nextId = ToddlerAudio.nextTrack();
+        const label = document.getElementById('bgm-track-label');
+        if (label) {
+          const names = ToddlerAudio.TRACK_NAMES || {};
+          label.innerText = (names[nextId] || nextId).split(' ')[0];
+        }
+      }
+    }
+
+    function updateAudioButtonUi(isEnabled) {
+      const icon = document.getElementById('sound-icon');
+      const slider = document.getElementById('bgm-volume-slider');
+      const percentEl = document.getElementById('vol-percent');
+      const dockIcon = document.getElementById('dock-sound-icon');
+      const dockText = document.getElementById('dock-sound-text');
+
+      if (isEnabled) {
+        const curVol = (window.ToddlerAudio && ToddlerAudio.getBgmVolume) ? Math.round(ToddlerAudio.getBgmVolume() * 100) : 45;
+        if (slider) slider.value = curVol;
+        if (percentEl) percentEl.innerText = `${curVol}%`;
+        if (icon) icon.innerText = curVol > 50 ? '🔊' : '🔉';
+        if (dockIcon) dockIcon.innerText = '🎵';
+        if (dockText) dockText.innerText = 'Bật';
+      } else {
+        if (icon) icon.innerText = '🔇';
+        if (slider) slider.value = 0;
+        if (percentEl) percentEl.innerText = '0%';
+        if (dockIcon) dockIcon.innerText = '🔇';
+        if (dockText) dockText.innerText = 'Tắt';
+      }
+    }
+
+    window.addEventListener('toddler-bgm-change', (e) => {
+      updateAudioButtonUi(e.detail.enabled);
+    });
+
+    // Auto sync on ready
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.ToddlerAudio) {
+        const curVol = ToddlerAudio.getBgmVolume ? Math.round(ToddlerAudio.getBgmVolume() * 100) : 45;
+        const slider = document.getElementById('bgm-volume-slider');
+        const percentEl = document.getElementById('vol-percent');
+        if (slider) slider.value = curVol;
+        if (percentEl) percentEl.innerText = `${curVol}%`;
+        updateAudioButtonUi(ToddlerAudio.bgmEnabled);
+      }
+    });
+
+    function playGameAudio(gameName) {
+      if (window.ToddlerAudio) {
+        ToddlerAudio.playPop();
+        ToddlerAudio.speakWord(gameName);
+      }
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+    // -------------------------------------------------------------
+    // QUICK HUB JUMP BAR (Hiệu ứng trượt lướt êm ái 60fps chuẩn Native App)
+    // -------------------------------------------------------------
+    function smoothScrollToElement(element, offset = 20, duration = 550) {
+      if (!element) return;
+      const start = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+      const targetPos = Math.max(0, element.getBoundingClientRect().top + start - offset);
+      const distance = targetPos - start;
+      if (Math.abs(distance) < 2) return;
+
+      const startTime = performance.now();
+
+      function easeInOutQuad(t) {
+        return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+      }
+
+      function step(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(1, elapsed / duration);
+        const ease = easeInOutQuad(progress);
+        const currentScroll = start + distance * ease;
+
+        window.scrollTo(0, currentScroll);
+
+        if (progress < 1) {
+          requestAnimationFrame(step);
+        }
+      }
+
+      requestAnimationFrame(step);
+    }
+
+    function switchMainTab(tab, e) {
+      if (e && e.preventDefault) e.preventDefault();
+      document.querySelectorAll('.quick-nav-pill').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = (tab === 'daily') ? document.getElementById('nav-btn-daily') : document.getElementById('nav-btn-free');
+      if (activeBtn) activeBtn.classList.add('active');
+
+      if (window.ToddlerAudio) ToddlerAudio.playPop();
+
+      const targetId = (tab === 'daily') ? 'hero-focus-container' : 'freeplay-section';
+      const target = document.getElementById(targetId);
+      if (target) {
+        smoothScrollToElement(target, 24, 550);
+      }
+    }
+
+    function filterPlayroom(clusterName, btnElem) {
+      document.querySelectorAll('.filter-pill').forEach(btn => btn.classList.remove('active'));
+      if (btnElem) btnElem.classList.add('active');
+
+      if (window.ToddlerAudio) ToddlerAudio.playPop();
+
+      document.querySelectorAll('.game-card').forEach(card => {
+        const cluster = card.getAttribute('data-cluster');
+        if (clusterName === 'all' || cluster === clusterName) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    }
+
+    // -------------------------------------------------------------
+    // PARENT GATE LOGIC (Bảo vệ an toàn cho phụ huynh)
+    // -------------------------------------------------------------
+    function openParentGate() {
+      const modal = document.getElementById('parent-gate-modal');
+      const n1 = Math.floor(Math.random() * 4) + 1;
+      const n2 = Math.floor(Math.random() * 4) + 1;
+      gateAnswerExpected = n1 + n2;
+      document.getElementById('gate-question').innerText = `${n1} + ${n2} = ?`;
+      document.getElementById('gate-answer').value = '';
+      document.getElementById('gate-answer').style.display = 'block';
+      document.querySelector('.parent-gate-actions').style.display = 'flex';
+      document.getElementById('parent-settings-panel').style.display = 'none';
+      modal.style.display = 'flex';
+      setTimeout(() => document.getElementById('gate-answer').focus(), 100);
+    }
+
+    function closeParentGate() {
+      document.getElementById('parent-gate-modal').style.display = 'none';
+    }
+
+    function verifyParentGate() {
+      const val = parseInt(document.getElementById('gate-answer').value, 10);
+      if (val === gateAnswerExpected) {
+        if (window.ToddlerAudio) ToddlerAudio.playChime();
+        document.getElementById('gate-question').innerText = '✅ Xác nhận chính xác!';
+        document.getElementById('gate-answer').style.display = 'none';
+        document.querySelector('.parent-gate-actions').style.display = 'none';
+        document.getElementById('parent-settings-panel').style.display = 'block';
+        updateGateWeekInfo();
+      } else {
+        if (window.ToddlerAudio) ToddlerAudio.playThud();
+        alert('Phép tính chưa đúng, mẹ vui lòng nhập lại nhé!');
+        openParentGate();
+      }
+    }
+
+    function updateGateWeekInfo() {
+      const cur = MissionEngine.getCurrentWeek ? MissionEngine.getCurrentWeek() : 1;
+      document.getElementById('gate-week-display').innerText = `Tuần ${cur}`;
+      const weekData = window.ToddlerVocabulary ? window.ToddlerVocabulary.build80_20Pack(cur) : null;
+      if (weekData) {
+        document.getElementById('gate-week-topic').innerText = `Chủ đề: ${weekData.title} • Nhân vật: ${weekData.feedingChar.vnName}`;
+      }
+    }
+
+    function changeWeek(delta) {
+      const cur = MissionEngine.getCurrentWeek ? MissionEngine.getCurrentWeek() : 1;
+      const target = Math.max(1, Math.min(52, cur + delta));
+      if (target !== cur) {
+        MissionEngine.setWeek(target);
+        updateGateWeekInfo();
+        renderHub();
+      }
+    }
+
+    function resetWeekProgress() {
+      const cur = MissionEngine.getCurrentWeek ? MissionEngine.getCurrentWeek() : 1;
+      if (confirm(`Mẹ có chắc muốn đặt lại tiến độ học của Tuần ${cur} để bé chơi lại từ đầu không?`)) {
+        const prog = MissionEngine.getProgress();
+        prog.completedDays = (prog.completedDays || []).filter(d => typeof d === 'string' && !d.startsWith(`w${cur}_`));
+        prog.currentDay = 1;
+        MissionEngine.saveProgress(prog);
+        renderHub();
+        alert(`Đã đặt lại tiến độ Tuần ${cur}! Bé có thể bắt đầu lại Ngày 1.`);
+        closeParentGate();
+      }
+    }
+
+    // Helper hàm render icon 3D linh hoạt cho huy hiệu & sticker
+    function renderStickerOrWordIcon(itemOrWord, size, fallbackEmoji = '⭐') {
+      if (window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon) {
+        if (typeof itemOrWord === 'string') {
+          return ToddlerVocabulary.renderWordIcon(itemOrWord, size);
+        } else if (itemOrWord && typeof itemOrWord === 'object') {
+          const target = itemOrWord.word || itemOrWord.id || itemOrWord.name;
+          return ToddlerVocabulary.renderWordIcon(target || itemOrWord, size);
+        }
+      }
+      return `<span style="font-size: ${Math.round(size * 0.72)}px; line-height: 1;">${fallbackEmoji}</span>`;
+    }
+
+    // -------------------------------------------------------------
+    // RENDER ROADMAP & HERO FOCUS CARD
+    // -------------------------------------------------------------
+    function renderHub() {
+      const prog = MissionEngine.getProgress();
+      const todayDay = (MissionEngine.getRealDayOfWeek) ? MissionEngine.getRealDayOfWeek() : 1;
+      const completedDays = prog.completedDays || [];
+      const unlockedStickers = prog.stickers || {};
+      const currentWeek = MissionEngine.getCurrentWeek ? MissionEngine.getCurrentWeek() : 1;
+      const currentRoadmap = (MissionEngine.getWeekRoadmap) ? MissionEngine.getWeekRoadmap(currentWeek) : MissionEngine.ROADMAP;
+      const weekData = window.ToddlerVocabulary ? window.ToddlerVocabulary.build80_20Pack(currentWeek) : null;
+
+      function isDayDone(dayNum) {
+        return completedDays.includes(dayNum) || completedDays.includes(`w${currentWeek}_d${dayNum}`);
+      }
+
+      function safeMissionUrl(m, week) {
+        if (!m || !m.gameUrl) return '#';
+        if (window.MissionEngine && MissionEngine.getMissionUrl) {
+          return MissionEngine.getMissionUrl(m, week);
+        }
+        const [base] = m.gameUrl.split('?');
+        return `${base}?mission=${m.id}&week=${week}&day=${m.day}`;
+      }
+
+      // 1. Update Labels
+      const journeyLabel = document.getElementById('journey-week-label');
+      if (journeyLabel && weekData) {
+        journeyLabel.innerText = `🗺️ Lộ Trình: ${weekData.title}`;
+      }
+
+      const streakText = document.getElementById('streak-text');
+      const studyDays = [1, 2, 3, 4, 5, 6];
+      const weekCompletedCount = studyDays.filter(d => isDayDone(d)).length;
+      if (weekCompletedCount === 0) {
+        streakText.innerText = `Tuần ${currentWeek}: Ngày 1 sẵn sàng!`;
+      } else if (weekCompletedCount === 6) {
+        streakText.innerText = `Tuần ${currentWeek}: Bé đã hoàn thành trọn vẹn 6/6 Ngày! 🎉`;
+      } else {
+        streakText.innerText = `Bé đã hoàn thành ${weekCompletedCount}/6 Ngày Tuần ${currentWeek}! 🔥`;
+      }
+
+      // 2. Render Hero Focus Card (Tâm điểm số 1 của bé)
+      const heroContainer = document.getElementById('hero-focus-container');
+      const todayMission = currentRoadmap.find(m => m.day === todayDay) || currentRoadmap[0];
+      const isTodayDone = isDayDone(todayMission.day);
+      const missedPast = currentRoadmap.filter(m => m.day < todayDay && m.day <= 6 && !isDayDone(m.day));
+
+      let heroHtml = '';
+      if (!isTodayDone && todayDay <= 6) {
+        // Chưa hoàn thành hôm nay (Thứ 2 - Thứ 7) -> Focus vào hôm nay
+        heroHtml = `
+          <div class="hero-focus-card">
+            <div class="hero-tag">🌟 NHIỆM VỤ HÔM NAY • ${todayMission.dayName.toUpperCase()} (${todayMission.dayVn || ''})</div>
+            <div class="hero-avatar" style="display: flex; justify-content: center; margin: 6px 0 12px;">
+              <div class="toy-badge-disc disc-sun" style="width: 124px; height: 124px; display: flex; align-items: center; justify-content: center;">
+                ${renderStickerOrWordIcon(todayMission.sticker.word || todayMission.sticker, 84, todayMission.sticker.icon.replace('✨', ''))}
+                <span class="badge-companion-pin" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;">
+                  <img src="assets/icons/star.png" style="width: 24px; height: 24px; object-fit: contain;" alt="⭐">
+                </span>
+              </div>
+            </div>
+            <div class="hero-title-en">${todayMission.englishTitle ? todayMission.englishTitle.toUpperCase() : todayMission.title}</div>
+            <div class="hero-title-vn">${todayMission.title}</div>
+            
+            <div class="hero-stars-row">
+              <span style="color: #BDBDBD; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.1));">⭐</span>
+              <span style="color: #BDBDBD; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.1));">⭐</span>
+              <span style="color: #BDBDBD; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.1));">⭐</span>
+            </div>
+
+            <a href="${safeMissionUrl(todayMission, currentWeek)}" class="hero-btn-play" onclick="ToddlerAudio.playFanfare(); ToddlerAudio.speakWord('${todayMission.voiceIntro}');">
+              <span>👉</span>
+              <span>CHƠI NGAY NÈ! ➜</span>
+            </a>
+          </div>
+        `;
+      } else if (missedPast.length > 0) {
+        // Có ngày quá khứ bị lỡ -> Gợi ý học bù để gom đủ 6 sticker
+        const catchUpTarget = missedPast[0];
+        heroHtml = `
+          <div class="hero-focus-card" style="border-color: #FF9800; background: linear-gradient(180deg, #FFFFFF 0%, #FFF3E0 100%);">
+            <div class="hero-tag" style="background: #FF9800;">⚡ HỌC BÙ DÁN STICKER • ${catchUpTarget.dayName.toUpperCase()} (${catchUpTarget.dayVn || ''})</div>
+            <div class="hero-avatar" style="display: flex; justify-content: center; margin: 6px 0 12px;">
+              <div class="toy-badge-disc disc-sky" style="width: 124px; height: 124px; border-color: #FF9800; display: flex; align-items: center; justify-content: center;">
+                ${renderStickerOrWordIcon(catchUpTarget.sticker.word || catchUpTarget.sticker, 84, catchUpTarget.sticker.icon.replace('✨', ''))}
+                <span class="badge-companion-pin" style="width: 44px; height: 44px; background: #FF9800; display: flex; align-items: center; justify-content: center;">
+                  <img src="assets/icons/star.png" style="width: 24px; height: 24px; object-fit: contain;" alt="⭐">
+                </span>
+              </div>
+            </div>
+            <div class="hero-title-en">${catchUpTarget.englishTitle ? catchUpTarget.englishTitle.toUpperCase() : catchUpTarget.title}</div>
+            <div class="hero-title-vn">Cùng học bù ngày ${catchUpTarget.dayVn} để nhận thêm Sticker và mở Quà Của Mẹ nhé!</div>
+            
+            <a href="${safeMissionUrl(catchUpTarget, currentWeek)}" class="hero-btn-play" style="background: linear-gradient(135deg, #FF9800, #F57C00);" onclick="ToddlerAudio.playFanfare(); ToddlerAudio.speakWord('${catchUpTarget.voiceIntro}');">
+              <span>⚡</span>
+              <span>HỌC BÙ DÁN STICKER ➜</span>
+            </a>
+          </div>
+        `;
+      } else {
+        // Đã hoàn thành bài Thứ Bảy hoặc Chủ Nhật nghỉ ngơi
+        const isSun = (todayDay === 7);
+        heroHtml = `
+          <div class="hero-focus-card" style="border-color: #4CAF50; background: linear-gradient(180deg, #FFFFFF 0%, #E8F5E9 100%);">
+            <div class="hero-tag" style="background: #4CAF50;">${isSun ? '🎈 HÔM NAY CHỦ NHẬT • BÉ NGHỈ NGƠI THẢ GA!' : '🎉 BÉ ĐÃ DÁN ĐỦ STICKER ĐẾN HÔM NAY!'}</div>
+            <div class="hero-avatar" style="display: flex; justify-content: center; margin: 6px 0 12px;">
+              <div class="toy-badge-disc disc-mint" style="width: 124px; height: 124px; display: flex; align-items: center; justify-content: center;">
+                ${renderStickerOrWordIcon(isSun ? 'balloon' : 'crown', 84, isSun ? '🎈' : '👑')}
+                <span class="badge-companion-pin" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;">
+                  <img src="assets/icons/star.png" style="width: 24px; height: 24px; object-fit: contain;" alt="⭐">
+                </span>
+              </div>
+            </div>
+            <div class="hero-title-en">${isSun ? 'HAPPY SUNDAY REST DAY!' : 'HOORAY! BÉ THẬT LÀ XUẤT SẮC!'}</div>
+            <div class="hero-title-vn">${isSun ? 'Chủ Nhật bé nghỉ ngơi cùng bố mẹ hoặc vào thi mở quà nhé!' : 'Tất cả Sticker đều đã dán ngay ngắn. Bé có thể chơi tự do hoặc ôn lại bài!'}</div>
+            
+            <a href="#freeplay-section" class="hero-btn-play" style="background: linear-gradient(135deg, #66BB6A, #2E7D32);" onclick="ToddlerAudio.playFanfare();">
+              <span>🎮</span>
+              <span>GÓC CHƠI TỰ DO ➜</span>
+            </a>
+          </div>
+        `;
+      }
+      heroContainer.innerHTML = heroHtml;
+
+      // 3. Render 7-Island Journey Strip
+      const roadmapGrid = document.getElementById('roadmap-grid');
+      roadmapGrid.innerHTML = '';
+
+      const weekendTestInfo = (prog.weekendTests && prog.weekendTests[`w${currentWeek}`]);
+
+      currentRoadmap.forEach(m => {
+        const isDone = isDayDone(m.day);
+        const isToday = (m.day === todayDay);
+        const isPast = (m.day < todayDay);
+        const isFuture = (m.day > todayDay);
+
+        let islandClass = 'journey-island';
+        let statusText = 'Khóa';
+        let iconHtml = '<span style="font-size: 1.8rem; line-height: 1;">🔒</span>';
+        let discClass = 'disc-sky';
+        let targetHref = '#';
+
+        if (m.day === 7) {
+          // CHỦ NHẬT: NGÀY NGHỈ & MỞ QUÀ
+          const isWeekFinished = isDayDone(6) || studyDays.every(d => isDayDone(d));
+          const hasPassedWeekendTest = weekendTestInfo && weekendTestInfo.passed;
+
+          if (hasPassedWeekendTest) {
+            islandClass += ' completed';
+            statusText = '👑 Huy Chương';
+            iconHtml = renderStickerOrWordIcon('crown', 40, '👑');
+            targetHref = `13_weekend_test/index.html?week=${currentWeek}`;
+          } else if (isWeekFinished) {
+            islandClass += ' active today';
+            statusText = '🎁 Nhận Quà';
+            iconHtml = renderStickerOrWordIcon('party_hat', 40, '🎁');
+            discClass = 'disc-sun';
+            targetHref = `13_weekend_test/index.html?week=${currentWeek}`;
+          } else {
+            islandClass += ' rest';
+            statusText = '🎈 Nghỉ Ngơi';
+            iconHtml = renderStickerOrWordIcon('balloon', 40, '🎈');
+            discClass = 'disc-sky';
+            targetHref = 'javascript:void(0);';
+          }
+        } else if (isDone) {
+          islandClass += ' completed';
+          statusText = '✅ Đã Dán';
+          iconHtml = renderStickerOrWordIcon(m.sticker.word || m.sticker, 40, m.sticker.icon.replace('✨', ''));
+          discClass = 'disc-mint';
+          targetHref = safeMissionUrl(m, currentWeek);
+        } else if (isToday) {
+          islandClass += ' active today';
+          statusText = '🎯 Hôm Nay';
+          iconHtml = renderStickerOrWordIcon(m.sticker.word || m.sticker, 40, m.sticker.icon.replace('✨', ''));
+          discClass = 'disc-sun';
+          targetHref = safeMissionUrl(m, currentWeek);
+        } else if (isPast) {
+          // Ngày quá khứ chưa học -> Cho phép học bù để dán sticker!
+          islandClass += ' catch-up';
+          statusText = '⚡ Học Bù';
+          iconHtml = renderStickerOrWordIcon(m.sticker.word || m.sticker, 40, m.sticker.icon.replace('✨', ''));
+          discClass = 'disc-sky';
+          targetHref = safeMissionUrl(m, currentWeek);
+        } else {
+          // Ngày tương lai chưa đến -> Khóa hoàn toàn, cấm dán trước!
+          islandClass += ' locked future';
+          statusText = '🔒 Chưa Đến';
+          iconHtml = '<span style="font-size: 1.8rem; line-height: 1;">🔒</span>';
+          discClass = 'disc-sky';
+          targetHref = 'javascript:void(0);';
+        }
+
+        const island = document.createElement('a');
+        island.className = islandClass;
+        island.href = targetHref;
+
+        island.innerHTML = `
+          <div class="island-day">${m.dayName ? m.dayName.toUpperCase() : `D${m.day}`}</div>
+          <div class="toy-badge-disc ${discClass}" style="width: 58px; height: 58px; margin: 4px auto 6px; border-width: 3px; box-shadow: 0 6px 14px rgba(0,0,0,0.12); display: flex; align-items: center; justify-content: center;">
+            ${iconHtml}
+          </div>
+          <div class="island-status">${statusText}</div>
+        `;
+
+        if (m.day === 7 && !isDayDone(6) && (!weekendTestInfo || !weekendTestInfo.passed)) {
+          island.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (window.ToddlerAudio) {
+              ToddlerAudio.playBoing();
+              ToddlerAudio.speakWord('Sunday is family rest day!');
+            }
+          });
+        } else if (isFuture && !isDone) {
+          island.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (window.ToddlerAudio) {
+              ToddlerAudio.playBoing();
+              ToddlerAudio.speakWord(`Please wait for ${m.dayName}!`);
+            }
+          });
+        } else if (isToday || isPast) {
+          island.addEventListener('click', () => {
+            if (window.ToddlerAudio) ToddlerAudio.speakWord(m.voiceIntro);
+          });
+        }
+
+        roadmapGrid.appendChild(island);
+      });
+
+      // 4. Render Sticker Album Grid
+      const stickersGrid = document.getElementById('stickers-grid');
+      stickersGrid.innerHTML = '';
+
+      currentRoadmap.forEach(m => {
+        const stickerInfo = unlockedStickers[m.sticker.id];
+        const isUnlocked = !!stickerInfo;
+        const iconHtml = isUnlocked
+          ? renderStickerOrWordIcon(m.sticker.word || m.sticker, 40, m.sticker.icon.replace('✨', ''))
+          : '<span style="font-size: 1.8rem; line-height: 1;">❓</span>';
+
+        const slot = document.createElement('div');
+        slot.className = 'sticker-slot' + (isUnlocked ? ' unlocked' : ' locked');
+
+        slot.innerHTML = `
+          <div class="toy-badge-disc ${isUnlocked ? 'disc-pink' : 'disc-sky'}" style="width: 58px; height: 58px; margin: 2px auto 6px; border-width: 3px; opacity: ${isUnlocked ? '1' : '0.55'}; box-shadow: ${isUnlocked ? '0 6px 14px rgba(255, 64, 129, 0.25)' : 'none'}; display: flex; align-items: center; justify-content: center;">
+            ${iconHtml}
+          </div>
+          <div class="slot-name">${isUnlocked ? m.sticker.name : (m.dayName || `Ngày ${m.day}`)}</div>
+        `;
+
+        if (isUnlocked) {
+          slot.addEventListener('click', () => {
+            ToddlerAudio.playChime();
+            ToddlerAudio.speakWord(m.sticker.name);
+          });
+        }
+
+        stickersGrid.appendChild(slot);
+      });
+
+      // 5. Render Weekend Challenge (Mở khi hoàn thành bài Thứ Bảy hoặc Chủ Nhật)
+      const weekendBox = document.getElementById('weekend-challenge-box');
+      if (weekendBox) {
+        const isDay6Done = isDayDone(6);
+        const isWeekDone = studyDays.every(d => isDayDone(d));
+        const isSunday = (todayDay === 7);
+        const isEligibleForTest = isDay6Done || isWeekDone || isSunday;
+
+        if (isEligibleForTest && weekendTestInfo && weekendTestInfo.passed) {
+          weekendBox.innerHTML = `
+            <div class="weekend-unlocked-card" style="background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%); border-color: #4CAF50;">
+              <h3 style="color: #1B5E20; font-size: 1.35rem; margin-bottom: 6px;">🎉 Bé Đã Đạt Huy Chương Tuần ${currentWeek}!</h3>
+              <p style="color: #2E7D32; font-size: 0.95rem; margin-bottom: 14px;">Mẹ hãy cùng bé mở xem lại quà hoặc tải Bằng Khen khoe Ông Bà nhé!</p>
+              <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                <button type="button" class="btn-cert-share" onclick="CertificateEngine.openCertificateModal(${currentWeek})" style="max-width: 320px;">
+                  <span>📸</span>
+                  <span>Khoe Bằng Khen Với Ông Bà ➜</span>
+                </button>
+                <a href="13_weekend_test/index.html?week=${currentWeek}&viewReward=true" class="btn-start-weekend-test" style="background: linear-gradient(135deg, #4CAF50, #2E7D32); border-color: #81C784;">
+                  <span>🎁</span>
+                  <span>Mở Lại "Phần Thưởng Của Mẹ" ➜</span>
+                </a>
+              </div>
+            </div>
+          `;
+        } else if (isEligibleForTest) {
+          weekendBox.innerHTML = `
+            <div class="weekend-unlocked-card">
+              <h3 style="color: #E65100; font-size: 1.35rem; margin-bottom: 6px;">🏆 Bài Thi Cuối Tuần: Mở "Phần Thưởng Của Mẹ"</h3>
+              <p style="color: #5D4037; font-size: 0.95rem; margin-bottom: 12px;">Bé chạm 4 hình siêu dễ để nhận Huy Chương và mở quà của mẹ nhé!</p>
+              <a href="13_weekend_test/index.html?week=${currentWeek}" class="btn-start-weekend-test">
+                <span>🚀</span>
+                <span>BẮT ĐẦU BÀI THI CUỐI TUẦN (Mở Quà) ➜</span>
+              </a>
+            </div>
+          `;
+        } else {
+          weekendBox.innerHTML = `
+            <div class="weekend-locked-card" style="background: #FFFDE7; border: 2.5px dashed #FFD54F; border-radius: 24px; padding: 18px; text-align: center; margin: 20px auto 0; max-width: 580px;">
+              <span style="font-size: 2rem;">🔒</span>
+              <div style="font-size: 1.1rem; font-weight: 800; color: #F57F17; margin-top: 4px;">🏆 Bài Thi Cuối Tuần & Phần Thưởng Của Mẹ</div>
+              <div style="font-size: 0.92rem; color: #795548; margin-top: 4px; line-height: 1.4;">Sẽ mở khóa ngay khi bé hoàn thành <b>bài Thứ Bảy</b> hoặc vào <b>Chủ Nhật</b> nhé!</div>
+            </div>
+          `;
+        }
+      }
+    }
+
+    // Cập nhật UI Hồ Sơ Bé
+    function updateBabyProfileUI() {
+      if (typeof BabyProfile !== 'undefined') {
+        BabyProfile.renderHeaderWidget('baby-profile-widget', '');
+        const badge = document.getElementById('header-baby-badge');
+        if (badge) {
+          badge.innerHTML = `🌸 ${BabyProfile.getDisplayName()} (${BabyProfile.getAge()} Tuổi) Cùng Mẹ Khám Phá`;
+        }
+      }
+    }
+    window.addEventListener('baby-profile-updated', updateBabyProfileUI);
+
+    // Initialize Hub
+    renderHub();
+    updateBabyProfileUI();
+
+    // -------------------------------------------------------------
+    // FLOATING BOTTOM DOCK NAVIGATION & SCROLLSPY
+    // -------------------------------------------------------------
+    function dockNavigate(target) {
+      if (window.ToddlerAudio) ToddlerAudio.playPop();
+
+      if (target === 'daily') {
+        const heroEl = document.getElementById('hero-focus-container') || document.body;
+        smoothScrollToElement(heroEl, 24, 550);
+        switchMainTab('daily');
+      } else if (target === 'free') {
+        const freeSec = document.getElementById('freeplay-section');
+        if (freeSec) {
+          smoothScrollToElement(freeSec, 24, 550);
+        }
+        switchMainTab('free');
+      } else if (target === 'stickers') {
+        const stickerSec = document.querySelector('.sticker-section');
+        if (stickerSec) {
+          smoothScrollToElement(stickerSec, 30, 550);
+        }
+      }
+      updateDockActive(target);
+    }
+
+    function updateDockActive(target) {
+      document.querySelectorAll('.dock-btn').forEach(btn => {
+        if (btn.id !== 'dock-btn-sound') btn.classList.remove('active');
+      });
+      const activeBtn = document.getElementById('dock-btn-' + target);
+      if (activeBtn) activeBtn.classList.add('active');
+    }
+
+    // Auto-update Quick Nav Pill & Bottom Dock on scroll (ScrollSpy)
+    window.addEventListener('scroll', () => {
+      const freeSection = document.getElementById('freeplay-section');
+      const stickerSection = document.querySelector('.sticker-section');
+      const dailyBtn = document.getElementById('nav-btn-daily');
+      const freeBtn = document.getElementById('nav-btn-free');
+
+      const freeTop = freeSection ? freeSection.getBoundingClientRect().top : 9999;
+      const stickerTop = stickerSection ? stickerSection.getBoundingClientRect().top : 9999;
+
+      if (freeTop <= 260) {
+        if (freeBtn) freeBtn.classList.add('active');
+        if (dailyBtn) dailyBtn.classList.remove('active');
+        updateDockActive('free');
+      } else if (stickerTop <= 260 && freeTop > 260) {
+        updateDockActive('stickers');
+      } else {
+        if (dailyBtn) dailyBtn.classList.add('active');
+        if (freeBtn) freeBtn.classList.remove('active');
+        updateDockActive('daily');
+      }
+    }, { passive: true });
+  </script>
+
+  <!-- 6. FLOATING BOTTOM ERGONOMIC DOCK BAR (Cố định đáy màn hình) -->
+  <nav class="floating-bottom-dock" id="floating-bottom-dock" aria-label="Điều hướng nhanh">
+    <button type="button" class="dock-btn active" id="dock-btn-daily" onclick="dockNavigate('daily')">
+      <span class="dock-icon">🗺️</span>
+      <span class="dock-text">Bài Học</span>
+    </button>
+    <button type="button" class="dock-btn" id="dock-btn-free" onclick="dockNavigate('free')">
+      <span class="dock-icon">🎡</span>
+      <span class="dock-text">15 Game</span>
+    </button>
+    <button type="button" class="dock-btn" id="dock-btn-stickers" onclick="dockNavigate('stickers')">
+      <span class="dock-icon">📖</span>
+      <span class="dock-text">Sticker</span>
+    </button>
+    <div class="dock-divider"></div>
+    <button type="button" class="dock-btn" id="dock-btn-sound" onclick="toggleMuteAudio()" title="Bật/Tắt nhạc nền">
+      <span class="dock-icon" id="dock-sound-icon">🎵</span>
+      <span class="dock-text" id="dock-sound-text">Bật</span>
+    </button>
+  </nav>
+</body>
+</html>

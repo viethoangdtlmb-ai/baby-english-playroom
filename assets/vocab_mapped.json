@@ -1,0 +1,1045 @@
+{
+  "friend": {
+    "id": "friend",
+    "word": "Friend",
+    "emoji": "🧑‍🤝‍🧑",
+    "github_path": "assets/People hugging/3D/people_hugging_3d.png",
+    "local_filename": "friend.png"
+  },
+  "dog": {
+    "id": "dog",
+    "word": "Dog",
+    "emoji": "🐶",
+    "github_path": "assets/Dog/3D/dog_3d.png",
+    "local_filename": "dog.png"
+  },
+  "cat": {
+    "id": "cat",
+    "word": "Cat",
+    "emoji": "🐱",
+    "github_path": "assets/Cat/3D/cat_3d.png",
+    "local_filename": "cat.png"
+  },
+  "bear": {
+    "id": "bear",
+    "word": "Bear",
+    "emoji": "🐻",
+    "github_path": "assets/Bear/3D/bear_3d.png",
+    "local_filename": "bear.png"
+  },
+  "duck": {
+    "id": "duck",
+    "word": "Duck",
+    "emoji": "🦆",
+    "github_path": "assets/Duck/3D/duck_3d.png",
+    "local_filename": "duck.png"
+  },
+  "pig": {
+    "id": "pig",
+    "word": "Pig",
+    "emoji": "🐷",
+    "github_path": "assets/Pig/3D/pig_3d.png",
+    "local_filename": "pig.png"
+  },
+  "cow": {
+    "id": "cow",
+    "word": "Cow",
+    "emoji": "🐮",
+    "github_path": "assets/Cow/3D/cow_3d.png",
+    "local_filename": "cow.png"
+  },
+  "sheep": {
+    "id": "sheep",
+    "word": "Sheep",
+    "emoji": "🐑",
+    "github_path": "assets/Ewe/3D/ewe_3d.png",
+    "local_filename": "sheep.png"
+  },
+  "chicken": {
+    "id": "chicken",
+    "word": "Chicken",
+    "emoji": "🐔",
+    "github_path": "assets/Chicken/3D/chicken_3d.png",
+    "local_filename": "chicken.png"
+  },
+  "rabbit": {
+    "id": "rabbit",
+    "word": "Rabbit",
+    "emoji": "🐰",
+    "github_path": "assets/Rabbit/3D/rabbit_3d.png",
+    "local_filename": "rabbit.png"
+  },
+  "frog": {
+    "id": "frog",
+    "word": "Frog",
+    "emoji": "🐸",
+    "github_path": "assets/Frog/3D/frog_3d.png",
+    "local_filename": "frog.png"
+  },
+  "lion": {
+    "id": "lion",
+    "word": "Lion",
+    "emoji": "🦁",
+    "github_path": "assets/Lion/3D/lion_3d.png",
+    "local_filename": "lion.png"
+  },
+  "tiger": {
+    "id": "tiger",
+    "word": "Tiger",
+    "emoji": "🐯",
+    "github_path": "assets/Tiger face/3D/tiger_face_3d.png",
+    "local_filename": "tiger.png"
+  },
+  "elephant": {
+    "id": "elephant",
+    "word": "Elephant",
+    "emoji": "🐘",
+    "github_path": "assets/Elephant/3D/elephant_3d.png",
+    "local_filename": "elephant.png"
+  },
+  "monkey": {
+    "id": "monkey",
+    "word": "Monkey",
+    "emoji": "🐵",
+    "github_path": "assets/Monkey face/3D/monkey_face_3d.png",
+    "local_filename": "monkey.png"
+  },
+  "giraffe": {
+    "id": "giraffe",
+    "word": "Giraffe",
+    "emoji": "🦒",
+    "github_path": "assets/Giraffe/3D/giraffe_3d.png",
+    "local_filename": "giraffe.png"
+  },
+  "zebra": {
+    "id": "zebra",
+    "word": "Zebra",
+    "emoji": "🦓",
+    "github_path": "assets/Zebra/3D/zebra_3d.png",
+    "local_filename": "zebra.png"
+  },
+  "hippo": {
+    "id": "hippo",
+    "word": "Hippo",
+    "emoji": "🦛",
+    "github_path": "assets/Hippopotamus/3D/hippopotamus_3d.png",
+    "local_filename": "hippo.png"
+  },
+  "kangaroo": {
+    "id": "kangaroo",
+    "word": "Kangaroo",
+    "emoji": "🦘",
+    "github_path": "assets/Kangaroo/3D/kangaroo_3d.png",
+    "local_filename": "kangaroo.png"
+  },
+  "panda": {
+    "id": "panda",
+    "word": "Panda",
+    "emoji": "🐼",
+    "github_path": "assets/Panda/3D/panda_3d.png",
+    "local_filename": "panda.png"
+  },
+  "koala": {
+    "id": "koala",
+    "word": "Koala",
+    "emoji": "🐨",
+    "github_path": "assets/Koala/3D/koala_3d.png",
+    "local_filename": "koala.png"
+  },
+  "horse": {
+    "id": "horse",
+    "word": "Horse",
+    "emoji": "🐴",
+    "github_path": "assets/Horse face/3D/horse_face_3d.png",
+    "local_filename": "horse.png"
+  },
+  "goat": {
+    "id": "goat",
+    "word": "Goat",
+    "emoji": "🐐",
+    "github_path": "assets/Goat/3D/goat_3d.png",
+    "local_filename": "goat.png"
+  },
+  "bird": {
+    "id": "bird",
+    "word": "Bird",
+    "emoji": "🐦",
+    "github_path": "assets/Bird/3D/bird_3d.png",
+    "local_filename": "bird.png"
+  },
+  "penguin": {
+    "id": "penguin",
+    "word": "Penguin",
+    "emoji": "🐧",
+    "github_path": "assets/Penguin/3D/penguin_3d.png",
+    "local_filename": "penguin.png"
+  },
+  "owl": {
+    "id": "owl",
+    "word": "Owl",
+    "emoji": "🦉",
+    "github_path": "assets/Owl/3D/owl_3d.png",
+    "local_filename": "owl.png"
+  },
+  "fish": {
+    "id": "fish",
+    "word": "Fish",
+    "emoji": "🐟",
+    "github_path": "assets/Fish/3D/fish_3d.png",
+    "local_filename": "fish.png"
+  },
+  "whale": {
+    "id": "whale",
+    "word": "Whale",
+    "emoji": "🐋",
+    "github_path": "assets/Spouting whale/3D/spouting_whale_3d.png",
+    "local_filename": "whale.png"
+  },
+  "dolphin": {
+    "id": "dolphin",
+    "word": "Dolphin",
+    "emoji": "🐬",
+    "github_path": "assets/Dolphin/3D/dolphin_3d.png",
+    "local_filename": "dolphin.png"
+  },
+  "octopus": {
+    "id": "octopus",
+    "word": "Octopus",
+    "emoji": "🐙",
+    "github_path": "assets/Octopus/3D/octopus_3d.png",
+    "local_filename": "octopus.png"
+  },
+  "crab": {
+    "id": "crab",
+    "word": "Crab",
+    "emoji": "🦀",
+    "github_path": "assets/Crab/3D/crab_3d.png",
+    "local_filename": "crab.png"
+  },
+  "turtle": {
+    "id": "turtle",
+    "word": "Turtle",
+    "emoji": "🐢",
+    "github_path": "assets/Turtle/3D/turtle_3d.png",
+    "local_filename": "turtle.png"
+  },
+  "shark": {
+    "id": "shark",
+    "word": "Shark",
+    "emoji": "🦈",
+    "github_path": "assets/Shark/3D/shark_3d.png",
+    "local_filename": "shark.png"
+  },
+  "seal": {
+    "id": "seal",
+    "word": "Seal",
+    "emoji": "🦭",
+    "github_path": "assets/Seal/3D/seal_3d.png",
+    "local_filename": "seal.png"
+  },
+  "starfish": {
+    "id": "starfish",
+    "word": "Starfish",
+    "emoji": "⭐",
+    "github_path": "assets/Star/3D/star_3d.png",
+    "local_filename": "starfish.png"
+  },
+  "bee": {
+    "id": "bee",
+    "word": "Bee",
+    "emoji": "🐝",
+    "github_path": "assets/Honeybee/3D/honeybee_3d.png",
+    "local_filename": "bee.png"
+  },
+  "butterfly": {
+    "id": "butterfly",
+    "word": "Butterfly",
+    "emoji": "🦋",
+    "github_path": "assets/Butterfly/3D/butterfly_3d.png",
+    "local_filename": "butterfly.png"
+  },
+  "snail": {
+    "id": "snail",
+    "word": "Snail",
+    "emoji": "🐌",
+    "github_path": "assets/Snail/3D/snail_3d.png",
+    "local_filename": "snail.png"
+  },
+  "hamster": {
+    "id": "hamster",
+    "word": "Hamster",
+    "emoji": "🐹",
+    "github_path": "assets/Hamster/3D/hamster_3d.png",
+    "local_filename": "hamster.png"
+  },
+  "fox": {
+    "id": "fox",
+    "word": "Fox",
+    "emoji": "🦊",
+    "github_path": "assets/Fox/3D/fox_3d.png",
+    "local_filename": "fox.png"
+  },
+  "deer": {
+    "id": "deer",
+    "word": "Deer",
+    "emoji": "🦌",
+    "github_path": "assets/Deer/3D/deer_3d.png",
+    "local_filename": "deer.png"
+  },
+  "mouse": {
+    "id": "mouse",
+    "word": "Mouse",
+    "emoji": "🐭",
+    "github_path": "assets/Mouse face/3D/mouse_face_3d.png",
+    "local_filename": "mouse.png"
+  },
+  "camel": {
+    "id": "camel",
+    "word": "Camel",
+    "emoji": "🐪",
+    "github_path": "assets/Two-hump camel/3D/two-hump_camel_3d.png",
+    "local_filename": "camel.png"
+  },
+  "apple": {
+    "id": "apple",
+    "word": "Apple",
+    "emoji": "🍎",
+    "github_path": "assets/Red apple/3D/red_apple_3d.png",
+    "local_filename": "apple.png"
+  },
+  "banana": {
+    "id": "banana",
+    "word": "Banana",
+    "emoji": "🍌",
+    "github_path": "assets/Banana/3D/banana_3d.png",
+    "local_filename": "banana.png"
+  },
+  "orange_food": {
+    "id": "orange_food",
+    "word": "Orange",
+    "emoji": "🍊",
+    "github_path": "assets/Tangerine/3D/tangerine_3d.png",
+    "local_filename": "orange_food.png"
+  },
+  "strawberry": {
+    "id": "strawberry",
+    "word": "Strawberry",
+    "emoji": "🍓",
+    "github_path": "assets/Strawberry/3D/strawberry_3d.png",
+    "local_filename": "strawberry.png"
+  },
+  "watermelon": {
+    "id": "watermelon",
+    "word": "Watermelon",
+    "emoji": "🍉",
+    "github_path": "assets/Watermelon/3D/watermelon_3d.png",
+    "local_filename": "watermelon.png"
+  },
+  "mango": {
+    "id": "mango",
+    "word": "Mango",
+    "emoji": "🥭",
+    "github_path": "assets/Mango/3D/mango_3d.png",
+    "local_filename": "mango.png"
+  },
+  "peach": {
+    "id": "peach",
+    "word": "Peach",
+    "emoji": "🍑",
+    "github_path": "assets/Peach/3D/peach_3d.png",
+    "local_filename": "peach.png"
+  },
+  "pineapple": {
+    "id": "pineapple",
+    "word": "Pineapple",
+    "emoji": "🍍",
+    "github_path": "assets/Pineapple/3D/pineapple_3d.png",
+    "local_filename": "pineapple.png"
+  },
+  "pear": {
+    "id": "pear",
+    "word": "Pear",
+    "emoji": "🍐",
+    "github_path": "assets/Pear/3D/pear_3d.png",
+    "local_filename": "pear.png"
+  },
+  "avocado": {
+    "id": "avocado",
+    "word": "Avocado",
+    "emoji": "🥑",
+    "github_path": "assets/Avocado/3D/avocado_3d.png",
+    "local_filename": "avocado.png"
+  },
+  "coconut": {
+    "id": "coconut",
+    "word": "Coconut",
+    "emoji": "🥥",
+    "github_path": "assets/Coconut/3D/coconut_3d.png",
+    "local_filename": "coconut.png"
+  },
+  "lemon": {
+    "id": "lemon",
+    "word": "Lemon",
+    "emoji": "🍋",
+    "github_path": "assets/Lemon/3D/lemon_3d.png",
+    "local_filename": "lemon.png"
+  },
+  "melon": {
+    "id": "melon",
+    "word": "Melon",
+    "emoji": "🍈",
+    "github_path": "assets/Melon/3D/melon_3d.png",
+    "local_filename": "melon.png"
+  },
+  "carrot": {
+    "id": "carrot",
+    "word": "Carrot",
+    "emoji": "🥕",
+    "github_path": "assets/Carrot/3D/carrot_3d.png",
+    "local_filename": "carrot.png"
+  },
+  "tomato": {
+    "id": "tomato",
+    "word": "Tomato",
+    "emoji": "🍅",
+    "github_path": "assets/Tomato/3D/tomato_3d.png",
+    "local_filename": "tomato.png"
+  },
+  "potato": {
+    "id": "potato",
+    "word": "Potato",
+    "emoji": "🥔",
+    "github_path": "assets/Potato/3D/potato_3d.png",
+    "local_filename": "potato.png"
+  },
+  "broccoli": {
+    "id": "broccoli",
+    "word": "Broccoli",
+    "emoji": "🥦",
+    "github_path": "assets/Broccoli/3D/broccoli_3d.png",
+    "local_filename": "broccoli.png"
+  },
+  "mushroom": {
+    "id": "mushroom",
+    "word": "Mushroom",
+    "emoji": "🍄",
+    "github_path": "assets/Mushroom/3D/mushroom_3d.png",
+    "local_filename": "mushroom.png"
+  },
+  "cucumber": {
+    "id": "cucumber",
+    "word": "Cucumber",
+    "emoji": "🥒",
+    "github_path": "assets/Cucumber/3D/cucumber_3d.png",
+    "local_filename": "cucumber.png"
+  },
+  "onion": {
+    "id": "onion",
+    "word": "Onion",
+    "emoji": "🧅",
+    "github_path": "assets/Onion/3D/onion_3d.png",
+    "local_filename": "onion.png"
+  },
+  "eggplant": {
+    "id": "eggplant",
+    "word": "Eggplant",
+    "emoji": "🍆",
+    "github_path": "assets/Eggplant/3D/eggplant_3d.png",
+    "local_filename": "eggplant.png"
+  },
+  "bread": {
+    "id": "bread",
+    "word": "Bread",
+    "emoji": "🍞",
+    "github_path": "assets/Bread/3D/bread_3d.png",
+    "local_filename": "bread.png"
+  },
+  "milk": {
+    "id": "milk",
+    "word": "Milk",
+    "emoji": "🥛",
+    "github_path": "assets/Glass of milk/3D/glass_of_milk_3d.png",
+    "local_filename": "milk.png"
+  },
+  "water": {
+    "id": "water",
+    "word": "Water",
+    "emoji": "💧",
+    "github_path": "assets/Potable water/3D/potable_water_3d.png",
+    "local_filename": "water.png"
+  },
+  "egg": {
+    "id": "egg",
+    "word": "Egg",
+    "emoji": "🥚",
+    "github_path": "assets/Egg/3D/egg_3d.png",
+    "local_filename": "egg.png"
+  },
+  "pizza": {
+    "id": "pizza",
+    "word": "Pizza",
+    "emoji": "🍕",
+    "github_path": "assets/Pizza/3D/pizza_3d.png",
+    "local_filename": "pizza.png"
+  },
+  "fish_food": {
+    "id": "fish_food",
+    "word": "Fish meat",
+    "emoji": "🐟",
+    "github_path": "assets/Fish/3D/fish_3d.png",
+    "local_filename": "fish_food.png"
+  },
+  "sandwich": {
+    "id": "sandwich",
+    "word": "Sandwich",
+    "emoji": "🥪",
+    "github_path": "assets/Sandwich/3D/sandwich_3d.png",
+    "local_filename": "sandwich.png"
+  },
+  "cake": {
+    "id": "cake",
+    "word": "Cake",
+    "emoji": "🍰",
+    "github_path": "assets/Birthday cake/3D/birthday_cake_3d.png",
+    "local_filename": "cake.png"
+  },
+  "cookie": {
+    "id": "cookie",
+    "word": "Cookie",
+    "emoji": "🍪",
+    "github_path": "assets/Cookie/3D/cookie_3d.png",
+    "local_filename": "cookie.png"
+  },
+  "icecream": {
+    "id": "icecream",
+    "word": "Ice cream",
+    "emoji": "🍦",
+    "github_path": "assets/Ice cream/3D/ice_cream_3d.png",
+    "local_filename": "icecream.png"
+  },
+  "candy": {
+    "id": "candy",
+    "word": "Candy",
+    "emoji": "🍬",
+    "github_path": "assets/Candy/3D/candy_3d.png",
+    "local_filename": "candy.png"
+  },
+  "popcorn": {
+    "id": "popcorn",
+    "word": "Popcorn",
+    "emoji": "🍿",
+    "github_path": "assets/Popcorn/3D/popcorn_3d.png",
+    "local_filename": "popcorn.png"
+  },
+  "circle": {
+    "id": "circle",
+    "word": "Circle",
+    "emoji": "⭕",
+    "github_path": "assets/Red circle/3D/red_circle_3d.png",
+    "local_filename": "circle.png"
+  },
+  "star_shape": {
+    "id": "star_shape",
+    "word": "Star",
+    "emoji": "⭐",
+    "github_path": "assets/Star/3D/star_3d.png",
+    "local_filename": "star_shape.png"
+  },
+  "heart_shape": {
+    "id": "heart_shape",
+    "word": "Heart",
+    "emoji": "❤️",
+    "github_path": "assets/Red heart/3D/red_heart_3d.png",
+    "local_filename": "heart_shape.png"
+  },
+  "square": {
+    "id": "square",
+    "word": "Square",
+    "emoji": "⬛",
+    "github_path": "assets/Red square/3D/red_square_3d.png",
+    "local_filename": "square.png"
+  },
+  "triangle": {
+    "id": "triangle",
+    "word": "Triangle",
+    "emoji": "🔺",
+    "github_path": "assets/Red triangle/3D/red_triangle_3d.png",
+    "local_filename": "triangle.png"
+  },
+  "eye": {
+    "id": "eye",
+    "word": "Eye",
+    "emoji": "👀",
+    "github_path": "assets/Eye/3D/eye_3d.png",
+    "local_filename": "eye.png"
+  },
+  "mouth": {
+    "id": "mouth",
+    "word": "Mouth",
+    "emoji": "👄",
+    "github_path": "assets/Mouth/3D/mouth_3d.png",
+    "local_filename": "mouth.png"
+  },
+  "hat": {
+    "id": "hat",
+    "word": "Hat",
+    "emoji": "👒",
+    "github_path": "assets/Billed cap/3D/billed_cap_3d.png",
+    "local_filename": "hat.png"
+  },
+  "cap": {
+    "id": "cap",
+    "word": "Cap",
+    "emoji": "🧢",
+    "github_path": "assets/Billed cap/3D/billed_cap_3d.png",
+    "local_filename": "cap.png"
+  },
+  "crown": {
+    "id": "crown",
+    "word": "Crown",
+    "emoji": "👑",
+    "github_path": "assets/Crown/3D/crown_3d.png",
+    "local_filename": "crown.png"
+  },
+  "ribbon": {
+    "id": "ribbon",
+    "word": "Ribbon",
+    "emoji": "🎀",
+    "github_path": "assets/Ribbon/3D/ribbon_3d.png",
+    "local_filename": "ribbon.png"
+  },
+  "shirt": {
+    "id": "shirt",
+    "word": "Shirt",
+    "emoji": "👕",
+    "github_path": "assets/T-shirt/3D/t-shirt_3d.png",
+    "local_filename": "shirt.png"
+  },
+  "dress": {
+    "id": "dress",
+    "word": "Dress",
+    "emoji": "👗",
+    "github_path": "assets/Dress/3D/dress_3d.png",
+    "local_filename": "dress.png"
+  },
+  "coat": {
+    "id": "coat",
+    "word": "Coat",
+    "emoji": "🦺",
+    "github_path": "assets/Coat/3D/coat_3d.png",
+    "local_filename": "coat.png"
+  },
+  "socks": {
+    "id": "socks",
+    "word": "Socks",
+    "emoji": "🧦",
+    "github_path": "assets/Socks/3D/socks_3d.png",
+    "local_filename": "socks.png"
+  },
+  "glasses": {
+    "id": "glasses",
+    "word": "Glasses",
+    "emoji": "👓",
+    "github_path": "assets/Glasses/3D/glasses_3d.png",
+    "local_filename": "glasses.png"
+  },
+  "sunglasses": {
+    "id": "sunglasses",
+    "word": "Sunglasses",
+    "emoji": "🕶️",
+    "github_path": "assets/Sunglasses/3D/sunglasses_3d.png",
+    "local_filename": "sunglasses.png"
+  },
+  "scarf": {
+    "id": "scarf",
+    "word": "Scarf",
+    "emoji": "🧣",
+    "github_path": "assets/Scarf/3D/scarf_3d.png",
+    "local_filename": "scarf.png"
+  },
+  "gloves": {
+    "id": "gloves",
+    "word": "Gloves",
+    "emoji": "🧤",
+    "github_path": "assets/Gloves/3D/gloves_3d.png",
+    "local_filename": "gloves.png"
+  },
+  "ball": {
+    "id": "ball",
+    "word": "Ball",
+    "emoji": "⚽",
+    "github_path": "assets/Soccer ball/3D/soccer_ball_3d.png",
+    "local_filename": "ball.png"
+  },
+  "balloon": {
+    "id": "balloon",
+    "word": "Balloon",
+    "emoji": "🎈",
+    "github_path": "assets/Balloon/3D/balloon_3d.png",
+    "local_filename": "balloon.png"
+  },
+  "teddy": {
+    "id": "teddy",
+    "word": "Teddy bear",
+    "emoji": "🧸",
+    "github_path": "assets/Teddy bear/3D/teddy_bear_3d.png",
+    "local_filename": "teddy.png"
+  },
+  "robot": {
+    "id": "robot",
+    "word": "Robot",
+    "emoji": "🤖",
+    "github_path": "assets/Robot/3D/robot_3d.png",
+    "local_filename": "robot.png"
+  },
+  "drum": {
+    "id": "drum",
+    "word": "Drum",
+    "emoji": "🥁",
+    "github_path": "assets/Drum/3D/drum_3d.png",
+    "local_filename": "drum.png"
+  },
+  "guitar": {
+    "id": "guitar",
+    "word": "Guitar",
+    "emoji": "🎸",
+    "github_path": "assets/Guitar/3D/guitar_3d.png",
+    "local_filename": "guitar.png"
+  },
+  "crayon": {
+    "id": "crayon",
+    "word": "Crayon",
+    "emoji": "🖍️",
+    "github_path": "assets/Crayon/3D/crayon_3d.png",
+    "local_filename": "crayon.png"
+  },
+  "kite": {
+    "id": "kite",
+    "word": "Kite",
+    "emoji": "🪁",
+    "github_path": "assets/Kite/3D/kite_3d.png",
+    "local_filename": "kite.png"
+  },
+  "bell": {
+    "id": "bell",
+    "word": "Bell",
+    "emoji": "🔔",
+    "github_path": "assets/Bell/3D/bell_3d.png",
+    "local_filename": "bell.png"
+  },
+  "wand": {
+    "id": "wand",
+    "word": "Magic wand",
+    "emoji": "🪄",
+    "github_path": "assets/Magic wand/3D/magic_wand_3d.png",
+    "local_filename": "wand.png"
+  },
+  "bed": {
+    "id": "bed",
+    "word": "Bed",
+    "emoji": "🛏️",
+    "github_path": "assets/Bed/3D/bed_3d.png",
+    "local_filename": "bed.png"
+  },
+  "chair": {
+    "id": "chair",
+    "word": "Chair",
+    "emoji": "🪑",
+    "github_path": "assets/Chair/3D/chair_3d.png",
+    "local_filename": "chair.png"
+  },
+  "cup": {
+    "id": "cup",
+    "word": "Cup",
+    "emoji": "🥤",
+    "github_path": "assets/Cup with straw/3D/cup_with_straw_3d.png",
+    "local_filename": "cup.png"
+  },
+  "spoon": {
+    "id": "spoon",
+    "word": "Spoon",
+    "emoji": "🥄",
+    "github_path": "assets/Spoon/3D/spoon_3d.png",
+    "local_filename": "spoon.png"
+  },
+  "door": {
+    "id": "door",
+    "word": "Door",
+    "emoji": "🚪",
+    "github_path": "assets/Door/3D/door_3d.png",
+    "local_filename": "door.png"
+  },
+  "window": {
+    "id": "window",
+    "word": "Window",
+    "emoji": "🪟",
+    "github_path": "assets/Window/3D/window_3d.png",
+    "local_filename": "window.png"
+  },
+  "house": {
+    "id": "house",
+    "word": "House",
+    "emoji": "🏠",
+    "github_path": "assets/House/3D/house_3d.png",
+    "local_filename": "house.png"
+  },
+  "mirror": {
+    "id": "mirror",
+    "word": "Mirror",
+    "emoji": "🪞",
+    "github_path": "assets/Mirror/3D/mirror_3d.png",
+    "local_filename": "mirror.png"
+  },
+  "soap": {
+    "id": "soap",
+    "word": "Soap",
+    "emoji": "🧼",
+    "github_path": "assets/Soap/3D/soap_3d.png",
+    "local_filename": "soap.png"
+  },
+  "key": {
+    "id": "key",
+    "word": "Key",
+    "emoji": "🔑",
+    "github_path": "assets/Key/3D/key_3d.png",
+    "local_filename": "key.png"
+  },
+  "bucket": {
+    "id": "bucket",
+    "word": "Bucket",
+    "emoji": "🪣",
+    "github_path": "assets/Bucket/3D/bucket_3d.png",
+    "local_filename": "bucket.png"
+  },
+  "umbrella": {
+    "id": "umbrella",
+    "word": "Umbrella",
+    "emoji": "☂️",
+    "github_path": "assets/Umbrella/3D/umbrella_3d.png",
+    "local_filename": "umbrella.png"
+  },
+  "magnet": {
+    "id": "magnet",
+    "word": "Magnet",
+    "emoji": "🧲",
+    "github_path": "assets/Magnet/3D/magnet_3d.png",
+    "local_filename": "magnet.png"
+  },
+  "ring": {
+    "id": "ring",
+    "word": "Ring",
+    "emoji": "💍",
+    "github_path": "assets/Ring/3D/ring_3d.png",
+    "local_filename": "ring.png"
+  },
+  "basket": {
+    "id": "basket",
+    "word": "Basket",
+    "emoji": "🧺",
+    "github_path": "assets/Basket/3D/basket_3d.png",
+    "local_filename": "basket.png"
+  },
+  "car": {
+    "id": "car",
+    "word": "Car",
+    "emoji": "🚗",
+    "github_path": "assets/Automobile/3D/automobile_3d.png",
+    "local_filename": "car.png"
+  },
+  "bus": {
+    "id": "bus",
+    "word": "Bus",
+    "emoji": "🚌",
+    "github_path": "assets/Bus/3D/bus_3d.png",
+    "local_filename": "bus.png"
+  },
+  "train": {
+    "id": "train",
+    "word": "Train",
+    "emoji": "🚂",
+    "github_path": "assets/Locomotive/3D/locomotive_3d.png",
+    "local_filename": "train.png"
+  },
+  "plane": {
+    "id": "plane",
+    "word": "Plane",
+    "emoji": "✈️",
+    "github_path": "assets/Airplane/3D/airplane_3d.png",
+    "local_filename": "plane.png"
+  },
+  "boat": {
+    "id": "boat",
+    "word": "Boat",
+    "emoji": "⛵",
+    "github_path": "assets/Sailboat/3D/sailboat_3d.png",
+    "local_filename": "boat.png"
+  },
+  "ship": {
+    "id": "ship",
+    "word": "Ship",
+    "emoji": "🚢",
+    "github_path": "assets/Ship/3D/ship_3d.png",
+    "local_filename": "ship.png"
+  },
+  "truck": {
+    "id": "truck",
+    "word": "Truck",
+    "emoji": "🚚",
+    "github_path": "assets/Delivery truck/3D/delivery_truck_3d.png",
+    "local_filename": "truck.png"
+  },
+  "bike": {
+    "id": "bike",
+    "word": "Bike",
+    "emoji": "🚲",
+    "github_path": "assets/Bicycle/3D/bicycle_3d.png",
+    "local_filename": "bike.png"
+  },
+  "rocket": {
+    "id": "rocket",
+    "word": "Rocket",
+    "emoji": "🚀",
+    "github_path": "assets/Rocket/3D/rocket_3d.png",
+    "local_filename": "rocket.png"
+  },
+  "taxi": {
+    "id": "taxi",
+    "word": "Taxi",
+    "emoji": "🚕",
+    "github_path": "assets/Taxi/3D/taxi_3d.png",
+    "local_filename": "taxi.png"
+  },
+  "ambulance": {
+    "id": "ambulance",
+    "word": "Ambulance",
+    "emoji": "🚑",
+    "github_path": "assets/Ambulance/3D/ambulance_3d.png",
+    "local_filename": "ambulance.png"
+  },
+  "policecar": {
+    "id": "policecar",
+    "word": "Police car",
+    "emoji": "🚓",
+    "github_path": "assets/Police car/3D/police_car_3d.png",
+    "local_filename": "policecar.png"
+  },
+  "tractor": {
+    "id": "tractor",
+    "word": "Tractor",
+    "emoji": "🚜",
+    "github_path": "assets/Tractor/3D/tractor_3d.png",
+    "local_filename": "tractor.png"
+  },
+  "sailboat": {
+    "id": "sailboat",
+    "word": "Sailboat",
+    "emoji": "⛵",
+    "github_path": "assets/Sailboat/3D/sailboat_3d.png",
+    "local_filename": "sailboat.png"
+  },
+  "helicopter": {
+    "id": "helicopter",
+    "word": "Helicopter",
+    "emoji": "🚁",
+    "github_path": "assets/Helicopter/3D/helicopter_3d.png",
+    "local_filename": "helicopter.png"
+  },
+  "skateboard": {
+    "id": "skateboard",
+    "word": "Skateboard",
+    "emoji": "🛹",
+    "github_path": "assets/Skateboard/3D/skateboard_3d.png",
+    "local_filename": "skateboard.png"
+  },
+  "sun": {
+    "id": "sun",
+    "word": "Sun",
+    "emoji": "☀️",
+    "github_path": "assets/Sun/3D/sun_3d.png",
+    "local_filename": "sun.png"
+  },
+  "moon": {
+    "id": "moon",
+    "word": "Moon",
+    "emoji": "🌙",
+    "github_path": "assets/Crescent moon/3D/crescent_moon_3d.png",
+    "local_filename": "moon.png"
+  },
+  "star_sky": {
+    "id": "star_sky",
+    "word": "Star",
+    "emoji": "⭐",
+    "github_path": "assets/Star/3D/star_3d.png",
+    "local_filename": "star_sky.png"
+  },
+  "cloud": {
+    "id": "cloud",
+    "word": "Cloud",
+    "emoji": "☁️",
+    "github_path": "assets/Cloud/3D/cloud_3d.png",
+    "local_filename": "cloud.png"
+  },
+  "rain": {
+    "id": "rain",
+    "word": "Rain",
+    "emoji": "🌧️",
+    "github_path": "assets/Cloud with rain/3D/cloud_with_rain_3d.png",
+    "local_filename": "rain.png"
+  },
+  "rainbow": {
+    "id": "rainbow",
+    "word": "Rainbow",
+    "emoji": "🌈",
+    "github_path": "assets/Rainbow/3D/rainbow_3d.png",
+    "local_filename": "rainbow.png"
+  },
+  "tree": {
+    "id": "tree",
+    "word": "Tree",
+    "emoji": "🌳",
+    "github_path": "assets/Deciduous tree/3D/deciduous_tree_3d.png",
+    "local_filename": "tree.png"
+  },
+  "flower": {
+    "id": "flower",
+    "word": "Flower",
+    "emoji": "🌸",
+    "github_path": "assets/Sunflower/3D/sunflower_3d.png",
+    "local_filename": "flower.png"
+  },
+  "grass": {
+    "id": "grass",
+    "word": "Grass",
+    "emoji": "🌱",
+    "github_path": "assets/Sheaf of rice/3D/sheaf_of_rice_3d.png",
+    "local_filename": "grass.png"
+  },
+  "wind": {
+    "id": "wind",
+    "word": "Wind",
+    "emoji": "💨",
+    "github_path": "assets/Wind face/3D/wind_face_3d.png",
+    "local_filename": "wind.png"
+  },
+  "mountain": {
+    "id": "mountain",
+    "word": "Mountain",
+    "emoji": "⛰️",
+    "github_path": "assets/Mountain/3D/mountain_3d.png",
+    "local_filename": "mountain.png"
+  },
+  "hot": {
+    "id": "hot",
+    "word": "Hot",
+    "emoji": "☀️",
+    "github_path": "assets/Hot face/3D/hot_face_3d.png",
+    "local_filename": "hot.png"
+  },
+  "cold": {
+    "id": "cold",
+    "word": "Cold",
+    "emoji": "🧊",
+    "github_path": "assets/Cold face/3D/cold_face_3d.png",
+    "local_filename": "cold.png"
+  }
+}

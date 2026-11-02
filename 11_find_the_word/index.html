@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+  <title>Listen & Tap with Surprise Egg - English for Toddlers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="../shared/styles.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      margin: 0;
+      padding: 0;
+    }
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Fredoka One', 'Nunito', cursive, sans-serif;
+      background: radial-gradient(circle at center, #FFFDF7 0%, #E1F5FE 45%, #B3E5FC 100%);
+      touch-action: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+
+    /* Ambient Floating Clouds */
+    .sky-cloud {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 50px;
+      pointer-events: none;
+      z-index: 1;
+      filter: blur(1px);
+      animation: floatCloud linear infinite;
+    }
+    @keyframes floatCloud {
+      from { transform: translateX(-200px); }
+      to { transform: translateX(calc(100vw + 200px)); }
+    }
+
+    /* HUD Header */
+    .hud {
+      width: 100%;
+      max-width: 980px;
+      padding: 12px 20px 4px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 30;
+      gap: 12px;
+    }
+    .btn-back {
+      background: linear-gradient(135deg, #0288D1 0%, #01579B 100%);
+      color: #FFF;
+      border: 3.5px solid #FFF;
+      border-radius: 50px;
+      padding: 10px 22px;
+      font-size: 1.15rem;
+      font-weight: 900;
+      text-decoration: none;
+      box-shadow: 0 6px 16px rgba(1, 87, 155, 0.35), inset 0 2px 4px rgba(255,255,255,0.4);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .btn-back:active {
+      transform: scale(0.92);
+    }
+
+    /* Center Banner / Prompt */
+    .banner {
+      background: rgba(255, 255, 255, 0.95);
+      border: 3.5px solid #0288D1;
+      border-radius: 40px;
+      padding: 6px 26px;
+      box-shadow: 0 8px 24px rgba(2, 136, 209, 0.22);
+      text-align: center;
+      backdrop-filter: blur(8px);
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .banner:active {
+      transform: scale(0.96);
+    }
+    .banner h2 {
+      font-size: 1.35rem;
+      color: #01579B;
+      letter-spacing: 0.5px;
+      text-shadow: 0 1px 0 #FFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .banner p {
+      font-size: 0.9rem;
+      color: #0288D1;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+    }
+
+    /* 3-Star Progress Tracker */
+    .star-tracker {
+      background: rgba(255, 255, 255, 0.95);
+      border: 3px solid #FFD54F;
+      border-radius: 35px;
+      padding: 6px 18px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 6px 16px rgba(255, 193, 7, 0.28);
+    }
+    .star-icon {
+      font-size: 1.5rem;
+      filter: grayscale(100%) opacity(0.35);
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .star-icon.active {
+      filter: grayscale(0%) opacity(1) drop-shadow(0 0 8px #FFD54F);
+      transform: scale(1.35) rotate(12deg);
+    }
+
+    /* Big Central Magic Boombox Radio Host */
+    .radio-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      margin: 4px 0 10px;
+    }
+
+    .magic-radio {
+      position: relative;
+      background: linear-gradient(135deg, #FF6F00 0%, #FFA000 100%);
+      border: 5px solid #FFF;
+      border-radius: 40px;
+      padding: 14px 38px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      cursor: pointer;
+      box-shadow: 0 12px 28px rgba(255, 111, 0, 0.32), inset 0 2px 4px rgba(255,255,255,0.4);
+      animation: radioFloat 3.2s ease-in-out infinite alternate;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes radioFloat {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-8px); }
+    }
+    .magic-radio:active {
+      transform: scale(1.08);
+    }
+
+    /* Radio Animated Antenna */
+    .radio-antenna {
+      position: absolute;
+      top: -24px;
+      left: 36px;
+      width: 6px;
+      height: 26px;
+      background: #FFE082;
+      border-radius: 4px;
+      transform-origin: bottom center;
+      animation: antennaWiggle 1.8s infinite ease-in-out;
+    }
+    .radio-antenna::before {
+      content: '';
+      position: absolute;
+      top: -8px;
+      left: -5px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #FF1744;
+      border: 2px solid #FFF;
+      box-shadow: 0 0 10px #FF1744;
+    }
+    @keyframes antennaWiggle {
+      0%, 100% { transform: rotate(-8deg); }
+      50% { transform: rotate(8deg); }
+    }
+
+    /* Radio Living Eyes */
+    .radio-eyes {
+      display: flex;
+      gap: 6px;
+      font-size: 2.2rem;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    }
+
+    /* Soundwave Bars */
+    .soundwave-box {
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      height: 38px;
+    }
+    .wave-bar {
+      width: 7px;
+      background: #FFF;
+      border-radius: 4px;
+      animation: waveDance 0.8s ease-in-out infinite alternate;
+    }
+    .wave-bar:nth-child(1) { height: 16px; animation-delay: 0.1s; }
+    .wave-bar:nth-child(2) { height: 32px; animation-delay: 0.3s; }
+    .wave-bar:nth-child(3) { height: 24px; animation-delay: 0.2s; }
+    .wave-bar:nth-child(4) { height: 38px; animation-delay: 0.4s; }
+    .wave-bar:nth-child(5) { height: 20px; animation-delay: 0.15s; }
+    @keyframes waveDance {
+      0% { transform: scaleY(0.4); opacity: 0.7; }
+      100% { transform: scaleY(1.1); opacity: 1; }
+    }
+
+    /* Radio Text Prompt */
+    .radio-content {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .target-word-title {
+      font-size: 2.3rem;
+      font-weight: 900;
+      color: #FFF;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.25);
+      letter-spacing: 0.5px;
+      line-height: 1.1;
+    }
+    .target-sub {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #FFFDE7;
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* 3 Big Marshmallow Cards Row */
+    .choices-row {
+      display: flex;
+      justify-content: center;
+      gap: 22px;
+      width: 100%;
+      max-width: 900px;
+      margin-bottom: 16px;
+      z-index: 20;
+      padding: 0 16px;
+    }
+
+    .choice-card {
+      flex: 1;
+      max-width: 250px;
+      height: 200px;
+      background: #FFF;
+      border: 5px solid #81D4FA;
+      border-radius: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 24px rgba(2, 136, 209, 0.15);
+      cursor: pointer;
+      position: relative;
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .choice-card:active {
+      transform: scale(0.92);
+    }
+    .choice-card:hover {
+      transform: translateY(-6px) scale(1.05);
+      box-shadow: 0 16px 32px rgba(2, 136, 209, 0.28);
+      border-color: #0288D1;
+    }
+    .choice-emoji {
+      font-size: 5.6rem;
+      line-height: 1;
+      filter: drop-shadow(0 8px 16px rgba(0,0,0,0.14));
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .choice-label {
+      font-size: 1.45rem;
+      font-weight: 900;
+      color: #37474F;
+      margin-top: 8px;
+      letter-spacing: 0.3px;
+    }
+
+    /* Success / Error Card States */
+    .choice-card.correct-pop {
+      border-color: #4CAF50;
+      background: #F1F8E9;
+      transform: scale(1.15) rotate(4deg);
+      box-shadow: 0 0 35px rgba(76, 175, 80, 0.6);
+    }
+    .choice-card.wrong-shake {
+      animation: cardShake 0.4s ease-in-out;
+      border-color: #FF9800;
+    }
+    @keyframes cardShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-12px); }
+      75% { transform: translateX(12px); }
+    }
+
+    /* Footer Hint Tip */
+    .footer-tip {
+      background: rgba(255, 255, 255, 0.92);
+      border: 3px solid #0288D1;
+      border-radius: 35px;
+      padding: 8px 24px;
+      font-size: 1.05rem;
+      font-weight: 900;
+      color: #01579B;
+      box-shadow: 0 6px 18px rgba(2, 136, 209, 0.22);
+      z-index: 25;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      animation: tipWiggle 3.2s ease-in-out infinite;
+    }
+    @keyframes tipWiggle {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    /* SURPRISE EGG REWARD MODAL (GIANT RAINBOW GACHA) */
+    .egg-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle, rgba(1, 87, 155, 0.85) 0%, rgba(38, 50, 56, 0.92) 100%);
+      backdrop-filter: blur(10px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 16px;
+    }
+    .egg-card {
+      background: linear-gradient(180deg, #FFFFFF 0%, #FFFDF5 100%);
+      border: 6px solid #FFC107;
+      border-radius: 45px;
+      padding: 34px 30px;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+      position: relative;
+    }
+    .egg-avatar {
+      font-size: 8rem;
+      line-height: 1;
+      margin: 12px 0 16px;
+      cursor: pointer;
+      display: inline-block;
+      transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+      filter: drop-shadow(0 12px 28px rgba(255, 193, 7, 0.5));
+    }
+    .egg-avatar.jiggle {
+      animation: eggShake 0.4s ease-in-out;
+    }
+    @keyframes eggShake {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      25% { transform: scale(1.18) rotate(-14deg); }
+      75% { transform: scale(1.18) rotate(14deg); }
+    }
+    .egg-title {
+      font-size: 1.75rem;
+      font-weight: 900;
+      color: #E65100;
+      margin-bottom: 6px;
+    }
+    .egg-sub {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #5D4037;
+      margin-bottom: 12px;
+    }
+    .toy-reveal-box {
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: #D81B60;
+      margin-bottom: 12px;
+      display: none;
+      animation: popBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes popBounce {
+      0% { transform: scale(0.5); opacity: 0; }
+      100% { transform: scale(1.2); opacity: 1; }
+    }
+
+    /* Confetti Win Overlay */
+    .confetti-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 10000;
+      overflow: hidden;
+    }
+    .confetti-piece {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      animation: confettiFall 2.4s ease-out forwards;
+    }
+    @keyframes confettiFall {
+      0% { transform: translateY(-50px) rotate(0deg) scale(0.8); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg) scale(1.2); opacity: 0; }
+    }
+
+    /* Mobile Responsive Optimizations */
+    @media (max-width: 768px) {
+      body, html {
+        padding: 6px 4px 10px;
+        max-width: 100vw;
+        overflow-x: hidden;
+      }
+      .hud {
+        padding: 6px 8px;
+        flex-wrap: wrap;
+        gap: 6px;
+        justify-content: space-between;
+      }
+      .btn-back {
+        padding: 6px 14px;
+        font-size: 0.9rem;
+      }
+      .star-tracker {
+        padding: 5px 10px;
+        font-size: 0.85rem;
+      }
+      .star-icon {
+        width: 22px !important;
+        height: 22px !important;
+      }
+      .banner {
+        order: 3;
+        width: 100%;
+        padding: 4px 10px;
+      }
+      .banner h2 {
+        font-size: 1rem;
+      }
+      .banner p {
+        font-size: 0.78rem;
+      }
+      .radio-stage {
+        margin: 4px 0 8px;
+        min-height: 90px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .magic-radio {
+        padding: 10px 22px;
+        gap: 12px;
+        border-radius: 28px;
+        border-width: 3.5px;
+      }
+      .target-word-title {
+        font-size: 1.65rem;
+      }
+      .target-sub {
+        font-size: 0.82rem;
+      }
+      .radio-eyes {
+        font-size: 1.6rem;
+      }
+      .choices-row {
+        gap: 8px;
+        padding: 0 6px;
+        margin-bottom: 8px;
+      }
+      .choice-card {
+        height: 120px;
+        border-radius: 24px;
+        border-width: 3px;
+      }
+      .choice-emoji {
+        font-size: 3.2rem;
+      }
+      .choice-label {
+        font-size: 0.95rem;
+        margin-top: 4px;
+      }
+      .footer-tip {
+        font-size: 0.8rem;
+        padding: 6px 14px;
+      }
+    }
+
+    @media (orientation: landscape) and (max-height: 520px) {
+      body, html {
+        padding: 2px 8px;
+      }
+      .hud {
+        padding: 2px 6px;
+      }
+      .btn-back {
+        padding: 4px 10px;
+        font-size: 0.85rem;
+      }
+      .banner {
+        padding: 2px 10px;
+      }
+      .banner h2 {
+        font-size: 0.95rem;
+      }
+      .banner p {
+        display: none;
+      }
+      .radio-stage {
+        margin: 2px 0;
+      }
+      .magic-radio {
+        padding: 4px 14px;
+        gap: 8px;
+        border-radius: 24px;
+      }
+      .target-word-title {
+        font-size: 1.35rem;
+      }
+      .target-sub {
+        font-size: 0.75rem;
+      }
+      .choices-row {
+        gap: 12px;
+        margin-bottom: 2px;
+        max-width: 800px;
+      }
+      .choice-card {
+        height: min(120px, 34vh);
+        border-radius: 20px;
+        border-width: 3px;
+        padding: 4px 6px;
+      }
+      .choice-emoji {
+        font-size: min(3rem, 18vh);
+      }
+      .choice-label {
+        font-size: 0.88rem;
+        margin-top: 2px;
+      }
+      .footer-tip {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient Sky Clouds -->
+  <div class="sky-cloud" style="width: 160px; height: 50px; top: 12%; animation-duration: 34s;"></div>
+  <div class="sky-cloud" style="width: 210px; height: 65px; top: 25%; animation-duration: 46s; animation-delay: -15s;"></div>
+  <div class="sky-cloud" style="width: 130px; height: 42px; top: 8%; animation-duration: 28s; animation-delay: -8s;"></div>
+
+  <!-- HUD Header -->
+  <div class="hud">
+    <a href="../index.html" class="btn-back">⬅ Menu</a>
+
+    <!-- Center Banner -->
+    <div class="banner" id="banner-box">
+      <h2 id="banner-title">🔍 Listen & Tap!</h2>
+      <p id="banner-sub">👂 Nghe và chạm hình đúng!</p>
+    </div>
+
+    <!-- 3-Star Progress Tracker -->
+    <div class="star-tracker">
+      <span class="star-icon" id="star-1"><img src="../assets/icons/star.png" style="width: 28px; height: 28px; object-fit: contain;" alt="⭐"></span>
+      <span class="star-icon" id="star-2"><img src="../assets/icons/star.png" style="width: 28px; height: 28px; object-fit: contain;" alt="⭐"></span>
+      <span class="star-icon" id="star-3"><img src="../assets/icons/star.png" style="width: 28px; height: 28px; object-fit: contain;" alt="⭐"></span>
+    </div>
+  </div>
+
+  <!-- Big Central Magic Boombox Radio Host -->
+  <div class="radio-stage">
+    <div class="magic-radio" id="magic-radio">
+      <div class="radio-antenna"></div>
+      <div class="radio-eyes">👀</div>
+      <div class="soundwave-box">
+        <div class="wave-bar"></div>
+        <div class="wave-bar"></div>
+        <div class="wave-bar"></div>
+        <div class="wave-bar"></div>
+        <div class="wave-bar"></div>
+      </div>
+      <div class="radio-content">
+        <div class="target-word-title" id="target-word">Apple</div>
+        <div class="target-sub">🔊 Chạm đài nghe lại từ nhé!</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 Options Choices Row -->
+  <div class="choices-row" id="choices-row"></div>
+
+  <!-- Footer Encouragement Tip -->
+  <div class="footer-tip" id="footer-tip">
+    <span>💡</span>
+    <span id="tip-text">Đoán đúng 3 từ để mở Quả Trứng Thần Kỳ bí mật nhé! 🥚🎁</span>
+  </div>
+
+  <!-- SURPRISE EGG REWARD MODAL -->
+  <div class="egg-modal-overlay" id="egg-modal">
+    <div class="egg-card">
+      <div class="egg-title" id="egg-title">🎁 Quả Trứng Bí Mật Của Bé!</div>
+      <div class="egg-sub" id="egg-sub">Bé chạm 3 lần "Cốc Cốc Cốc" để mở đồ chơi nhé!</div>
+      
+      <div class="egg-avatar" id="egg-avatar"><img src="../assets/icons/egg.png" style="width: 130px; height: 130px; object-fit: contain; filter: drop-shadow(0 14px 28px rgba(0,0,0,0.25));" alt="🥚"></div>
+
+      <div class="toy-reveal-box" id="toy-name-reveal"></div>
+    </div>
+  </div>
+
+  <!-- Confetti Layer -->
+  <div class="confetti-layer" id="confetti-layer"></div>
+
+  <script src="../shared/audio.js"></script>
+  <script src="../shared/vocabulary.js"></script>
+  <script>
+    // -------------------------------------------------------------
+    // WEBAUDIO EGG KNOCK & CRACK SYNTHESIZER
+    // (Khắc phục hoàn toàn lỗi playKnock và playBoing is not a function)
+    // -------------------------------------------------------------
+    function playEggKnockSound(hitCount) {
+      ToddlerAudio.init();
+      if (!ToddlerAudio.ctx) return;
+      const ctx = ToddlerAudio.ctx;
+
+      if (hitCount === 1) {
+        // Wooden knock sound
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        const st = ctx.currentTime;
+        osc.frequency.setValueAtTime(460, st);
+        osc.frequency.exponentialRampToValueAtTime(140, st + 0.08);
+
+        gain.gain.setValueAtTime(0.5, st);
+        gain.gain.exponentialRampToValueAtTime(0.01, st + 0.09);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(st);
+        osc.stop(st + 0.1);
+
+      } else if (hitCount === 2) {
+        // Egg cracking sound
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sawtooth';
+        const st = ctx.currentTime;
+        osc.frequency.setValueAtTime(680, st);
+        osc.frequency.linearRampToValueAtTime(320, st + 0.12);
+
+        gain.gain.setValueAtTime(0.4, st);
+        gain.gain.exponentialRampToValueAtTime(0.01, st + 0.13);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(st);
+        osc.stop(st + 0.14);
+
+        // Accent Pop
+        setTimeout(() => ToddlerAudio.playPop(520), 40);
+
+      } else {
+        // Hatch Explosion Ta-da!
+        ToddlerAudio.playCrash();
+        setTimeout(() => ToddlerAudio.playWin(), 200);
+      }
+    }
+
+    // -------------------------------------------------------------
+    // DYNAMIC VOCABULARY BANK (52-WEEK READY)
+    // -------------------------------------------------------------
+    const urlParams = new URLSearchParams(window.location.search);
+    const queryWeek = parseInt(urlParams.get('week')) || 1;
+
+    let pool = [];
+    if (window.ToddlerVocabulary && window.ToddlerVocabulary.build80_20Pack) {
+      const pack = window.ToddlerVocabulary.build80_20Pack(queryWeek);
+      const combined = [...(pack.newWords || []), ...(pack.reviewWords || [])].filter(w => w && w.word && w.emoji && !w.hex);
+      if (combined.length >= 3) {
+        pool = combined.map(w => ({ name: w.word, emoji: w.emoji }));
+      }
+    }
+
+    if (pool.length < 3) {
+      pool = [
+        { name: 'Apple', emoji: '🍎' },
+        { name: 'Cat', emoji: '🐱' },
+        { name: 'Dog', emoji: '🐶' },
+        { name: 'Duck', emoji: '🦆' },
+        { name: 'Car', emoji: '🚗' },
+        { name: 'Bus', emoji: '🚌' },
+        { name: 'Ball', emoji: '⚽' },
+        { name: 'Milk', emoji: '🥛' },
+        { name: 'Bread', emoji: '🍞' },
+        { name: 'Star', emoji: '⭐' }
+      ];
+    }
+
+    // Surprise Toys Collection (Max 2 words focus)
+    const toyTreasures = [
+      { name: 'Fire Truck', icon: 'firetruck', emoji: '🚒', voice: 'Fire Truck! Wee-woo!' },
+      { name: 'Cute Robot', icon: 'robot', emoji: '🤖', voice: 'Robot! Beep beep!' },
+      { name: 'Teddy Bear', icon: 'bear', emoji: '🧸', voice: 'Teddy Bear!' },
+      { name: 'Toy Rocket', icon: 'rocket', emoji: '🚀', voice: 'Rocket! Zoom!' },
+      { name: 'Sweet Baby Doll', icon: 'doll', emoji: '🪆', voice: 'Baby Doll!' },
+      { name: 'Little Train', icon: 'train', emoji: '🚂', voice: 'Train! Choo-choo!' }
+    ];
+
+    let currentTarget = null;
+    let correctStreak = 0;
+    let eggHits = 0;
+    let isQuestionActive = true;
+
+    // DOM Elements
+    const magicRadio = document.getElementById('magic-radio');
+    const targetWordElem = document.getElementById('target-word');
+    const choicesRow = document.getElementById('choices-row');
+    const bannerTitle = document.getElementById('banner-title');
+    const bannerSub = document.getElementById('banner-sub');
+    const tipText = document.getElementById('tip-text');
+
+    const starIcons = [
+      document.getElementById('star-1'),
+      document.getElementById('star-2'),
+      document.getElementById('star-3')
+    ];
+
+    const eggModal = document.getElementById('egg-modal');
+    const eggAvatar = document.getElementById('egg-avatar');
+    const eggTitle = document.getElementById('egg-title');
+    const eggSub = document.getElementById('egg-sub');
+    const toyReveal = document.getElementById('toy-name-reveal');
+    const confettiLayer = document.getElementById('confetti-layer');
+
+    // -------------------------------------------------------------
+    // QUESTION LOOP
+    // -------------------------------------------------------------
+    function nextQuestion() {
+      isQuestionActive = true;
+      choicesRow.innerHTML = '';
+
+      const shuffled = [...pool].sort(() => Math.random() - 0.5);
+      const choices = shuffled.slice(0, 3);
+
+      currentTarget = choices[Math.floor(Math.random() * choices.length)];
+      targetWordElem.innerText = currentTarget.name;
+
+      bannerTitle.innerHTML = `🔍 Where is the <b>${currentTarget.name.toUpperCase()}</b>?`;
+      bannerSub.innerText = `👂 Chạm vào hình ${currentTarget.name}!`;
+      tipText.innerText = `Chạm đài để nghe lại: ${currentTarget.name} 🔊`;
+
+      // Announce Motherese voice: 1-2 words focus
+      setTimeout(() => {
+        ToddlerAudio.speak(currentTarget.name);
+      }, 350);
+
+      choices.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'choice-card';
+
+        const emoji = document.createElement('span');
+        emoji.className = 'choice-emoji';
+        emoji.innerHTML = (window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon)
+          ? ToddlerVocabulary.renderWordIcon(item, 88)
+          : item.emoji;
+
+        const label = document.createElement('span');
+        label.className = 'choice-label';
+        label.innerText = item.name;
+
+        card.appendChild(emoji);
+        card.appendChild(label);
+
+        card.addEventListener('pointerdown', () => {
+          if (!isQuestionActive) return;
+
+          ToddlerAudio.init();
+
+          if (item.name === currentTarget.name) {
+            // MATCH!
+            isQuestionActive = false;
+            card.classList.add('correct-pop');
+
+            ToddlerAudio.playWin();
+            ToddlerAudio.speak(`${item.name}! Yay!`);
+
+            correctStreak++;
+            updateStarsDisplay();
+
+            bannerSub.innerText = `Hoan hô! Đúng là ${item.name} rồi! 🎉`;
+
+            setTimeout(() => {
+              // Cứ sau 3 câu đúng -> Mở Quả Trứng Thần Kỳ!
+              if (correctStreak % 3 === 0) {
+                spawnSurpriseEgg();
+              } else {
+                nextQuestion();
+              }
+            }, 1200);
+
+          } else {
+            // MISMATCH (Montessori Gentle Shake)
+            card.classList.remove('wrong-shake');
+            void card.offsetWidth; // trigger reflow
+            card.classList.add('wrong-shake');
+
+            ToddlerAudio.playTone(280, 'sine', 0.2, 0.3);
+            ToddlerAudio.speak(currentTarget.name);
+
+            setTimeout(() => {
+              card.classList.remove('wrong-shake');
+            }, 500);
+          }
+        });
+
+        choicesRow.appendChild(card);
+      });
+    }
+
+    function updateStarsDisplay() {
+      const activeStars = correctStreak % 3 === 0 && correctStreak > 0 ? 3 : correctStreak % 3;
+      starIcons.forEach((star, idx) => {
+        star.classList.toggle('active', idx < activeStars);
+      });
+    }
+
+    // Replay Sound via Magic Radio Tap
+    magicRadio.addEventListener('pointerdown', () => {
+      ToddlerAudio.init();
+      magicRadio.style.transform = 'scale(1.12) rotate(-3deg)';
+      setTimeout(() => magicRadio.style.transform = '', 250);
+
+      if (currentTarget) {
+        ToddlerAudio.speak(currentTarget.name);
+      }
+    });
+
+    // -------------------------------------------------------------
+    // GIANT SURPRISE EGG REWARD SYSTEM
+    // -------------------------------------------------------------
+    function spawnSurpriseEgg() {
+      eggHits = 0;
+      eggAvatar.innerHTML = `<img src="../assets/icons/egg.png" style="width: 140px; height: 140px; object-fit: contain; filter: drop-shadow(0 14px 28px rgba(0,0,0,0.25));" alt="🥚">`;
+      eggAvatar.style.transform = 'scale(1)';
+      eggTitle.innerText = '🎁 Quả Trứng Bí Mật Của Bé!';
+      eggSub.innerText = 'Bé chạm 3 lần "Cốc Cốc Cốc" để mở đồ chơi nhé!';
+      toyReveal.style.display = 'none';
+      eggModal.style.display = 'flex';
+
+      ToddlerAudio.playChime();
+      ToddlerAudio.speak('Surprise Egg!');
+    }
+
+    eggAvatar.addEventListener('pointerdown', () => {
+      eggHits++;
+      eggAvatar.classList.remove('jiggle');
+      void eggAvatar.offsetWidth; // trigger reflow
+      eggAvatar.classList.add('jiggle');
+
+      playEggKnockSound(eggHits);
+
+      if (eggHits === 1) {
+        eggAvatar.innerHTML = `<div style="position: relative; display: inline-block;"><img src="../assets/icons/egg.png" style="width: 140px; height: 140px; object-fit: contain; filter: drop-shadow(0 14px 28px rgba(0,0,0,0.25));" alt="🥚"><span style="position: absolute; top: -10px; right: -10px; font-size: 2rem;">✨</span></div>`;
+        eggSub.innerText = 'Gõ tiếp một lần nữa nào! Cốc!';
+        ToddlerAudio.speak('One!');
+      } else if (eggHits === 2) {
+        eggAvatar.innerHTML = `<div style="position: relative; display: inline-block;"><img src="../assets/icons/egg.png" style="width: 148px; height: 148px; object-fit: contain; filter: drop-shadow(0 16px 30px rgba(255, 193, 7, 0.45));" alt="🥚"><span style="position: absolute; top: -14px; right: -14px; font-size: 2.2rem;">✨✨</span></div>`;
+        eggSub.innerText = 'Sắp mở ra rồi! Cố lên bé ơi!';
+        ToddlerAudio.speak('Two!');
+      } else if (eggHits >= 3) {
+        // HATCH TOY!
+        const toy = toyTreasures[Math.floor(Math.random() * toyTreasures.length)];
+        eggAvatar.innerHTML = `<img src="../assets/icons/${toy.icon}.png" style="width: 148px; height: 148px; object-fit: contain; filter: drop-shadow(0 16px 32px rgba(0,0,0,0.28));" alt="${toy.name}" onerror="this.outerHTML='${toy.emoji}'">`;
+        eggAvatar.style.transform = 'scale(1.35)';
+        eggTitle.innerText = '🎉 Oa! Bé Nhận Được Đồ Chơi!';
+        eggSub.innerText = `Chúc mừng bé đã mở được ${toy.name}!`;
+        toyReveal.innerText = `⭐ ${toy.name.toUpperCase()} ⭐`;
+        toyReveal.style.display = 'block';
+
+        triggerConfetti();
+        ToddlerAudio.playFanfare();
+        ToddlerAudio.speak(toy.voice);
+
+        // Auto Close and Progress to Next Round after 2.8s (Không cần nút bấm người lớn)
+        setTimeout(() => {
+          closeSurpriseEgg();
+        }, 2800);
+      }
+    });
+
+    function closeSurpriseEgg() {
+      eggModal.style.display = 'none';
+      // Reset Stars
+      starIcons.forEach(s => s.classList.remove('active'));
+      nextQuestion();
+    }
+
+    function triggerConfetti() {
+      const colors = ['#FF1744', '#FFEA00', '#00E676', '#00B0FF', '#D500F9', '#FF9100'];
+      for (let i = 0; i < 45; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+        piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.left = (Math.random() * 95) + 'vw';
+        piece.style.top = '-20px';
+        piece.style.animationDelay = (Math.random() * 0.6) + 's';
+        piece.style.transform = `rotate(${Math.random() * 360}deg)`;
+        confettiLayer.appendChild(piece);
+        setTimeout(() => piece.remove(), 2600);
+      }
+    }
+
+    // Welcome Voice & BGM
+    window.addEventListener('pointerdown', () => {
+      if (window.ToddlerAudio) {
+        ToddlerAudio.init();
+        ToddlerAudio.startBGM('action');
+      }
+    }, { once: true });
+
+    setTimeout(() => {
+      ToddlerAudio.init();
+      nextQuestion();
+    }, 400);
+  </script>
+</body>
+</html>

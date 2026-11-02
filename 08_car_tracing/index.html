@@ -1,0 +1,2323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+  <title>Find Way Home - English for Toddlers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="../shared/styles.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      margin: 0;
+      padding: 0;
+    }
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Fredoka One', 'Nunito', cursive, sans-serif;
+      background: linear-gradient(180deg, #E0F7FA 0%, #B2EBF2 35%, #C8E6C9 70%, #A5D6A7 100%);
+      touch-action: none;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: background 0.6s ease;
+      max-width: 100vw;
+      overflow-x: hidden;
+    }
+
+    /* Ambient Floating Clouds / Bubbles */
+    .ambient-floater {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 50px;
+      pointer-events: none;
+      z-index: 1;
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.05));
+      animation: floatAmbient linear infinite;
+    }
+    @keyframes floatAmbient {
+      from { transform: translateX(-220px); }
+      to { transform: translateX(calc(100vw + 220px)); }
+    }
+
+    /* HUD Header */
+    .hud {
+      width: 100%;
+      padding: 6px 12px 2px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 30;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .btn-back {
+      background: linear-gradient(135deg, #FF6E40 0%, #FF3D00 100%);
+      color: #FFF;
+      border: 2.5px solid #FFF;
+      border-radius: 50px;
+      padding: 6px 14px;
+      font-size: 0.95rem;
+      font-weight: 900;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(255, 61, 0, 0.35);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: transform 0.15s;
+    }
+    .btn-back:active {
+      transform: scale(0.92);
+    }
+
+    .banner {
+      background: rgba(255, 255, 255, 0.95);
+      border: 3px solid #0288D1;
+      border-radius: 30px;
+      padding: 4px 16px;
+      box-shadow: 0 4px 14px rgba(2, 136, 209, 0.2);
+      text-align: center;
+      backdrop-filter: blur(8px);
+      flex: 1;
+      max-width: 520px;
+      min-width: 0;
+    }
+    .banner h2 {
+      font-size: 1.15rem;
+      color: #01579B;
+      letter-spacing: 0.2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .banner p {
+      font-size: 0.82rem;
+      color: #0277BD;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* 3 Star Progress Tracker */
+    .star-tracker {
+      background: rgba(255, 255, 255, 0.92);
+      border: 2.5px solid #FFD54F;
+      border-radius: 26px;
+      padding: 4px 10px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      box-shadow: 0 4px 10px rgba(255, 193, 7, 0.25);
+      flex-shrink: 0;
+    }
+    .track-star-icon {
+      font-size: 1.25rem;
+      filter: grayscale(100%) opacity(0.3);
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .track-star-icon.active {
+      filter: grayscale(0%) opacity(1) drop-shadow(0 0 8px #FFD54F);
+      transform: scale(1.3) rotate(8deg);
+    }
+
+    /* Biome World Pills & Character Bar */
+    .controls-wrapper {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      z-index: 30;
+      padding: 0 10px;
+      flex-shrink: 0;
+    }
+
+    /* Biome Tabs */
+    .biome-bar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 3px 6px;
+      border-radius: 26px;
+      border: 2px solid #B0BEC5;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+    }
+    .biome-tab {
+      background: transparent;
+      border: none;
+      border-radius: 18px;
+      padding: 6px 14px;
+      min-height: 36px;
+      font-size: 0.88rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: #455A64;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .biome-tab.active {
+      background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+      color: white;
+      box-shadow: 0 3px 10px rgba(245, 124, 0, 0.35);
+      transform: scale(1.04);
+    }
+
+    /* Character Sub-Selector */
+    .char-bar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .char-pod {
+      background: rgba(255, 255, 255, 0.92);
+      border: 2.5px solid #CFD8DC;
+      border-radius: 22px;
+      padding: 3px 10px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      font-size: 0.86rem;
+      font-weight: 900;
+      color: #37474F;
+    }
+    .char-pod .pod-icon {
+      width: 26px;
+      height: 26px;
+      object-fit: contain;
+      pointer-events: none;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+    }
+    .char-pod.active {
+      background: #FFF;
+      border-color: #00C853;
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 4px 14px rgba(0, 200, 83, 0.3);
+      color: #1B5E20;
+    }
+
+    /* Main Arena */
+    .road-arena {
+      position: relative;
+      width: 96%;
+      max-width: 1040px;
+      flex: 1;
+      min-height: 250px;
+      margin: 4px auto 6px auto;
+      border-radius: 32px;
+      background: linear-gradient(180deg, #A5D6A7 0%, #81C784 40%, #66BB6A 100%);
+      box-shadow: inset 0 6px 18px rgba(0,0,0,0.12), 0 12px 28px rgba(0,0,0,0.14);
+      border: 4px solid rgba(255, 255, 255, 0.7);
+      overflow: hidden;
+      z-index: 10;
+      transition: background 0.5s ease;
+      touch-action: none;
+    }
+
+    /* Track Canvas */
+    #track-canvas {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* Particle Canvas */
+    #particle-canvas {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 18;
+      pointer-events: none;
+    }
+
+    /* 3 Collectible Items on Track */
+    .track-item {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 6;
+      pointer-events: none;
+      filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.2));
+      animation: itemBob 2s ease-in-out infinite alternate;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .track-item img {
+      width: 44px;
+      height: 44px;
+      object-fit: contain;
+    }
+    .track-item::after {
+      content: '';
+      position: absolute;
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 235, 59, 0.45) 0%, rgba(255, 235, 59, 0) 70%);
+      z-index: -1;
+      animation: pulseGlow 1.6s ease-in-out infinite;
+    }
+    @keyframes itemBob {
+      from { transform: translateY(-5px) scale(1); }
+      to { transform: translateY(5px) scale(1.08); }
+    }
+    @keyframes pulseGlow {
+      0%, 100% { transform: scale(0.9); opacity: 0.6; }
+      50% { transform: scale(1.25); opacity: 1; }
+    }
+    .track-item.collected {
+      transform: scale(2.4) rotate(360deg);
+      opacity: 0;
+    }
+
+    /* 3 Mid-Track Challenge Gates */
+    .track-gate {
+      position: absolute;
+      width: 78px;
+      height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 7;
+      cursor: pointer;
+      filter: drop-shadow(0 6px 16px rgba(0,0,0,0.25));
+      animation: gatePulse 1.6s ease-in-out infinite alternate;
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .track-gate img {
+      width: 54px;
+      height: 54px;
+      object-fit: contain;
+      pointer-events: none;
+    }
+    .track-gate .gate-badge {
+      position: absolute;
+      top: -10px;
+      background: linear-gradient(135deg, #FF6F00 0%, #E65100 100%);
+      color: white;
+      font-size: 0.68rem;
+      font-weight: 900;
+      padding: 2px 8px;
+      border-radius: 12px;
+      border: 2px solid white;
+      white-space: nowrap;
+      pointer-events: none;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.25);
+    }
+    @keyframes gatePulse {
+      from { transform: scale(0.95); }
+      to { transform: scale(1.08); }
+    }
+    .track-gate.cleared {
+      transform: scale(1.8) rotate(180deg);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Destination Target */
+    .dest-target {
+      position: absolute;
+      right: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 8;
+      pointer-events: none;
+      filter: drop-shadow(0 8px 18px rgba(0,0,0,0.25));
+    }
+    .dest-graphic {
+      width: 82px;
+      height: 82px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s;
+    }
+    .dest-graphic img {
+      width: 78px;
+      height: 78px;
+      object-fit: contain;
+    }
+    .dest-target.celebrating .dest-graphic {
+      animation: targetBounce 0.6s infinite alternate;
+    }
+    @keyframes targetBounce {
+      from { transform: scale(1); }
+      to { transform: scale(1.15) translateY(-8px); }
+    }
+
+    /* Living Cartoon Character Sprite */
+    .character-sprite {
+      position: absolute;
+      width: 98px;
+      height: 98px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: grab;
+      touch-action: none;
+      z-index: 20;
+      filter: drop-shadow(0 8px 16px rgba(0,0,0,0.28));
+      transform-origin: center center;
+      transition: transform 0.05s ease-out;
+      will-change: transform, left, top;
+    }
+    .character-sprite:active {
+      cursor: grabbing;
+    }
+    .character-sprite img {
+      width: 82px;
+      height: 82px;
+      object-fit: contain;
+      pointer-events: none;
+    }
+    .character-sprite.cheering {
+      animation: charCheer 0.4s ease-out;
+    }
+    @keyframes charCheer {
+      0% { transform: scale(1); }
+      40% { transform: scale(1.25) translateY(-16px) rotate(-6deg); }
+      75% { transform: scale(1.12) translateY(-5px) rotate(4deg); }
+      100% { transform: scale(1); }
+    }
+
+    /* Audio Ripple */
+    .audio-ripple {
+      position: absolute;
+      border: 4px solid #FFEB3B;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 15;
+      animation: rippleAnim 0.6s ease-out forwards;
+    }
+    @keyframes rippleAnim {
+      from { width: 30px; height: 30px; opacity: 1; transform: translate(-50%, -50%) scale(0.5); }
+      to { width: 220px; height: 220px; opacity: 0; transform: translate(-50%, -50%) scale(1.5); }
+    }
+
+    /* Tap Hint Balloon */
+    .tap-hint-balloon {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.95);
+      border: 3px solid #FF9800;
+      border-radius: 28px;
+      padding: 5px 18px;
+      font-size: 0.9rem;
+      font-weight: 900;
+      color: #E65100;
+      box-shadow: 0 4px 12px rgba(255, 152, 0, 0.28);
+      z-index: 25;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      animation: bounceHint 2.4s ease-in-out infinite;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    @keyframes bounceHint {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(-5px); }
+    }
+
+    /* Celebration Overlay */
+    .confetti-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 40;
+      overflow: hidden;
+    }
+    .confetti-piece {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      animation: confettiFall 2.4s ease-out forwards;
+    }
+    @keyframes confettiFall {
+      0% { transform: translateY(-50px) rotate(0deg) scale(0.8); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg) scale(1.2); opacity: 0; }
+    }
+
+    /* Speech Bubble for Win Praise */
+    .praise-bubble {
+      position: absolute;
+      background: #FFF;
+      border: 4px solid #4CAF50;
+      border-radius: 28px;
+      padding: 8px 20px;
+      font-size: 1.15rem;
+      font-weight: 900;
+      color: #2E7D32;
+      box-shadow: 0 8px 20px rgba(76, 175, 80, 0.35);
+      z-index: 50;
+      pointer-events: none;
+      transform: translate(-50%, -100%) scale(0.4);
+      opacity: 0;
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      white-space: nowrap;
+    }
+    .praise-bubble.show {
+      transform: translate(-50%, -100%) scale(1.05);
+      opacity: 1;
+    }
+
+    /* -------------------------------------------------------------
+       AUDIO-FIRST MODAL: MID-TRACK GATE QUIZ
+       ------------------------------------------------------------- */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.25s ease;
+      padding: 12px;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .quiz-card {
+      background: linear-gradient(135deg, #FFFFFF 0%, #FFFDE7 100%);
+      border: 5px solid #FF9800;
+      border-radius: 36px;
+      padding: 18px 20px;
+      max-width: 460px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+      position: relative;
+      animation: popModal 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes popModal {
+      from { transform: scale(0.65) translateY(25px); opacity: 0; }
+      to { transform: scale(1) translateY(0); opacity: 1; }
+    }
+    .quiz-gate-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #FF6F00 0%, #E65100 100%);
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 900;
+      padding: 4px 16px;
+      border-radius: 20px;
+      margin-bottom: 6px;
+      box-shadow: 0 4px 10px rgba(230, 81, 0, 0.3);
+    }
+
+    /* Thought Bubble Visual Clue for non-reading toddlers */
+    .thought-bubble-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: #FFF8E1;
+      border: 2px dashed #FFB300;
+      border-radius: 24px;
+      padding: 4px 14px;
+      margin: 4px auto 8px auto;
+      width: fit-content;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.06);
+    }
+    .thought-char {
+      font-size: 2.2rem;
+      line-height: 1;
+    }
+    .thought-dots {
+      font-size: 1.5rem;
+      animation: dotsFloat 1.4s ease-in-out infinite alternate;
+    }
+    @keyframes dotsFloat {
+      from { transform: scale(0.9); }
+      to { transform: scale(1.2); }
+    }
+    .thought-target img {
+      width: 44px;
+      height: 44px;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.18));
+      animation: targetWiggle 2s ease-in-out infinite alternate;
+    }
+    @keyframes targetWiggle {
+      from { transform: rotate(-8deg); }
+      to { transform: rotate(8deg); }
+    }
+
+    /* Giant Audio Replay Button */
+    .btn-replay-audio {
+      background: linear-gradient(135deg, #FFD54F 0%, #FFB300 100%);
+      color: #3E2723;
+      border: 3.5px solid #FFFFFF;
+      border-radius: 40px;
+      padding: 8px 22px;
+      font-size: 1.05rem;
+      font-weight: 900;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 6px 18px rgba(255, 179, 0, 0.45);
+      animation: audioPulseBtn 1.8s infinite ease-in-out;
+      margin-bottom: 8px;
+      transition: transform 0.15s;
+    }
+    @keyframes audioPulseBtn {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.06); box-shadow: 0 8px 24px rgba(255, 179, 0, 0.65); }
+    }
+    .btn-replay-audio:active {
+      transform: scale(0.93);
+    }
+    .btn-replay-audio .speaker-icon {
+      font-size: 1.5rem;
+    }
+
+    .quiz-question-en {
+      font-size: 1.25rem;
+      color: #01579B;
+      margin-bottom: 2px;
+    }
+    .quiz-question-vn {
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: #E65100;
+      margin-bottom: 12px;
+    }
+
+    /* Quiz Option Cards with Audio Tap Preview */
+    .quiz-options-grid {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+    .quiz-option-btn {
+      flex: 1;
+      background: white;
+      border: 3.5px solid #FFD54F;
+      border-radius: 24px;
+      padding: 10px 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+    }
+    .quiz-option-btn:hover, .quiz-option-btn:active {
+      transform: scale(1.08);
+      border-color: #FF9800;
+    }
+    .quiz-option-btn.wrong {
+      animation: optionShake 0.4s ease-in-out;
+      border-color: #E57373;
+      background: #FFEBEE;
+    }
+    @keyframes optionShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-8px) rotate(-4deg); }
+      75% { transform: translateX(8px) rotate(4deg); }
+    }
+    .quiz-option-btn.correct {
+      background: #E8F5E9;
+      border-color: #4CAF50;
+      box-shadow: 0 0 20px rgba(76, 175, 80, 0.6);
+      transform: scale(1.15);
+    }
+    .quiz-option-btn img {
+      width: 54px;
+      height: 54px;
+      object-fit: contain;
+      pointer-events: none;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.14));
+    }
+    .quiz-option-name {
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: #37474F;
+    }
+    .quiz-option-sound-pin {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      background: #E1F5FE;
+      color: #0288D1;
+      border: 1.5px solid #81D4FA;
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      font-size: 0.72rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    /* Mobile Responsive Optimizations */
+    @media (max-width: 768px) and (orientation: portrait) {
+      body {
+        padding: 6px 4px 10px;
+        max-width: 100vw;
+        overflow-x: hidden;
+      }
+      .hud {
+        padding: 4px 6px;
+        gap: 6px;
+      }
+      .btn-back {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+      }
+      .banner {
+        padding: 4px 10px;
+      }
+      .banner h2 {
+        font-size: 1rem;
+      }
+      .banner p {
+        font-size: 0.75rem;
+      }
+      .controls-wrapper {
+        margin: 2px 0 4px;
+        gap: 4px;
+      }
+      .biome-tab {
+        padding: 4px 10px;
+        min-height: 32px;
+        font-size: 0.8rem;
+      }
+      .char-pod {
+        padding: 2px 8px;
+        font-size: 0.8rem;
+      }
+      .road-arena {
+        min-height: 200px;
+        max-height: 60vh;
+        margin: 2px auto 4px auto;
+        border-radius: 24px;
+      }
+    }
+
+    @media (orientation: landscape) and (max-height: 520px) {
+      body {
+        padding: 2px 8px;
+        overflow: hidden;
+      }
+      .hud {
+        padding: 2px 6px;
+        height: 36px;
+        margin-bottom: 2px;
+      }
+      .btn-back {
+        padding: 4px 10px;
+        font-size: 0.85rem;
+      }
+      .banner {
+        padding: 2px 10px;
+      }
+      .banner h2 {
+        font-size: 0.95rem;
+      }
+      .banner p {
+        display: none;
+      }
+      .star-tracker {
+        padding: 3px 8px;
+      }
+      .controls-wrapper {
+        margin: 1px 0;
+        gap: 6px;
+        height: 34px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .biome-tab {
+        padding: 2px 8px;
+        min-height: 26px;
+        font-size: 0.75rem;
+      }
+      .char-pod {
+        padding: 2px 6px;
+        font-size: 0.75rem;
+      }
+      .char-pod .pod-icon {
+        width: 18px;
+        height: 18px;
+      }
+      .road-arena {
+        height: calc(100vh - 85px);
+        max-height: 260px;
+        min-height: 180px;
+        margin: 2px auto;
+        border-radius: 20px;
+      }
+      .character-sprite {
+        width: 64px;
+        height: 64px;
+      }
+      .character-sprite img {
+        width: 54px;
+        height: 54px;
+      }
+      .dest-graphic {
+        width: 58px;
+        height: 58px;
+      }
+      .dest-graphic img {
+        width: 54px;
+        height: 54px;
+      }
+      .tap-hint-balloon {
+        padding: 2px 10px;
+        font-size: 0.75rem;
+        bottom: 4px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient Floaters -->
+  <div class="ambient-floater" style="width: 130px; height: 46px; top: 10%; animation-duration: 30s;"></div>
+  <div class="ambient-floater" style="width: 180px; height: 58px; top: 18%; animation-duration: 40s; animation-delay: -16s;"></div>
+  <div class="ambient-floater" style="width: 100px; height: 38px; top: 6%; animation-duration: 26s; animation-delay: -8s;"></div>
+
+  <!-- HUD Header -->
+  <div class="hud">
+    <a href="../index.html" class="btn-back">⬅ Menu</a>
+
+    <div class="banner">
+      <h2 id="title-text">🐰 Help Bunny Find Carrots!</h2>
+      <p id="sub-hint">🚗 Kéo bạn nhỏ về nhà!</p>
+    </div>
+
+    <!-- 3 Stars Corresponding to 3 Challenge Gates -->
+    <div class="star-tracker" title="Vượt qua 3 Cổng Câu Đố để nhận 3 Ngôi Sao!">
+      <span class="track-star-icon" id="hud-star-1"><img src="../assets/icons/carrot.png" style="width: 22px; height: 22px; object-fit: contain;" alt="⭐"></span>
+      <span class="track-star-icon" id="hud-star-2"><img src="../assets/icons/carrot.png" style="width: 22px; height: 22px; object-fit: contain;" alt="⭐"></span>
+      <span class="track-star-icon" id="hud-star-3"><img src="../assets/icons/carrot.png" style="width: 22px; height: 22px; object-fit: contain;" alt="⭐"></span>
+    </div>
+  </div>
+
+  <!-- World Biome & Character Selector -->
+  <div class="controls-wrapper">
+    <div class="biome-bar">
+      <button type="button" class="biome-tab active" data-biome="forest" onclick="switchBiome('forest')">
+        <span>🌲</span>
+        <span>Rừng Xanh</span>
+      </button>
+      <button type="button" class="biome-tab" data-biome="ocean" onclick="switchBiome('ocean')">
+        <span>🌊</span>
+        <span>Đại Dương</span>
+      </button>
+      <button type="button" class="biome-tab" data-biome="sky" onclick="switchBiome('sky')">
+        <span>☁️</span>
+        <span>Bầu Trời</span>
+      </button>
+    </div>
+
+    <div class="char-bar" id="char-bar">
+      <!-- Injected dynamically -->
+    </div>
+  </div>
+
+  <!-- Main Road Arena -->
+  <div class="road-arena" id="arena">
+    <canvas id="track-canvas"></canvas>
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- 3 Target Items Along Track (Placed right after each gate) -->
+    <div class="track-item" id="item-1"></div>
+    <div class="track-item" id="item-2"></div>
+    <div class="track-item" id="item-3"></div>
+
+    <!-- 3 Mid-Track Challenge Gates -->
+    <div class="track-gate" id="gate-1">
+      <div class="gate-badge" id="gate-1-badge">🚪 Cổng 1</div>
+      <div id="gate-1-icon"></div>
+    </div>
+    <div class="track-gate" id="gate-2">
+      <div class="gate-badge" id="gate-2-badge">🚪 Cổng 2</div>
+      <div id="gate-2-icon"></div>
+    </div>
+    <div class="track-gate" id="gate-3">
+      <div class="gate-badge" id="gate-3-badge">🚪 Cổng 3</div>
+      <div id="gate-3-icon"></div>
+    </div>
+
+    <!-- Destination Target House/Nest/Coral -->
+    <div class="dest-target" id="dest-target">
+      <div class="dest-graphic" id="dest-graphic"></div>
+    </div>
+
+    <!-- Living Character Sprite -->
+    <div class="character-sprite" id="character">
+      <span id="char-img-wrap"></span>
+    </div>
+
+    <!-- Tap Hint Balloon -->
+    <div class="tap-hint-balloon" id="tap-hint">
+      <span>📢</span>
+      <span id="tap-hint-text">Chạm nghe tiếng reo!</span>
+    </div>
+
+    <!-- Praise Bubble -->
+    <div class="praise-bubble" id="praise-bubble">Hoan hô! Về nhà rồi! 🏡</div>
+  </div>
+
+  <!-- Confetti Layer -->
+  <div class="confetti-layer" id="confetti-layer"></div>
+
+  <!-- MODAL 1: AUDIO-FIRST MID-TRACK GATE QUIZ (For toddlers who can't read) -->
+  <div class="modal-overlay" id="quiz-modal" style="display: none;">
+    <div class="quiz-card">
+      <div class="quiz-gate-badge" id="quiz-gate-badge">🚪 CỔNG THỬ THÁCH 1/3</div>
+
+      <!-- Visual Thought Bubble Clue (🐰 💭 🥕) -->
+      <div class="thought-bubble-box" id="thought-bubble-box">
+        <span class="thought-char" id="thought-char">🐰</span>
+        <span class="thought-dots">💭</span>
+        <span class="thought-target" id="thought-target"></span>
+      </div>
+
+      <!-- Giant Audio Replay Button -->
+      <button type="button" class="btn-replay-audio" id="btn-replay-audio" onclick="replayQuizAudio()" title="Nghe phát âm tên đồ vật">
+        <span class="speaker-icon">🔊</span>
+        <span class="speaker-label">Nghe Tên Đồ Vật</span>
+      </button>
+
+      <h3 class="quiz-question-en" id="quiz-question-en">Listen & Find! 🎧</h3>
+      <p class="quiz-question-vn" id="quiz-question-vn">Bé nghe loa đọc rồi chọn đúng hình nhé!</p>
+
+      <div class="quiz-options-grid" id="quiz-options">
+        <!-- 3 Interactive Cards injected dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: CELEBRATION ARRIVAL MODAL (Controlled by user, no abrupt jumps) -->
+  <div class="modal-overlay" id="victory-modal" style="display: none;">
+    <div class="quiz-card" style="border-color: #4CAF50; background: linear-gradient(135deg, #FFFFFF 0%, #E8F5E9 100%);">
+      <div style="font-size: 3.8rem; line-height: 1; margin-bottom: 6px;">👑</div>
+      <h3 style="font-size: 1.45rem; color: #2E7D32; margin-bottom: 4px;" id="vic-title">Hoan Hô! Về Nhà An Toàn!</h3>
+      <p style="font-size: 0.95rem; color: #33691E; font-weight: 800; margin-bottom: 20px;" id="vic-subtitle">Bé đã giúp bạn nhỏ vượt qua cả 3 câu đố và thu thập đủ 3 ngôi sao xuất sắc!</p>
+
+      <div style="display: flex; gap: 10px; justify-content: center;">
+        <button type="button" onclick="goToNextCharacter()" style="background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%); color: white; border: none; border-radius: 30px; padding: 12px 20px; font-size: 1rem; font-weight: 900; cursor: pointer; box-shadow: 0 4px 14px rgba(46, 125, 50, 0.35);">
+          🎉 Đổi Bạn Nhỏ Khác ➜
+        </button>
+        <button type="button" onclick="replayCurrentCharacter()" style="background: white; color: #E65100; border: 3px solid #FFA000; border-radius: 30px; padding: 12px 18px; font-size: 1rem; font-weight: 900; cursor: pointer;">
+          🔄 Chơi Lại
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div style="height: 4px;"></div>
+
+  <script src="../shared/audio.js"></script>
+  <script src="../shared/vocabulary.js"></script>
+  <script>
+    (function () {
+      function getAudio() {
+        return window.ToddlerAudio || {};
+      }
+
+      // -------------------------------------------------------------
+      // 9 CHARACTERS WITH 3 INDIVIDUAL PUZZLES FOR 3 CHALLENGE GATES
+      // -------------------------------------------------------------
+      const BIOMES = {
+        forest: {
+          name: 'Forest',
+          vnName: 'Rừng Xanh',
+          bodyBg: 'linear-gradient(180deg, #E0F7FA 0%, #B2EBF2 35%, #C8E6C9 70%, #A5D6A7 100%)',
+          arenaBg: 'linear-gradient(180deg, #A5D6A7 0%, #81C784 40%, #66BB6A 100%)',
+          roadCurb: '#FFFFFF',
+          roadSurface: '#4E342E',
+          roadLine: '#FFEB3B'
+        },
+        ocean: {
+          name: 'Ocean',
+          vnName: 'Đại Dương',
+          bodyBg: 'linear-gradient(180deg, #B2EBF2 0%, #80DEEA 35%, #4DD0E1 70%, #0097A7 100%)',
+          arenaBg: 'linear-gradient(180deg, #80DEEA 0%, #26C6DA 45%, #0097A7 100%)',
+          roadCurb: '#B2EBF2',
+          roadSurface: '#006064',
+          roadLine: '#80D8FF'
+        },
+        sky: {
+          name: 'Sky',
+          vnName: 'Bầu Trời',
+          bodyBg: 'linear-gradient(180deg, #EDE7F6 0%, #D1C4E9 35%, #BBDEFB 70%, #90CAF9 100%)',
+          arenaBg: 'linear-gradient(180deg, #CE93D8 0%, #B39DDB 35%, #90CAF9 70%, #80D8FF 100%)',
+          roadCurb: '#FFFFFF',
+          roadSurface: '#5C6BC0',
+          roadLine: '#FFD54F'
+        }
+      };
+
+      const CHARACTERS = [
+        // 🌲 FOREST FRIENDS
+        {
+          id: 'rabbit',
+          name: 'Little Bunny',
+          vnName: 'Bạn Thỏ Trắng',
+          biome: 'forest',
+          icon: 'rabbit_face',
+          emoji: '🐰',
+          facing: 'front',
+          targetItem: { id: 'carrot', name: 'Carrot', icon: 'carrot', emoji: '🥕' },
+          destination: { id: 'house', name: 'Cozy Burrow', icon: 'house', emoji: '🏡', vnName: 'Hang Thỏ Ấm Áp' },
+          quizzes: [
+            {
+              gateIndex: 1,
+              questionEn: 'Where is the Carrot for Little Bunny?',
+              questionVn: 'Đâu là Củ Cà Rốt giòn rụm của bạn Thỏ nhỉ?',
+              correct: { id: 'carrot', name: 'Carrot', icon: 'carrot', emoji: '🥕' },
+              distractors: [
+                { id: 'apple', name: 'Apple', icon: 'apple', emoji: '🍎' },
+                { id: 'bone', name: 'Bone', icon: 'bone', emoji: '🦴' }
+              ]
+            },
+            {
+              gateIndex: 2,
+              questionEn: "Who is Little Bunny's meadow friend?",
+              questionVn: 'Ai là bạn cưng chơi cùng Thỏ trên đồng cỏ?',
+              correct: { id: 'dog', name: 'Puppy Dog', icon: 'dog', emoji: '🐶' },
+              distractors: [
+                { id: 'fish', name: 'Little Fish', icon: 'fish', emoji: '🐠' },
+                { id: 'plane', name: 'Airplane', icon: 'plane', emoji: '✈️' }
+              ]
+            },
+            {
+              gateIndex: 3,
+              questionEn: "Where is Little Bunny's cozy home?",
+              questionVn: 'Đâu là ngôi nhà hang thỏ ấm áp nào?',
+              correct: { id: 'house', name: 'Cozy Burrow', icon: 'house', emoji: '🏡' },
+              distractors: [
+                { id: 'coral', name: 'Coral Reef', icon: 'coral', emoji: '🪸' },
+                { id: 'nest', name: 'Bird Nest', icon: 'nest', emoji: '🪺' }
+              ]
+            }
+          ],
+          voice: 'Help Little Bunny find carrots and pass 3 challenge gates!',
+          soundType: 'hop',
+          soundVoice: 'Hop hop! Munch munch!',
+          curveType: 'gentle_wave'
+        },
+        {
+          id: 'dog',
+          name: 'Puppy Dog',
+          vnName: 'Chú Cún Cưng',
+          biome: 'forest',
+          icon: 'dog',
+          emoji: '🐶',
+          facing: 'front',
+          targetItem: { id: 'bone', name: 'Bone', icon: 'bone', emoji: '🦴' },
+          destination: { id: 'house', name: 'Doghouse', icon: 'house', emoji: '🏡', vnName: 'Nhà Cún Yêu Thương' },
+          quizzes: [
+            {
+              gateIndex: 1,
+              questionEn: 'Where is the delicious Bone for Puppy?',
+              questionVn: 'Khúc xương thơm cho bạn Cún ở đâu nhỉ?',
+              correct: { id: 'bone', name: 'Bone', icon: 'bone', emoji: '🦴' },
+              distractors: [
+                { id: 'carrot', name: 'Carrot', icon: 'carrot', emoji: '🥕' },
+                { id: 'flower', name: 'Flower', icon: 'flower', emoji: '🌸' }
+              ]
+            },
+            {
+              gateIndex: 2,
+              questionEn: 'Who runs in the forest with Puppy?',
+              questionVn: 'Bạn nhỏ nào tai dài chạy nhảy cùng Cún?',
+              correct: { id: 'rabbit_face', name: 'Bunny', icon: 'rabbit_face', emoji: '🐰' },
+              distractors: [
+                { id: 'dolphin', name: 'Dolphin', icon: 'dolphin', emoji: '🐬' },
+                { id: 'bee', name: 'Busy Bee', icon: 'bee', emoji: '🐝' }
+              ]
+            },
+            {
+              gateIndex: 3,
+              questionEn: "Where is Puppy's sweet doghouse?",
+              questionVn: 'Đâu là ngôi nhà ấm áp của bạn Cún?',
+              correct: { id: 'house', name: 'Doghouse', icon: 'house', emoji: '🏡' },
+              distractors: [
+                { id: 'island', name: 'Island', icon: 'island', emoji: '🏝️' },
+                { id: 'coral', name: 'Coral', icon: 'coral', emoji: '🪸' }
+              ]
+            }
+          ],
+          voice: 'Help Puppy Dog collect bones and run home!',
+          soundType: 'woof',
+          soundVoice: 'Woof woof! Good doggy!',
+          curveType: 'hills'
+        },
+        {
+          id: 'car',
+          name: 'Red Car',
+          vnName: 'Xe Hơi Đỏ',
+          biome: 'forest',
+          icon: 'car',
+          emoji: '🚗',
+          facing: 'left',
+          targetItem: { id: 'star', name: 'Star', icon: 'star', emoji: '⭐' },
+          destination: { id: 'house', name: 'Garage', icon: 'house', emoji: '🏡', vnName: 'Ga-ra Nhà Mình' },
+          quizzes: [
+            {
+              gateIndex: 1,
+              questionEn: 'Where is the Golden Star?',
+              questionVn: 'Đâu là Ngôi Sao lấp lánh cho xe hơi?',
+              correct: { id: 'star', name: 'Star', icon: 'star', emoji: '⭐' },
+              distractors: [
+                { id: 'bone', name: 'Bone', icon: 'bone', emoji: '🦴' },
+                { id: 'carrot', name: 'Carrot', icon: 'carrot', emoji: '🥕' }
+              ]
+            },
+            {
+              gateIndex: 2,
+              questionEn: 'What color is our speedy car?',
+              questionVn: 'Đâu là chiếc xe hơi màu đỏ rực rỡ?',
+              correct: { id: 'car', name: 'Red Car', icon: 'car', emoji: '🚗' },
+              distractors: [
+                { id: 'fish', name: 'Fish', icon: 'fish', emoji: '🐠' },
+                { id: 'bird', name: 'Bird', icon: 'bird', emoji: '🐦' }
+              ]
+            },
+            {
+              gateIndex: 3,
+              questionEn: 'Drive Red Car back to the garage!',
+              questionVn: 'Đâu là ngôi nhà ga-ra của xe hơi?',
+              correct: { id: 'house', name: 'Garage', icon: 'house', emoji: '🏡' },
+              distractors: [
+                { id: 'nest', name: 'Nest', icon: 'nest', emoji: '🪺' },
+                { id: 'coral', name: 'Coral', icon: 'coral', emoji: '🪸' }
+              ]
+            }
+          ],
+          voice: 'Drive Red Car home, beep beep!',
+          soundType: 'beep',
+          soundVoice: 'Beep beep! Vroom vroom!',
+          curveType: 'gentle_wave'
+        },
+
+        // 🌊 OCEAN FRIENDS
+        {
+          id: 'fish',
+          name: 'Little Fish',
+          vnName: 'Chú Cá Nhỏ',
+          biome: 'ocean',
+          icon: 'fish',
+          emoji: '🐠',
+          facing: 'left',
+          targetItem: { id: 'seashell', name: 'Seashell', icon: 'seashell', emoji: '🐚' },
+          destination: { id: 'coral', name: 'Coral Reef', icon: 'coral', emoji: '🪸', vnName: 'Rạn San Hô Rực Rỡ' },
+          quizzes: [
+            {
+              gateIndex: 1,
+              questionEn: 'Where is the shiny Seashell?',
+              questionVn: 'Vỏ ốc xinh đẹp dưới biển ở đâu nhỉ?',
+              correct: { id: 'seashell', name: 'Seashell', icon: 'seashell', emoji: '🐚' },
+              distractors: [
+                { id: 'flower', name: 'Flower', icon: 'flower', emoji: '🌸' },
+                { id: 'apple', name: 'Apple', icon: 'apple', emoji: '🍎' }
+              ]
+            },
+            {
+              gateIndex: 2,
+              questionEn: 'Who swims in the ocean with Little Fish?',
+              questionVn: 'Bạn rùa biển bơi cùng cá nhỏ ở đâu?',
+              correct: { id: 'turtle', name: 'Sea Turtle', icon: 'turtle', emoji: '🐢' },
+              distractors: [
+                { id: 'dog', name: 'Puppy', icon: 'dog', emoji: '🐶' },
+                { id: 'rabbit_face', name: 'Bunny', icon: 'rabbit_face', emoji: '🐰' }
+              ]
+            },
+            {
+              gateIndex: 3,
+              questionEn: 'Where is the colorful Coral Reef home?',
+              questionVn: 'Đâu là rạn san hô rực rỡ dưới biển?',
+              correct: { id: 'coral', name: 'Coral Reef', icon: 'coral', emoji: '🪸' },
+              distractors: [
+                { id: 'house', name: 'House', icon: 'house', emoji: '🏡' },
+                { id: 'nest', name: 'Nest', icon: 'nest', emoji: '🪺' }
+              ]
+            }
+          ],
+          voice: 'Swim Little Fish! Find seashells and coral reef!',
+          soundType: 'bubble',
+          soundVoice: 'Glub glub! Swish swish!',
+          curveType: 'ocean_wave'
+        },
+        {
+          id: 'turtle',
+          name: 'Sea Turtle',
+          vnName: 'Rùa Biển Nhỏ',
+          biome: 'ocean',
+          icon: 'turtle',
+          emoji: '🐢',
+          facing: 'left',
+          targetItem: { id: 'seashell', name: 'Seashell', icon: 'seashell', emoji: '🐚' },
+          destination: { id: 'coral', name: 'Coral Reef', icon: 'coral', emoji: '🪸', vnName: 'Rạn San Hô Bình Yên' },
+          quizzes: [
+            {
+              gateIndex: 1,
+              questionEn: 'Find the pretty Seashell for Sea Turtle!',
+              questionVn: 'Bé tìm Vỏ Ốc cho bạn Rùa nhé!',
+              correct: { id: 'seashell', name: 'Seashell', icon: 'seashell', emoji: '🐚' },
+              distractors: [
+                { id: 'bone', name: 'Bone', icon: 'bone', emoji: '🦴' },
+                { id: 'carrot', name: 'Carrot', icon: 'carrot', emoji: '🥕' }
+              ]
+            },
+            {
+              gateIndex: 2,
+              questionEn: 'Who is jumping in the ocean waves?',
+              questionVn: 'Bạn cá heo nhảy sóng ở đâu nào?',
+              correct: { id: 'dolphin', name: 'Dolphin', icon: 'dolphin', emoji: '🐬' },
+              distractors: [
+                { id: 'bee', name: 'Bee', icon: 'bee', emoji: '🐝' },
+                { id: 'bird', name: 'Bird', icon: 'bird', emoji: '🐦' }
+              ]
+            },
+            {
+              gateIndex: 3,
+              questionEn: 'Swim Sea Turtle back to the coral!',
+              questionVn: 'Đâu là ngôi nhà rạn san hô yên bình?',
+              correct: { id: 'coral', name: 'Coral Reef', icon: 'coral', emoji: '🪸' },
+              distractors: [
+                { id: 'house', name: 'House', icon: 'house', emoji: '🏡' },
+                { id: 'rainbow', name: 'Rainbow', icon: 'rainbow', emoji: '🌈' }
+              ]
+            }
+          ],
+          voice: 'Paddle along, Sea Turtle! Swim to the coral!',
+          soundType: 'bubble',
+          soundVoice: 'Paddle paddle! Hello Turtle!',
+          curveType: 'deep_valley'
+        },
+        {
+          id: 'dolphin',
+          name: 'Happy Dolphin',
+          vnName: 'Cá Heo Vui Vẻ',
+          biome: 'ocean',
+          icon: 'dolphin',
+          emoji: '🐬',
+          facing: 'left',
+          targetItem: { id: 'starfish', name: 'Starfish', icon: 'starfish', emoji: '⭐' },
+          destination: { id: 'island', name: 'Tropical Island', icon: 'island', emoji: '🏝️', vnName: 'Đảo Nhiệt Đới' },
+          quizzes: [
+            {
+              gateIndex: 1,
+              questionEn: 'Where is the ocean Starfish?',
+              questionVn: 'Sao biển cho bạn Cá Heo ở đâu nào?',
+              correct: { id: 'starfish', name: 'Starfish', icon: 'starfish', emoji: '⭐' },
+              distractors: [
+                { id: 'apple', name: 'Apple', icon: 'apple', emoji: '🍎' },
+                { id: 'flower', name: 'Flower', icon: 'flower', emoji: '🌸' }
+              ]
+            },
+            {
+              gateIndex: 2,
+              questionEn: 'Who swims in the deep blue sea?',
+              questionVn: 'Bạn cá nhỏ tung tăng bơi ở đâu?',
+              correct: { id: 'fish', name: 'Little Fish', icon: 'fish', emoji: '🐠' },
+              distractors: [
+                { id: 'rabbit_face', name: 'Bunny', icon: 'rabbit_face', emoji: '🐰' },
+                { id: 'dog', name: 'Puppy', icon: 'dog', emoji: '🐶' }
+              ]
+            },
+            {
+              gateIndex: 3,
+              questionEn: 'Swim to the sunny Tropical Island!',
+              questionVn: 'Hòn đảo nhiệt đới xinh đẹp ở đâu?',
+              correct: { id: 'island', name: 'Tropical Island', icon: 'island', emoji: '🏝️' },
+              distractors: [
+                { id: 'house', name: 'House', icon: 'house', emoji: '🏡' },
+                { id: 'nest', name: 'Nest', icon: 'nest', emoji: '🪺' }
+              ]
+            }
+          ],
+          voice: 'Wheee! Dolphin jump! Swim to the island!',
+          soundType: 'click',
+          soundVoice: 'Click click! Wheee!',
+          curveType: 'ocean_wave'
+        },
+
+        // ☁️ SKY FRIENDS
+        {
+          id: 'bee',
+          name: 'Busy Bee',
+          vnName: 'Chú Ong Vàng',
+          biome: 'sky',
+          icon: 'bee',
+          emoji: '🐝',
+          facing: 'left',
+          targetItem: { id: 'flower', name: 'Sweet Flower', icon: 'flower', emoji: '🌸' },
+          destination: { id: 'honey', name: 'Honey Pot', icon: 'honey', emoji: '🍯', vnName: 'Hũ Mật Ngọt Ngào' },
+          quizzes: [
+            {
+              gateIndex: 1,
+              questionEn: 'Where is the Sweet Flower for Busy Bee?',
+              questionVn: 'Bông hoa ngọt ngào cho chú Ong ở đâu?',
+              correct: { id: 'flower', name: 'Flower', icon: 'flower', emoji: '🌸' },
+              distractors: [
+                { id: 'bone', name: 'Bone', icon: 'bone', emoji: '🦴' },
+                { id: 'seashell', name: 'Seashell', icon: 'seashell', emoji: '🐚' }
+              ]
+            },
+            {
+              gateIndex: 2,
+              questionEn: 'Who is flying in the sunny garden?',
+              questionVn: 'Bạn bướm rực rỡ bay cùng Ong ở đâu?',
+              correct: { id: 'butterfly', name: 'Butterfly', icon: 'butterfly', emoji: '🦋' },
+              distractors: [
+                { id: 'fish', name: 'Fish', icon: 'fish', emoji: '🐠' },
+                { id: 'turtle', name: 'Turtle', icon: 'turtle', emoji: '🐢' }
+              ]
+            },
+            {
+              gateIndex: 3,
+              questionEn: 'Bring sweet nectar to the Honey Pot!',
+              questionVn: 'Đâu là hũ mật ong ngọt ngào nào?',
+              correct: { id: 'honey', name: 'Honey Pot', icon: 'honey', emoji: '🍯' },
+              distractors: [
+                { id: 'coral', name: 'Coral', icon: 'coral', emoji: '🪸' },
+                { id: 'house', name: 'House', icon: 'house', emoji: '🏡' }
+              ]
+            }
+          ],
+          voice: 'Bzzz! Busy Bee, collect sweet flowers and make honey!',
+          soundType: 'buzz',
+          soundVoice: 'Bzzz bzzz! Sweet honey!',
+          curveType: 'rainbow_arch'
+        },
+        {
+          id: 'bird',
+          name: 'Singing Bird',
+          vnName: 'Chim Non Hót Vang',
+          biome: 'sky',
+          icon: 'bird',
+          emoji: '🐦',
+          facing: 'left',
+          targetItem: { id: 'apple', name: 'Red Apple', icon: 'apple', emoji: '🍎' },
+          destination: { id: 'nest', name: 'Cozy Nest', icon: 'nest', emoji: '🪺', vnName: 'Tổ Chim Ấm Áp' },
+          quizzes: [
+            {
+              gateIndex: 1,
+              questionEn: 'Where is the Red Apple for Singing Bird?',
+              questionVn: 'Quả táo đỏ mọng cho chim non ở đâu nào?',
+              correct: { id: 'apple', name: 'Apple', icon: 'apple', emoji: '🍎' },
+              distractors: [
+                { id: 'starfish', name: 'Starfish', icon: 'starfish', emoji: '⭐' },
+                { id: 'carrot', name: 'Carrot', icon: 'carrot', emoji: '🥕' }
+              ]
+            },
+            {
+              gateIndex: 2,
+              questionEn: 'Who is buzzing in the sky with Bird?',
+              questionVn: 'Bạn ong vàng chăm chỉ bay ở đâu?',
+              correct: { id: 'bee', name: 'Busy Bee', icon: 'bee', emoji: '🐝' },
+              distractors: [
+                { id: 'fish', name: 'Fish', icon: 'fish', emoji: '🐠' },
+                { id: 'dolphin', name: 'Dolphin', icon: 'dolphin', emoji: '🐬' }
+              ]
+            },
+            {
+              gateIndex: 3,
+              questionEn: 'Fly Singing Bird back to the cozy Nest!',
+              questionVn: 'Tổ chim ấm áp trên cành cây ở đâu?',
+              correct: { id: 'nest', name: 'Cozy Nest', icon: 'nest', emoji: '🪺' },
+              distractors: [
+                { id: 'coral', name: 'Coral', icon: 'coral', emoji: '🪸' },
+                { id: 'island', name: 'Island', icon: 'island', emoji: '🏝️' }
+              ]
+            }
+          ],
+          voice: 'Chirp chirp! Fly Little Bird, back to the nest!',
+          soundType: 'chirp',
+          soundVoice: 'Chirp chirp! Tweet tweet!',
+          curveType: 'gentle_wave'
+        },
+        {
+          id: 'plane',
+          name: 'Airplane',
+          vnName: 'Máy Bay Nhỏ',
+          biome: 'sky',
+          icon: 'plane',
+          emoji: '✈️',
+          facing: 'left_up',
+          targetItem: { id: 'star', name: 'Star', icon: 'star', emoji: '⭐' },
+          destination: { id: 'rainbow', name: 'Rainbow', icon: 'rainbow', emoji: '🌈', vnName: 'Cầu Vồng Rực Rỡ' },
+          quizzes: [
+            {
+              gateIndex: 1,
+              questionEn: 'Find the Golden Star in the sky!',
+              questionVn: 'Ngôi sao lấp lánh trên trời ở đâu?',
+              correct: { id: 'star', name: 'Star', icon: 'star', emoji: '⭐' },
+              distractors: [
+                { id: 'flower', name: 'Flower', icon: 'flower', emoji: '🌸' },
+                { id: 'bone', name: 'Bone', icon: 'bone', emoji: '🦴' }
+              ]
+            },
+            {
+              gateIndex: 2,
+              questionEn: 'Who is soaring high in the clouds?',
+              questionVn: 'Bạn chim non bay vút trên mây ở đâu?',
+              correct: { id: 'bird', name: 'Bird', icon: 'bird', emoji: '🐦' },
+              distractors: [
+                { id: 'fish', name: 'Fish', icon: 'fish', emoji: '🐠' },
+                { id: 'turtle', name: 'Turtle', icon: 'turtle', emoji: '🐢' }
+              ]
+            },
+            {
+              gateIndex: 3,
+              questionEn: 'Fly through the magical Rainbow!',
+              questionVn: 'Dải cầu vồng 7 màu rực rỡ ở đâu?',
+              correct: { id: 'rainbow', name: 'Rainbow', icon: 'rainbow', emoji: '🌈' },
+              distractors: [
+                { id: 'house', name: 'House', icon: 'house', emoji: '🏡' },
+                { id: 'coral', name: 'Coral', icon: 'coral', emoji: '🪸' }
+              ]
+            }
+          ],
+          voice: 'Whoosh! Fly the Airplane through the rainbow!',
+          soundType: 'whoosh',
+          soundVoice: 'Whoosh! Flying high!',
+          curveType: 'rainbow_arch'
+        }
+      ];
+
+      // -------------------------------------------------------------
+      // GAME STATE (3 Gate Milestones)
+      // -------------------------------------------------------------
+      let currentBiome = 'forest';
+      let currentCharIndex = 0;
+      let isArrived = false;
+      let isQuizOpen = false;
+      let currentT = 0;
+
+      // 3 Gate milestones and 3 Items placed right past the gates
+      const gateTs = [0.26, 0.52, 0.78];
+      const itemTs = [0.34, 0.60, 0.86];
+
+      let gatesCleared = [false, false, false];
+      let itemsCollected = [false, false, false];
+      let currentActiveGateIdx = -1;
+
+      // DOM Elements
+      const arena = document.getElementById('arena');
+      const trackCanvas = document.getElementById('track-canvas');
+      const particleCanvas = document.getElementById('particle-canvas');
+      const trackCtx = trackCanvas.getContext('2d');
+      const particleCtx = particleCanvas.getContext('2d');
+
+      const character = document.getElementById('character');
+      const charImgWrap = document.getElementById('char-img-wrap');
+      const destTarget = document.getElementById('dest-target');
+      const destGraphic = document.getElementById('dest-graphic');
+
+      const gateElems = [
+        document.getElementById('gate-1'),
+        document.getElementById('gate-2'),
+        document.getElementById('gate-3')
+      ];
+      const gateIconElems = [
+        document.getElementById('gate-1-icon'),
+        document.getElementById('gate-2-icon'),
+        document.getElementById('gate-3-icon')
+      ];
+
+      const titleText = document.getElementById('title-text');
+      const subHint = document.getElementById('sub-hint');
+      const tapHint = document.getElementById('tap-hint');
+      const tapHintText = document.getElementById('tap-hint-text');
+      const praiseBubble = document.getElementById('praise-bubble');
+      const confettiLayer = document.getElementById('confetti-layer');
+
+      const itemElems = [
+        document.getElementById('item-1'),
+        document.getElementById('item-2'),
+        document.getElementById('item-3')
+      ];
+      const hudStars = [
+        document.getElementById('hud-star-1'),
+        document.getElementById('hud-star-2'),
+        document.getElementById('hud-star-3')
+      ];
+
+      // -------------------------------------------------------------
+      // PARTICLES (Smoke, Bubbles, Sparkles)
+      // -------------------------------------------------------------
+      const particles = [];
+      class TrailParticle {
+        constructor(x, y, biome) {
+          this.x = x;
+          this.y = y;
+          this.biome = biome;
+          this.vx = (Math.random() - 0.5) * 1.6 - 1.0;
+          this.vy = (Math.random() - 0.5) * 1.2;
+          this.radius = 6 + Math.random() * 8;
+          this.alpha = 0.85;
+          this.scale = 0.6;
+          if (biome === 'ocean') {
+            this.color = 'rgba(224, 247, 250, 0.8)';
+            this.vy -= 1.0;
+          } else if (biome === 'sky') {
+            this.color = Math.random() < 0.5 ? '#FFF59D' : '#FFE082';
+          } else {
+            this.color = '#FFFFFF';
+          }
+        }
+        update() {
+          this.x += this.vx;
+          this.y += this.vy;
+          this.scale += 0.035;
+          this.alpha -= 0.026;
+        }
+        draw(ctx) {
+          ctx.save();
+          ctx.globalAlpha = Math.max(0, this.alpha);
+          ctx.fillStyle = this.color;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius * this.scale, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+
+      function renderParticles() {
+        particleCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+        for (let i = particles.length - 1; i >= 0; i--) {
+          const p = particles[i];
+          p.update();
+          p.draw(particleCtx);
+          if (p.alpha <= 0) particles.splice(i, 1);
+        }
+        requestAnimationFrame(renderParticles);
+      }
+      requestAnimationFrame(renderParticles);
+
+      // -------------------------------------------------------------
+      // BÉZIER TRACK MATHEMATICS
+      // -------------------------------------------------------------
+      function getBezierPoints(W, H, curveType) {
+        const p0 = { x: 55, y: H * 0.52 };
+        const p3 = { x: W - 145, y: H * 0.52 };
+
+        if (curveType === 'rainbow_arch') {
+          return {
+            p0,
+            p1: { x: W * 0.32, y: H * 0.12 },
+            p2: { x: W * 0.68, y: H * 0.20 },
+            p3
+          };
+        } else if (curveType === 'ocean_wave' || curveType === 'deep_valley') {
+          return {
+            p0,
+            p1: { x: W * 0.30, y: H * 0.82 },
+            p2: { x: W * 0.64, y: H * 0.18 },
+            p3
+          };
+        } else {
+          return {
+            p0,
+            p1: { x: W * 0.30, y: H * 0.22 },
+            p2: { x: W * 0.62, y: H * 0.80 },
+            p3
+          };
+        }
+      }
+
+      function getPointAtT(t, pts) {
+        const u = 1 - t;
+        const tt = t * t;
+        const uu = u * u;
+        const uuu = uu * u;
+        const ttt = tt * t;
+
+        const x = uuu * pts.p0.x + 3 * uu * t * pts.p1.x + 3 * u * tt * pts.p2.x + ttt * pts.p3.x;
+        const y = uuu * pts.p0.y + 3 * uu * t * pts.p1.y + 3 * u * tt * pts.p2.y + ttt * pts.p3.y;
+        return { x, y };
+      }
+
+      function getTangentAtT(t, pts) {
+        const u = 1 - t;
+        const dx = 3 * u * u * (pts.p1.x - pts.p0.x) + 6 * u * t * (pts.p2.x - pts.p1.x) + 3 * t * t * (pts.p3.x - pts.p2.x);
+        const dy = 3 * u * u * (pts.p1.y - pts.p0.y) + 6 * u * t * (pts.p2.y - pts.p1.y) + 3 * t * t * (pts.p3.y - pts.p2.y);
+        return { dx, dy, angle: Math.atan2(dy, dx) };
+      }
+
+      function findClosestT(px, py, pts) {
+        let bestT = 0;
+        let minDstSq = Infinity;
+        const steps = 60;
+        for (let i = 0; i <= steps; i++) {
+          const t = i / steps;
+          const pt = getPointAtT(t, pts);
+          const dstSq = (pt.x - px) ** 2 + (pt.y - py) ** 2;
+          if (dstSq < minDstSq) {
+            minDstSq = dstSq;
+            bestT = t;
+          }
+        }
+        return bestT;
+      }
+
+      // -------------------------------------------------------------
+      // CANVAS DRAWING (Road, scenery, milestones)
+      // -------------------------------------------------------------
+      function resizeCanvases() {
+        const rect = arena.getBoundingClientRect();
+        const W = arena.clientWidth || rect.width || 800;
+        const H = arena.clientHeight || rect.height || 400;
+
+        trackCanvas.width = W;
+        trackCanvas.height = H;
+        particleCanvas.width = W;
+        particleCanvas.height = H;
+
+        drawRoad();
+        positionMilestones();
+      }
+
+      function drawRoad() {
+        const W = trackCanvas.width;
+        const H = trackCanvas.height;
+        if (!W || !H) return;
+
+        trackCtx.clearRect(0, 0, W, H);
+        const char = getCurrentCharacter();
+        const biome = BIOMES[currentBiome];
+        const pts = getBezierPoints(W, H, char.curveType);
+
+        drawSceneryDecor(trackCtx, W, H);
+
+        // Curbs
+        trackCtx.beginPath();
+        trackCtx.moveTo(pts.p0.x, pts.p0.y);
+        trackCtx.bezierCurveTo(pts.p1.x, pts.p1.y, pts.p2.x, pts.p2.y, pts.p3.x, pts.p3.y);
+        trackCtx.lineWidth = 100;
+        trackCtx.lineCap = 'round';
+        trackCtx.strokeStyle = biome.roadCurb;
+        trackCtx.stroke();
+
+        trackCtx.lineWidth = 108;
+        trackCtx.strokeStyle = 'rgba(0, 0, 0, 0.08)';
+        trackCtx.globalCompositeOperation = 'destination-over';
+        trackCtx.stroke();
+        trackCtx.globalCompositeOperation = 'source-over';
+
+        // Road Surface
+        trackCtx.beginPath();
+        trackCtx.moveTo(pts.p0.x, pts.p0.y);
+        trackCtx.bezierCurveTo(pts.p1.x, pts.p1.y, pts.p2.x, pts.p2.y, pts.p3.x, pts.p3.y);
+        trackCtx.lineWidth = 84;
+        trackCtx.lineCap = 'round';
+        trackCtx.strokeStyle = biome.roadSurface;
+        trackCtx.stroke();
+
+        // Divider
+        trackCtx.beginPath();
+        trackCtx.moveTo(pts.p0.x, pts.p0.y);
+        trackCtx.bezierCurveTo(pts.p1.x, pts.p1.y, pts.p2.x, pts.p2.y, pts.p3.x, pts.p3.y);
+        trackCtx.setLineDash([22, 18]);
+        trackCtx.lineWidth = 6;
+        trackCtx.lineCap = 'round';
+        trackCtx.strokeStyle = biome.roadLine;
+        trackCtx.shadowColor = biome.roadLine;
+        trackCtx.shadowBlur = 8;
+        trackCtx.stroke();
+        trackCtx.setLineDash([]);
+        trackCtx.shadowBlur = 0;
+
+        // Start Line
+        trackCtx.fillStyle = '#4CAF50';
+        trackCtx.beginPath();
+        trackCtx.arc(pts.p0.x, pts.p0.y, 42, 0, Math.PI * 2);
+        trackCtx.fill();
+        trackCtx.fillStyle = '#FFFFFF';
+        trackCtx.font = 'bold 14px "Fredoka One", sans-serif';
+        trackCtx.textAlign = 'center';
+        trackCtx.textBaseline = 'middle';
+        trackCtx.fillText('START', pts.p0.x, pts.p0.y);
+
+        // Finish Line
+        drawCheckeredFinish(trackCtx, pts.p3.x, pts.p3.y);
+      }
+
+      function drawCheckeredFinish(ctx, cx, cy) {
+        const squareSize = 10;
+        const rows = 8;
+        const cols = 2;
+        ctx.save();
+        ctx.translate(cx, cy - (rows * squareSize) / 2);
+        for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < cols; c++) {
+            ctx.fillStyle = (r + c) % 2 === 0 ? '#FFFFFF' : '#212121';
+            ctx.fillRect(c * squareSize, r * squareSize, squareSize, squareSize);
+          }
+        }
+        ctx.restore();
+      }
+
+      function drawSceneryDecor(ctx, W, H) {
+        ctx.font = '26px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        if (currentBiome === 'forest') {
+          const spots = [
+            { x: W * 0.12, y: H * 0.20, emoji: '🌸' },
+            { x: W * 0.22, y: H * 0.88, emoji: '🌼' },
+            { x: W * 0.48, y: H * 0.12, emoji: '🍄' },
+            { x: W * 0.74, y: H * 0.18, emoji: '🌻' },
+            { x: W * 0.84, y: H * 0.88, emoji: '🌼' },
+            { x: W * 0.08, y: H * 0.80, emoji: '🌲' },
+            { x: W * 0.38, y: H * 0.50, emoji: '🌳' },
+            { x: W * 0.70, y: H * 0.50, emoji: '🦋' }
+          ];
+          spots.forEach(s => ctx.fillText(s.emoji, s.x, s.y));
+        } else if (currentBiome === 'ocean') {
+          const spots = [
+            { x: W * 0.14, y: H * 0.22, emoji: '🪸' },
+            { x: W * 0.24, y: H * 0.86, emoji: '🌿' },
+            { x: W * 0.46, y: H * 0.16, emoji: '🫧' },
+            { x: W * 0.76, y: H * 0.24, emoji: '🪸' },
+            { x: W * 0.84, y: H * 0.84, emoji: '🫧' },
+            { x: W * 0.38, y: H * 0.48, emoji: '🐠' }
+          ];
+          spots.forEach(s => ctx.fillText(s.emoji, s.x, s.y));
+        } else {
+          const spots = [
+            { x: W * 0.12, y: H * 0.24, emoji: '☁️' },
+            { x: W * 0.24, y: H * 0.86, emoji: '🌈' },
+            { x: W * 0.48, y: H * 0.14, emoji: '☀️' },
+            { x: W * 0.76, y: H * 0.22, emoji: '☁️' },
+            { x: W * 0.84, y: H * 0.86, emoji: '⭐' }
+          ];
+          spots.forEach(s => ctx.fillText(s.emoji, s.x, s.y));
+        }
+      }
+
+      function positionMilestones() {
+        const W = arena.clientWidth || 800;
+        const H = arena.clientHeight || 400;
+        const char = getCurrentCharacter();
+        const pts = getBezierPoints(W, H, char.curveType);
+
+        // Position 3 Gates
+        gateTs.forEach((t, idx) => {
+          const pt = getPointAtT(t, pts);
+          const gateEl = gateElems[idx];
+          gateEl.style.left = (pt.x - 39) + 'px';
+          gateEl.style.top = (pt.y - 39) + 'px';
+        });
+
+        // Position 3 Items right after gates
+        itemTs.forEach((t, idx) => {
+          const pt = getPointAtT(t, pts);
+          const itemEl = itemElems[idx];
+          itemEl.style.left = (pt.x - 30) + 'px';
+          itemEl.style.top = (pt.y - 30) + 'px';
+        });
+      }
+
+      // -------------------------------------------------------------
+      // CHARACTER & BIOME SWITCHING
+      // -------------------------------------------------------------
+      function getCurrentCharacter() {
+        return CHARACTERS[currentCharIndex];
+      }
+
+      function switchBiome(biomeKey) {
+        currentBiome = biomeKey;
+
+        document.querySelectorAll('.biome-tab').forEach(tab => {
+          tab.classList.toggle('active', tab.dataset.biome === biomeKey);
+        });
+
+        const bData = BIOMES[biomeKey];
+        document.body.style.background = bData.bodyBg;
+        arena.style.background = bData.arenaBg;
+
+        renderCharBar();
+        const firstIdx = CHARACTERS.findIndex(c => c.biome === biomeKey);
+        selectCharacter(firstIdx >= 0 ? firstIdx : 0);
+      }
+
+      function renderCharBar() {
+        const bar = document.getElementById('char-bar');
+        bar.innerHTML = '';
+        CHARACTERS.forEach((c, idx) => {
+          if (c.biome !== currentBiome) return;
+
+          const pod = document.createElement('div');
+          pod.className = 'char-pod' + (idx === currentCharIndex ? ' active' : '');
+          pod.innerHTML = `
+            <img src="../assets/icons/${c.icon}.png" class="pod-icon" alt="${c.name}" onerror="this.outerHTML='${c.emoji}'">
+            <span>${c.name}</span>
+          `;
+          pod.onclick = () => selectCharacter(idx);
+          bar.appendChild(pod);
+        });
+      }
+
+      function selectCharacter(idx) {
+        currentCharIndex = idx;
+        const c = getCurrentCharacter();
+
+        document.querySelectorAll('.char-pod').forEach((pod, pIdx) => {
+          pod.classList.toggle('active', CHARACTERS.filter(item => item.biome === currentBiome)[pIdx] === c);
+        });
+
+        titleText.innerHTML = `${c.emoji} Help ${c.name} Find ${c.targetItem.name}s!`;
+        subHint.innerText = `🚗 Kéo bạn nhỏ về nhà!`;
+        tapHintText.innerText = `📢 Chạm nghe tiếng reo!`;
+
+        destGraphic.innerHTML = `<img src="../assets/icons/${c.destination.icon}.png" alt="${c.destination.name}" onerror="this.outerHTML='<span style=\\'font-size:4.2rem;\\'>${c.destination.emoji}</span>'">`;
+
+        // Configure 3 Items
+        itemElems.forEach(el => {
+          el.innerHTML = `<img src="../assets/icons/${c.targetItem.icon}.png" alt="${c.targetItem.name}" onerror="this.outerHTML='<span style=\\'font-size:2.6rem;\\'>${c.targetItem.emoji}</span>'">`;
+        });
+        hudStars.forEach(el => {
+          el.innerHTML = `<img src="../assets/icons/${c.targetItem.icon}.png" style="width: 22px; height: 22px; object-fit: contain;" alt="${c.targetItem.emoji}">`;
+        });
+
+        // Configure 3 Gates
+        gateIconElems[0].innerHTML = `<img src="../assets/icons/${c.quizzes[0].correct.icon}.png" alt="Gate 1" onerror="this.outerHTML='<span>🚪</span>'">`;
+        gateIconElems[1].innerHTML = `<img src="../assets/icons/${c.quizzes[1].correct.icon}.png" alt="Gate 2" onerror="this.outerHTML='<span>🚪</span>'">`;
+        gateIconElems[2].innerHTML = `<img src="../assets/icons/${c.quizzes[2].correct.icon}.png" alt="Gate 3" onerror="this.outerHTML='<span>🚪</span>'">`;
+
+        charImgWrap.innerHTML = `<img src="../assets/icons/${c.icon}.png" alt="${c.name}" onerror="this.outerHTML='<span style=\\'font-size:4.8rem;\\'>${c.emoji}</span>'">`;
+
+        initRound();
+      }
+
+      function initRound() {
+        isArrived = false;
+        isQuizOpen = false;
+        currentT = 0;
+        gatesCleared = [false, false, false];
+        itemsCollected = [false, false, false];
+        currentActiveGateIdx = -1;
+
+        gateElems.forEach(el => el.classList.remove('cleared'));
+        itemElems.forEach(el => el.classList.remove('collected'));
+        hudStars.forEach(el => el.classList.remove('active'));
+        destTarget.classList.remove('celebrating');
+        praiseBubble.classList.remove('show');
+        document.getElementById('quiz-modal').style.display = 'none';
+        document.getElementById('victory-modal').style.display = 'none';
+
+        resizeCanvases();
+        setCharacterAtT(0);
+
+        const c = getCurrentCharacter();
+        const audio = getAudio();
+        if (audio.speak) {
+          audio.speak(c.voice);
+        }
+      }
+
+      // -------------------------------------------------------------
+      // AUTO-ORIENTATION ENGINE (Direction & Rotation)
+      // -------------------------------------------------------------
+      function setCharacterAtT(t) {
+        const W = arena.clientWidth || 800;
+        const H = arena.clientHeight || 400;
+        const c = getCurrentCharacter();
+        const pts = getBezierPoints(W, H, c.curveType);
+        const pos = getPointAtT(t, pts);
+        const tang = getTangentAtT(t, pts);
+
+        const charHalf = 49;
+        character.style.left = (pos.x - charHalf) + 'px';
+        character.style.top = (pos.y - charHalf) + 'px';
+
+        let deg = 0;
+        let scaleX = 1;
+
+        if (c.facing === 'left') {
+          scaleX = -1;
+          deg = tang.angle * (180 / Math.PI) * 0.85;
+        } else if (c.facing === 'left_up') {
+          scaleX = -1;
+          deg = tang.angle * (180 / Math.PI) * 0.85;
+        } else {
+          scaleX = 1;
+          deg = Math.sin(t * Math.PI * 10) * 10;
+        }
+
+        character.style.transform = `rotate(${deg}deg) scaleX(${scaleX})`;
+
+        if (isDragging && Math.random() < 0.5) {
+          const backX = pos.x - Math.cos(tang.angle) * 38;
+          const backY = pos.y - Math.sin(tang.angle) * 38;
+          particles.push(new TrailParticle(backX, backY, currentBiome));
+        }
+      }
+
+      // -------------------------------------------------------------
+      // ROBUST DRAG ENGINE (Clamped Speed & Gate Locking)
+      // -------------------------------------------------------------
+      let isDragging = false;
+      let dragStartX = 0;
+      let dragStartY = 0;
+      let hasMovedMuch = false;
+      let throttleSound = 0;
+
+      function handleDragStart(clientX, clientY, pointerId, targetEl) {
+        if (isArrived || isQuizOpen) return;
+
+        const rect = arena.getBoundingClientRect();
+        const pointerX = clientX - rect.left;
+        const pointerY = clientY - rect.top;
+
+        const c = getCurrentCharacter();
+        const pts = getBezierPoints(rect.width, rect.height, c.curveType);
+        const charPos = getPointAtT(currentT, pts);
+        const distToChar = Math.hypot(pointerX - charPos.x, pointerY - charPos.y);
+
+        // Anti-teleport tolerance: tap must be near character (<= 140px)
+        if (distToChar > 140) {
+          return;
+        }
+
+        isDragging = true;
+        hasMovedMuch = false;
+        dragStartX = clientX;
+        dragStartY = clientY;
+        const audio = getAudio();
+        if (audio.init) audio.init();
+
+        if (pointerId !== undefined && targetEl && targetEl.setPointerCapture) {
+          try { targetEl.setPointerCapture(pointerId); } catch (e) {}
+        }
+      }
+
+      function handleDragMove(clientX, clientY) {
+        if (!isDragging || isArrived || isQuizOpen) return;
+
+        const dist = Math.hypot(clientX - dragStartX, clientY - dragStartY);
+        if (dist > 6) hasMovedMuch = true;
+
+        const rect = arena.getBoundingClientRect();
+        const pointerX = clientX - rect.left;
+        const pointerY = clientY - rect.top;
+
+        const W = arena.clientWidth || rect.width || 800;
+        const H = arena.clientHeight || rect.height || 400;
+
+        const c = getCurrentCharacter();
+        const pts = getBezierPoints(W, H, c.curveType);
+        const targetT = findClosestT(pointerX, pointerY, pts);
+
+        // CLAMP STEP: Strictly limit advancement per frame
+        const maxForward = 0.038;
+        const maxBackward = 0.045;
+        const delta = Math.max(-maxBackward, Math.min(maxForward, targetT - currentT));
+        let nextT = currentT + delta;
+
+        // CHECK 3 GATES: Stop at the next uncleared gate!
+        for (let g = 0; g < 3; g++) {
+          if (!gatesCleared[g] && nextT >= gateTs[g]) {
+            nextT = gateTs[g];
+            currentT = nextT;
+            setCharacterAtT(currentT);
+            isDragging = false;
+            triggerGateQuiz(g);
+            return;
+          }
+        }
+
+        currentT = Math.max(0, Math.min(1, nextT));
+        setCharacterAtT(currentT);
+
+        throttleSound++;
+        if (throttleSound % 10 === 0) {
+          playMotionSound();
+        }
+
+        checkItemCollisions();
+
+        if (currentT >= 0.95 && !isArrived) {
+          onArrivedDestination();
+        }
+      }
+
+      function handleDragEnd() {
+        if (!isDragging) return;
+        isDragging = false;
+        if (!hasMovedMuch && !isArrived && !isQuizOpen) {
+          playCharacterCheer();
+        }
+      }
+
+      character.addEventListener('pointerdown', (e) => {
+        e.stopPropagation();
+        handleDragStart(e.clientX, e.clientY, e.pointerId, character);
+      });
+
+      arena.addEventListener('pointerdown', (e) => {
+        handleDragStart(e.clientX, e.clientY, e.pointerId, arena);
+      });
+
+      window.addEventListener('pointermove', (e) => {
+        handleDragMove(e.clientX, e.clientY);
+      });
+
+      window.addEventListener('pointerup', handleDragEnd);
+      window.addEventListener('pointercancel', handleDragEnd);
+
+      tapHint.addEventListener('pointerdown', (e) => {
+        e.stopPropagation();
+        playCharacterCheer();
+      });
+
+      // -------------------------------------------------------------
+      // 3 AUDIO-FIRST MID-TRACK QUIZ GATES
+      // -------------------------------------------------------------
+      gateElems.forEach((gateEl, idx) => {
+        gateEl.addEventListener('pointerdown', (e) => {
+          e.stopPropagation();
+          if (!gatesCleared[idx] && !isQuizOpen) {
+            triggerGateQuiz(idx);
+          }
+        });
+      });
+
+      function triggerGateQuiz(gateIdx) {
+        if (gatesCleared[gateIdx] || isQuizOpen) return;
+        isQuizOpen = true;
+        isDragging = false;
+        currentActiveGateIdx = gateIdx;
+
+        const c = getCurrentCharacter();
+        const quiz = c.quizzes[gateIdx];
+
+        const modal = document.getElementById('quiz-modal');
+        const badge = document.getElementById('quiz-gate-badge');
+        const thoughtChar = document.getElementById('thought-char');
+        const thoughtTarget = document.getElementById('thought-target');
+        const qEn = document.getElementById('quiz-question-en');
+        const qVn = document.getElementById('quiz-question-vn');
+        const optionsBox = document.getElementById('quiz-options');
+
+        badge.innerText = `🚪 CỔNG THỬ THÁCH ${gateIdx + 1}/3`;
+        thoughtChar.innerText = c.emoji;
+        thoughtTarget.innerHTML = `<span style="font-size: 2.3rem; display: inline-block; animation: targetWiggle 1.4s infinite alternate ease-in-out;">❓</span>`;
+
+        qEn.innerText = `Listen & Find! 🎧`;
+        qVn.innerText = `Bé nghe loa đọc rồi chọn đúng hình nhé!`;
+
+        // Shuffle options
+        const allOpts = [
+          { ...quiz.correct, isCorrect: true },
+          { ...quiz.distractors[0], isCorrect: false },
+          { ...quiz.distractors[1], isCorrect: false }
+        ];
+        allOpts.sort(() => Math.random() - 0.5);
+
+        optionsBox.innerHTML = '';
+        allOpts.forEach(opt => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'quiz-option-btn';
+          btn.innerHTML = `
+            <span class="quiz-option-sound-pin">🔊</span>
+            <img src="../assets/icons/${opt.icon}.png" alt="${opt.name}" onerror="this.outerHTML='<span style=\\'font-size:2.8rem;\\'>${opt.emoji}</span>'">
+            <span class="quiz-option-name">${opt.name}</span>
+          `;
+          btn.onclick = () => handleQuizOptionClick(opt, btn, gateIdx);
+          optionsBox.appendChild(btn);
+        });
+
+        modal.style.display = 'flex';
+
+        // Auto speak target item only for toddlers (no long sentences)
+        const audio = getAudio();
+        if (audio.speak) {
+          audio.speak(quiz.correct.name);
+        }
+      }
+
+      function replayQuizAudio() {
+        if (currentActiveGateIdx < 0) return;
+        const c = getCurrentCharacter();
+        const quiz = c.quizzes[currentActiveGateIdx];
+        const audio = getAudio();
+        if (audio.speak) {
+          audio.speak(quiz.correct.name);
+        }
+      }
+
+      function handleQuizOptionClick(opt, btnElem, gateIdx) {
+        const audio = getAudio();
+        const thoughtTarget = document.getElementById('thought-target');
+        const qEn = document.getElementById('quiz-question-en');
+        const qVn = document.getElementById('quiz-question-vn');
+
+        if (opt.isCorrect) {
+          btnElem.classList.add('correct');
+          if (audio.playChime) audio.playChime();
+          else if (audio.playWin) audio.playWin();
+
+          // Reveal the mystery item in thought bubble upon winning!
+          thoughtTarget.innerHTML = `<img src="../assets/icons/${opt.icon}.png" alt="${opt.name}" style="width: 44px; height: 44px; object-fit: contain; animation: targetWiggle 0.5s infinite alternate;" onerror="this.outerHTML='<span style=\\'font-size:2.4rem;\\'>${opt.emoji}</span>'">`;
+          qEn.innerHTML = `Bingo! <b style="color: #2E7D32;">${opt.name}</b>!`;
+          qVn.innerText = `Đúng rồi! Bạn nhỏ tìm thấy ${opt.name} rồi!`;
+
+          if (audio.speak) {
+            audio.speak('Bingo! ' + opt.name + '! Great job!');
+          }
+
+          gatesCleared[gateIdx] = true;
+          gateElems[gateIdx].classList.add('cleared');
+
+          setTimeout(() => {
+            document.getElementById('quiz-modal').style.display = 'none';
+            isQuizOpen = false;
+            currentActiveGateIdx = -1;
+            if (audio.speak) {
+              audio.speak('Gate is open! Keep going!');
+            }
+          }, 1100);
+        } else {
+          btnElem.classList.add('wrong');
+          if (audio.playPop) audio.playPop();
+          // Pronounce the item clicked so baby learns its name!
+          if (audio.speak) {
+            audio.speak(opt.name + '! Try again, little baby!');
+          }
+          setTimeout(() => {
+            btnElem.classList.remove('wrong');
+          }, 500);
+        }
+      }
+
+      // -------------------------------------------------------------
+      // AUDIO & MOTION
+      // -------------------------------------------------------------
+      function playMotionSound() {
+        const c = getCurrentCharacter();
+        const audio = getAudio();
+        if (c.soundType === 'beep' && audio.playVroom) {
+          audio.playVroom();
+        } else if (audio.playTone) {
+          const pitch = 300 + currentT * 260;
+          audio.playTone(pitch, 'sine', 0.08, 0.12);
+        }
+      }
+
+      function playCharacterCheer() {
+        const audio = getAudio();
+        if (audio.init) audio.init();
+        const c = getCurrentCharacter();
+
+        createAudioRipple();
+
+        character.classList.remove('cheering');
+        void character.offsetWidth;
+        character.classList.add('cheering');
+
+        if (c.soundType === 'beep' && audio.playHorn) {
+          audio.playHorn();
+        } else if (audio.playPop) {
+          audio.playPop();
+        }
+
+        if (audio.speak) {
+          audio.speak(c.soundVoice);
+        }
+      }
+
+      function createAudioRipple() {
+        const charRect = character.getBoundingClientRect();
+        const arenaRect = arena.getBoundingClientRect();
+        const cx = (charRect.left + charRect.width / 2) - arenaRect.left;
+        const cy = (charRect.top + charRect.height / 2) - arenaRect.top;
+
+        const ripple = document.createElement('div');
+        ripple.className = 'audio-ripple';
+        ripple.style.left = cx + 'px';
+        ripple.style.top = cy + 'px';
+        arena.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 600);
+      }
+
+      function checkItemCollisions() {
+        const notes = [523.25, 659.25, 783.99];
+        const c = getCurrentCharacter();
+        const audio = getAudio();
+
+        itemTs.forEach((t, idx) => {
+          if (!itemsCollected[idx] && Math.abs(currentT - t) < 0.08) {
+            itemsCollected[idx] = true;
+            itemElems[idx].classList.add('collected');
+            hudStars[idx].classList.add('active');
+
+            if (audio.playTone) {
+              audio.playTone(notes[idx], 'triangle', 0.25, 0.35);
+            }
+            if (audio.speak) {
+              const countWords = ['One! ' + c.targetItem.name + '!', 'Two! Delicious!', 'Three! All collected! Awesome!'];
+              audio.speak(countWords[idx]);
+            }
+          }
+        });
+      }
+
+      // -------------------------------------------------------------
+      // ARRIVAL & VICTORY (Controlled by user)
+      // -------------------------------------------------------------
+      function onArrivedDestination() {
+        isArrived = true;
+        isDragging = false;
+        setCharacterAtT(1.0);
+
+        destTarget.classList.add('celebrating');
+        triggerConfetti();
+
+        const c = getCurrentCharacter();
+        praiseBubble.innerText = `Hoan hô! ${c.name} đã về ${c.destination.vnName}! 🎉`;
+        praiseBubble.classList.add('show');
+
+        const audio = getAudio();
+        if (audio.playFanfare) {
+          audio.playFanfare();
+        } else if (audio.playWin) {
+          audio.playWin();
+        }
+
+        if (audio.speak) {
+          audio.speak(`Wonderful! Look at ${c.name} safe and sound at the ${c.destination.name}! You are amazing!`);
+        }
+
+        setTimeout(() => {
+          document.getElementById('vic-title').innerText = `🎉 ${c.name} Đã Về Nhà!`;
+          document.getElementById('vic-subtitle').innerText = `Bé đã giúp ${c.vnName} vượt qua cả 3 câu đố và thu thập đủ 3 ngôi sao xuất sắc!`;
+          document.getElementById('victory-modal').style.display = 'flex';
+        }, 1500);
+      }
+
+      function goToNextCharacter() {
+        document.getElementById('victory-modal').style.display = 'none';
+        const nextIdx = (currentCharIndex + 1) % CHARACTERS.length;
+        if (CHARACTERS[nextIdx].biome !== currentBiome) {
+          switchBiome(CHARACTERS[nextIdx].biome);
+        } else {
+          selectCharacter(nextIdx);
+        }
+      }
+
+      function replayCurrentCharacter() {
+        document.getElementById('victory-modal').style.display = 'none';
+        initRound();
+      }
+
+      function triggerConfetti() {
+        confettiLayer.innerHTML = '';
+        const colors = ['#FF4081', '#FFD54F', '#40C4FF', '#69F0AE', '#FF6E40', '#E040FB', '#7C4DFF'];
+        for (let i = 0; i < 70; i++) {
+          const piece = document.createElement('div');
+          piece.className = 'confetti-piece';
+          piece.style.left = (Math.random() * 100) + 'vw';
+          piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+          piece.style.animationDelay = (Math.random() * 0.4) + 's';
+          piece.style.transform = `scale(${Math.random() * 0.8 + 0.6})`;
+          confettiLayer.appendChild(piece);
+        }
+        setTimeout(() => { confettiLayer.innerHTML = ''; }, 2500);
+      }
+
+      // -------------------------------------------------------------
+      // INITIALIZATION & GLOBAL EXPOSURE
+      // -------------------------------------------------------------
+      window.switchBiome = switchBiome;
+      window.selectCharacter = selectCharacter;
+      window.goToNextCharacter = goToNextCharacter;
+      window.replayCurrentCharacter = replayCurrentCharacter;
+      window.replayQuizAudio = replayQuizAudio;
+
+      function initGame() {
+        switchBiome('forest');
+
+        window.addEventListener('resize', () => {
+          resizeCanvases();
+          setCharacterAtT(currentT);
+        });
+
+        requestAnimationFrame(() => {
+          resizeCanvases();
+          setCharacterAtT(0);
+        });
+
+        setTimeout(() => {
+          resizeCanvases();
+          setCharacterAtT(0);
+        }, 120);
+      }
+
+      if (document.readyState === 'loading') {
+        window.addEventListener('DOMContentLoaded', initGame);
+      } else {
+        initGame();
+      }
+    })();
+  </script>
+</body>
+</html>

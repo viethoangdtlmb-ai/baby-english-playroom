@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+  <title>Magic Shadow Match - Sân Khấu Rối Bóng Kỳ Diệu (Chuẩn 52 Tuần)</title>
+  
+  <link rel="stylesheet" href="../shared/styles.css">
+  <script src="../shared/audio.js"></script>
+  <script src="../shared/vocabulary.js"></script>
+  <script src="../shared/missions.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      margin: 0;
+      padding: 0;
+    }
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Fredoka', 'Nunito', 'Comic Sans MS', cursive, sans-serif;
+      background: radial-gradient(circle at 50% 20%, #FFFDE7 0%, #E8F5E9 48%, #C8E6C9 100%);
+      touch-action: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 16px 20px;
+      position: relative;
+    }
+
+    /* Theater Spotlight Beams */
+    .spotlight-beam {
+      position: absolute;
+      top: 0;
+      width: 280px;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.14;
+      background: linear-gradient(180deg, rgba(255, 235, 59, 0.9) 0%, rgba(255, 255, 255, 0) 80%);
+      transform-origin: top center;
+      filter: blur(16px);
+      animation: sweepTheaterLight 7s infinite ease-in-out alternate;
+    }
+    .beam-left { left: 8%; transform: rotate(-15deg); animation-duration: 8s; }
+    .beam-right { right: 8%; transform: rotate(15deg); animation-duration: 6.5s; }
+    @keyframes sweepTheaterLight {
+      0% { transform: rotate(-14deg); }
+      100% { transform: rotate(14deg); }
+    }
+
+    /* Top HUD */
+    .hud {
+      width: 100%;
+      max-width: 1050px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 30;
+    }
+    .btn-back {
+      background: #FFF;
+      color: #0288D1;
+      border: 3.5px solid #29B6F6;
+      border-radius: 50px;
+      padding: 10px 24px;
+      font-size: 1.15rem;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: 0 4px 14px rgba(2, 136, 209, 0.22);
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+    .btn-back:active { transform: scale(0.94); }
+
+    /* HUD Level Pill */
+    .level-badge-pill {
+      background: white;
+      border: 3.5px solid #FFA726;
+      border-radius: 40px;
+      padding: 8px 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 6px 18px rgba(255, 167, 38, 0.25);
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #E65100;
+    }
+
+    /* Star Score Badge */
+    .star-hud-badge {
+      background: white;
+      border: 3.5px solid #FFD54F;
+      border-radius: 30px;
+      padding: 8px 20px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 14px rgba(255, 213, 79, 0.35);
+      font-weight: 800;
+      font-size: 1.2rem;
+      color: #F57F17;
+    }
+
+    /* Theater Stage Area */
+    .theater-stage {
+      width: 100%;
+      max-width: 1050px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 10;
+      position: relative;
+    }
+
+    /* Target Row: 3 Big Shadow Frames */
+    .target-shadow-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 36px;
+      width: 100%;
+      z-index: 15;
+    }
+
+    .shadow-slot {
+      width: 180px;
+      height: 180px;
+      border-radius: 36px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 4px dashed #81C784;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      box-shadow: 0 10px 24px rgba(46, 125, 50, 0.12), inset 0 2px 6px rgba(0,0,0,0.06);
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+
+    /* Calling Glow when Card is selected or dragged nearby */
+    .shadow-slot.target-calling {
+      border: 4px solid #FFA726 !important;
+      background: #FFF8E1 !important;
+      transform: scale(1.08) translateY(-6px);
+      box-shadow: 0 0 28px rgba(255, 167, 38, 0.65), 0 12px 28px rgba(0,0,0,0.15) !important;
+    }
+
+    /* Golden star indicator pointing to the shadow */
+    .slot-star-hint {
+      position: absolute;
+      top: -46px;
+      font-size: 2.6rem;
+      pointer-events: none;
+      display: none;
+      animation: starHintHop 0.7s infinite alternate ease-in-out;
+      filter: drop-shadow(0 4px 8px rgba(255, 167, 38, 0.5));
+    }
+    .shadow-slot.target-calling .slot-star-hint {
+      display: block;
+    }
+    @keyframes starHintHop {
+      0% { transform: translateY(0) scale(1); }
+      100% { transform: translateY(-12px) scale(1.2); }
+    }
+
+    /* Sharp Distinctive Silhouette */
+    .shadow-silhouette {
+      font-size: 5.6rem;
+      line-height: 1;
+      filter: brightness(0) opacity(0.38) drop-shadow(0 4px 6px rgba(0,0,0,0.25));
+      pointer-events: none;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s;
+    }
+
+    /* Solfege / English Label below silhouette */
+    .slot-shadow-label {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: rgba(55, 71, 79, 0.4);
+      margin-top: 4px;
+      pointer-events: none;
+      letter-spacing: 0.5px;
+    }
+
+    /* Matched Awakened State */
+    .shadow-slot.matched {
+      background: white !important;
+      border: 4px solid #4CAF50 !important;
+      box-shadow: 0 12px 30px rgba(76, 175, 80, 0.35) !important;
+      transform: scale(1.05);
+    }
+    .shadow-slot.matched .shadow-silhouette {
+      filter: drop-shadow(0 8px 16px rgba(0,0,0,0.22)) !important;
+      animation: awakeningPop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+    .shadow-slot.matched .slot-shadow-label {
+      color: #2E7D32 !important;
+      font-weight: 900;
+    }
+
+    @keyframes awakeningPop {
+      0% { transform: scale(0.4) rotate(-15deg); filter: brightness(0) opacity(0.3); }
+      60% { transform: scale(1.35) rotate(8deg); filter: none; }
+      80% { transform: scale(0.95) rotate(-4deg); }
+      100% { transform: scale(1.1) rotate(0deg); filter: drop-shadow(0 8px 16px rgba(0,0,0,0.22)); }
+    }
+
+    /* Source Row: 3 Draggable Living Puppet Cards */
+    .source-cards-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 36px;
+      width: 100%;
+      z-index: 20;
+    }
+
+    .drag-card {
+      width: 160px;
+      height: 168px;
+      background: white;
+      border: 4px solid #FFD54F;
+      border-radius: 32px;
+      box-shadow: 0 10px 0 #FFB300, 0 14px 26px rgba(0,0,0,0.14);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 8px 12px;
+      cursor: grab;
+      touch-action: none;
+      transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.15s, box-shadow 0.15s;
+      position: relative;
+    }
+    .drag-card:active {
+      cursor: grabbing;
+    }
+
+    .drag-card.selected-tap {
+      border-color: #FF5722 !important;
+      transform: translateY(-12px) scale(1.08) !important;
+      box-shadow: 0 12px 0 #E64A19, 0 18px 32px rgba(255, 87, 34, 0.35) !important;
+      animation: gentleWiggle 0.6s infinite alternate ease-in-out;
+    }
+    @keyframes gentleWiggle {
+      0% { transform: translateY(-12px) scale(1.08) rotate(-3deg); }
+      100% { transform: translateY(-12px) scale(1.08) rotate(3deg); }
+    }
+
+    .drag-emoji {
+      font-size: 5rem;
+      line-height: 1;
+      pointer-events: none;
+      filter: drop-shadow(0 6px 12px rgba(0,0,0,0.16));
+      transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .drag-card:active .drag-emoji, .drag-card.dragging .drag-emoji {
+      transform: scale(1.22);
+    }
+
+    .drag-label {
+      font-size: 1.35rem;
+      font-weight: 900;
+      color: #37474F;
+      pointer-events: none;
+      letter-spacing: 0.5px;
+    }
+
+    /* Matched Disappear Animation */
+    .drag-card.card-matched-away {
+      animation: cardFlyInSlot 0.4s forwards ease-in;
+      pointer-events: none;
+    }
+    @keyframes cardFlyInSlot {
+      0% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(0.2) translateY(-120px); opacity: 0; }
+    }
+
+    /* Floating Sparkles & Star Particles */
+    .star-pop-fx {
+      position: absolute;
+      font-size: 3rem;
+      pointer-events: none;
+      z-index: 100;
+      animation: starBurstPop 1.2s forwards ease-out;
+    }
+    @keyframes starBurstPop {
+      0% { opacity: 1; transform: translate(0, 0) scale(0.3) rotate(0deg); }
+      50% { opacity: 1; transform: translate(var(--tx), var(--ty)) scale(1.35) rotate(180deg); }
+      100% { opacity: 0; transform: translate(var(--tx), calc(var(--ty) + 50px)) scale(0.8) rotate(360deg); }
+    }
+
+    /* Victory All Matched Dance */
+    .shadow-slot.all-win-dance {
+      animation: slotHappyDance 0.8s infinite alternate ease-in-out !important;
+    }
+    @keyframes slotHappyDance {
+      0% { transform: scale(1.05) translateY(0) rotate(-4deg); }
+      100% { transform: scale(1.12) translateY(-16px) rotate(4deg); }
+    }
+
+    /* Bottom Prompt Pill */
+    .prompt-footer-pill {
+      background: white;
+      border: 3.5px solid #FFA726;
+      border-radius: 36px;
+      padding: 10px 32px;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #E65100;
+      box-shadow: 0 6px 18px rgba(255, 167, 38, 0.22);
+      z-index: 25;
+      text-align: center;
+      letter-spacing: 0.3px;
+    }
+
+    /* Spotlight Wrap Container & Mobile Rules */
+    .spotlight-wrap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    @media (max-width: 768px) {
+      body, html {
+        padding: 6px 6px 10px;
+        max-width: 100vw;
+        overflow-x: hidden;
+      }
+      .hud {
+        width: 100%;
+        max-width: 100%;
+        flex-wrap: wrap;
+        gap: 4px;
+        justify-content: space-between;
+      }
+      .btn-back {
+        padding: 5px 12px;
+        font-size: 0.85rem;
+      }
+      .star-hud-badge {
+        padding: 5px 10px;
+        font-size: 0.85rem;
+        border-width: 2px;
+        gap: 4px;
+      }
+      .level-badge-pill {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        padding: 4px 8px;
+        font-size: 0.85rem;
+        border-width: 2px;
+        gap: 6px;
+      }
+      .theater-stage {
+        width: 100%;
+        max-width: 100%;
+        gap: 8px;
+      }
+      .target-shadow-row {
+        gap: 6px;
+        width: 100%;
+      }
+      .shadow-slot {
+        width: 31%;
+        max-width: 105px;
+        height: 105px;
+        border-radius: 18px;
+        border-width: 2.5px;
+      }
+      .shadow-silhouette {
+        font-size: 3rem;
+      }
+      .slot-shadow-label {
+        font-size: 0.72rem;
+        margin-top: 2px;
+      }
+      .source-cards-row {
+        gap: 6px;
+        width: 100%;
+      }
+      .drag-card {
+        width: 31%;
+        max-width: 105px;
+        height: 108px;
+        border-radius: 18px;
+        border-width: 2.5px;
+        padding: 8px 4px 6px;
+        box-shadow: 0 4px 0 #FFB300, 0 6px 12px rgba(0,0,0,0.12);
+      }
+      .card-avatar {
+        font-size: 2.5rem;
+      }
+      .card-word {
+        font-size: 0.72rem;
+      }
+      .prompt-footer-pill {
+        font-size: 0.8rem;
+        padding: 5px 12px;
+        margin-top: 2px;
+      }
+    }
+
+    @media (orientation: landscape) and (max-height: 520px) {
+      body, html {
+        padding: 2px 8px;
+      }
+      .hud {
+        padding: 2px 8px;
+        max-width: 100%;
+      }
+      .btn-back {
+        padding: 4px 12px;
+        font-size: 0.85rem;
+      }
+      .level-badge-pill {
+        padding: 3px 12px;
+        font-size: 0.85rem;
+      }
+      .star-hud-badge {
+        padding: 3px 10px;
+        font-size: 0.85rem;
+      }
+      .theater-stage {
+        gap: 6px;
+        padding: 0;
+        justify-content: space-around;
+      }
+      .target-shadow-row, .source-cards-row {
+        gap: 12px;
+      }
+      .shadow-slot {
+        width: min(130px, 24vw);
+        height: min(95px, 27vh);
+        border-radius: 18px;
+      }
+      .shadow-silhouette {
+        font-size: min(2.6rem, 15vh);
+      }
+      .drag-card {
+        width: min(130px, 24vw);
+        height: min(95px, 27vh);
+        border-radius: 18px;
+        padding: 6px 4px 4px;
+        box-shadow: 0 4px 0 #FFB300, 0 6px 12px rgba(0,0,0,0.12);
+      }
+      .drag-emoji {
+        font-size: min(2.6rem, 15vh);
+      }
+      .drag-label {
+        font-size: 0.8rem;
+      }
+      .prompt-footer-pill {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Theater Spotlights contained in spotlight-wrap -->
+  <div class="spotlight-wrap">
+    <div class="spotlight-beam beam-left"></div>
+    <div class="spotlight-beam beam-right"></div>
+  </div>
+
+  <!-- HUD -->
+  <div class="hud">
+    <a href="../index.html" class="btn-back">⬅ Menu</a>
+
+    <!-- Level Pill -->
+    <div class="level-badge-pill" id="level-badge-pill">
+      <span>🎭</span>
+      <span id="level-title-text">Màn 1: Các Bạn Thú</span>
+    </div>
+
+    <!-- Star Count Badge -->
+    <div class="star-hud-badge">
+      <span>⭐</span>
+      <span id="star-score-text">3 Stars</span>
+    </div>
+  </div>
+
+  <!-- Theater Stage Container -->
+  <div class="theater-stage" id="theater-stage">
+    <!-- Top Row: 3 Target Shadows -->
+    <div class="target-shadow-row" id="target-shadow-row"></div>
+
+    <!-- Bottom Row: 3 Draggable Cards -->
+    <div class="source-cards-row" id="source-cards-row"></div>
+  </div>
+
+  <!-- Bottom Guidance Pill -->
+  <div class="prompt-footer-pill" id="prompt-footer-pill">
+    🎭 Ghép bạn nhỏ vào bóng!
+  </div>
+
+  <script>
+    // -------------------------------------------------------------
+    // MAGIC SHADOW MATCH ENGINE (100% Natural Touch for 3yo)
+    // -------------------------------------------------------------
+    const AudioEngine = window.AudioEngine || window.ToddlerAudio || {};
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const queryWeek = parseInt(urlParams.get('week'));
+    const currentWeek = queryWeek || ((window.MissionEngine && MissionEngine.getCurrentWeek) ? MissionEngine.getCurrentWeek() : 1);
+    const weekData = (window.ToddlerVocabulary) ? window.ToddlerVocabulary.build80_20Pack(currentWeek) : null;
+
+    // Bộ sưu tập từ vựng chuẩn 52 tuần với hình bóng đặc trưng cao độ
+    const weekShadowPool = (weekData && weekData.shadowPool && weekData.shadowPool.length >= 3)
+      ? weekData.shadowPool.map(item => ({
+          id: item.id || item.word.toLowerCase(),
+          name: item.word,
+          emoji: item.emoji || '⭐',
+          sound: item.sound || 'Hello'
+        }))
+      : [
+          { id: 'elephant', name: 'Elephant', emoji: '🐘', sound: 'Pawoo pawoo' },
+          { id: 'giraffe', name: 'Giraffe', emoji: '🦒', sound: 'Tall giraffe' },
+          { id: 'rabbit', name: 'Rabbit', emoji: '🐰', sound: 'Hop hop hop' }
+        ];
+
+    const levels = [
+      {
+        title: `Màn 1: Bạn Nhỏ Quen Thuộc (Tuần ${currentWeek})`,
+        items: weekShadowPool
+      },
+      {
+        title: 'Màn 2: Rừng Xanh Kỳ Thú',
+        items: [
+          { id: 'lion', name: 'Lion', emoji: '🦁', sound: 'Roar roar' },
+          { id: 'monkey', name: 'Monkey', emoji: '🐵', sound: 'Ooh ooh aah aah' },
+          { id: 'panda', name: 'Panda', emoji: '🐼', sound: 'Cute panda' }
+        ]
+      },
+      {
+        title: 'Màn 3: Hoa Quả Ngọt Lành',
+        items: [
+          { id: 'apple', name: 'Apple', emoji: '🍎', sound: 'Crunch crunch' },
+          { id: 'banana', name: 'Banana', emoji: '🍌', sound: 'Yummy banana' },
+          { id: 'carrot', name: 'Carrot', emoji: '🥕', sound: 'Crunchy carrot' }
+        ]
+      },
+      {
+        title: 'Màn 4: Phương Tiện Vi Vu',
+        items: [
+          { id: 'train', name: 'Train', emoji: '🚂', sound: 'Choo choo' },
+          { id: 'plane', name: 'Plane', emoji: '✈️', sound: 'Whoosh' },
+          { id: 'boat', name: 'Boat', emoji: '⛵', sound: 'Splish splash' }
+        ]
+      },
+      {
+        title: 'Màn 5: Khám Phá Vũ Trụ',
+        items: [
+          { id: 'rocket', name: 'Rocket', emoji: '🚀', sound: 'Blast off' },
+          { id: 'rainbow', name: 'Rainbow', emoji: '🌈', sound: 'Beautiful rainbow' },
+          { id: 'star', name: 'Star', emoji: '⭐', sound: 'Twinkle twinkle' }
+        ]
+      },
+      {
+        title: 'Màn 6: Nông Trại Vui Vẻ',
+        items: [
+          { id: 'duck', name: 'Duck', emoji: '🦆', sound: 'Quack quack' },
+          { id: 'pig', name: 'Pig', emoji: '🐷', sound: 'Oink oink' },
+          { id: 'sheep', name: 'Sheep', emoji: '🐑', sound: 'Baa baa' }
+        ]
+      },
+      {
+        title: 'Màn 7: Thế Giới Đại Dương',
+        items: [
+          { id: 'fish', name: 'Fish', emoji: '🐟', sound: 'Swim swim' },
+          { id: 'whale', name: 'Whale', emoji: '🐳', sound: 'Big whale' },
+          { id: 'crab', name: 'Crab', emoji: '🦀', sound: 'Click clack' }
+        ]
+      },
+      {
+        title: 'Màn 8: Khu Vườn Xinh Xắn',
+        items: [
+          { id: 'butterfly', name: 'Butterfly', emoji: '🦋', sound: 'Flutter flutter' },
+          { id: 'bee', name: 'Bee', emoji: '🐝', sound: 'Buzzz buzzz' },
+          { id: 'flower', name: 'Flower', emoji: '🌸', sound: 'Pretty flower' }
+        ]
+      },
+      {
+        title: 'Màn 9: Món Ngon Của Bé',
+        items: [
+          { id: 'icecream', name: 'Ice Cream', emoji: '🍦', sound: 'Cold and sweet' },
+          { id: 'cake', name: 'Cake', emoji: '🎂', sound: 'Yummy cake' },
+          { id: 'pizza', name: 'Pizza', emoji: '🍕', sound: 'Yummy pizza' }
+        ]
+      },
+      {
+        title: 'Màn 10: Giờ Chơi Sôi Nổi',
+        items: [
+          { id: 'ball', name: 'Ball', emoji: '⚽', sound: 'Bounce bounce' },
+          { id: 'car', name: 'Car', emoji: '🚗', sound: 'Vroom vroom' },
+          { id: 'bike', name: 'Bicycle', emoji: '🚲', sound: 'Ring ring' }
+        ]
+      },
+      {
+        title: 'Màn 11: Đầm Lầy Tinh Nghịch',
+        items: [
+          { id: 'frog', name: 'Frog', emoji: '🐸', sound: 'Ribbit ribbit' },
+          { id: 'turtle', name: 'Turtle', emoji: '🐢', sound: 'Slow turtle' },
+          { id: 'croc', name: 'Crocodile', emoji: '🐊', sound: 'Snap snap' }
+        ]
+      },
+      {
+        title: 'Màn 12: Xứ Sở Băng Giá',
+        items: [
+          { id: 'penguin', name: 'Penguin', emoji: '🐧', sound: 'Waddle waddle' },
+          { id: 'bear', name: 'Bear', emoji: '🐻', sound: 'Warm teddy bear' },
+          { id: 'snow', name: 'Snowman', emoji: '☃️', sound: 'Cold cold' }
+        ]
+      },
+      {
+        title: 'Màn 13: Giai Điệu Rộn Ràng',
+        items: [
+          { id: 'guitar', name: 'Guitar', emoji: '🎸', sound: 'Strum strum' },
+          { id: 'drum', name: 'Drum', emoji: '🥁', sound: 'Boom boom' },
+          { id: 'balloon', name: 'Balloon', emoji: '🎈', sound: 'Pop pop' }
+        ]
+      },
+      {
+        title: 'Màn 14: Bầu Trời Yêu Thương',
+        items: [
+          { id: 'sun', name: 'Sun', emoji: '☀️', sound: 'Bright sun' },
+          { id: 'moon', name: 'Moon', emoji: '🌙', sound: 'Good night moon' },
+          { id: 'cloud', name: 'Cloud', emoji: '☁️', sound: 'Fluffy cloud' }
+        ]
+      },
+      {
+        title: 'Màn 15: Vương Quốc Vinh Quang',
+        items: [
+          { id: 'dino', name: 'Dinosaur', emoji: '🦖', sound: 'Rawr rawr dino' },
+          { id: 'crown', name: 'Crown', emoji: '👑', sound: 'Royal crown' },
+          { id: 'cup', name: 'Trophy', emoji: '🏆', sound: 'Number one trophy' }
+        ]
+      }
+    ];
+
+    let currentLevel = 0;
+    let matchCount = 0;
+    let selectedCard = null;
+    let isTransitioning = false;
+    let earnedStars = 3;
+
+    const targetRow = document.getElementById('target-shadow-row');
+    const sourceRow = document.getElementById('source-cards-row');
+    const promptPill = document.getElementById('prompt-footer-pill');
+    const levelTitle = document.getElementById('level-title-text');
+    const starScoreText = document.getElementById('star-score-text');
+
+    // -------------------------------------------------------------
+    // TẢI CẤP ĐỘ MỚI (LOAD LEVEL)
+    // -------------------------------------------------------------
+    function loadLevel(lvlIdx) {
+      matchCount = 0;
+      selectedCard = null;
+      isTransitioning = false;
+      targetRow.innerHTML = '';
+      sourceRow.innerHTML = '';
+
+      const lvl = levels[lvlIdx % levels.length];
+      levelTitle.innerText = lvl.title;
+      promptPill.innerText = '🎭 Ghép bạn nhỏ vào bóng!';
+
+      // Shuffle danh sách hiển thị thẻ bài
+      const shuffledItems = [...lvl.items].sort(() => Math.random() - 0.5);
+
+      // 1. Tạo 3 khung bóng đen (Target Shadows)
+      lvl.items.forEach(item => {
+        const slot = document.createElement('div');
+        slot.className = 'shadow-slot';
+        slot.id = 'slot-' + item.id;
+        slot.dataset.id = item.id;
+        slot.dataset.name = item.name;
+        slot.dataset.sound = item.sound;
+
+        const iconHtml = (window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon)
+          ? ToddlerVocabulary.renderWordIcon(item, 88)
+          : item.emoji;
+
+        slot.innerHTML = `
+          <div class="slot-star-hint">⭐👆</div>
+          <span class="shadow-silhouette" id="sil-${item.id}">${iconHtml}</span>
+          <span class="slot-shadow-label">${item.name}</span>
+        `;
+
+        // Chạm vào bóng khi đã chọn thẻ bài (Tap & Snap)
+        function handleSlotAction() {
+          if (isTransitioning || slot.classList.contains('matched')) return;
+
+          if (selectedCard) {
+            if (selectedCard.dataset.id === slot.dataset.id) {
+              performSuccessMatch(selectedCard, slot);
+            } else {
+              // Bấm nhầm bóng khác: Rung nhẹ báo hiệu
+              slot.style.transform = 'translateX(-8px)';
+              setTimeout(() => slot.style.transform = 'translateX(8px)', 80);
+              setTimeout(() => slot.style.transform = '', 160);
+              if (AudioEngine.playBoing) AudioEngine.playBoing();
+              AudioEngine.speak(`No, find ${selectedCard.dataset.name}'s shadow!`);
+            }
+          } else {
+            // Chạm bóng khi chưa chọn thẻ: Gợi ý tìm bạn
+            AudioEngine.speak(`Where is ${item.name}? Tap ${item.name}!`);
+            highlightMatchingCard(item.id);
+          }
+        }
+
+        slot.addEventListener('pointerdown', (e) => {
+          e.stopPropagation();
+          handleSlotAction();
+        });
+        slot.addEventListener('click', (e) => {
+          e.stopPropagation();
+          handleSlotAction();
+        });
+
+        targetRow.appendChild(slot);
+      });
+
+      // 2. Tạo 3 thẻ bài bạn nhỏ (Draggable Cards)
+      shuffledItems.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'drag-card';
+        card.id = 'card-' + item.id;
+        card.dataset.id = item.id;
+        card.dataset.name = item.name;
+        card.dataset.sound = item.sound;
+
+        const cardIconHtml = (window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon)
+          ? ToddlerVocabulary.renderWordIcon(item, 84)
+          : item.emoji;
+
+        card.innerHTML = `
+          <span class="drag-emoji">${cardIconHtml}</span>
+          <span class="drag-label">${item.name.toUpperCase()}</span>
+        `;
+
+        // Gắn cơ chế Kéo Thả Nam Châm
+        attachMagneticDrag(card);
+
+        // Chạm để chọn (Tap to Select)
+        function handleCardSelect() {
+          if (isTransitioning) return;
+          if (activeDrag && activeDrag.hasMoved) return;
+
+          AudioEngine.init();
+          AudioEngine.speak(`${item.name}!`);
+
+          // Bỏ chọn thẻ cũ
+          document.querySelectorAll('.drag-card').forEach(c => c.classList.remove('selected-tap'));
+          document.querySelectorAll('.shadow-slot').forEach(s => s.classList.remove('target-calling'));
+
+          // Chọn thẻ mới
+          selectedCard = card;
+          card.classList.add('selected-tap');
+
+          // Làm bóng tương ứng sáng bừng vẫy gọi
+          const matchingSlot = document.getElementById('slot-' + item.id);
+          if (matchingSlot && !matchingSlot.classList.contains('matched')) {
+            matchingSlot.classList.add('target-calling');
+            promptPill.innerText = `⭐ Chạm vào bóng đen của ${item.name} nào!`;
+          }
+        }
+
+        card.addEventListener('pointerdown', (e) => {
+          handleCardSelect();
+        });
+        card.addEventListener('click', (e) => {
+          handleCardSelect();
+        });
+
+        sourceRow.appendChild(card);
+      });
+    }
+
+    function highlightMatchingCard(itemId) {
+      const card = document.getElementById('card-' + itemId);
+      if (card) {
+        card.style.transform = 'scale(1.22)';
+        setTimeout(() => card.style.transform = '', 400);
+      }
+    }
+
+    // -------------------------------------------------------------
+    // KHỚP ĐÚNG BÓNG ĐEN (PERFORM SUCCESS MATCH & AWAKENING)
+    // -------------------------------------------------------------
+    function performSuccessMatch(card, targetSlot) {
+      if (targetSlot.classList.contains('matched')) return;
+
+      document.querySelectorAll('.shadow-slot').forEach(s => s.classList.remove('target-calling'));
+      document.querySelectorAll('.drag-card').forEach(c => c.classList.remove('selected-tap'));
+
+      targetSlot.classList.add('matched');
+
+      // Âm thanh chuông ngân & Giọng đọc Motherese
+      if (AudioEngine.playChime) AudioEngine.playChime();
+      AudioEngine.speak(`Yes! ${targetSlot.dataset.name}! ${targetSlot.dataset.sound}! Good job!`);
+
+      // Hiệu ứng pháo hoa sao nhỏ
+      const rect = targetSlot.getBoundingClientRect();
+      spawnSparkles(rect.left + rect.width / 2, rect.top + rect.height / 2);
+
+      // Thẻ bài biến mất mượt mà
+      card.classList.add('card-matched-away');
+      setTimeout(() => card.remove(), 420);
+
+      selectedCard = null;
+      matchCount++;
+
+      // Ghi nhận tiến độ nhiệm vụ
+      if (window.MissionEngine && MissionEngine.recordAction) {
+        MissionEngine.recordAction();
+      }
+
+      promptPill.innerText = `✨ Tuyệt vời! Bé đã tìm đúng ${targetSlot.dataset.name}!`;
+
+      // Nếu đã ghép đủ 3 bạn nhỏ
+      if (matchCount >= 3) {
+        onLevelCompleted();
+      }
+    }
+
+    // Ăn mừng hoàn thành cấp độ & Tự động sang màn mới
+    function onLevelCompleted() {
+      isTransitioning = true;
+      earnedStars += 3;
+      starScoreText.innerText = `${earnedStars} Stars ⭐`;
+
+      promptPill.innerText = '🎉 Hoan hô! Bé đã ghép đúng tất cả các bạn nhỏ! 🌟';
+
+      setTimeout(() => {
+        if (AudioEngine.playFanfare) AudioEngine.playFanfare();
+        AudioEngine.speak('Wonderful! All shadows matched! You did it!');
+
+        // 3 bạn nhỏ cùng nhảy múa chiến thắng
+        document.querySelectorAll('.shadow-slot').forEach(slot => {
+          slot.classList.add('all-win-dance');
+        });
+
+        // Bung nở 24 pháo hoa ngôi sao
+        spawnGrandCelebration();
+
+        // Tự động chuyển cấp độ mới sau 2.4s (Không cần ấn nút chữ!)
+        setTimeout(() => {
+          currentLevel = (currentLevel + 1) % levels.length;
+          loadLevel(currentLevel);
+        }, 2400);
+      }, 500);
+    }
+
+    // -------------------------------------------------------------
+    // KÉO THẢ NAM CHÂM SIÊU NHẠY (MAGNETIC SNAP DRAG)
+    // -------------------------------------------------------------
+    let activeDrag = null;
+
+    function attachMagneticDrag(card) {
+      card.addEventListener('pointerdown', (e) => {
+        if (isTransitioning) return;
+        AudioEngine.init();
+
+        const rect = card.getBoundingClientRect();
+        activeDrag = {
+          elem: card,
+          startX: e.clientX,
+          startY: e.clientY,
+          offsetX: e.clientX - rect.left,
+          offsetY: e.clientY - rect.top,
+          hasMoved: false
+        };
+
+        card.setPointerCapture(e.pointerId);
+      });
+
+      card.addEventListener('pointermove', (e) => {
+        if (!activeDrag || activeDrag.elem !== card) return;
+
+        const dx = Math.abs(e.clientX - activeDrag.startX);
+        const dy = Math.abs(e.clientY - activeDrag.startY);
+
+        if (dx > 8 || dy > 8) {
+          activeDrag.hasMoved = true;
+          card.classList.add('dragging');
+          card.style.position = 'fixed';
+          card.style.zIndex = '100';
+          card.style.transform = 'scale(1.25)';
+          card.style.left = `${e.clientX - activeDrag.offsetX}px`;
+          card.style.top = `${e.clientY - activeDrag.offsetY}px`;
+
+          // Kiểm tra vị trí gần bóng tương ứng (Lực hút nam châm)
+          checkMagneticHover(card, e.clientX, e.clientY);
+        }
+      });
+
+      card.addEventListener('pointerup', (e) => {
+        if (!activeDrag || activeDrag.elem !== card) return;
+
+        if (activeDrag.hasMoved) {
+          card.classList.remove('dragging');
+          resolveDragDrop(card, e.clientX, e.clientY);
+        }
+
+        activeDrag = null;
+      });
+
+      card.addEventListener('pointercancel', () => {
+        if (activeDrag && activeDrag.elem === card) {
+          resetCardPosition(card);
+          activeDrag = null;
+        }
+      });
+    }
+
+    function checkMagneticHover(card, cx, cy) {
+      const targetSlot = document.getElementById('slot-' + card.dataset.id);
+      if (!targetSlot || targetSlot.classList.contains('matched')) return;
+
+      const sRect = targetSlot.getBoundingClientRect();
+      const sx = sRect.left + sRect.width / 2;
+      const sy = sRect.top + sRect.height / 2;
+      const dist = Math.hypot(cx - sx, cy - sy);
+
+      // Nếu trong phạm vi 150px: Kích hoạt lực hút nam châm
+      if (dist < 150) {
+        targetSlot.classList.add('target-calling');
+      } else {
+        targetSlot.classList.remove('target-calling');
+      }
+    }
+
+    function resolveDragDrop(card, cx, cy) {
+      const targetSlot = document.getElementById('slot-' + card.dataset.id);
+
+      if (targetSlot && !targetSlot.classList.contains('matched')) {
+        const sRect = targetSlot.getBoundingClientRect();
+        const sx = sRect.left + sRect.width / 2;
+        const sy = sRect.top + sRect.height / 2;
+        const dist = Math.hypot(cx - sx, cy - sy);
+
+        // Khớp thành công trong bán kính nam châm rộng 150px
+        if (dist < 150) {
+          performSuccessMatch(card, targetSlot);
+          return;
+        }
+      }
+
+      // Không khớp: Thẻ nảy đàn hồi về vị trí cũ
+      resetCardPosition(card);
+    }
+
+    function resetCardPosition(card) {
+      card.style.position = 'relative';
+      card.style.left = '0px';
+      card.style.top = '0px';
+      card.style.zIndex = '1';
+      card.style.transform = '';
+      document.querySelectorAll('.shadow-slot').forEach(s => s.classList.remove('target-calling'));
+    }
+
+    // -------------------------------------------------------------
+    // HIỆU ỨNG THỊ GIÁC PHÁO HOA & NGÔI SAO
+    // -------------------------------------------------------------
+    function spawnSparkles(cx, cy) {
+      const items = ['⭐', '✨', '💖', '🍭', '🎉'];
+      for (let i = 0; i < 14; i++) {
+        const fx = document.createElement('div');
+        fx.className = 'star-pop-fx';
+        fx.innerText = items[i % items.length];
+        const angle = (i / 14) * Math.PI * 2;
+        const dist = 70 + Math.random() * 80;
+        const tx = Math.cos(angle) * dist;
+        const ty = Math.sin(angle) * dist - 25;
+
+        fx.style.setProperty('--tx', `${tx}px`);
+        fx.style.setProperty('--ty', `${ty}px`);
+        fx.style.left = `${cx}px`;
+        fx.style.top = `${cy}px`;
+
+        document.body.appendChild(fx);
+        setTimeout(() => fx.remove(), 1100);
+      }
+    }
+
+    function spawnGrandCelebration() {
+      const items = ['⭐', '✨', '💖', '🎉', '🌟', '🍭', '🎨'];
+      for (let i = 0; i < 24; i++) {
+        const fx = document.createElement('div');
+        fx.className = 'star-pop-fx';
+        fx.innerText = items[i % items.length];
+        const angle = (i / 24) * Math.PI * 2;
+        const dist = 120 + Math.random() * 150;
+        const tx = Math.cos(angle) * dist;
+        const ty = Math.sin(angle) * dist - 30;
+
+        fx.style.setProperty('--tx', `${tx}px`);
+        fx.style.setProperty('--ty', `${ty}px`);
+        fx.style.left = '50%';
+        fx.style.top = '40%';
+
+        document.body.appendChild(fx);
+        setTimeout(() => fx.remove(), 1200);
+      }
+    }
+
+    // Expose helpers globally
+    window.loadLevel = loadLevel;
+    window.performSuccessMatch = performSuccessMatch;
+
+    // Initialize Day 5 Mission (Roadmap integration & Sticker Unlock)
+    if (window.MissionEngine && MissionEngine.initGameMission) {
+      MissionEngine.initGameMission('mission_day_5', '.hud');
+    }
+
+    // Khởi tạo Màn 1
+    loadLevel(0);
+
+    window.addEventListener('pointerdown', () => {
+      if (window.AudioEngine) {
+        AudioEngine.init();
+        AudioEngine.startBGM('action');
+      }
+    }, { once: true });
+
+    setTimeout(() => {
+      AudioEngine.speak('Shadow Match!');
+    }, 600);
+  </script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+# Toddler Audio BGM Asset Licenses (100% CC0 Public Domain)
+
+All background music tracks in this directory are dedicated to the Public Domain under Creative Commons Zero (CC0 1.0 Universal).
+No copyright restrictions. Free for commercial, non-commercial, educational, and distribution use with no attribution required.
+
+1. bgm_playroom_hub.mp3
+   - Track: "Children's March Theme"
+   - Author: CleytonKauffman
+   - License: CC0 1.0 Universal (Public Domain)
+   - Source: https://opengameart.org/content/childrens-march-theme
+
+2. bgm_game_action.mp3
+   - Track: "Happy Adventure (Loop)"
+   - Author: TinyWorlds
+   - License: CC0 1.0 Universal (Public Domain)
+   - Source: https://opengameart.org/content/happy-adventure-loop
+
+3. bgm_game_caring.mp3
+   - Track: "Wintery loop"
+   - Author: Emma_MA
+   - License: CC0 1.0 Universal (Public Domain)
+   - Notice: "This track has been released into the public domain as of January 2017."
+   - Source: https://opengameart.org/content/wintery-loop
+
+4. bgm_happy_sunshine.mp3
+   - Track: "Happy Tune"
+   - Author: syncopika
+   - License: CC0 1.0 Universal (Public Domain)
+   - Source: https://opengameart.org/content/happy-tune
+
+5. bgm_puzzle_play.mp3
+   - Track: "Crystal Cave Song"
+   - Author: cynicmusic
+   - License: CC0 1.0 Universal (Public Domain)
+   - Source: https://opengameart.org/content/crystal-cave-song18

@@ -1,0 +1,1618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+  <title>Magic Word Mixer & Disco Stage - English for Toddlers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/styles.css">
+  <style>
+    :root {
+      --char-color: #FF5252;
+      --char-scale: 1;
+    }
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      margin: 0;
+      padding: 0;
+    }
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Fredoka One', 'Nunito', cursive, sans-serif;
+      background: radial-gradient(circle at center, #FFFDF7 0%, #EDE7F6 45%, #D1C4E9 100%);
+      touch-action: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+
+    /* Ambient Floating Disco Lights */
+    .bg-disco-light {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 1;
+      filter: blur(2px);
+      animation: floatDisco 10s infinite ease-in-out alternate;
+    }
+    @keyframes floatDisco {
+      0% { transform: translateY(0) scale(1); opacity: 0.35; }
+      100% { transform: translateY(-50px) scale(1.2); opacity: 0.7; }
+    }
+
+    /* HUD Header */
+    .hud {
+      width: 100%;
+      max-width: 980px;
+      padding: 10px 20px 4px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 30;
+      gap: 12px;
+    }
+    .btn-back {
+      background: linear-gradient(135deg, #7E57C2 0%, #5E35B1 100%);
+      color: #FFF;
+      border: 3.5px solid #FFF;
+      border-radius: 50px;
+      padding: 10px 22px;
+      font-size: 1.15rem;
+      font-weight: 900;
+      text-decoration: none;
+      box-shadow: 0 6px 16px rgba(94, 53, 177, 0.35), inset 0 2px 4px rgba(255,255,255,0.4);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .btn-back:active {
+      transform: scale(0.92);
+    }
+
+    /* -------------------------------------------------------------
+       GOAL TARGET CARD (Hiển thị trực tiếp kết quả mục tiêu bé cần tìm)
+       ------------------------------------------------------------- */
+    .goal-preview-card {
+      background: linear-gradient(135deg, #FFFDF7 0%, #FFF8E1 100%);
+      border: 4.5px solid #FFA000;
+      border-radius: 44px;
+      padding: 6px 18px 6px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 10px 26px rgba(255, 160, 0, 0.35);
+      cursor: pointer;
+      animation: targetPulse 2.4s infinite ease-in-out;
+      transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
+    }
+    .goal-preview-card:active {
+      transform: scale(0.95);
+    }
+    .goal-preview-card.matched-bounce {
+      animation: matchSuccessBounce 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border-color: #4CAF50;
+      box-shadow: 0 0 30px rgba(76, 175, 80, 0.6);
+    }
+    @keyframes matchSuccessBounce {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.15) rotate(3deg); }
+    }
+    @keyframes targetPulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 8px 22px rgba(255, 160, 0, 0.25); }
+      50% { transform: scale(1.04); box-shadow: 0 12px 28px rgba(255, 160, 0, 0.45); }
+    }
+
+    .goal-label-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      line-height: 1.1;
+    }
+    .goal-label-badge span:first-child {
+      font-size: 0.95rem;
+      font-weight: 900;
+      color: #E65100;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .goal-label-badge span:last-child {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: #8D6E63;
+    }
+
+    /* Miniature Visual Avatar of the Target */
+    .goal-visual-box {
+      position: relative;
+      width: 58px;
+      height: 58px;
+      background: #FFFFFF;
+      border: 3.5px solid #FFB300;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.08), 0 4px 10px rgba(0,0,0,0.12);
+      overflow: visible;
+    }
+    .goal-mini-svg {
+      width: 48px;
+      height: 48px;
+      pointer-events: none;
+    }
+    .goal-action-badge {
+      position: absolute;
+      bottom: -6px;
+      right: -6px;
+      background: #FFFFFF;
+      border: 2.5px solid #FFA000;
+      border-radius: 50%;
+      width: 26px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      animation: actionBadgeWobble 1.6s infinite ease-in-out alternate;
+    }
+    @keyframes actionBadgeWobble {
+      0% { transform: scale(0.9) rotate(-10deg); }
+      100% { transform: scale(1.1) rotate(10deg); }
+    }
+
+    .goal-text-info {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+    }
+    .goal-phrase-name {
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: #3E2723;
+      letter-spacing: 0.3px;
+    }
+
+    .goal-speaker-icon {
+      font-size: 1.35rem;
+      animation: speakerBob 1.2s infinite ease-in-out;
+      margin-left: 2px;
+    }
+    @keyframes speakerBob {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.25); }
+    }
+
+    /* 3-Star Progress Tracker */
+    .hud-stars-box {
+      background: rgba(255, 255, 255, 0.95);
+      border: 3.5px solid #FFD54F;
+      border-radius: 50px;
+      padding: 6px 16px;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    }
+    .hud-star {
+      font-size: 1.7rem;
+      filter: grayscale(1);
+      opacity: 0.35;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .hud-star.earned {
+      filter: grayscale(0) drop-shadow(0 0 8px #FFD54F);
+      opacity: 1;
+      transform: scale(1.18);
+    }
+
+    /* Live Broadway Disco Stage */
+    .stage-area {
+      position: relative;
+      width: 100%;
+      max-width: 760px;
+      height: 48%;
+      background: linear-gradient(180deg, #FFFFFF 0%, #F5F5F5 60%, #E0E0E0 100%);
+      border-radius: 40px;
+      border: 6px solid #FFD54F;
+      box-shadow: 0 16px 36px rgba(0,0,0,0.14), inset 0 6px 18px rgba(255, 235, 59, 0.25);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      margin: 4px 0;
+      z-index: 10;
+    }
+
+    /* Spotlight Beam */
+    .stage-spotlight {
+      position: absolute;
+      top: -20px;
+      width: 320px;
+      height: 340px;
+      background: radial-gradient(ellipse at top, rgba(255, 238, 88, 0.5) 0%, rgba(255, 238, 88, 0) 70%);
+      pointer-events: none;
+      border-radius: 50%;
+      z-index: 2;
+      animation: spotSweep 4s infinite ease-in-out alternate;
+    }
+    @keyframes spotSweep {
+      0% { transform: rotate(-15deg); }
+      100% { transform: rotate(15deg); }
+    }
+
+    /* Stage Floor Mat */
+    .prop-ground {
+      position: absolute;
+      bottom: 12px;
+      width: 82%;
+      height: 18px;
+      background: linear-gradient(90deg, #81C784 0%, #A5D6A7 50%, #81C784 100%);
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+      z-index: 3;
+    }
+
+    /* Live Phrase Banner on Top of Stage */
+    .phrase-bar {
+      position: absolute;
+      top: 12px;
+      display: flex;
+      gap: 10px;
+      z-index: 15;
+    }
+    .chip {
+      background: #FFF;
+      border: 3px solid #FFA000;
+      border-radius: 25px;
+      padding: 6px 16px;
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: #E65100;
+      box-shadow: 0 4px 12px rgba(255, 160, 0, 0.25);
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* Character Container */
+    .actor-container {
+      position: relative;
+      width: 210px;
+      height: 210px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 5;
+      cursor: pointer;
+      transform: scale(var(--char-scale));
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .actor-container:active {
+      transform: scale(calc(var(--char-scale) * 1.15));
+    }
+    .actor-svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 12px 22px rgba(0,0,0,0.2));
+      overflow: visible;
+    }
+
+    /* Fur class that responds to selected color */
+    .char-fur {
+      fill: var(--char-color);
+      transition: fill 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* ANIMATIONS FOR ACTIONS */
+    .action-jump {
+      animation: animJump 0.65s infinite alternate cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes animJump {
+      0% { transform: scale(var(--char-scale)) translateY(20px) scaleY(0.85); }
+      100% { transform: scale(var(--char-scale)) translateY(-65px) scaleY(1.15); }
+    }
+
+    .action-run {
+      animation: animRun 0.75s infinite alternate ease-in-out;
+    }
+    @keyframes animRun {
+      0% { transform: scale(var(--char-scale)) translateX(-120px) rotate(12deg); }
+      100% { transform: scale(var(--char-scale)) translateX(120px) rotate(-12deg); }
+    }
+
+    .action-sleep {
+      animation: animSleep 1.8s infinite alternate ease-in-out;
+    }
+    @keyframes animSleep {
+      0% { transform: scale(var(--char-scale)) rotate(-14deg) translateY(10px); }
+      100% { transform: scale(var(--char-scale)) rotate(-4deg) translateY(18px); }
+    }
+
+    .action-dance {
+      animation: animDance 0.42s infinite alternate ease-in-out;
+    }
+    @keyframes animDance {
+      0% { transform: scale(var(--char-scale)) rotate(-24deg) scale(1.1); }
+      100% { transform: scale(var(--char-scale)) rotate(24deg) scale(1.1); }
+    }
+
+    .action-eat {
+      animation: animEat 0.4s infinite alternate ease-in-out;
+    }
+    @keyframes animEat {
+      0% { transform: scale(var(--char-scale)) scale(0.96); }
+      100% { transform: scale(var(--char-scale)) scale(1.18); }
+    }
+
+    .action-sing {
+      animation: animSing 0.45s infinite alternate ease-in-out;
+    }
+    @keyframes animSing {
+      0% { transform: scale(var(--char-scale)) rotate(-10deg) scaleY(0.92); }
+      100% { transform: scale(var(--char-scale)) rotate(10deg) scaleY(1.12); }
+    }
+
+    .action-clap {
+      animation: animClap 0.32s infinite alternate ease-in-out;
+    }
+    @keyframes animClap {
+      0% { transform: scale(var(--char-scale)) scale(0.94) translateY(6px); }
+      100% { transform: scale(var(--char-scale)) scale(1.1) translateY(-12px); }
+    }
+
+    .action-fly {
+      animation: animFly 1.2s infinite alternate ease-in-out;
+    }
+    @keyframes animFly {
+      0% { transform: scale(var(--char-scale)) translateY(20px) rotate(-8deg); }
+      100% { transform: scale(var(--char-scale)) translateY(-55px) rotate(8deg); }
+    }
+
+    /* Action Props Overlays */
+    .action-prop {
+      position: absolute;
+      pointer-events: none;
+      z-index: 15;
+    }
+    .prop-apple {
+      right: -25px;
+      top: 50px;
+      font-size: 3.8rem;
+      animation: biteApple 0.75s infinite alternate ease-in-out;
+    }
+    @keyframes biteApple {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-24px) scale(0.85); }
+    }
+    .prop-zzz {
+      right: -10px;
+      top: -25px;
+      font-size: 3.4rem;
+      animation: floatZzz 1.5s infinite;
+    }
+    @keyframes floatZzz {
+      0% { opacity: 0; transform: translateY(12px) scale(0.5); }
+      50% { opacity: 1; }
+      100% { opacity: 0; transform: translateY(-50px) scale(1.3); }
+    }
+    .prop-music {
+      left: -20px;
+      top: -20px;
+      font-size: 3.4rem;
+      animation: bounceMusic 0.48s infinite alternate;
+    }
+    @keyframes bounceMusic {
+      0% { transform: rotate(-22deg) scale(0.8); }
+      100% { transform: rotate(22deg) scale(1.25); }
+    }
+    .prop-mic {
+      right: -20px;
+      bottom: 20px;
+      font-size: 3.4rem;
+      animation: micBounce 0.5s infinite alternate ease-in-out;
+    }
+    @keyframes micBounce {
+      0% { transform: scale(0.9) rotate(-10deg); }
+      100% { transform: scale(1.15) rotate(10deg); }
+    }
+    .prop-clap {
+      left: -15px;
+      bottom: 25px;
+      font-size: 3.2rem;
+      animation: clapBeat 0.35s infinite alternate ease-in-out;
+    }
+    @keyframes clapBeat {
+      0% { transform: scale(0.85) rotate(-15deg); }
+      100% { transform: scale(1.2) rotate(15deg); }
+    }
+    .prop-fly {
+      right: -15px;
+      top: -20px;
+      font-size: 3.4rem;
+      animation: flyTrail 0.8s infinite alternate ease-in-out;
+    }
+    @keyframes flyTrail {
+      0% { transform: translateY(0) scale(0.9); }
+      100% { transform: translateY(-20px) scale(1.2); }
+    }
+
+    /* 3 Marshmallow Carousel Trays (No spreadsheet tables!) */
+    .mixer-trays-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      width: 100%;
+      max-width: 940px;
+      z-index: 20;
+      margin-bottom: 8px;
+      padding: 0 12px;
+    }
+
+    .tray-card {
+      background: #FFF;
+      border-radius: 32px;
+      padding: 10px 12px;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.1);
+      border: 4px solid #E0E0E0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .tray-title {
+      font-size: 1.15rem;
+      font-weight: 900;
+      letter-spacing: 0.3px;
+    }
+    .tray-1-title { color: #E91E63; }
+    .tray-2-title { color: #1976D2; }
+    .tray-3-title { color: #388E3C; }
+
+    /* Horizontal Pills Bar for each Tray */
+    .tray-pills-row {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+
+    .tray-pill {
+      background: #F5F5F5;
+      border: 3px solid transparent;
+      border-radius: 24px;
+      padding: 6px 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      font-size: 1.05rem;
+      font-weight: 900;
+      color: #37474F;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.06);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .tray-pill:active {
+      transform: scale(0.9);
+    }
+    .tray-pill.active {
+      background: #FFF8E1;
+      border-color: #FFA000;
+      color: #E65100;
+      transform: scale(1.08) translateY(-2px);
+      box-shadow: 0 6px 14px rgba(255, 160, 0, 0.35);
+    }
+    .pill-emoji {
+      font-size: 1.55rem;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+    }
+
+    /* Footer Prompt Tip */
+    .footer-tip {
+      background: rgba(255, 255, 255, 0.95);
+      border: 3px solid #7E57C2;
+      border-radius: 35px;
+      padding: 6px 22px;
+      font-size: 1rem;
+      font-weight: 900;
+      color: #4A148C;
+      box-shadow: 0 6px 18px rgba(126, 87, 194, 0.22);
+      z-index: 25;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Confetti Win Overlay */
+    .confetti-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 60;
+      overflow: hidden;
+    }
+    .confetti-piece {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      animation: confettiFall 2.4s ease-out forwards;
+    }
+    /* Stage Matched Glow Celebration */
+    .stage-area.matched-glow {
+      border-color: #4CAF50 !important;
+      box-shadow: 0 0 38px rgba(76, 175, 80, 0.7), inset 0 0 24px rgba(255, 235, 59, 0.4) !important;
+      animation: stageVictoryPulse 0.8s infinite alternate ease-in-out;
+    }
+    @keyframes stageVictoryPulse {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.02); }
+    }
+
+    /* -------------------------------------------------------------
+       MODAL: VICTORY & NEXT QUEST (Chốt qua bài rực rỡ)
+       ------------------------------------------------------------- */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(10px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 150;
+      padding: 16px;
+    }
+    .celebration-card {
+      background: linear-gradient(135deg, #FFFFFF 0%, #FFFDF7 100%);
+      border: 6px solid #FFD54F;
+      border-radius: 44px;
+      padding: 34px 28px;
+      max-width: 520px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+      animation: popInModal 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes popInModal {
+      0% { transform: scale(0.6); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .modal-trophy-icon {
+      font-size: 5.8rem;
+      animation: floatTrophy 2s infinite ease-in-out alternate;
+    }
+    @keyframes floatTrophy {
+      0% { transform: translateY(0) rotate(-6deg); }
+      100% { transform: translateY(-14px) rotate(6deg); }
+    }
+    .modal-title {
+      font-size: 2.1rem;
+      color: #E65100;
+      margin: 12px 0 6px;
+    }
+    .modal-subtitle {
+      font-size: 1.25rem;
+      color: #5D4037;
+      margin-bottom: 24px;
+      line-height: 1.4;
+      font-weight: 700;
+    }
+    .btn-modal-action {
+      background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+      color: white;
+      border: 4px solid #81C784;
+      border-radius: 50px;
+      padding: 15px 36px;
+      font-size: 1.35rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 10px 28px rgba(46, 125, 50, 0.4);
+      transition: transform 0.15s;
+    }
+    .btn-modal-action:active {
+      transform: scale(0.95);
+    }
+
+    /* Mobile Responsive Optimizations */
+    @media (max-width: 768px) {
+      body, html {
+        padding: 6px 4px 10px;
+        max-width: 100vw;
+        overflow-x: hidden;
+      }
+      .hud {
+        padding: 6px 8px;
+        flex-wrap: wrap;
+        gap: 6px;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 100%;
+      }
+      .btn-back {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+      }
+      .hud-stars-box {
+        padding: 4px 8px;
+        gap: 4px;
+        border-width: 2.5px;
+      }
+      .hud-stars-box img {
+        width: 20px !important;
+        height: 20px !important;
+      }
+      .goal-preview-card {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        padding: 4px 12px;
+        gap: 8px;
+        border-width: 3px;
+      }
+      .goal-visual-box {
+        width: 42px;
+        height: 42px;
+        border-width: 2.5px;
+      }
+      .goal-mini-svg {
+        width: 34px;
+        height: 34px;
+      }
+      .goal-phrase-name {
+        font-size: 1rem;
+      }
+      .goal-speaker-icon {
+        font-size: 1.15rem;
+      }
+      .stage-area {
+        height: 38%;
+        min-height: 180px;
+        border-radius: 28px;
+        border-width: 4px;
+        margin: 4px 0;
+      }
+      .actor-container {
+        width: 140px;
+        height: 140px;
+      }
+      .mixer-trays-container {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        padding: 0 4px;
+        margin-bottom: 4px;
+        width: 100%;
+      }
+      .tray-card {
+        padding: 4px 8px;
+        border-radius: 18px;
+        border-width: 2px;
+        gap: 4px;
+        flex-direction: row;
+        align-items: center;
+      }
+      .tray-title {
+        font-size: 0.8rem;
+        white-space: nowrap;
+        min-width: 80px;
+      }
+      .tray-pills-row {
+        gap: 4px;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        justify-content: flex-start;
+        padding: 2px 0;
+      }
+      .tray-pill {
+        flex-shrink: 0;
+        padding: 4px 8px;
+        font-size: 0.8rem;
+        border-radius: 14px;
+        gap: 3px;
+      }
+      .pill-emoji {
+        font-size: 1.05rem;
+      }
+      .footer-tip {
+        font-size: 0.8rem;
+        padding: 4px 12px;
+        margin-bottom: 2px;
+      }
+    }
+
+    @media (orientation: landscape) and (max-height: 520px) {
+      body, html {
+        padding: 2px 8px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-content: center;
+      }
+      .hud {
+        width: 100%;
+        padding: 2px 4px;
+        gap: 6px;
+      }
+      .goal-preview-card {
+        order: unset;
+        width: auto;
+        padding: 2px 10px;
+      }
+      .stage-area {
+        width: 44%;
+        height: calc(100vh - 65px);
+        max-height: 310px;
+        min-height: unset;
+        margin: 0;
+      }
+      .actor-container {
+        width: min(160px, 36vw);
+        height: min(160px, 48vh);
+      }
+      .mixer-trays-container {
+        width: 54%;
+        height: calc(100vh - 65px);
+        max-height: 310px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        gap: 4px;
+        margin: 0;
+        padding: 0;
+      }
+      .tray-card {
+        padding: 4px 8px;
+        flex-direction: row;
+        align-items: center;
+      }
+      .tray-title {
+        font-size: 0.78rem;
+        white-space: nowrap;
+        min-width: 75px;
+      }
+      .tray-pills-row {
+        gap: 4px;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        justify-content: flex-start;
+      }
+      .tray-pill {
+        flex-shrink: 0;
+        padding: 3px 6px;
+        font-size: 0.75rem;
+      }
+      .footer-tip {
+        display: none;
+      }
+    }
+  </style>
+  <script src="../shared/audio.js"></script>
+  <script src="../shared/vocabulary.js"></script>
+  <script src="../shared/missions.js"></script>
+</head>
+<body>
+
+  <!-- Ambient Disco Lights -->
+  <div class="bg-disco-light" style="width: 130px; height: 130px; background: rgba(255, 82, 82, 0.22); top: 12%; left: 8%;"></div>
+  <div class="bg-disco-light" style="width: 160px; height: 160px; background: rgba(33, 150, 243, 0.22); bottom: 18%; right: 6%;"></div>
+  <div class="bg-disco-light" style="width: 120px; height: 120px; background: rgba(255, 235, 59, 0.25); top: 35%; right: 10%;"></div>
+
+  <!-- HUD Header -->
+  <div class="hud">
+    <a href="../index.html" class="btn-back">⬅ Menu</a>
+
+    <!-- GOAL TARGET CARD (Hiển thị trực tiếp kết quả mục tiêu bé cần tìm) -->
+    <div class="goal-preview-card" id="goal-card" onclick="announceTarget()" title="Chạm nghe lại mẫu mục tiêu">
+      <div class="goal-label-badge">
+        <span>👑 MẪU CẦN TÌM</span>
+        <span>Goal Target</span>
+      </div>
+      
+      <div class="goal-visual-box">
+        <svg class="goal-mini-svg" id="goal-mini-svg" viewBox="0 0 200 200">
+          <!-- Rendered dynamically by JS -->
+        </svg>
+        <span class="goal-action-badge" id="goal-action-badge">🦘</span>
+      </div>
+
+      <div class="goal-text-info">
+        <span class="goal-phrase-name" id="goal-phrase-name">Blue Dog Jump</span>
+      </div>
+
+      <span class="goal-speaker-icon">🔊</span>
+    </div>
+
+    <!-- 3-Star Progress Tracker -->
+    <div class="hud-stars-box" id="hud-stars-box" title="Ghép đủ 3 bạn nhỏ để nhận Cúp Vàng!">
+      <span class="hud-star" id="m-star-1"><img src="../assets/icons/star.png" style="width: 26px; height: 26px; object-fit: contain;" alt="⭐"></span>
+      <span class="hud-star" id="m-star-2"><img src="../assets/icons/star.png" style="width: 26px; height: 26px; object-fit: contain;" alt="⭐"></span>
+      <span class="hud-star" id="m-star-3"><img src="../assets/icons/star.png" style="width: 26px; height: 26px; object-fit: contain;" alt="⭐"></span>
+    </div>
+  </div>
+
+  <!-- Live Broadway Disco Stage Display -->
+  <div class="stage-area" id="stage">
+    <div class="stage-spotlight"></div>
+    <div class="prop-ground"></div>
+
+    <!-- Phrase Banner on Stage -->
+    <div class="phrase-bar">
+      <span class="chip" id="chip-mod">🔴 Red</span>
+      <span class="chip" id="chip-char">🐱 Cat</span>
+      <span class="chip" id="chip-act">🦘 Jump</span>
+    </div>
+
+    <!-- Live Animated Character SVG -->
+    <div class="actor-container action-jump" id="actor-wrap">
+      <svg class="actor-svg" viewBox="0 0 200 200">
+        
+        <!-- 1. THE CAT (Con Mèo) -->
+        <g id="animal-cat">
+          <polygon points="40,80 20,15 80,45" class="char-fur" stroke="#333" stroke-width="4"/>
+          <polygon points="42,70 30,28 72,48" fill="#FF8A80"/>
+          <polygon points="160,80 180,15 120,45" class="char-fur" stroke="#333" stroke-width="4"/>
+          <polygon points="158,70 170,28 128,48" fill="#FF8A80"/>
+          <circle cx="100" cy="115" r="62" class="char-fur" stroke="#333" stroke-width="5"/>
+          <circle cx="58" cy="125" r="10" fill="#FF8A80" opacity="0.6"/>
+          <circle cx="142" cy="125" r="10" fill="#FF8A80" opacity="0.6"/>
+          <line x1="25" y1="112" x2="62" y2="116" stroke="#333" stroke-width="3" stroke-linecap="round"/>
+          <line x1="25" y1="126" x2="60" y2="124" stroke="#333" stroke-width="3" stroke-linecap="round"/>
+          <line x1="175" y1="112" x2="138" y2="116" stroke="#333" stroke-width="3" stroke-linecap="round"/>
+          <line x1="175" y1="126" x2="140" y2="124" stroke="#333" stroke-width="3" stroke-linecap="round"/>
+          <polygon points="95,116 105,116 100,123" fill="#E91E63"/>
+          <path d="M 90 124 Q 100 134 100 124 Q 100 134 110 124" stroke="#333" stroke-width="3" fill="none" stroke-linecap="round"/>
+        </g>
+
+        <!-- 2. THE DOG (Chú Chó) -->
+        <g id="animal-dog" style="display: none;">
+          <ellipse cx="36" cy="100" rx="20" ry="38" class="char-fur" stroke="#333" stroke-width="4" transform="rotate(15 36 100)"/>
+          <ellipse cx="164" cy="100" rx="20" ry="38" class="char-fur" stroke="#333" stroke-width="4" transform="rotate(-15 164 100)"/>
+          <circle cx="100" cy="112" r="62" class="char-fur" stroke="#333" stroke-width="5"/>
+          <circle cx="62" cy="125" r="12" fill="#FF8A80" opacity="0.6"/>
+          <circle cx="138" cy="125" r="12" fill="#FF8A80" opacity="0.6"/>
+          <ellipse cx="100" cy="122" rx="28" ry="20" fill="#FFF" opacity="0.85"/>
+          <ellipse cx="100" cy="114" rx="12" ry="8" fill="#333"/>
+          <path d="M 95 125 Q 100 145 105 125" fill="#FF4081" stroke="#C2185B" stroke-width="2"/>
+        </g>
+
+        <!-- 3. THE FROG (Chú Ếch) -->
+        <g id="animal-frog" style="display: none;">
+          <circle cx="62" cy="62" r="28" class="char-fur" stroke="#333" stroke-width="5"/>
+          <circle cx="138" cy="62" r="28" class="char-fur" stroke="#333" stroke-width="5"/>
+          <circle cx="62" cy="62" r="12" fill="#333"/>
+          <circle cx="58" cy="58" r="4" fill="#FFF"/>
+          <circle cx="138" cy="62" r="12" fill="#333"/>
+          <circle cx="134" cy="58" r="4" fill="#FFF"/>
+          <ellipse cx="100" cy="120" rx="72" ry="52" class="char-fur" stroke="#333" stroke-width="5"/>
+          <circle cx="50" cy="125" r="12" fill="#FF8A80" opacity="0.6"/>
+          <circle cx="150" cy="125" r="12" fill="#FF8A80" opacity="0.6"/>
+          <path d="M 58 122 Q 100 152 142 122" stroke="#333" stroke-width="4" fill="none" stroke-linecap="round"/>
+        </g>
+
+        <!-- 4. THE DUCK (Chú Vịt) -->
+        <g id="animal-duck" style="display: none;">
+          <path d="M 95 48 Q 100 25 110 35 Q 105 45 102 50" class="char-fur" stroke="#333" stroke-width="3"/>
+          <circle cx="100" cy="108" r="58" class="char-fur" stroke="#333" stroke-width="5"/>
+          <circle cx="60" cy="116" r="10" fill="#FF8A80" opacity="0.6"/>
+          <circle cx="140" cy="116" r="10" fill="#FF8A80" opacity="0.6"/>
+          <ellipse cx="100" cy="126" rx="34" ry="18" fill="#FF9800" stroke="#E65100" stroke-width="4"/>
+          <circle cx="92" cy="122" r="2" fill="#BF360C"/>
+          <circle cx="108" cy="122" r="2" fill="#BF360C"/>
+        </g>
+
+        <!-- 5. THE BEAR (Chú Gấu) -->
+        <g id="animal-bear" style="display: none;">
+          <circle cx="48" cy="62" r="25" class="char-fur" stroke="#333" stroke-width="4"/>
+          <circle cx="48" cy="62" r="14" fill="#FFCCBC"/>
+          <circle cx="152" cy="62" r="25" class="char-fur" stroke="#333" stroke-width="4"/>
+          <circle cx="152" cy="62" r="14" fill="#FFCCBC"/>
+          <circle cx="100" cy="115" r="62" class="char-fur" stroke="#333" stroke-width="5"/>
+          <circle cx="58" cy="126" r="12" fill="#FF8A80" opacity="0.6"/>
+          <circle cx="142" cy="126" r="12" fill="#FF8A80" opacity="0.6"/>
+          <ellipse cx="100" cy="126" rx="26" ry="18" fill="#FFF8E1" stroke="#333" stroke-width="3"/>
+          <ellipse cx="100" cy="118" rx="10" ry="7" fill="#333"/>
+          <path d="M 94 128 Q 100 134 106 128" stroke="#333" stroke-width="3" fill="none" stroke-linecap="round"/>
+        </g>
+
+        <!-- 6. THE PIG (Bạn Heo) -->
+        <g id="animal-pig" style="display: none;">
+          <polygon points="36,65 65,95 24,95" class="char-fur" stroke="#333" stroke-width="4"/>
+          <polygon points="164,65 135,95 176,95" class="char-fur" stroke="#333" stroke-width="4"/>
+          <circle cx="100" cy="115" r="62" class="char-fur" stroke="#333" stroke-width="5"/>
+          <circle cx="56" cy="122" r="12" fill="#FF8A80" opacity="0.6"/>
+          <circle cx="144" cy="122" r="12" fill="#FF8A80" opacity="0.6"/>
+          <ellipse cx="100" cy="126" rx="26" ry="18" fill="#F48FB1" stroke="#333" stroke-width="3"/>
+          <ellipse cx="92" cy="126" rx="4" ry="7" fill="#880E4F"/>
+          <ellipse cx="108" cy="126" rx="4" ry="7" fill="#880E4F"/>
+        </g>
+
+        <!-- 7. THE RABBIT (Bạn Thỏ) -->
+        <g id="animal-rabbit" style="display: none;">
+          <path d="M 54 85 C 38 12 72 10 78 85 Z" class="char-fur" stroke="#333" stroke-width="4"/>
+          <path d="M 58 80 C 48 24 68 22 72 80 Z" fill="#FF80AB"/>
+          <path d="M 146 85 C 162 12 128 10 122 85 Z" class="char-fur" stroke="#333" stroke-width="4"/>
+          <path d="M 142 80 C 152 24 132 22 128 80 Z" fill="#FF80AB"/>
+          <circle cx="100" cy="115" r="62" class="char-fur" stroke="#333" stroke-width="5"/>
+          <circle cx="56" cy="122" r="12" fill="#FF8A80" opacity="0.6"/>
+          <circle cx="144" cy="122" r="12" fill="#FF8A80" opacity="0.6"/>
+          <polygon points="94,118 106,118 100,124" fill="#E91E63"/>
+          <path d="M 92 125 Q 100 133 108 125" stroke="#333" stroke-width="3" fill="none" stroke-linecap="round"/>
+        </g>
+
+        <!-- 8. THE PANDA (Bạn Gấu Trúc) -->
+        <g id="animal-panda" style="display: none;">
+          <circle cx="48" cy="62" r="24" fill="#333" stroke="#222" stroke-width="3"/>
+          <circle cx="152" cy="62" r="24" fill="#333" stroke="#222" stroke-width="3"/>
+          <circle cx="100" cy="115" r="62" class="char-fur" stroke="#333" stroke-width="5"/>
+          <ellipse cx="74" cy="100" rx="16" ry="14" fill="#333" transform="rotate(-15 74 100)"/>
+          <ellipse cx="126" cy="100" rx="16" ry="14" fill="#333" transform="rotate(15 126 100)"/>
+          <circle cx="56" cy="126" r="10" fill="#FF8A80" opacity="0.6"/>
+          <circle cx="144" cy="126" r="10" fill="#FF8A80" opacity="0.6"/>
+          <ellipse cx="100" cy="122" rx="12" ry="8" fill="#333"/>
+          <path d="M 94 128 Q 100 134 106 128" stroke="#333" stroke-width="3" fill="none" stroke-linecap="round"/>
+        </g>
+
+        <!-- 9. THE LION (Bạn Sư Tử) -->
+        <g id="animal-lion" style="display: none;">
+          <!-- Mane -->
+          <circle cx="100" cy="115" r="76" fill="#FF9800" stroke="#E65100" stroke-width="4" stroke-dasharray="14 6"/>
+          <circle cx="100" cy="115" r="58" class="char-fur" stroke="#333" stroke-width="4.5"/>
+          <circle cx="58" cy="65" r="16" class="char-fur" stroke="#333" stroke-width="3"/>
+          <circle cx="142" cy="65" r="16" class="char-fur" stroke="#333" stroke-width="3"/>
+          <circle cx="58" cy="124" r="10" fill="#FF8A80" opacity="0.6"/>
+          <circle cx="142" cy="124" r="10" fill="#FF8A80" opacity="0.6"/>
+          <polygon points="93,116 107,116 100,123" fill="#8D6E63"/>
+          <path d="M 92 125 Q 100 133 108 125" stroke="#333" stroke-width="3" fill="none" stroke-linecap="round"/>
+        </g>
+
+        <!-- UNIVERSAL EYES -->
+        <g id="eyes-open">
+          <circle cx="78" cy="100" r="8" fill="#333"/>
+          <circle cx="75" cy="97" r="3" fill="#FFF"/>
+          <circle cx="122" cy="100" r="8" fill="#333"/>
+          <circle cx="119" cy="97" r="3" fill="#FFF"/>
+        </g>
+        <g id="eyes-closed" style="display: none;">
+          <path d="M 68 102 Q 78 112 88 102" stroke="#333" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <path d="M 112 102 Q 122 112 132 102" stroke="#333" stroke-width="4" fill="none" stroke-linecap="round"/>
+        </g>
+
+        <!-- Mouth Open For Eating -->
+        <g id="mouth-eat" style="display: none;">
+          <ellipse cx="100" cy="132" rx="16" ry="14" fill="#C2185B" stroke="#880E4F" stroke-width="2"/>
+        </g>
+      </svg>
+
+      <!-- Action Props Overlays -->
+      <div class="action-prop prop-apple" id="prop-apple" style="display: none;">🍎</div>
+      <div class="action-prop prop-zzz" id="prop-zzz" style="display: none;">💤</div>
+      <div class="action-prop prop-music" id="prop-music" style="display: none;">🎵</div>
+      <div class="action-prop prop-mic" id="prop-mic" style="display: none;">🎤</div>
+      <div class="action-prop prop-clap" id="prop-clap" style="display: none;">👏</div>
+      <div class="action-prop prop-fly" id="prop-fly" style="display: none;">🚀</div>
+    </div>
+  </div>
+
+  <!-- 3 Sweet Marshmallow Carousel Trays -->
+  <div class="mixer-trays-container">
+    <!-- Tray 1: Colors / Size (8 Màu Rực Rỡ) -->
+    <div class="tray-card" style="border-color: #F48FB1;">
+      <div class="tray-title tray-1-title">1. Màu Sắc 🎨</div>
+      <div class="tray-pills-row">
+        <div class="tray-pill active" data-type="mod" data-word="Red" data-color="#FF5252" data-tag="🔴 Red">
+          <span class="pill-emoji">🔴</span> Red
+        </div>
+        <div class="tray-pill" data-type="mod" data-word="Blue" data-color="#42A5F5" data-tag="🔵 Blue">
+          <span class="pill-emoji">🔵</span> Blue
+        </div>
+        <div class="tray-pill" data-type="mod" data-word="Yellow" data-color="#FFD600" data-tag="🟡 Yellow">
+          <span class="pill-emoji">🟡</span> Yellow
+        </div>
+        <div class="tray-pill" data-type="mod" data-word="Green" data-color="#66BB6A" data-tag="🟢 Green">
+          <span class="pill-emoji">🟢</span> Green
+        </div>
+        <div class="tray-pill" data-type="mod" data-word="Orange" data-color="#FF9800" data-tag="🟠 Orange">
+          <span class="pill-emoji">🟠</span> Orange
+        </div>
+        <div class="tray-pill" data-type="mod" data-word="Purple" data-color="#AB47BC" data-tag="🟣 Purple">
+          <span class="pill-emoji">🟣</span> Purple
+        </div>
+        <div class="tray-pill" data-type="mod" data-word="Pink" data-color="#FF4081" data-tag="🌸 Pink">
+          <span class="pill-emoji">🌸</span> Pink
+        </div>
+        <div class="tray-pill" data-type="mod" data-word="White" data-color="#ECEFF1" data-tag="⚪ White">
+          <span class="pill-emoji">⚪</span> White
+        </div>
+      </div>
+    </div>
+
+    <!-- Tray 2: Animal Characters (9 Bạn Thú Cưng) -->
+    <div class="tray-card" style="border-color: #90CAF9;">
+      <div class="tray-title tray-2-title">2. Bạn Nhỏ 🐾</div>
+      <div class="tray-pills-row">
+        <div class="tray-pill active" data-type="char" data-word="Cat" data-id="cat" data-tag="🐱 Cat">
+          <span class="pill-emoji"><img src="../assets/icons/cat.png" style="width: 26px; height: 26px; object-fit: contain; vertical-align: middle;" alt="Cat"></span> Cat
+        </div>
+        <div class="tray-pill" data-type="char" data-word="Dog" data-id="dog" data-tag="🐶 Dog">
+          <span class="pill-emoji"><img src="../assets/icons/dog.png" style="width: 26px; height: 26px; object-fit: contain; vertical-align: middle;" alt="Dog"></span> Dog
+        </div>
+        <div class="tray-pill" data-type="char" data-word="Frog" data-id="frog" data-tag="🐸 Frog">
+          <span class="pill-emoji"><img src="../assets/icons/frog.png" style="width: 26px; height: 26px; object-fit: contain; vertical-align: middle;" alt="Frog"></span> Frog
+        </div>
+        <div class="tray-pill" data-type="char" data-word="Duck" data-id="duck" data-tag="🦆 Duck">
+          <span class="pill-emoji"><img src="../assets/icons/duck.png" style="width: 26px; height: 26px; object-fit: contain; vertical-align: middle;" alt="Duck"></span> Duck
+        </div>
+        <div class="tray-pill" data-type="char" data-word="Bear" data-id="bear" data-tag="🐻 Bear">
+          <span class="pill-emoji"><img src="../assets/icons/bear.png" style="width: 26px; height: 26px; object-fit: contain; vertical-align: middle;" alt="Bear"></span> Bear
+        </div>
+        <div class="tray-pill" data-type="char" data-word="Pig" data-id="pig" data-tag="🐷 Pig">
+          <span class="pill-emoji"><img src="../assets/icons/pig.png" style="width: 26px; height: 26px; object-fit: contain; vertical-align: middle;" alt="Pig"></span> Pig
+        </div>
+        <div class="tray-pill" data-type="char" data-word="Rabbit" data-id="rabbit" data-tag="🐰 Rabbit">
+          <span class="pill-emoji"><img src="../assets/icons/rabbit.png" style="width: 26px; height: 26px; object-fit: contain; vertical-align: middle;" alt="Rabbit"></span> Rabbit
+        </div>
+        <div class="tray-pill" data-type="char" data-word="Panda" data-id="panda" data-tag="🐼 Panda">
+          <span class="pill-emoji"><img src="../assets/icons/panda.png" style="width: 26px; height: 26px; object-fit: contain; vertical-align: middle;" alt="Panda"></span> Panda
+        </div>
+        <div class="tray-pill" data-type="char" data-word="Lion" data-id="lion" data-tag="🦁 Lion">
+          <span class="pill-emoji"><img src="../assets/icons/lion.png" style="width: 26px; height: 26px; object-fit: contain; vertical-align: middle;" alt="Lion"></span> Lion
+        </div>
+      </div>
+    </div>
+
+    <!-- Tray 3: Actions (8 Chuyển Động Hoạt Hình) -->
+    <div class="tray-card" style="border-color: #A5D6A7;">
+      <div class="tray-title tray-3-title">3. Hành Động 🦘</div>
+      <div class="tray-pills-row">
+        <div class="tray-pill active" data-type="act" data-word="Jump" data-class="action-jump" data-tag="🦘 Jump">
+          <span class="pill-emoji"><img src="../assets/icons/jump.png" style="width: 26px; height: 26px; object-fit: contain; vertical-align: middle;" onerror="this.outerHTML='🦘'" alt="Jump"></span> Jump
+        </div>
+        <div class="tray-pill" data-type="act" data-word="Dance" data-class="action-dance" data-tag="💃 Dance">
+          <span class="pill-emoji"><img src="../assets/icons/dance.png" style="width: 26px; height: 26px; object-fit: contain; vertical-align: middle;" onerror="this.outerHTML='💃'" alt="Dance"></span> Dance
+        </div>
+        <div class="tray-pill" data-type="act" data-word="Eat" data-class="action-eat" data-tag="🍎 Eat">
+          <span class="pill-emoji"><img src="../assets/icons/eat.png" style="width: 26px; height: 26px; object-fit: contain; vertical-align: middle;" onerror="this.outerHTML='🍎'" alt="Eat"></span> Eat
+        </div>
+        <div class="tray-pill" data-type="act" data-word="Sleep" data-class="action-sleep" data-tag="😴 Sleep">
+          <span class="pill-emoji"><img src="../assets/icons/sleep.png" style="width: 26px; height: 26px; object-fit: contain; vertical-align: middle;" onerror="this.outerHTML='😴'" alt="Sleep"></span> Sleep
+        </div>
+        <div class="tray-pill" data-type="act" data-word="Run" data-class="action-run" data-tag="🏃 Run">
+          <span class="pill-emoji"><img src="../assets/icons/run.png" style="width: 26px; height: 26px; object-fit: contain; vertical-align: middle;" onerror="this.outerHTML='🏃'" alt="Run"></span> Run
+        </div>
+        <div class="tray-pill" data-type="act" data-word="Sing" data-class="action-sing" data-tag="🎤 Sing">
+          <span class="pill-emoji"><img src="../assets/icons/sing.png" style="width: 26px; height: 26px; object-fit: contain; vertical-align: middle;" onerror="this.outerHTML='🎤'" alt="Sing"></span> Sing
+        </div>
+        <div class="tray-pill" data-type="act" data-word="Clap" data-class="action-clap" data-tag="👏 Clap">
+          <span class="pill-emoji"><img src="../assets/icons/clap.png" style="width: 26px; height: 26px; object-fit: contain; vertical-align: middle;" onerror="this.outerHTML='👏'" alt="Clap"></span> Clap
+        </div>
+        <div class="tray-pill" data-type="act" data-word="Fly" data-class="action-fly" data-tag="🚀 Fly">
+          <span class="pill-emoji"><img src="../assets/icons/rocket.png" style="width: 26px; height: 26px; object-fit: contain; vertical-align: middle;" onerror="this.outerHTML='🚀'" alt="Fly"></span> Fly
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Encouragement Tip -->
+  <div class="footer-tip" id="footer-tip">
+    <span>💡</span>
+    <span id="tip-text">Chạm đổi Màu, Bạn Nhỏ & Hành Động để xem bạn nhỏ biến hình nhảy múa nhé! ✨</span>
+  </div>
+
+  <!-- Confetti Win Layer -->
+  <div class="confetti-layer" id="confetti-layer"></div>
+
+  <!-- MODAL: VICTORY & NEXT CHALLENGE CELEBRATION (Chốt qua bài rực rỡ) -->
+  <div class="modal-overlay" id="modal-celebration">
+    <div class="celebration-card">
+      <div class="modal-trophy-icon" id="modal-trophy-icon">🏆</div>
+      <h2 class="modal-title" id="modal-title">Bé Ghép Đúng Rồi!</h2>
+      <p class="modal-subtitle" id="modal-subtitle">Chính là bạn Blue Dog Jump thật tài ba!</p>
+
+      <button type="button" class="btn-modal-action" id="btn-modal-action" onclick="advanceToNextRecipe()">
+        <span>🎉 Ghép Bạn Tiếp Theo Nào ➜</span>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // -------------------------------------------------------------
+    // SAFE AUDIO ENGINE ALIAS (Khắc phục triệt để lỗi AudioEngine is not defined)
+    // -------------------------------------------------------------
+    const AudioEngine = window.ToddlerAudio || {
+      init() {},
+      playTone() {},
+      playChime() {},
+      playWin() {},
+      playFanfare() {},
+      speak(t) {},
+      speakWord(w) {}
+    };
+
+    // State
+    let currentMod = { word: 'Red', color: '#FF5252', scale: 1, tag: '🔴 Red' };
+    let currentChar = { word: 'Cat', id: 'cat', tag: '🐱 Cat' };
+    let currentAct = { word: 'Jump', class: 'action-jump', tag: '🦘 Jump' };
+
+    const actorWrap = document.getElementById('actor-wrap');
+    const chipMod = document.getElementById('chip-mod');
+    const chipChar = document.getElementById('chip-char');
+    const chipAct = document.getElementById('chip-act');
+
+    const eyesOpen = document.getElementById('eyes-open');
+    const eyesClosed = document.getElementById('eyes-closed');
+    const mouthEat = document.getElementById('mouth-eat');
+    const propApple = document.getElementById('prop-apple');
+    const propZzz = document.getElementById('prop-zzz');
+    const propMusic = document.getElementById('prop-music');
+    const propMic = document.getElementById('prop-mic');
+    const propClap = document.getElementById('prop-clap');
+    const propFly = document.getElementById('prop-fly');
+    const confettiLayer = document.getElementById('confetti-layer');
+
+    function updateVisuals() {
+      // 1. Update Chips
+      chipMod.innerText = currentMod.tag;
+      chipChar.innerText = currentChar.tag;
+      chipAct.innerText = currentAct.tag;
+
+      // 2. Set CSS root variables for COLOR and SCALE
+      document.documentElement.style.setProperty('--char-color', currentMod.color);
+      document.documentElement.style.setProperty('--char-scale', currentMod.scale);
+
+      // 3. Switch Animal Group visibility (9 Bạn nhỏ)
+      ['cat', 'dog', 'bear', 'frog', 'duck', 'pig', 'rabbit', 'panda', 'lion'].forEach(id => {
+        const el = document.getElementById('animal-' + id);
+        if (el) el.style.display = (id === currentChar.id) ? 'block' : 'none';
+      });
+
+      // Special case: Frog has its own top eyes, so hide universal eyes
+      if (currentChar.id === 'frog') {
+        eyesOpen.style.display = 'none';
+      } else {
+        eyesOpen.style.display = 'block';
+      }
+
+      // 4. Update Animation Class
+      actorWrap.className = 'actor-container ' + currentAct.class;
+
+      // Reset props
+      propApple.style.display = 'none';
+      propZzz.style.display = 'none';
+      propMusic.style.display = 'none';
+      if (propMic) propMic.style.display = 'none';
+      if (propClap) propClap.style.display = 'none';
+      if (propFly) propFly.style.display = 'none';
+      eyesClosed.style.display = 'none';
+      mouthEat.style.display = 'none';
+
+      // Action specific props
+      if (currentAct.word === 'Sleep') {
+        eyesOpen.style.display = 'none';
+        eyesClosed.style.display = 'block';
+        propZzz.style.display = 'block';
+      } else if (currentAct.word === 'Eat') {
+        mouthEat.style.display = 'block';
+        propApple.style.display = 'block';
+      } else if (currentAct.word === 'Dance') {
+        propMusic.style.display = 'block';
+      } else if (currentAct.word === 'Sing') {
+        mouthEat.style.display = 'block';
+        if (propMic) propMic.style.display = 'block';
+      } else if (currentAct.word === 'Clap') {
+        if (propClap) propClap.style.display = 'block';
+      } else if (currentAct.word === 'Fly') {
+        if (propFly) propFly.style.display = 'block';
+      }
+
+      // 5. Check if matches Sunday Challenge Recipe
+      checkChallengeMatch();
+    }
+
+    // Attach choice listeners
+    let lastChoiceTap = 0;
+    function handleChoiceSelect(item) {
+      if (Date.now() - lastChoiceTap < 180) return;
+      lastChoiceTap = Date.now();
+
+      AudioEngine.init();
+      const type = item.dataset.type;
+
+      item.parentElement.querySelectorAll('.tray-pill').forEach(s => s.classList.remove('active'));
+      item.classList.add('active');
+
+      if (type === 'mod') {
+        currentMod = {
+          word: item.dataset.word,
+          color: item.dataset.color || '#FF5252',
+          scale: parseFloat(item.dataset.scale || 1),
+          tag: item.dataset.tag
+        };
+        AudioEngine.speakWord(currentMod.word);
+      } else if (type === 'char') {
+        currentChar = {
+          word: item.dataset.word,
+          id: item.dataset.id,
+          tag: item.dataset.tag
+        };
+        AudioEngine.speakWord(currentChar.word);
+      } else if (type === 'act') {
+        currentAct = {
+          word: item.dataset.word,
+          class: item.dataset.class,
+          tag: item.dataset.tag
+        };
+        AudioEngine.speakWord(currentAct.word);
+      }
+
+      updateVisuals();
+    }
+
+    document.querySelectorAll('.tray-pill').forEach(item => {
+      item.addEventListener('pointerdown', () => handleChoiceSelect(item));
+      const emojiSpan = item.querySelector('.pill-emoji');
+      const word = item.dataset.word;
+      if (emojiSpan && word && window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon) {
+        emojiSpan.innerHTML = ToddlerVocabulary.renderWordIcon(word.toLowerCase(), 28);
+      }
+    });
+
+    // -------------------------------------------------------------
+    // DYNAMIC 52-WEEK CHALLENGE RECIPES & VISUAL GOAL TARGET
+    // -------------------------------------------------------------
+    const urlParams = new URLSearchParams(window.location.search);
+    const queryWeek = parseInt(urlParams.get('week'));
+    const currentWeek = queryWeek || ((window.MissionEngine && MissionEngine.getCurrentWeek) ? MissionEngine.getCurrentWeek() : 1);
+    const weekData = (window.ToddlerVocabulary) ? window.ToddlerVocabulary.build80_20Pack(currentWeek) : null;
+    const baseRecipe = (weekData && weekData.mixerRecipe) ? weekData.mixerRecipe : { color: 'Blue', animal: 'Dog', action: 'Jump' };
+
+    const colorHexMap = {
+      'Red': '#FF5252',
+      'Blue': '#42A5F5',
+      'Green': '#66BB6A',
+      'Yellow': '#FFD600',
+      'Orange': '#FF9800',
+      'Purple': '#AB47BC',
+      'Pink': '#FF4081',
+      'White': '#ECEFF1'
+    };
+    const actionBadgeMap = {
+      'Jump': '⬆️',
+      'Dance': '🎵',
+      'Sleep': '💤',
+      'Eat': '🍎',
+      'Run': '🏃',
+      'Sing': '🎤',
+      'Clap': '👏',
+      'Fly': '🚀'
+    };
+
+    // ĐỘNG CƠ SINH NHIỆM VỤ NGẪU NHIÊN VÔ TẬN (8 Màu x 9 Bạn Nhỏ x 8 Hành Động = 576 Biến Thể)
+    const availableColors = ['Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Purple', 'Pink', 'White'];
+    const availableAnimals = ['Dog', 'Cat', 'Frog', 'Duck', 'Bear', 'Pig', 'Rabbit', 'Panda', 'Lion'];
+    const availableActions = ['Jump', 'Dance', 'Sleep', 'Eat', 'Run', 'Sing', 'Clap', 'Fly'];
+
+    function generate3FreshQuests() {
+      const shuffledAnimals = [...availableAnimals].sort(() => Math.random() - 0.5).slice(0, 3);
+      return shuffledAnimals.map(anim => {
+        const col = availableColors[Math.floor(Math.random() * availableColors.length)];
+        const act = availableActions[Math.floor(Math.random() * availableActions.length)];
+        return { color: col, animal: anim, action: act };
+      });
+    }
+
+    // Khởi tạo 3 Quests đầu tiên (ưu tiên baseRecipe của tuần nếu có)
+    let challengeQuests = generate3FreshQuests();
+    if (baseRecipe && baseRecipe.animal) {
+      challengeQuests[0] = {
+        color: baseRecipe.color || 'Blue',
+        animal: baseRecipe.animal || 'Dog',
+        action: baseRecipe.action || 'Jump'
+      };
+    }
+
+    let currentQuestIdx = 0;
+    let completedQuestsCount = 0;
+    let isCelebrating = false;
+
+    // DOM Elements
+    const goalMiniSvg = document.getElementById('goal-mini-svg');
+    const goalActionBadge = document.getElementById('goal-action-badge');
+    const goalPhraseName = document.getElementById('goal-phrase-name');
+    const goalCard = document.getElementById('goal-card');
+    const stageArea = document.getElementById('stage');
+
+    // Hàm vẽ Mini SVG khuôn mặt con vật mục tiêu với đúng màu sắc
+    function renderGoalMiniSvg(animal, colorHex) {
+      if (!goalMiniSvg) return;
+      const id = animal.toLowerCase();
+      let innerShapes = '';
+
+      if (id === 'cat') {
+        innerShapes = `
+          <polygon points="40,80 20,15 80,45" fill="${colorHex}" stroke="#333" stroke-width="4"/>
+          <polygon points="42,70 30,28 72,48" fill="#FF8A80"/>
+          <polygon points="160,80 180,15 120,45" fill="${colorHex}" stroke="#333" stroke-width="4"/>
+          <polygon points="158,70 170,28 128,48" fill="#FF8A80"/>
+          <circle cx="100" cy="115" r="62" fill="${colorHex}" stroke="#333" stroke-width="5"/>
+          <circle cx="58" cy="125" r="10" fill="#FF8A80" opacity="0.6"/>
+          <circle cx="142" cy="125" r="10" fill="#FF8A80" opacity="0.6"/>
+          <circle cx="78" cy="100" r="8" fill="#333"/><circle cx="75" cy="97" r="3" fill="#FFF"/>
+          <circle cx="122" cy="100" r="8" fill="#333"/><circle cx="119" cy="97" r="3" fill="#FFF"/>
+          <polygon points="95,116 105,116 100,123" fill="#E91E63"/>
+        `;
+      } else if (id === 'dog') {
+        innerShapes = `
+          <ellipse cx="36" cy="100" rx="20" ry="38" fill="${colorHex}" stroke="#333" stroke-width="4" transform="rotate(15 36 100)"/>
+          <ellipse cx="164" cy="100" rx="20" ry="38" fill="${colorHex}" stroke="#333" stroke-width="4" transform="rotate(-15 164 100)"/>
+          <circle cx="100" cy="112" r="62" fill="${colorHex}" stroke="#333" stroke-width="5"/>
+          <circle cx="62" cy="125" r="12" fill="#FF8A80" opacity="0.6"/>
+          <circle cx="138" cy="125" r="12" fill="#FF8A80" opacity="0.6"/>
+          <circle cx="78" cy="98" r="8" fill="#333"/><circle cx="75" cy="95" r="3" fill="#FFF"/>
+          <circle cx="122" cy="98" r="8" fill="#333"/><circle cx="119" cy="95" r="3" fill="#FFF"/>
+          <ellipse cx="100" cy="122" rx="26" ry="18" fill="#FFF" opacity="0.88"/>
+          <ellipse cx="100" cy="114" rx="12" ry="8" fill="#333"/>
+          <path d="M 95 125 Q 100 145 105 125" fill="#FF4081" stroke="#C2185B" stroke-width="2"/>
+        `;
+      } else if (id === 'frog') {
+        innerShapes = `
+          <circle cx="62" cy="62" r="28" fill="${colorHex}" stroke="#333" stroke-width="5"/>
+          <circle cx="138" cy="62" r="28" fill="${colorHex}" stroke="#333" stroke-width="5"/>
+          <circle cx="62" cy="62" r="12" fill="#333"/><circle cx="58" cy="58" r="4" fill="#FFF"/>
+          <circle cx="138" cy="62" r="12" fill="#333"/><circle cx="134" cy="58" r="4" fill="#FFF"/>
+          <ellipse cx="100" cy="120" rx="72" ry="52" fill="${colorHex}" stroke="#333" stroke-width="5"/>
+          <circle cx="50" cy="125" r="12" fill="#FF8A80" opacity="0.6"/>
+          <circle cx="150" cy="125" r="12" fill="#FF8A80" opacity="0.6"/>
+          <path d="M 58 122 Q 100 152 142 122" stroke="#333" stroke-width="4" fill="none" stroke-linecap="round"/>
+        `;
+      } else if (id === 'duck') {
+        innerShapes = `
+          <path d="M 95 48 Q 100 25 110 35 Q 105 45 102 50" fill="${colorHex}" stroke="#333" stroke-width="3"/>
+          <circle cx="100" cy="108" r="58" fill="${colorHex}" stroke="#333" stroke-width="5"/>
+          <circle cx="60" cy="116" r="10" fill="#FF8A80" opacity="0.6"/>
+          <circle cx="140" cy="116" r="10" fill="#FF8A80" opacity="0.6"/>
+          <circle cx="78" cy="98" r="8" fill="#333"/><circle cx="75" cy="95" r="3" fill="#FFF"/>
+          <circle cx="122" cy="98" r="8" fill="#333"/><circle cx="119" cy="95" r="3" fill="#FFF"/>
+          <ellipse cx="100" cy="126" rx="34" ry="18" fill="#FF9800" stroke="#E65100" stroke-width="4"/>
+        `;
+      } else if (id === 'pig') {
+        innerShapes = `
+          <polygon points="36,65 65,95 24,95" fill="${colorHex}" stroke="#333" stroke-width="4"/>
+          <polygon points="164,65 135,95 176,95" fill="${colorHex}" stroke="#333" stroke-width="4"/>
+          <circle cx="100" cy="115" r="62" fill="${colorHex}" stroke="#333" stroke-width="5"/>
+          <circle cx="56" cy="122" r="12" fill="#FF8A80" opacity="0.6"/>
+          <circle cx="144" cy="122" r="12" fill="#FF8A80" opacity="0.6"/>
+          <circle cx="78" cy="100" r="8" fill="#333"/><circle cx="75" cy="97" r="3" fill="#FFF"/>
+          <circle cx="122" cy="100" r="8" fill="#333"/><circle cx="119" cy="97" r="3" fill="#FFF"/>
+          <ellipse cx="100" cy="126" rx="24" ry="16" fill="#F48FB1" stroke="#333" stroke-width="3"/>
+          <ellipse cx="93" cy="126" rx="3.5" ry="6" fill="#880E4F"/>
+          <ellipse cx="107" cy="126" rx="3.5" ry="6" fill="#880E4F"/>
+        `;
+      } else if (id === 'rabbit') {
+        innerShapes = `
+          <path d="M 54 85 C 38 12 72 10 78 85 Z" fill="${colorHex}" stroke="#333" stroke-width="4"/>
+          <path d="M 58 80 C 48 24 68 22 72 80 Z" fill="#FF80AB"/>
+          <path d="M 146 85 C 162 12 128 10 122 85 Z" fill="${colorHex}" stroke="#333" stroke-width="4"/>
+          <path d="M 142 80 C 152 24 132 22 128 80 Z" fill="#FF80AB"/>
+          <circle cx="100" cy="115" r="62" fill="${colorHex}" stroke="#333" stroke-width="5"/>
+          <circle cx="56" cy="122" r="12" fill="#FF8A80" opacity="0.6"/>
+          <circle cx="144" cy="122" r="12" fill="#FF8A80" opacity="0.6"/>
+          <circle cx="78" cy="100" r="8" fill="#333"/><circle cx="75" cy="97" r="3" fill="#FFF"/>
+          <circle cx="122" cy="100" r="8" fill="#333"/><circle cx="119" cy="97" r="3" fill="#FFF"/>
+          <polygon points="94,118 106,118 100,124" fill="#E91E63"/>
+        `;
+      } else if (id === 'panda') {
+        innerShapes = `
+          <circle cx="48" cy="62" r="24" fill="#333" stroke="#222" stroke-width="3"/>
+          <circle cx="152" cy="62" r="24" fill="#333" stroke="#222" stroke-width="3"/>
+          <circle cx="100" cy="115" r="62" fill="${colorHex}" stroke="#333" stroke-width="5"/>
+          <ellipse cx="74" cy="100" rx="16" ry="14" fill="#333" transform="rotate(-15 74 100)"/>
+          <ellipse cx="126" cy="100" rx="16" ry="14" fill="#333" transform="rotate(15 126 100)"/>
+          <circle cx="74" cy="100" r="6" fill="#FFF"/>
+          <circle cx="126" cy="100" r="6" fill="#FFF"/>
+          <circle cx="75" cy="101" r="3" fill="#333"/>
+          <circle cx="127" cy="101" r="3" fill="#333"/>
+          <ellipse cx="100" cy="122" rx="12" ry="8" fill="#333"/>
+        `;
+      } else if (id === 'lion') {
+        innerShapes = `
+          <circle cx="100" cy="115" r="76" fill="#FF9800" stroke="#E65100" stroke-width="4" stroke-dasharray="14 6"/>
+          <circle cx="100" cy="115" r="58" fill="${colorHex}" stroke="#333" stroke-width="4.5"/>
+          <circle cx="58" cy="65" r="16" fill="${colorHex}" stroke="#333" stroke-width="3"/>
+          <circle cx="142" cy="65" r="16" fill="${colorHex}" stroke="#333" stroke-width="3"/>
+          <circle cx="78" cy="100" r="8" fill="#333"/><circle cx="75" cy="97" r="3" fill="#FFF"/>
+          <circle cx="122" cy="100" r="8" fill="#333"/><circle cx="119" cy="97" r="3" fill="#FFF"/>
+          <polygon points="93,116 107,116 100,123" fill="#8D6E63"/>
+        `;
+      } else {
+        // Bear
+        innerShapes = `
+          <circle cx="48" cy="62" r="25" fill="${colorHex}" stroke="#333" stroke-width="4"/>
+          <circle cx="48" cy="62" r="14" fill="#FFCCBC"/>
+          <circle cx="152" cy="62" r="25" fill="${colorHex}" stroke="#333" stroke-width="4"/>
+          <circle cx="152" cy="62" r="14" fill="#FFCCBC"/>
+          <circle cx="100" cy="115" r="62" fill="${colorHex}" stroke="#333" stroke-width="5"/>
+          <circle cx="58" cy="126" r="12" fill="#FF8A80" opacity="0.6"/>
+          <circle cx="142" cy="126" r="12" fill="#FF8A80" opacity="0.6"/>
+          <circle cx="78" cy="100" r="8" fill="#333"/><circle cx="75" cy="97" r="3" fill="#FFF"/>
+          <circle cx="122" cy="100" r="8" fill="#333"/><circle cx="119" cy="97" r="3" fill="#FFF"/>
+          <ellipse cx="100" cy="126" rx="26" ry="18" fill="#FFF8E1" stroke="#333" stroke-width="3"/>
+          <ellipse cx="100" cy="118" rx="10" ry="7" fill="#333"/>
+        `;
+      }
+
+      goalMiniSvg.innerHTML = innerShapes;
+    }
+
+    // Nạp thử thách hiện tại vào Khung Tranh Mẫu
+    function loadCurrentQuest() {
+      const q = challengeQuests[currentQuestIdx];
+      const colorHex = colorHexMap[q.color] || '#42A5F5';
+
+      // 1. Render Mini SVG con vật mục tiêu
+      renderGoalMiniSvg(q.animal, colorHex);
+
+      // 2. Cập nhật Badge hành động trực quan
+      if (goalActionBadge) {
+        goalActionBadge.innerText = actionBadgeMap[q.action] || '✨';
+      }
+
+      // 3. Cập nhật cụm từ tên mục tiêu
+      if (goalPhraseName) {
+        goalPhraseName.innerText = `${q.color} ${q.animal} ${q.action}`;
+      }
+
+      // 4. Phát âm thanh hướng dẫn nhẹ nhàng
+      setTimeout(() => {
+        announceTarget();
+      }, 350);
+    }
+
+    function announceTarget() {
+      const q = challengeQuests[currentQuestIdx];
+      if (AudioEngine.speak) {
+        AudioEngine.speak(`Find the ${q.color} ${q.animal} ${q.action}!`);
+      }
+    }
+
+    function updateStarsHud() {
+      for (let i = 1; i <= 3; i++) {
+        const star = document.getElementById(`m-star-${i}`);
+        if (star) {
+          star.classList.toggle('earned', i <= completedQuestsCount);
+        }
+      }
+    }
+
+    // Tap Actor to speak full sentence
+    actorWrap.addEventListener('pointerdown', () => {
+      AudioEngine.init();
+      AudioEngine.speak(`${currentMod.word} ${currentChar.word} is ${currentAct.word}ing!`);
+      actorWrap.style.transform = `scale(calc(${currentMod.scale} * 1.25))`;
+      setTimeout(() => {
+        actorWrap.style.transform = `scale(${currentMod.scale})`;
+      }, 250);
+    });
+
+    // Check challenge match
+    function checkChallengeMatch() {
+      const target = challengeQuests[currentQuestIdx];
+      const modMatch = (currentMod.word.toLowerCase() === target.color.toLowerCase());
+      const charMatch = (currentChar.word.toLowerCase() === target.animal.toLowerCase());
+      const actMatch = (currentAct.word.toLowerCase() === target.action.toLowerCase());
+
+      if (modMatch && charMatch && actMatch && !isCelebrating) {
+        isCelebrating = true;
+
+        // Visual match celebrations
+        if (goalCard) goalCard.classList.add('matched-bounce');
+        if (stageArea) stageArea.classList.add('matched-glow');
+
+        triggerConfetti();
+        AudioEngine.playFanfare();
+        AudioEngine.playWin();
+        AudioEngine.speak(`Yes! ${target.color} ${target.animal} ${target.action}! Perfect match!`);
+
+        completedQuestsCount = Math.min(3, currentQuestIdx + 1);
+        updateStarsHud();
+
+        if (window.MissionEngine && MissionEngine.recordAction) {
+          MissionEngine.recordAction();
+        }
+
+        // Show celebration victory modal with next challenge button
+        setTimeout(() => {
+          const modal = document.getElementById('modal-celebration');
+          const mTitle = document.getElementById('modal-title');
+          const mSub = document.getElementById('modal-subtitle');
+          const mBtn = document.getElementById('btn-modal-action');
+          const mIcon = document.getElementById('modal-trophy-icon');
+
+          if (currentQuestIdx < 2) {
+            mIcon.innerText = '⭐';
+            mTitle.innerText = 'Bé Ghép Đúng Rồi!';
+            mSub.innerText = `Bé đã tạo ra bạn ${target.color} ${target.animal} ${target.action} hoàn hảo! Nhận 1 Ngôi Sao Vàng!`;
+            mBtn.innerHTML = '<span>🎉 Ghép Bạn Tiếp Theo Nào ➜</span>';
+          } else {
+            mIcon.innerText = '🏆';
+            mTitle.innerText = 'Bé Là Nhà Sáng Tạo Vô Địch!';
+            mSub.innerText = `Bé đã chinh phục trọn vẹn cả 3 bạn nhỏ biến hình! Xuất sắc nhận Cúp Vàng!`;
+            mBtn.innerHTML = '<span>🌟 Thử Thách Vòng Mới ➜</span>';
+          }
+
+          modal.style.display = 'flex';
+        }, 1100);
+      }
+    }
+
+    function advanceToNextRecipe() {
+      const modal = document.getElementById('modal-celebration');
+      modal.style.display = 'none';
+
+      if (goalCard) goalCard.classList.remove('matched-bounce');
+      if (stageArea) stageArea.classList.remove('matched-glow');
+
+      isCelebrating = false;
+
+      if (currentQuestIdx < 2) {
+        currentQuestIdx++;
+      } else {
+        // Sinh 3 nhiệm vụ mới toanh từ kho ngẫu nhiên vô tận
+        challengeQuests = generate3FreshQuests();
+        currentQuestIdx = 0;
+        completedQuestsCount = 0;
+        updateStarsHud();
+        if (window.ToddlerAudio) ToddlerAudio.playBoing();
+      }
+
+      loadCurrentQuest();
+    }
+
+    function triggerConfetti() {
+      const colors = ['#FF1744', '#FFEA00', '#00E676', '#00B0FF', '#D500F9', '#FF9100'];
+      for (let i = 0; i < 48; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+        piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.left = (Math.random() * 95) + 'vw';
+        piece.style.top = '-20px';
+        piece.style.animationDelay = (Math.random() * 0.6) + 's';
+        piece.style.transform = `rotate(${Math.random() * 360}deg)`;
+        confettiLayer.appendChild(piece);
+        setTimeout(() => piece.remove(), 2600);
+      }
+    }
+
+    // Initialize Day 7 Mission
+    if (window.MissionEngine && MissionEngine.initGameMission) {
+      MissionEngine.initGameMission('mission_day_7', '.hud');
+    }
+
+    updateVisuals();
+    loadCurrentQuest();
+  </script>
+</body>
+</html>

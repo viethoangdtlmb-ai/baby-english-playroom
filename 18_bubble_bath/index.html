@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+  <title>Bubble Bath Pop - Bồn Tắm Bọt Xà Phòng Kỳ Diệu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      margin: 0;
+      padding: 0;
+    }
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Fredoka One', 'Nunito', cursive, sans-serif;
+      background: radial-gradient(circle at 50% 25%, #E0F7FA 0%, #B2EBF2 45%, #80DEEA 80%, #4DD0E1 100%);
+      touch-action: manipulation;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    /* Ambient Floating Rainbow Sparkle Bubbles */
+    .bg-bubble-glow {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.7) 0%, rgba(178, 235, 242, 0.3) 60%, transparent 80%);
+      pointer-events: none;
+      z-index: 1;
+      filter: blur(2px);
+      animation: floatGlow 14s infinite ease-in-out alternate;
+    }
+    @keyframes floatGlow {
+      0% { transform: translateY(0) scale(1); opacity: 0.4; }
+      100% { transform: translateY(-50px) scale(1.2); opacity: 0.8; }
+    }
+
+    /* -------------------------------------------------------------
+       TOP HUD: Menu + Title Badge + 5 Bubble Stars Tracker
+       ------------------------------------------------------------- */
+    .hud {
+      width: 100%;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 10px 18px 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 50;
+      gap: 12px;
+    }
+    .btn-back {
+      background: linear-gradient(135deg, #00ACC1 0%, #00838F 100%);
+      color: #FFF;
+      border: 3.5px solid #FFF;
+      border-radius: 50px;
+      padding: 9px 20px;
+      font-size: 1.15rem;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: 0 6px 16px rgba(0, 131, 143, 0.35);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .btn-back:active {
+      transform: scale(0.92);
+    }
+
+    .bath-title-badge {
+      background: rgba(255, 255, 255, 0.95);
+      border: 3.5px solid #26C6DA;
+      border-radius: 40px;
+      padding: 6px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 6px 18px rgba(38, 198, 218, 0.25);
+    }
+    .bath-title-badge h2 {
+      font-size: 1.35rem;
+      color: #00838F;
+      letter-spacing: 0.5px;
+    }
+
+    /* 5 Bubble Stars Progress */
+    .hud-stars-box {
+      background: rgba(255, 255, 255, 0.9);
+      border: 3.5px solid #FFD54F;
+      border-radius: 36px;
+      padding: 6px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    }
+    .hud-star {
+      font-size: 1.7rem;
+      filter: grayscale(1) opacity(0.35);
+      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.35s;
+    }
+    .hud-star.earned {
+      filter: grayscale(0) opacity(1) drop-shadow(0 2px 8px rgba(255, 179, 0, 0.7));
+      animation: starPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes starPop {
+      0% { transform: scale(0.5); }
+      70% { transform: scale(1.35); }
+      100% { transform: scale(1); }
+    }
+
+    /* -------------------------------------------------------------
+       TARGET RESCUE PROMPT PILL (Motherese Listening Anchor)
+       ------------------------------------------------------------- */
+    .prompt-container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      z-index: 45;
+      margin-top: 2px;
+    }
+    .target-prompt-pill {
+      background: rgba(255, 255, 255, 0.96);
+      border: 3.5px solid #00ACC1;
+      border-radius: 32px;
+      padding: 6px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #006064;
+      box-shadow: 0 8px 20px rgba(0, 172, 193, 0.25);
+      cursor: pointer;
+      animation: promptFloat 2.6s infinite ease-in-out alternate;
+    }
+    @keyframes promptFloat {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-5px); }
+    }
+    .target-prompt-pill:active {
+      transform: scale(0.96);
+    }
+
+    /* -------------------------------------------------------------
+       MAIN BATHROOM ARENA (Bathtub + Wand + Bubble Airspace)
+       ------------------------------------------------------------- */
+    .bath-arena {
+      flex: 1;
+      width: 100%;
+      max-width: 1040px;
+      margin: 0 auto;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      z-index: 10;
+    }
+
+    /* Airspace where bubbles float */
+    .bubble-sky {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 25;
+    }
+
+    /* Floating Interactive Bubble */
+    .bubble {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.45) 30%, rgba(129, 212, 250, 0.55) 70%, rgba(41, 182, 246, 0.85) 100%);
+      box-shadow: inset 0 0 24px rgba(255, 255, 255, 0.85), 0 10px 24px rgba(0, 151, 167, 0.35);
+      border: 3px solid rgba(255, 255, 255, 0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      pointer-events: auto;
+      z-index: 30;
+      animation: floatUpward linear infinite, bubbleJelly 2.2s ease-in-out infinite alternate;
+      transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .bubble:hover, .bubble:active {
+      transform: scale(1.15);
+    }
+    @keyframes floatUpward {
+      0% { transform: translateY(82vh) scale(0.85); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(-140px) scale(1.1); opacity: 0; }
+    }
+    @keyframes bubbleJelly {
+      0% { border-radius: 50% 48% 52% 49% / 49% 51% 48% 52%; }
+      100% { border-radius: 48% 52% 49% 51% / 52% 48% 52% 48%; }
+    }
+    .bubble-inner-emoji {
+      font-size: 3.8rem;
+      line-height: 1;
+      pointer-events: none;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.18));
+      animation: innerBob 2s infinite ease-in-out alternate;
+    }
+    @keyframes innerBob {
+      0% { transform: translateY(-3px) rotate(-4deg); }
+      100% { transform: translateY(3px) rotate(4deg); }
+    }
+
+    /* Pop Water Droplet Particles */
+    .pop-particle {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #FFFFFF 0%, #B2EBF2 60%, #4DD0E1 100%);
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.9);
+      pointer-events: none;
+      z-index: 40;
+      animation: explodePop 0.45s ease-out forwards;
+    }
+    @keyframes explodePop {
+      0% { transform: translate(0, 0) scale(1); opacity: 1; }
+      100% { transform: translate(var(--tx), var(--ty)) scale(0.2); opacity: 0; }
+    }
+
+    /* Rescued Animal Diving Into Tub Animation */
+    .diving-animal {
+      position: fixed;
+      font-size: 5.2rem;
+      pointer-events: none;
+      z-index: 45;
+      transition: all 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      filter: drop-shadow(0 8px 16px rgba(0, 151, 167, 0.35));
+    }
+
+    /* -------------------------------------------------------------
+       3D PORCELAIN MARSHMALLOW BATHTUB (Centerpiece)
+       ------------------------------------------------------------- */
+    .bathtub-container {
+      position: relative;
+      width: 620px;
+      height: 240px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      z-index: 15;
+    }
+
+    /* Golden Claw Tub Feet */
+    .tub-foot-left, .tub-foot-right {
+      position: absolute;
+      bottom: -10px;
+      width: 54px;
+      height: 40px;
+      background: linear-gradient(135deg, #FFE082 0%, #FFB300 50%, #FF8F00 100%);
+      border: 3.5px solid #E65100;
+      border-radius: 12px 12px 24px 24px;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+      z-index: 1;
+    }
+    .tub-foot-left { left: 80px; transform: rotate(-10deg); }
+    .tub-foot-right { right: 80px; transform: rotate(10deg); }
+
+    /* Outer Tub Porcelain Basin */
+    .tub-basin {
+      position: relative;
+      width: 580px;
+      height: 205px;
+      background: linear-gradient(180deg, #FFFFFF 0%, #F5FBFB 60%, #E0F2F1 100%);
+      border: 8px solid #00ACC1;
+      border-radius: 44px 44px 110px 110px / 44px 44px 130px 130px;
+      box-shadow: 0 20px 45px rgba(0, 96, 100, 0.35), inset 0 8px 16px rgba(255, 255, 255, 0.95);
+      z-index: 5;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    /* Shimmering Adaptive Bath Water (Changes color with Soaps) */
+    .tub-water {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 126px;
+      background: linear-gradient(180deg, rgba(77, 208, 225, 0.75) 0%, rgba(0, 172, 193, 0.9) 100%);
+      border-top: 4.5px solid rgba(255, 255, 255, 0.9);
+      z-index: 2;
+      overflow: hidden;
+      animation: waterWave 3.5s infinite ease-in-out alternate;
+      transition: background 0.8s ease;
+    }
+    @keyframes waterWave {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-5px); }
+    }
+
+    /* Rescued Swimming Pals Inside Bathtub */
+    .swimmers-container {
+      position: absolute;
+      bottom: 25px;
+      left: 20px;
+      width: 420px;
+      height: 75px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      z-index: 10;
+      pointer-events: none;
+    }
+    .swimming-pal {
+      font-size: 3.4rem;
+      line-height: 1;
+      animation: swimBob 2s infinite ease-in-out alternate;
+      filter: drop-shadow(0 4px 8px rgba(0, 77, 64, 0.3));
+    }
+    @keyframes swimBob {
+      0% { transform: translateY(0) rotate(-6deg); }
+      100% { transform: translateY(-8px) rotate(6deg); }
+    }
+
+    /* Fluffy Foam Bubble Clouds Overflowing the Tub Rim */
+    .foam-cloud-rim {
+      position: absolute;
+      top: 52px;
+      left: 0;
+      width: 100%;
+      height: 48px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 12;
+      pointer-events: none;
+      font-size: 2.6rem;
+      filter: drop-shadow(0 4px 6px rgba(0, 151, 167, 0.2));
+    }
+
+    /* Squeaky Rubber Duck Host (Floating in Tub) */
+    .rubber-duck-host {
+      position: absolute;
+      bottom: 35px;
+      right: 45px;
+      font-size: 5.8rem;
+      line-height: 1;
+      cursor: pointer;
+      z-index: 20;
+      filter: drop-shadow(0 8px 16px rgba(0, 131, 143, 0.35));
+      animation: duckBobbing 2.6s infinite ease-in-out alternate;
+      transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .rubber-duck-host:hover {
+      transform: scale(1.15) rotate(8deg);
+    }
+    .rubber-duck-host:active {
+      transform: scale(1.25) rotate(-10deg);
+    }
+    @keyframes duckBobbing {
+      0% { transform: translateY(0) rotate(-6deg); }
+      100% { transform: translateY(-14px) rotate(6deg); }
+    }
+
+    /* Rainbow Magic Bubble Wand (Touch to Blow Bubbles) */
+    .rainbow-wand {
+      position: absolute;
+      top: 15px;
+      left: -20px;
+      background: linear-gradient(135deg, #FF4081 0%, #FFD54F 50%, #40C4FF 100%);
+      border: 3.5px solid white;
+      border-radius: 40px;
+      padding: 8px 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: white;
+      box-shadow: 0 8px 20px rgba(0, 172, 193, 0.35);
+      cursor: pointer;
+      z-index: 25;
+      animation: wandGlow 2.5s infinite ease-in-out alternate;
+    }
+    @keyframes wandGlow {
+      0% { transform: rotate(-5deg) scale(1); box-shadow: 0 6px 16px rgba(0, 172, 193, 0.3); }
+      100% { transform: rotate(5deg) scale(1.08); box-shadow: 0 0 24px rgba(255, 64, 129, 0.6); }
+    }
+    .rainbow-wand:active {
+      transform: scale(0.92);
+    }
+
+    /* Rainbow Showerhead / Water Sprayer (Right Tub Rim) */
+    .rainbow-showerhead {
+      position: absolute;
+      top: 15px;
+      right: 0px;
+      background: linear-gradient(135deg, #00E676 0%, #00B0FF 50%, #D500F9 100%);
+      border: 3.5px solid white;
+      border-radius: 40px;
+      padding: 8px 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: white;
+      box-shadow: 0 8px 20px rgba(0, 172, 193, 0.35);
+      cursor: pointer;
+      z-index: 25;
+      animation: showerGlow 2.8s infinite ease-in-out alternate;
+    }
+    @keyframes showerGlow {
+      0% { transform: rotate(5deg) scale(1); }
+      100% { transform: rotate(-5deg) scale(1.08); }
+    }
+    .rainbow-showerhead:active {
+      transform: scale(0.92);
+    }
+    .rainbow-showerhead.spraying {
+      animation: sprayShake 0.4s infinite ease-in-out;
+    }
+    @keyframes sprayShake {
+      0%, 100% { transform: rotate(-5deg); }
+      50% { transform: rotate(10deg) scale(1.1); }
+    }
+
+    /* Water Spray Particle Jet */
+    .spray-jet-drop {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: #FFFFFF;
+      border-radius: 50%;
+      box-shadow: 0 0 8px rgba(64, 196, 255, 0.8);
+      pointer-events: none;
+      z-index: 22;
+      animation: jetSpray 0.5s ease-out forwards;
+    }
+    @keyframes jetSpray {
+      0% { transform: translate(0, 0) scale(1); opacity: 1; }
+      100% { transform: translate(var(--dx), var(--dy)) scale(0.3); opacity: 0; }
+    }
+
+    /* -------------------------------------------------------------
+       MAGIC SOAPS TRAY (Color Bath Magic)
+       ------------------------------------------------------------- */
+    .soaps-shelf {
+      position: absolute;
+      bottom: -4px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.95);
+      border: 3px solid #26C6DA;
+      border-radius: 30px;
+      padding: 4px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 6px 16px rgba(0, 131, 143, 0.25);
+      z-index: 30;
+    }
+    .shelf-label {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #00838F;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .soap-pill {
+      background: white;
+      border: 2.5px solid #E0E0E0;
+      border-radius: 20px;
+      padding: 4px 10px;
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+      transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.15s;
+    }
+    .soap-pill:hover, .soap-pill:active {
+      transform: scale(1.22);
+    }
+    .soap-pink { border-color: #FF4081; }
+    .soap-purple { border-color: #7C4DFF; }
+    .soap-orange { border-color: #FF6E40; }
+    .soap-green { border-color: #00E676; }
+
+    /* -------------------------------------------------------------
+       MODAL: GRAND RAINBOW FOAM FIESTA CELEBRATION
+       ------------------------------------------------------------- */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(10px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 200;
+      padding: 16px;
+    }
+    .celebration-card {
+      background: linear-gradient(135deg, #FFFFFF 0%, #E0F7FA 100%);
+      border: 6px solid #26C6DA;
+      border-radius: 44px;
+      padding: 32px 28px;
+      max-width: 520px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 24px 60px rgba(0, 131, 143, 0.4);
+      animation: popInModal 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes popInModal {
+      0% { transform: scale(0.6); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .modal-trophy-icon {
+      font-size: 5.8rem;
+      animation: floatTrophy 2s infinite ease-in-out alternate;
+    }
+    @keyframes floatTrophy {
+      0% { transform: translateY(0) rotate(-6deg); }
+      100% { transform: translateY(-14px) rotate(6deg); }
+    }
+    .modal-title {
+      font-size: 2.1rem;
+      color: #00838F;
+      margin: 12px 0 6px;
+    }
+    .modal-subtitle {
+      font-size: 1.25rem;
+      color: #006064;
+      margin-bottom: 24px;
+      line-height: 1.4;
+      font-weight: 700;
+    }
+    .btn-modal-action {
+      background: linear-gradient(135deg, #00ACC1 0%, #00838F 100%);
+      color: white;
+      border: 4px solid #80DEEA;
+      border-radius: 50px;
+      padding: 15px 36px;
+      font-size: 1.35rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 10px 28px rgba(0, 131, 143, 0.4);
+      transition: transform 0.15s;
+    }
+    .btn-modal-action:active {
+      transform: scale(0.95);
+    }
+
+    /* Confetti Canvas */
+    #confetti-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 250;
+    }
+
+    /* Mobile Responsive Optimizations */
+    @media (max-width: 768px) {
+      body, html {
+        padding: 6px 4px 10px;
+        max-width: 100vw;
+        overflow-x: hidden;
+      }
+      .hud {
+        padding: 6px 8px;
+        flex-wrap: wrap;
+        gap: 6px;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 100%;
+      }
+      .btn-back {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+      }
+      .hud-stars-box {
+        padding: 4px 8px;
+        gap: 3px;
+        border-width: 2.5px;
+      }
+      .hud-stars-box img {
+        width: 18px !important;
+        height: 18px !important;
+      }
+      .bath-title-badge {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        padding: 4px 10px;
+        border-width: 2.5px;
+      }
+      .bath-title-badge h2 {
+        font-size: 1rem;
+      }
+      .bath-title-badge img {
+        width: 24px !important;
+        height: 24px !important;
+      }
+      .rainbow-wand {
+        left: 0;
+        top: 6px;
+        padding: 6px 10px;
+        font-size: 0.85rem;
+      }
+      .rainbow-showerhead {
+        right: 0;
+        top: 6px;
+        padding: 6px 10px;
+        font-size: 0.85rem;
+      }
+      .bathtub-container {
+        width: 96%;
+        max-width: 350px;
+        height: 160px;
+      }
+      .tub-basin {
+        width: 100%;
+        height: 140px;
+        border-width: 5px;
+        border-radius: 28px 28px 70px 70px / 28px 28px 85px 85px;
+      }
+      .tub-water {
+        height: 85px;
+      }
+      .tub-foot-left {
+        left: 36px;
+        width: 36px;
+        height: 26px;
+      }
+      .tub-foot-right {
+        right: 36px;
+        width: 36px;
+        height: 26px;
+      }
+      .swimmers-container {
+        width: 80%;
+        left: 10px;
+        bottom: 12px;
+      }
+      .target-bubble-banner {
+        font-size: 0.85rem;
+        padding: 6px 14px;
+      }
+    }
+
+    @media (max-width: 700px) and (orientation: landscape) {
+      body, html {
+        padding: 4px 6px;
+      }
+      .rainbow-showerhead {
+        right: 0;
+      }
+      .target-bubble-banner {
+        display: none;
+      }
+    }
+  </style>
+
+  <!-- SHARED ENGINES -->
+  <link rel="stylesheet" href="../shared/styles.css">
+  <script src="../shared/vocabulary.js"></script>
+  <script src="../shared/audio.js"></script>
+  <script src="../shared/missions.js"></script>
+  <script src="../shared/affiliate_config.js"></script>
+</head>
+<body>
+
+  <canvas id="confetti-canvas"></canvas>
+
+  <div class="bg-bubble-glow" style="width: 150px; height: 150px; top: 15%; left: 8%;"></div>
+  <div class="bg-bubble-glow" style="width: 200px; height: 200px; bottom: 25%; right: 10%;"></div>
+
+  <!-- TOP HUD -->
+  <div class="hud">
+    <a href="../index.html" class="btn-back">⬅ Menu</a>
+    
+    <div class="bath-title-badge">
+      <span style="display: inline-flex; align-items: center;"><img src="../assets/icons/bath.png" style="width: 32px; height: 32px; object-fit: contain;" alt="🛁"></span>
+      <h2>Bubble Bath Pop!</h2>
+    </div>
+
+    <div class="hud-stars-box" id="hud-stars-box" title="Bắt đủ 5 bạn nhỏ để nhận Cúp Bọt Biển!">
+      <span class="hud-star" id="b-star-1"><img src="../assets/icons/star.png" style="width: 26px; height: 26px; object-fit: contain;" alt="⭐"></span>
+      <span class="hud-star" id="b-star-2"><img src="../assets/icons/star.png" style="width: 26px; height: 26px; object-fit: contain;" alt="⭐"></span>
+      <span class="hud-star" id="b-star-3"><img src="../assets/icons/star.png" style="width: 26px; height: 26px; object-fit: contain;" alt="⭐"></span>
+      <span class="hud-star" id="b-star-4"><img src="../assets/icons/star.png" style="width: 26px; height: 26px; object-fit: contain;" alt="⭐"></span>
+      <span class="hud-star" id="b-star-5"><img src="../assets/icons/star.png" style="width: 26px; height: 26px; object-fit: contain;" alt="⭐"></span>
+    </div>
+  </div>
+
+  <!-- TARGET PROMPT PILL -->
+  <div class="prompt-container">
+    <div class="target-prompt-pill" id="prompt-pill" onclick="replayTargetAudio()">
+      <span id="prompt-icon" style="font-size: 1.8rem;">🐸</span>
+      <span id="prompt-text">Chạm nổ bạn Frog!</span>
+      <span style="font-size: 1.2rem;">🔊</span>
+    </div>
+  </div>
+
+  <!-- MAIN BATHROOM ARENA -->
+  <div class="bath-arena" id="bath-arena">
+    
+    <!-- Bubble sky container -->
+    <div class="bubble-sky" id="bubble-sky"></div>
+
+    <!-- 3D PORCELAIN MARSHMALLOW BATHTUB -->
+    <div class="bathtub-container">
+      <div class="tub-foot-left"></div>
+      <div class="tub-foot-right"></div>
+
+      <!-- Magic Wand on Tub Left Edge -->
+      <div class="rainbow-wand" id="rainbow-wand" onclick="blowMagicWandBubbles()" title="Chạm để thổi bọt bong bóng!">
+        <span>🪄</span>
+        <span>Thổi Bọt! 🫧</span>
+      </div>
+
+      <!-- Rainbow Showerhead on Tub Right Edge -->
+      <div class="rainbow-showerhead" id="rainbow-showerhead" onclick="sprayRainbowShower()" title="Chạm để xịt nước vòi sen!">
+        <span>🚿</span>
+        <span>Xịt Nước! ✨</span>
+      </div>
+
+      <!-- Tub Basin -->
+      <div class="tub-basin" id="tub-basin">
+        
+        <!-- Overflowing Foam Clouds -->
+        <div class="foam-cloud-rim" id="foam-rim">
+          <span>🫧</span>
+          <span>🧼</span>
+          <span>🫧</span>
+          <span>🧼</span>
+          <span>🫧</span>
+          <span>🫧</span>
+          <span>🧼</span>
+        </div>
+
+        <!-- Swimming Water (Adaptive Color Gradient) -->
+        <div class="tub-water" id="tub-water">
+          <div class="swimmers-container" id="swimmers-container">
+            <!-- Rescued swimming pals appear here -->
+          </div>
+        </div>
+
+        <!-- Squeaky Rubber Duck Host -->
+        <div class="rubber-duck-host" id="rubber-duck" onclick="tapRubberDuck(event)" title="Chạm chít chít!">
+          🐥
+        </div>
+
+      </div>
+
+      <!-- Magic Soaps Shelf at bottom of Bathtub -->
+      <div class="soaps-shelf">
+        <span class="shelf-label">🧼 Đổi Màu:</span>
+        <div class="soap-pill soap-pink" onclick="applyMagicSoap('pink')" title="Xà bông Dâu hồng">🍓</div>
+        <div class="soap-pill soap-purple" onclick="applyMagicSoap('purple')" title="Xà bông Nho tím">🫐</div>
+        <div class="soap-pill soap-orange" onclick="applyMagicSoap('orange')" title="Xà bông Cam vàng">🍊</div>
+        <div class="soap-pill soap-green" onclick="applyMagicSoap('green')" title="Xà bông Bạc hà xanh">🌿</div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- MODAL: GRAND FIESTA CELEBRATION -->
+  <div class="modal-overlay" id="modal-celebration">
+    <div class="celebration-card">
+      <div class="modal-trophy-icon"><img src="../assets/icons/crown.png" style="width: 96px; height: 96px; object-fit: contain; filter: drop-shadow(0 10px 20px rgba(255, 193, 7, 0.5));" alt="🏆"></div>
+      <h2 class="modal-title" id="modal-title">Bé Thổi Bọt Tuyệt Đỉnh!</h2>
+      <p class="modal-subtitle" id="modal-subtitle">Bé đã giải cứu đủ 5 bạn nhỏ vào bồn tắm bơi lội tung tăng! Chú vịt vàng quack quack reo vang!</p>
+
+      <button type="button" class="btn-modal-action" onclick="restartBubbleGame()">
+        <span>🫧 Thổi Bọt Tiếp Nào ➜</span>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // -------------------------------------------------------------
+    // SAFE WEB AUDIO SYNTHESIZER (No playSqueak missing crash!)
+    // -------------------------------------------------------------
+    const AudioEngine = window.ToddlerAudio || {};
+
+    // 1. Synthesize adorable high-pitch rubber duck squeak
+    function playRubberDuckSqueak() {
+      try {
+        if (!AudioEngine.ctx) AudioEngine.init();
+        const ctx = AudioEngine.ctx;
+        if (!ctx) return;
+
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+
+        // Squeak sweep up then down (1200Hz -> 1850Hz -> 1400Hz)
+        osc.frequency.setValueAtTime(1200, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1850, ctx.currentTime + 0.08);
+        osc.frequency.exponentialRampToValueAtTime(1400, ctx.currentTime + 0.16);
+
+        gain.gain.setValueAtTime(0.35, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.2);
+      } catch (e) {}
+    }
+
+    // 2. Synthesize crisp pop sound
+    function playBubblePopSound() {
+      try {
+        if (!AudioEngine.ctx) AudioEngine.init();
+        const ctx = AudioEngine.ctx;
+        if (!ctx) return;
+
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(680, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(140, ctx.currentTime + 0.08);
+
+        gain.gain.setValueAtTime(0.35, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.09);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.1);
+      } catch (e) {}
+    }
+
+    // 3. Synthesize water splash droplets sound
+    function playWaterSplashSound() {
+      try {
+        if (!AudioEngine.ctx) AudioEngine.init();
+        const ctx = AudioEngine.ctx;
+        if (!ctx) return;
+
+        [420, 560, 310].forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.04);
+          osc.frequency.exponentialRampToValueAtTime(180, ctx.currentTime + idx * 0.04 + 0.1);
+
+          gain.gain.setValueAtTime(0.25, ctx.currentTime + idx * 0.04);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.04 + 0.12);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + idx * 0.04);
+          osc.stop(ctx.currentTime + idx * 0.04 + 0.13);
+        });
+      } catch (e) {}
+    }
+
+    // 4. Synthesize gentle water spray / shower whoosh
+    function playShowerSpraySound() {
+      try {
+        if (!AudioEngine.ctx) AudioEngine.init();
+        const ctx = AudioEngine.ctx;
+        if (!ctx) return;
+
+        [380, 520, 750, 920].forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.03);
+          osc.frequency.exponentialRampToValueAtTime(260, ctx.currentTime + idx * 0.03 + 0.18);
+
+          gain.gain.setValueAtTime(0.18, ctx.currentTime + idx * 0.03);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.03 + 0.2);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + idx * 0.03);
+          osc.stop(ctx.currentTime + idx * 0.03 + 0.22);
+        });
+      } catch (e) {}
+    }
+
+    // 5. Synthesize Magic Soap transformation arpeggio
+    function playMagicColorSound() {
+      try {
+        if (!AudioEngine.ctx) AudioEngine.init();
+        const ctx = AudioEngine.ctx;
+        if (!ctx) return;
+
+        const notes = [523.25, 659.25, 783.99, 1046.50]; // C E G C
+        notes.forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.06);
+
+          gain.gain.setValueAtTime(0.24, ctx.currentTime + idx * 0.06);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.06 + 0.25);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + idx * 0.06);
+          osc.stop(ctx.currentTime + idx * 0.06 + 0.26);
+        });
+      } catch (e) {}
+    }
+
+    // -------------------------------------------------------------
+    // BUBBLE RESIDENTS CATALOG (18 Rich Water & Friendly Animals & Bath Toys)
+    // -------------------------------------------------------------
+    const bubbleTargets = [
+      { id: 'frog', name: 'Frog', vnName: 'Chú Ếch', emoji: '🐸', voice: 'Frog! Ribbit ribbit!' },
+      { id: 'fish', name: 'Fish', vnName: 'Cá Vàng', emoji: '🐟', voice: 'Little Fish! Splash!' },
+      { id: 'star', name: 'Star', vnName: 'Sao Biển', emoji: '⭐', voice: 'Golden Star!' },
+      { id: 'crab', name: 'Crab', vnName: 'Chú Cua', emoji: '🦀', voice: 'Little Crab! Click clack!' },
+      { id: 'turtle', name: 'Turtle', vnName: 'Bạn Rùa', emoji: '🐢', voice: 'Slow Turtle!' },
+      { id: 'dolphin', name: 'Dolphin', vnName: 'Cá Heo', emoji: '🐬', voice: 'Happy Dolphin!' },
+      { id: 'whale', name: 'Whale', vnName: 'Cá Voi', emoji: '🐋', voice: 'Big Whale!' },
+      { id: 'duck', name: 'Duck', vnName: 'Chú Vịt', emoji: '🦆', voice: 'Cute Duck! Quack quack!' },
+      { id: 'octopus', name: 'Octopus', vnName: 'Bạch Tuộc', emoji: '🐙', voice: 'Funny Octopus!' },
+      { id: 'penguin', name: 'Penguin', vnName: 'Chim Cánh Cụt', emoji: '🐧', voice: 'Waddle Penguin!' },
+      { id: 'hippo', name: 'Hippo', vnName: 'Hà Mã', emoji: '🦛', voice: 'Big Hippo!' },
+      { id: 'crocodile', name: 'Crocodile', vnName: 'Cá Sấu', emoji: '🐊', voice: 'Green Crocodile!' },
+      { id: 'boat', name: 'Boat', vnName: 'Thuyền Nhỏ', emoji: '⛵', voice: 'Little Sailboat!' },
+      { id: 'ball', name: 'Ball', vnName: 'Quả Bóng', emoji: '⚽', voice: 'Bouncing Ball!' },
+      { id: 'ship', name: 'Ship', vnName: 'Tàu Thủy', emoji: '🚢', voice: 'Big Ship!' },
+      { id: 'submarine', name: 'Submarine', vnName: 'Tàu Ngầm', emoji: '🛥️', voice: 'Yellow Submarine!' },
+      { id: 'dinosaur', name: 'Dinosaur', vnName: 'Khủng Long', emoji: '🦖', voice: 'Bath Dinosaur!' },
+      { id: 'teddy', name: 'Teddy', vnName: 'Gấu Bông', emoji: '🧸', voice: 'Bath Teddy!' }
+    ];
+
+    // -------------------------------------------------------------
+    // GAME STATE & 5-STAR QUEST
+    // -------------------------------------------------------------
+    let currentTarget = null;
+    let rescuedCount = 0;
+    const TARGET_STARS = 5;
+    let isSpawning = true;
+    let spawnTimer = null;
+    let bubbleBag = [];
+
+    // -------------------------------------------------------------
+    // SHUFFLE BAG ALGORITHM (Đúng chuẩn 1/18 = 5.55% cho mọi con vật)
+    // Bảo đảm 100% tất cả 18 con vật trong danh sách đều sẽ xuất hiện
+    // tuần tự đầy đủ trong mỗi chu kỳ 18 quả bóng, không bao giờ bị bỏ quên!
+    // -------------------------------------------------------------
+    function refillBubbleBag() {
+      const bag = [...bubbleTargets];
+      // Fisher-Yates Shuffle
+      for (let i = bag.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [bag[i], bag[j]] = [bag[j], bag[i]];
+      }
+      return bag;
+    }
+
+    function getNextTargetFromBag() {
+      if (bubbleBag.length === 0) {
+        bubbleBag = refillBubbleBag();
+      }
+      return bubbleBag.pop();
+    }
+
+    // DOM Elements
+    const bubbleSky = document.getElementById('bubble-sky');
+    const promptIcon = document.getElementById('prompt-icon');
+    const promptText = document.getElementById('prompt-text');
+    const swimmersContainer = document.getElementById('swimmers-container');
+    const rubberDuck = document.getElementById('rubber-duck');
+    const modalCelebration = document.getElementById('modal-celebration');
+    const tubWater = document.getElementById('tub-water');
+    const showerhead = document.getElementById('rainbow-showerhead');
+
+    // -------------------------------------------------------------
+    // QUEST GENERATION
+    // -------------------------------------------------------------
+    function nextTargetQuest() {
+      // Pick random target from targets
+      const available = bubbleTargets.filter(t => !currentTarget || t.name !== currentTarget.name);
+      currentTarget = available[Math.floor(Math.random() * available.length)];
+
+      if (window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon) {
+        promptIcon.innerHTML = ToddlerVocabulary.renderWordIcon(currentTarget, 48);
+      } else {
+        promptIcon.innerText = currentTarget.emoji;
+      }
+      promptText.innerText = `Chạm nổ bạn ${currentTarget.name}!`;
+
+      setTimeout(() => {
+        if (AudioEngine.speak) {
+          AudioEngine.speak(`Pop the ${currentTarget.name}! ${currentTarget.name}!`);
+        }
+      }, 350);
+
+      // Đưa bạn mục tiêu lên vị trí rút đầu tiên của túi để bé thấy ngay nhịp đầu
+      if (bubbleBag.length === 0) {
+        bubbleBag = refillBubbleBag();
+      }
+      const targetIdx = bubbleBag.findIndex(t => t.name.toLowerCase() === currentTarget.name.toLowerCase());
+      if (targetIdx !== -1) {
+        const item = bubbleBag.splice(targetIdx, 1)[0];
+        bubbleBag.push(item); // .pop() sẽ lấy item này ra đầu tiên
+      } else {
+        bubbleBag.push(currentTarget);
+      }
+
+      // Thả ngay 1 bóng chứa mục tiêu để bé bắt đầu
+      setTimeout(() => {
+        spawnBubble(currentTarget);
+      }, 500);
+    }
+
+    function replayTargetAudio() {
+      if (!currentTarget) return;
+      playRubberDuckSqueak();
+      if (AudioEngine.speak) {
+        AudioEngine.speak(`Pop the ${currentTarget.name}! ${currentTarget.name}!`);
+      }
+    }
+
+    // -------------------------------------------------------------
+    // SPAWN BUBBLE (Shuffle Bag Draw - 1/18 = 5.55% chuẩn xác từng con)
+    // -------------------------------------------------------------
+    function spawnBubble(specificTarget = null) {
+      if (!isSpawning) return;
+
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble';
+
+      const size = Math.floor(Math.random() * 30) + 110; // 110px - 140px (giant & easy for 3yo)
+      bubble.style.width = `${size}px`;
+      bubble.style.height = `${size}px`;
+
+      // Position horizontally across viewport
+      const maxX = Math.max(20, window.innerWidth - size - 40);
+      const posX = Math.floor(Math.random() * maxX) + 20;
+      bubble.style.left = `${posX}px`;
+
+      // Float duration
+      const dur = (Math.random() * 2.5 + 5.5).toFixed(1); // 5.5s - 8s gentle float
+      bubble.style.animationDuration = `${dur}s, 2.2s`;
+
+      // Rút tuần tự từ Túi Xáo Trộn: Mỗi con vật giữ nguyên xác suất 1/18 (5.55%),
+      // bảo đảm 100% không con nào bị bỏ sót hay biến mất!
+      const target = specificTarget || getNextTargetFromBag();
+
+      bubble.setAttribute('data-target-id', (target.id || target.name).toLowerCase());
+
+      const bubbleIconHtml = (window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon)
+        ? ToddlerVocabulary.renderWordIcon(target, 76)
+        : `<span class="bubble-inner-emoji">${target.emoji}</span>`;
+      bubble.innerHTML = bubbleIconHtml;
+
+      // Pointer event for instant touch reaction
+      bubble.addEventListener('pointerdown', (e) => {
+        e.stopPropagation();
+        handleBubblePop(bubble, target, e.clientX, e.clientY);
+      });
+
+      bubbleSky.appendChild(bubble);
+
+      // Auto clean up when floated off top
+      setTimeout(() => {
+        if (bubble.parentElement) bubble.remove();
+      }, dur * 1000);
+    }
+
+    // -------------------------------------------------------------
+    // HANDLE BUBBLE POPPING
+    // -------------------------------------------------------------
+    function handleBubblePop(bubbleElem, target, clientX, clientY) {
+      playBubblePopSound();
+
+      const rect = bubbleElem.getBoundingClientRect();
+      const cx = clientX || (rect.left + rect.width / 2);
+      const cy = clientY || (rect.top + rect.height / 2);
+
+      spawnPopDroplets(cx, cy);
+
+      // Check if target matches quest
+      if (currentTarget && target.name.toLowerCase() === currentTarget.name.toLowerCase()) {
+        // CORRECT TARGET RESCUE!
+        bubbleElem.remove();
+        handleCorrectRescue(target, cx, cy);
+      } else {
+        // FREE PLAY POP
+        bubbleElem.remove();
+        if (AudioEngine.speakWord) {
+          AudioEngine.speakWord(target.name);
+        } else if (AudioEngine.speak) {
+          AudioEngine.speak(target.name);
+        }
+      }
+    }
+
+    function handleCorrectRescue(target, startX, startY) {
+      playWaterSplashSound();
+      if (AudioEngine.speak) {
+        AudioEngine.speak(`Yes! ${target.name}! Good job!`);
+      }
+
+      // 1. Diving Animal Animation (Flies down to the tub)
+      const diver = document.createElement('div');
+      diver.className = 'diving-animal';
+      if (window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon) {
+        diver.innerHTML = ToddlerVocabulary.renderWordIcon(target, 80);
+      } else {
+        diver.innerText = target.emoji;
+      }
+      diver.style.left = `${startX - 40}px`;
+      diver.style.top = `${startY - 40}px`;
+      document.body.appendChild(diver);
+
+      const tubRect = document.getElementById('tub-basin').getBoundingClientRect();
+      const targetX = tubRect.left + 80 + Math.random() * (tubRect.width - 200);
+      const targetY = tubRect.bottom - 80;
+
+      setTimeout(() => {
+        diver.style.left = `${targetX}px`;
+        diver.style.top = `${targetY}px`;
+        diver.style.transform = 'scale(0.8) rotate(20deg)';
+      }, 20);
+
+      // 2. Animal lands in tub & starts swimming
+      setTimeout(() => {
+        diver.remove();
+        playWaterSplashSound();
+
+        const swimmer = document.createElement('span');
+        swimmer.className = 'swimming-pal';
+        if (window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon) {
+          swimmer.innerHTML = ToddlerVocabulary.renderWordIcon(target, 48);
+        } else {
+          swimmer.innerText = target.emoji;
+        }
+        swimmersContainer.appendChild(swimmer);
+
+        // Increment Star
+        rescuedCount = Math.min(TARGET_STARS, rescuedCount + 1);
+        updateStarsHud();
+
+        if (rescuedCount >= TARGET_STARS) {
+          // CELEBRATION!
+          triggerGrandBathCelebration();
+        } else {
+          // NEXT QUEST
+          setTimeout(nextTargetQuest, 1200);
+        }
+      }, 650);
+    }
+
+    function spawnPopDroplets(cx, cy) {
+      for (let i = 0; i < 9; i++) {
+        const p = document.createElement('div');
+        p.className = 'pop-particle';
+        const angle = (i / 9) * Math.PI * 2;
+        const dist = Math.random() * 55 + 35;
+        p.style.setProperty('--tx', `${Math.cos(angle) * dist}px`);
+        p.style.setProperty('--ty', `${Math.sin(angle) * dist}px`);
+        p.style.left = `${cx}px`;
+        p.style.top = `${cy}px`;
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 450);
+      }
+    }
+
+    // -------------------------------------------------------------
+    // TAP RUBBER DUCK HOST (Squeak & Quack!)
+    // -------------------------------------------------------------
+    function tapRubberDuck(e) {
+      e.stopPropagation();
+      playRubberDuckSqueak();
+
+      rubberDuck.style.transform = 'scale(1.3) rotate(15deg)';
+      setTimeout(() => {
+        rubberDuck.style.transform = '';
+      }, 250);
+
+      if (AudioEngine.speak) {
+        AudioEngine.speak('Quack quack! I love bubbles!');
+      }
+
+      // Spurt out 2 little surprise bubbles from duck (with guaranteed target)
+      const rect = rubberDuck.getBoundingClientRect();
+      spawnPopDroplets(rect.left + 40, rect.top + 20);
+      for (let i = 0; i < 2; i++) {
+        const isTarget = (i === 0 && currentTarget);
+        setTimeout(() => spawnBubble(isTarget ? currentTarget : null), i * 200);
+      }
+    }
+
+    // -------------------------------------------------------------
+    // RAINBOW MAGIC WAND (Touch to blow batch of bubbles)
+    // -------------------------------------------------------------
+    function blowMagicWandBubbles() {
+      playWaterSplashSound();
+      if (AudioEngine.playChime) AudioEngine.playChime();
+
+      if (AudioEngine.speak) {
+        AudioEngine.speak('Bubble wand! Blow bubbles!');
+      }
+
+      // Spurt 4 bubbles rapidly with guaranteed target
+      for (let i = 0; i < 4; i++) {
+        const isTarget = (i === 1 && currentTarget);
+        setTimeout(() => spawnBubble(isTarget ? currentTarget : null), i * 220);
+      }
+    }
+
+    // -------------------------------------------------------------
+    // RAINBOW SHOWERHEAD SPRAYER (Jet of droplets & fresh bubbles)
+    // -------------------------------------------------------------
+    function sprayRainbowShower() {
+      playShowerSpraySound();
+      showerhead.classList.add('spraying');
+      setTimeout(() => showerhead.classList.remove('spraying'), 800);
+
+      if (AudioEngine.speak) {
+        AudioEngine.speak('Rainbow shower! Splash splash!');
+      }
+
+      // Spawn spray jet drops towards tub center
+      const rect = showerhead.getBoundingClientRect();
+      for (let i = 0; i < 16; i++) {
+        const drop = document.createElement('div');
+        drop.className = 'spray-jet-drop';
+        drop.style.left = `${rect.left + 20}px`;
+        drop.style.top = `${rect.top + 30}px`;
+
+        const dx = -(Math.random() * 220 + 80);
+        const dy = (Math.random() * 120 + 30);
+        drop.style.setProperty('--dx', `${dx}px`);
+        drop.style.setProperty('--dy', `${dy}px`);
+
+        document.body.appendChild(drop);
+        setTimeout(() => drop.remove(), 520);
+      }
+
+      // Spawn 3 extra bubbles from shower spray with guaranteed target
+      for (let i = 0; i < 3; i++) {
+        const isTarget = (i === 0 && currentTarget);
+        setTimeout(() => spawnBubble(isTarget ? currentTarget : null), i * 200);
+      }
+    }
+
+    // -------------------------------------------------------------
+    // MAGIC SOAPS: CHANGE WATER COLOR DYNAMICALLY
+    // -------------------------------------------------------------
+    const soapColorMap = {
+      pink: {
+        bg: 'linear-gradient(180deg, rgba(255, 64, 129, 0.75) 0%, rgba(216, 27, 96, 0.9) 100%)',
+        voice: 'Pink water! Pretty pink bubbles!'
+      },
+      purple: {
+        bg: 'linear-gradient(180deg, rgba(179, 136, 255, 0.75) 0%, rgba(124, 77, 255, 0.9) 100%)',
+        voice: 'Purple water! Magical purple bubbles!'
+      },
+      orange: {
+        bg: 'linear-gradient(180deg, rgba(255, 171, 64, 0.75) 0%, rgba(255, 109, 0, 0.9) 100%)',
+        voice: 'Orange water! Sunshine orange bubbles!'
+      },
+      green: {
+        bg: 'linear-gradient(180deg, rgba(105, 240, 174, 0.75) 0%, rgba(0, 200, 83, 0.9) 100%)',
+        voice: 'Green water! Fresh green bubbles!'
+      }
+    };
+
+    function applyMagicSoap(colorKey) {
+      const config = soapColorMap[colorKey];
+      if (!config) return;
+
+      playMagicColorSound();
+      tubWater.style.background = config.bg;
+
+      if (AudioEngine.speak) {
+        AudioEngine.speak(config.voice);
+      }
+
+      // Splash ripples in tub
+      playWaterSplashSound();
+      const tubRect = tubWater.getBoundingClientRect();
+      spawnPopDroplets(tubRect.left + tubRect.width / 2, tubRect.top + 30);
+
+      // Blow 2 matching surprise bubbles with guaranteed target
+      for (let i = 0; i < 2; i++) {
+        const isTarget = (i === 0 && currentTarget);
+        setTimeout(() => spawnBubble(isTarget ? currentTarget : null), i * 220);
+      }
+    }
+
+    // -------------------------------------------------------------
+    // GRAND CELEBRATION (Confetti + Fiesta Modal)
+    // -------------------------------------------------------------
+    function triggerGrandBathCelebration() {
+      isSpawning = false;
+      if (AudioEngine.playFanfare) {
+        AudioEngine.playFanfare();
+      } else if (AudioEngine.playWin) {
+        AudioEngine.playWin();
+      }
+
+      if (AudioEngine.speak) {
+        AudioEngine.speak('Hooray! 5 Stars! You saved all the friends! Good job!');
+      }
+
+      launchBathConfetti();
+
+      setTimeout(() => {
+        modalCelebration.style.display = 'flex';
+      }, 1500);
+    }
+
+    function restartBubbleGame() {
+      modalCelebration.style.display = 'none';
+      rescuedCount = 0;
+      bubbleBag = [];
+      isSpawning = true;
+      updateStarsHud();
+      swimmersContainer.innerHTML = '';
+      nextTargetQuest();
+    }
+
+    function updateStarsHud() {
+      for (let i = 1; i <= TARGET_STARS; i++) {
+        const star = document.getElementById(`b-star-${i}`);
+        if (star) {
+          star.classList.toggle('earned', i <= rescuedCount);
+        }
+      }
+    }
+
+    // -------------------------------------------------------------
+    // CONFETTI FIREWORKS
+    // -------------------------------------------------------------
+    function launchBathConfetti() {
+      const canvas = document.getElementById('confetti-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const colors = ['#26C6DA', '#FF4081', '#FFD54F', '#00E676', '#FF9100', '#E040FB'];
+      const particles = [];
+      for (let i = 0; i < 90; i++) {
+        particles.push({
+          x: canvas.width / 2,
+          y: canvas.height * 0.45,
+          vx: (Math.random() - 0.5) * 16,
+          vy: (Math.random() - 0.8) * 16,
+          size: Math.random() * 9 + 5,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rotation: Math.random() * 360,
+          dRotation: (Math.random() - 0.5) * 12,
+          alpha: 1
+        });
+      }
+
+      function render() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let alive = false;
+        particles.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.38;
+          p.rotation += p.dRotation;
+          p.alpha -= 0.012;
+
+          if (p.alpha > 0) {
+            alive = true;
+            ctx.save();
+            ctx.globalAlpha = p.alpha;
+            ctx.translate(p.x, p.y);
+            ctx.rotate((p.rotation * Math.PI) / 180);
+            ctx.fillStyle = p.color;
+            ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+            ctx.restore();
+          }
+        });
+        if (alive) {
+          requestAnimationFrame(render);
+        } else {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+      }
+      render();
+    }
+
+    // -------------------------------------------------------------
+    // INITIALIZATION
+    // -------------------------------------------------------------
+    window.addEventListener('DOMContentLoaded', () => {
+      updateStarsHud();
+      nextTargetQuest();
+
+      // Continuous gentle bubble spawning
+      spawnTimer = setInterval(() => {
+        if (isSpawning) spawnBubble();
+      }, 1600);
+    });
+  </script>
+</body>
+</html>

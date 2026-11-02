@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+  <title>Weekend Star Quiz - Đấu Trường Cuối Tuần & Phần Thưởng Của Mẹ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="../shared/styles.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      margin: 0;
+      padding: 0;
+    }
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Fredoka One', 'Nunito', cursive, sans-serif;
+      background: radial-gradient(circle at center, #FFF9C4 0%, #FFE082 45%, #FFB74D 100%);
+      touch-action: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+
+    /* Ambient Warm Star Bubbles */
+    .bg-star-bubble {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 1;
+      filter: blur(1px);
+      animation: floatStar 12s infinite ease-in-out alternate;
+    }
+    @keyframes floatStar {
+      0% { transform: translateY(0) scale(1); opacity: 0.35; }
+      100% { transform: translateY(-45px) scale(1.15); opacity: 0.7; }
+    }
+
+    /* Top HUD */
+    .hud {
+      width: 100%;
+      max-width: 980px;
+      padding: 12px 20px 4px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 30;
+      gap: 12px;
+    }
+    .btn-back {
+      background: linear-gradient(135deg, #FF6F00 0%, #E65100 100%);
+      color: #FFF;
+      border: 3.5px solid #FFF;
+      border-radius: 50px;
+      padding: 10px 22px;
+      font-size: 1.15rem;
+      font-weight: 900;
+      text-decoration: none;
+      box-shadow: 0 6px 16px rgba(230, 81, 0, 0.35), inset 0 2px 4px rgba(255,255,255,0.4);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .btn-back:active {
+      transform: scale(0.92);
+    }
+
+    /* Center Badge */
+    .quiz-title-badge {
+      background: #FFF;
+      border: 4px solid #FFA000;
+      border-radius: 40px;
+      padding: 6px 26px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 8px 24px rgba(255, 160, 0, 0.25);
+      backdrop-filter: blur(8px);
+    }
+    .quiz-title-badge h2 {
+      font-size: 1.35rem;
+      color: #E65100;
+      letter-spacing: 0.5px;
+      text-shadow: 0 1px 0 #FFF;
+    }
+
+    /* 5 Stars Progress Row */
+    .stars-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 20;
+      margin-top: 4px;
+    }
+    .stars-bar {
+      display: flex;
+      gap: 14px;
+      background: rgba(255, 255, 255, 0.95);
+      border: 3.5px solid #FFD54F;
+      border-radius: 40px;
+      padding: 6px 26px;
+      box-shadow: 0 6px 20px rgba(255, 160, 0, 0.28);
+    }
+    .q-star {
+      font-size: 2.6rem;
+      filter: grayscale(100%) opacity(0.35);
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .q-star.earned {
+      filter: grayscale(0%) opacity(1) drop-shadow(0 0 12px #FFD54F);
+      transform: scale(1.3) rotate(12deg);
+      animation: starPop 0.45s ease-out;
+    }
+    @keyframes starPop {
+      0% { transform: scale(0.5); }
+      70% { transform: scale(1.45) rotate(16deg); }
+      100% { transform: scale(1.3) rotate(12deg); }
+    }
+
+    /* Central Talking Star Host Speaker */
+    .star-speaker-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 8px 0;
+      cursor: pointer;
+      z-index: 20;
+    }
+    .talking-star-host {
+      background: linear-gradient(135deg, #00BCD4 0%, #00838F 100%);
+      border: 5px solid #FFF;
+      border-radius: 40px;
+      padding: 12px 34px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 12px 28px rgba(0, 131, 143, 0.32), inset 0 2px 4px rgba(255,255,255,0.4);
+      animation: speakerBreathe 2.6s ease-in-out infinite alternate;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes speakerBreathe {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-6px); }
+    }
+    .talking-star-host:active {
+      transform: scale(1.08);
+    }
+    .star-host-emoji {
+      font-size: 2.6rem;
+      filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2));
+    }
+    /* Animated Soundwave Bars */
+    .soundwave-box {
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      height: 34px;
+    }
+    .wave-bar {
+      width: 6px;
+      background: #FFF;
+      border-radius: 4px;
+      animation: waveDance 0.8s ease-in-out infinite alternate;
+    }
+    .wave-bar:nth-child(1) { height: 14px; animation-delay: 0.1s; }
+    .wave-bar:nth-child(2) { height: 28px; animation-delay: 0.3s; }
+    .wave-bar:nth-child(3) { height: 20px; animation-delay: 0.2s; }
+    .wave-bar:nth-child(4) { height: 32px; animation-delay: 0.4s; }
+    .wave-bar:nth-child(5) { height: 16px; animation-delay: 0.15s; }
+    @keyframes waveDance {
+      0% { transform: scaleY(0.4); opacity: 0.7; }
+      100% { transform: scaleY(1.1); opacity: 1; }
+    }
+    .host-text-box {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .prompt-word-label {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #FFF;
+      letter-spacing: 0.5px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.25);
+      line-height: 1.1;
+    }
+    .prompt-sub-hint {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #E0F7FA;
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* 3 Big Marshmallow Option Cards */
+    .cards-arena {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 22px;
+      width: 100%;
+      max-width: 920px;
+      margin-bottom: 12px;
+      z-index: 20;
+      padding: 0 16px;
+    }
+    .option-card {
+      flex: 1;
+      max-width: 260px;
+      height: 230px;
+      background: #FFF;
+      border: 5px solid #FFCA28;
+      border-radius: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 12px 28px rgba(255, 160, 0, 0.2);
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+    }
+    .option-card:active {
+      transform: scale(0.92);
+    }
+    .option-card:hover {
+      transform: translateY(-6px) scale(1.05);
+      box-shadow: 0 18px 36px rgba(255, 160, 0, 0.32);
+      border-color: #FFA000;
+    }
+    .option-card.correct {
+      border-color: #4CAF50;
+      background: #E8F5E9;
+      transform: scale(1.15) rotate(4deg);
+      box-shadow: 0 0 35px rgba(76, 175, 80, 0.65);
+    }
+    .option-card.wrong {
+      animation: cardShake 0.45s ease-in-out;
+      border-color: #EF5350 !important;
+      background: #FFEBEE !important;
+    }
+    .penalty-badge {
+      position: absolute;
+      top: -18px;
+      right: 12px;
+      background: linear-gradient(135deg, #FF1744, #D50000);
+      color: #FFFFFF;
+      font-weight: 900;
+      font-size: 1.35rem;
+      padding: 5px 14px;
+      border-radius: 20px;
+      border: 3px solid #FFFFFF;
+      box-shadow: 0 6px 18px rgba(213, 0, 0, 0.45);
+      animation: penaltyFloat 0.9s forwards ease-out;
+      pointer-events: none;
+      z-index: 100;
+      letter-spacing: 0.5px;
+    }
+    @keyframes penaltyFloat {
+      0% { transform: translateY(0) scale(0.6); opacity: 0; }
+      25% { transform: translateY(-10px) scale(1.15); opacity: 1; }
+      80% { transform: translateY(-28px) scale(1); opacity: 1; }
+      100% { transform: translateY(-42px) scale(0.85); opacity: 0; }
+    }
+    .hud-star.lost-star {
+      animation: starLost 0.6s ease-in-out;
+    }
+    @keyframes starLost {
+      0% { transform: scale(1.35); filter: brightness(1.5) drop-shadow(0 0 10px #FF1744); }
+      50% { transform: scale(0.7); opacity: 0.35; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes cardShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-12px); }
+      75% { transform: translateX(12px); }
+    }
+    .option-card.disabled {
+      opacity: 0.28;
+      pointer-events: none;
+      filter: grayscale(0.7);
+      border-color: #B0BEC5;
+      box-shadow: none;
+      transform: scale(0.95);
+    }
+    .option-card.shimmer-guide {
+      animation: shimmerGuide 1.6s infinite ease-in-out;
+      border-color: #FF8F00;
+    }
+    @keyframes shimmerGuide {
+      0%, 100% { transform: scale(1); box-shadow: 0 12px 28px rgba(255, 160, 0, 0.2); }
+      50% { transform: scale(1.08); box-shadow: 0 0 30px rgba(255, 179, 0, 0.75); border-color: #E65100; }
+    }
+    .card-emoji {
+      font-size: 6.8rem;
+      filter: drop-shadow(0 8px 18px rgba(0,0,0,0.16));
+      pointer-events: none;
+      line-height: 1;
+    }
+
+    /* Footer Prompt Tip */
+    .footer-tip {
+      background: rgba(255, 255, 255, 0.95);
+      border: 3px solid #FFA000;
+      border-radius: 35px;
+      padding: 6px 22px;
+      font-size: 1rem;
+      font-weight: 900;
+      color: #E65100;
+      box-shadow: 0 6px 18px rgba(255, 160, 0, 0.2);
+      z-index: 25;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* -----------------------------------------------------------
+       MODAL 1: PASS CELEBRATION (GIANT CUP)
+       ----------------------------------------------------------- */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle, rgba(230, 81, 0, 0.82) 0%, rgba(38, 50, 56, 0.92) 100%);
+      backdrop-filter: blur(10px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 16px;
+    }
+    .reward-pass-card {
+      background: linear-gradient(180deg, #FFFFFF 0%, #FFFDF5 100%);
+      border: 6px solid #FFD54F;
+      border-radius: 45px;
+      padding: 34px 28px;
+      max-width: 560px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+      animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes popIn {
+      0% { transform: scale(0.6); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .pass-trophy {
+      font-size: 6rem;
+      line-height: 1;
+      animation: floatTrophy 2s infinite ease-in-out alternate;
+    }
+    @keyframes floatTrophy {
+      0% { transform: translateY(0) rotate(-6deg); }
+      100% { transform: translateY(-14px) rotate(6deg); }
+    }
+    .pass-title {
+      font-size: 1.85rem;
+      font-weight: 900;
+      color: #E65100;
+      margin: 10px 0 6px;
+    }
+    .pass-subtitle {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #5D4037;
+      margin-bottom: 22px;
+      line-height: 1.4;
+    }
+    .btn-moms-reward {
+      background: linear-gradient(135deg, #FF4081 0%, #F50057 100%);
+      color: white;
+      border: 4px solid #FFF;
+      border-radius: 50px;
+      padding: 14px 34px;
+      font-size: 1.45rem;
+      font-weight: 900;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 10px 28px rgba(245, 0, 87, 0.45);
+      animation: pulseReward 1.8s infinite;
+      transition: transform 0.1s;
+    }
+    .btn-moms-reward:active {
+      transform: scale(0.95);
+    }
+    @keyframes pulseReward {
+      0%, 100% { transform: scale(1); box-shadow: 0 10px 28px rgba(245, 0, 87, 0.45); }
+      50% { transform: scale(1.05); box-shadow: 0 16px 36px rgba(245, 0, 87, 0.65); }
+    }
+    .btn-next-quiz-round {
+      background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+      color: white;
+      border: 4px solid #A5D6A7;
+      border-radius: 50px;
+      padding: 14px 34px;
+      font-size: 1.35rem;
+      font-weight: 900;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 10px 28px rgba(46, 125, 50, 0.45);
+      transition: transform 0.15s;
+    }
+    .btn-next-quiz-round:active {
+      transform: scale(0.95);
+    }
+    .btn-back-home-sub {
+      margin-top: 14px;
+      background: transparent;
+      border: none;
+      color: #888;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    /* -----------------------------------------------------------
+       MODAL 2: PARENTAL GATE (Hold 2.5s)
+       ----------------------------------------------------------- */
+    .parental-gate-card {
+      background: white;
+      border: 5px solid #7E57C2;
+      border-radius: 40px;
+      padding: 30px 24px;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 48px rgba(0,0,0,0.3);
+    }
+    .gate-shield {
+      font-size: 4.2rem;
+      margin-bottom: 6px;
+    }
+    .gate-title {
+      font-size: 1.55rem;
+      font-weight: 900;
+      color: #4A148C;
+      margin-bottom: 6px;
+    }
+    .gate-desc {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #666;
+      margin-bottom: 18px;
+      line-height: 1.4;
+    }
+    .hold-button-wrapper {
+      position: relative;
+      display: inline-block;
+      margin: 8px 0;
+    }
+    .btn-hold-to-unlock {
+      background: #7E57C2;
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 16px 36px;
+      font-size: 1.25rem;
+      font-weight: 900;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(126, 87, 194, 0.35);
+    }
+    .hold-progress-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 0%;
+      background: #B388FF;
+      opacity: 0.7;
+      transition: width 0.05s linear;
+      pointer-events: none;
+    }
+
+    /* -----------------------------------------------------------
+       MODAL 3: AFFILIATE PRODUCT SHOWCASE
+       ----------------------------------------------------------- */
+    .affiliate-showcase-card {
+      background: white;
+      border: 5px solid #E91E63;
+      border-radius: 40px;
+      padding: 24px;
+      max-width: 580px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+      text-align: center;
+      animation: popIn 0.4s ease-out;
+    }
+    .aff-badge {
+      display: inline-block;
+      background: #E8F5E9;
+      color: #2E7D32;
+      border: 2px solid #81C784;
+      border-radius: 20px;
+      padding: 4px 16px;
+      font-size: 0.92rem;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+    .aff-hero-icon {
+      font-size: 5.2rem;
+      margin: 4px 0;
+    }
+    .aff-product-title {
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: #212121;
+      line-height: 1.35;
+      margin-bottom: 6px;
+    }
+    .aff-meta-row {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 1.05rem;
+      color: #FFA000;
+      font-weight: 800;
+    }
+    .aff-why-box {
+      background: #FFF9C4;
+      border-left: 5px solid #FBC02D;
+      border-radius: 14px;
+      padding: 10px 14px;
+      text-align: left;
+      font-size: 0.95rem;
+      color: #5D4037;
+      margin-bottom: 18px;
+      line-height: 1.4;
+      font-family: 'Nunito', sans-serif;
+    }
+    .aff-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+    }
+    .btn-buy-shopee {
+      background: linear-gradient(135deg, #FF5722 0%, #EE4D2D 100%);
+      color: #FFFFFF;
+      text-decoration: none;
+      border: 3.5px solid #FFCCBC;
+      border-radius: 40px;
+      padding: 16px 32px;
+      font-size: 1.35rem;
+      font-weight: 900;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+      box-shadow: 0 10px 24px rgba(238, 77, 45, 0.42);
+      animation: pulseShopeeBtn 1.8s infinite ease-in-out;
+      transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .btn-buy-shopee:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 14px 30px rgba(238, 77, 45, 0.55);
+    }
+    .btn-buy-shopee:active {
+      transform: scale(0.96);
+    }
+    @keyframes pulseShopeeBtn {
+      0%, 100% { transform: scale(1); box-shadow: 0 10px 24px rgba(238, 77, 45, 0.42); }
+      50% { transform: scale(1.03); box-shadow: 0 14px 32px rgba(238, 77, 45, 0.6); }
+    }
+
+    /* Confetti Win Layer */
+    .confetti-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 10000;
+      overflow: hidden;
+    }
+    .confetti-piece {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      animation: confettiFall 2.4s ease-out forwards;
+    }
+    @keyframes confettiFall {
+      0% { transform: translateY(-50px) rotate(0deg) scale(0.8); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg) scale(1.2); opacity: 0; }
+    }
+
+    /* Mobile Responsive Optimizations */
+    @media (max-width: 768px) {
+      body, html {
+        padding: 6px 4px 10px;
+        max-width: 100vw;
+        overflow-x: hidden;
+      }
+      .hud {
+        padding: 6px 8px;
+        flex-wrap: wrap;
+        gap: 6px;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 100%;
+      }
+      .btn-back {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+      }
+      .baby-profile-pill {
+        padding: 3px 8px 3px 4px !important;
+        gap: 4px !important;
+      }
+      .baby-pill-sub {
+        display: none !important;
+      }
+      .quiz-title-badge {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        padding: 4px 10px;
+        font-size: 0.95rem;
+        border-width: 3px;
+      }
+      .quiz-title-badge h2 {
+        font-size: 1rem;
+      }
+      .stars-bar {
+        gap: 8px;
+        padding: 4px 16px;
+        border-width: 2.5px;
+      }
+      .q-star {
+        font-size: 1.8rem;
+      }
+      .talking-star-host {
+        padding: 8px 18px;
+        gap: 10px;
+        border-radius: 28px;
+        border-width: 3.5px;
+      }
+      .prompt-word-label {
+        font-size: 1.5rem;
+      }
+      .prompt-sub-hint {
+        font-size: 0.78rem;
+      }
+      .cards-arena {
+        gap: 8px;
+        padding: 0 4px;
+        margin-bottom: 6px;
+        width: 100%;
+        max-width: 100%;
+      }
+      .option-card {
+        height: 125px;
+        border-radius: 22px;
+        border-width: 3px;
+      }
+      .option-emoji {
+        font-size: 3.2rem;
+      }
+      .option-word {
+        font-size: 0.95rem;
+        margin-top: 4px;
+      }
+      .footer-tip {
+        font-size: 0.8rem;
+        padding: 6px 14px;
+        margin-bottom: 2px;
+      }
+    }
+
+    @media (orientation: landscape) and (max-height: 520px) {
+      body, html {
+        padding: 2px 8px;
+        overflow: hidden;
+      }
+      .hud {
+        padding: 2px 6px;
+        margin-bottom: 2px;
+      }
+      .btn-back {
+        padding: 4px 10px;
+        font-size: 0.85rem;
+      }
+      .quiz-title-badge {
+        padding: 3px 12px;
+      }
+      .quiz-title-badge h2 {
+        font-size: 0.95rem;
+      }
+      .stars-bar {
+        padding: 2px 10px;
+        gap: 6px;
+      }
+      .q-star {
+        font-size: 1.5rem;
+      }
+      .talking-star-host {
+        padding: 4px 14px;
+        gap: 8px;
+        margin: 2px 0;
+      }
+      .prompt-word-label {
+        font-size: 1.35rem;
+      }
+      .prompt-sub-hint {
+        font-size: 0.75rem;
+      }
+      .cards-arena {
+        gap: 12px;
+        margin-bottom: 2px;
+        max-width: 840px;
+      }
+      .option-card {
+        height: min(98px, 27vh);
+        border-radius: 18px;
+        padding: 4px;
+      }
+      .option-emoji {
+        font-size: min(2.4rem, 14vh);
+      }
+      .option-word {
+        font-size: 0.85rem;
+        margin-top: 2px;
+      }
+      .footer-tip {
+        display: none;
+      }
+    }
+  </style>
+  <script src="../shared/audio.js"></script>
+  <script src="../shared/vocabulary.js"></script>
+  <script src="../shared/missions.js"></script>
+  <script src="../shared/affiliate_config.js"></script>
+  <script src="../shared/profile.js"></script>
+  <script src="../shared/certificate_engine.js"></script>
+</head>
+<body>
+
+  <!-- Ambient Star Bubbles -->
+  <div class="bg-star-bubble" style="width: 140px; height: 140px; background: rgba(255, 160, 0, 0.2); top: 12%; left: 8%;"></div>
+  <div class="bg-star-bubble" style="width: 170px; height: 170px; background: rgba(255, 238, 88, 0.25); bottom: 18%; right: 6%;"></div>
+  <div class="bg-star-bubble" style="width: 110px; height: 110px; background: rgba(255, 111, 0, 0.18); top: 38%; right: 12%;"></div>
+
+  <!-- Top Header / HUD -->
+  <div class="hud">
+    <a href="../index.html" class="btn-back">⬅ Menu</a>
+    <div class="quiz-title-badge">
+      <span><img src="../assets/icons/crown.png" style="width: 28px; height: 28px; object-fit: contain;" alt="🏆"></span>
+      <h2 id="hud-week-title">Bài Kiểm Tra Cuối Tuần 1</h2>
+    </div>
+    <div id="baby-profile-widget"></div>
+  </div>
+
+  <!-- 5 Stars Progress Row -->
+  <div class="stars-container">
+    <div class="stars-bar" id="stars-bar">
+      <span class="q-star" id="star-1"><img src="../assets/icons/star.png" style="width: 28px; height: 28px; object-fit: contain;" alt="⭐"></span>
+      <span class="q-star" id="star-2"><img src="../assets/icons/star.png" style="width: 28px; height: 28px; object-fit: contain;" alt="⭐"></span>
+      <span class="q-star" id="star-3"><img src="../assets/icons/star.png" style="width: 28px; height: 28px; object-fit: contain;" alt="⭐"></span>
+      <span class="q-star" id="star-4"><img src="../assets/icons/star.png" style="width: 28px; height: 28px; object-fit: contain;" alt="⭐"></span>
+      <span class="q-star" id="star-5"><img src="../assets/icons/star.png" style="width: 28px; height: 28px; object-fit: contain;" alt="⭐"></span>
+    </div>
+  </div>
+
+  <!-- Central Talking Star Host Speaker -->
+  <div class="star-speaker-stage" id="btn-replay-prompt" title="Chạm để nghe lại">
+    <div class="talking-star-host">
+      <span class="star-host-emoji"><img src="../assets/icons/star.png" style="width: 60px; height: 60px; object-fit: contain; filter: drop-shadow(0 6px 14px rgba(255, 193, 7, 0.6));" alt="⭐"></span>
+      <div class="soundwave-box">
+        <div class="wave-bar"></div>
+        <div class="wave-bar"></div>
+        <div class="wave-bar"></div>
+        <div class="wave-bar"></div>
+        <div class="wave-bar"></div>
+      </div>
+      <div class="host-text-box">
+        <span class="prompt-word-label" id="prompt-word-label">Listen...</span>
+        <span class="prompt-sub-hint">🔊 Chạm để nghe lại bạn nhỏ nhé!</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 Big Visual Choice Cards for 3yo -->
+  <div class="cards-arena" id="cards-arena"></div>
+
+  <!-- Bottom Tip -->
+  <div class="footer-tip" id="footer-tip">
+    <span>💡</span>
+    <span id="tip-text">Bé tích lũy đủ 5 Ngôi Sao Vàng để mở Cúp Chiến Thắng nhé! 🏆✨</span>
+  </div>
+
+  <!-- -----------------------------------------------------------
+       MODAL 1: PASS CELEBRATION (GIANT CUP)
+       ----------------------------------------------------------- -->
+  <div class="modal-overlay" id="modal-pass">
+    <div class="reward-pass-card">
+      <div class="pass-trophy"><img src="../assets/icons/crown.png" style="width: 110px; height: 110px; object-fit: contain; filter: drop-shadow(0 12px 24px rgba(255, 193, 7, 0.6));" alt="🏆"></div>
+      <h2 class="pass-title" id="pass-title">HOORAY! BÉ ĐẠT 5 SAO VÀNG!</h2>
+      <p class="pass-subtitle">Bé thật là xuất sắc! Mẹ và bé hãy cùng tải Bằng Khen khoe Ông Bà hoặc mở "Phần Thưởng Của Mẹ" nhé!</p>
+
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 6px;">
+        <button type="button" class="btn-cert-share" id="btn-cert-share-win" onclick="CertificateEngine.openCertificateModal(currentWeek, '../')">
+          <span>📸</span>
+          <span>Khoe Bằng Khen Với Ông Bà (Tải Ảnh) ➜</span>
+        </button>
+
+        <button type="button" class="btn-moms-reward" id="btn-open-moms-reward">
+          <span>🎁</span>
+          <span>Phần Thưởng Của Mẹ ➜</span>
+        </button>
+
+        <button type="button" class="btn-next-quiz-round" id="btn-next-quiz-round" onclick="startNextQuizRound()">
+          <span>🎉 Thử Thách Vòng Mới ➜</span>
+        </button>
+      </div>
+
+      <button type="button" class="btn-back-home-sub" onclick="window.location.href='../index.html'">
+        Về Màn Hình Chính
+      </button>
+    </div>
+  </div>
+
+  <!-- -----------------------------------------------------------
+       MODAL 2: PARENTAL GATE (Math Question for Parents)
+       ----------------------------------------------------------- -->
+  <div class="modal-overlay" id="modal-gate">
+    <div class="parental-gate-card">
+      <div class="gate-shield">🛡️</div>
+      <h3 class="gate-title">Góc Dành Riêng Cho Bố/Mẹ</h3>
+      <p class="gate-desc">Để bảo vệ bé không bấm nhầm vào link mua sắm, Bố/Mẹ vui lòng chạm vào đáp án đúng của phép tính dưới đây để mở quà nhé:</p>
+
+      <div class="math-question-box" style="margin: 14px auto 16px; background: #EDE7F6; border: 3px solid #7E57C2; border-radius: 20px; padding: 12px 28px; display: inline-block;">
+        <span id="gate-math-text" style="font-size: 2.4rem; font-weight: 900; color: #4A148C; letter-spacing: 2px;">4 + 3 = ?</span>
+      </div>
+
+      <div class="math-keypad" id="gate-keypad" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; max-width: 320px; margin: 0 auto 12px;">
+        <!-- Injected by JS -->
+      </div>
+
+      <div id="gate-error-msg" style="color: #D32F2F; font-size: 0.95rem; font-weight: 800; min-height: 22px; margin-bottom: 6px;"></div>
+
+      <button type="button" class="btn-back-home-sub" onclick="closeGateModal()">
+        Đóng
+      </button>
+    </div>
+  </div>
+
+  <!-- -----------------------------------------------------------
+       MODAL 3: AFFILIATE PRODUCT SHOWCASE
+       ----------------------------------------------------------- -->
+  <div class="modal-overlay" id="modal-showcase">
+    <div class="affiliate-showcase-card">
+      <span class="aff-badge" id="aff-badge">Món Quà Tương Thích Tuần Này</span>
+      <div class="aff-hero-icon" id="aff-hero-icon">🍎🧺</div>
+      <h3 class="aff-product-title" id="aff-product-title">Bộ Đồ Chơi Cắt Hoa Quả Bằng Gỗ Cho Bé</h3>
+
+      <div class="aff-meta-row">
+        <span class="aff-rating" id="aff-rating">⭐⭐⭐⭐⭐ Đánh giá 5 sao từ phụ huynh</span>
+      </div>
+
+      <div class="aff-why-box" id="aff-why-box">
+        💡 <b>Lợi ích giáo dục:</b> Bé vừa chơi cắt hoa quả vừa thực hành phát âm tiếng Anh các từ đã học trong tuần!
+      </div>
+
+      <div class="aff-actions">
+        <a href="#" target="_blank" rel="noopener noreferrer" class="btn-buy-shopee" id="link-shopee">
+          <span id="txt-shopee">🎁 Mở Quà Shopee Khen Thưởng Bé ➜</span>
+        </a>
+      </div>
+
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: 14px;">
+        <button type="button" onclick="startQuizFromShowcase()" style="background: #FFF8E1; border: 2.5px solid #FFA000; color: #E65100; font-weight: 800; border-radius: 30px; padding: 10px 22px; font-size: 1rem; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+          <span>🎮</span>
+          <span>Bé Thử Thách Quiz Lại Nè!</span>
+        </button>
+
+        <button type="button" class="btn-back-home-sub" onclick="finishAndGoHome()">
+          Xong & Về Sổ Dán Sticker
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confetti Layer -->
+  <div class="confetti-layer" id="confetti-layer"></div>
+
+  <script>
+    // -------------------------------------------------------------
+    // AUDIO ENGINE ALIAS
+    // -------------------------------------------------------------
+    const AudioEngine = window.ToddlerAudio || window.AudioEngine || {
+      init() {},
+      playTone() {},
+      playChime() {},
+      playWin() {},
+      playFanfare() {},
+      speak(t) {},
+      speakWord(w) {}
+    };
+
+    // -------------------------------------------------------------
+    // 5-STAR GUIDED QUIZ ENGINE
+    // -------------------------------------------------------------
+    const urlParams = new URLSearchParams(window.location.search);
+    const queryWeek = parseInt(urlParams.get('week'));
+    let currentWeek = queryWeek || ((window.MissionEngine && MissionEngine.getCurrentWeek) ? MissionEngine.getCurrentWeek() : 1);
+    let weekData = (window.ToddlerVocabulary) ? window.ToddlerVocabulary.build80_20Pack(currentWeek) : null;
+
+    document.getElementById('hud-week-title').innerText = `Bài Kiểm Tra Cuối Tuần ${currentWeek}`;
+
+    const TARGET_STARS = 5;
+    let currentStars = 0;
+    let isProcessing = false;
+
+    function isConcreteNoun(item) {
+      if (!item) return false;
+      if (item.hex) return false;
+      if (item.type === 'verb' || item.type === 'adjective') return false;
+      return !!item.emoji;
+    }
+
+    const rawNewWords = (weekData && weekData.newWords) ? weekData.newWords : [];
+    const rawReviewWords = (weekData && weekData.reviewWords) ? weekData.reviewWords : [];
+
+    const targetNewWords = rawNewWords.filter(isConcreteNoun);
+    const targetReviewWords = rawReviewWords.filter(isConcreteNoun);
+
+    const allDistractorPool = (window.ToddlerVocabulary)
+      ? [
+          ...ToddlerVocabulary.CATEGORIES.animals,
+          ...ToddlerVocabulary.CATEGORIES.food,
+          ...ToddlerVocabulary.CATEGORIES.vehicles,
+          ...ToddlerVocabulary.CATEGORIES.toys_home,
+          ...ToddlerVocabulary.CATEGORIES.body,
+          ...ToddlerVocabulary.CATEGORIES.clothes,
+          ...ToddlerVocabulary.CATEGORIES.nature
+        ].filter(isConcreteNoun)
+      : [
+          { word: 'Apple', emoji: '🍎', type: 'noun' },
+          { word: 'Cat', emoji: '🐱', type: 'noun' },
+          { word: 'Car', emoji: '🚗', type: 'noun' },
+          { word: 'Ball', emoji: '⚽', type: 'noun' }
+        ];
+
+    let lastTargetWord = '';
+    let currentTarget = null;
+    let currentOptions = [];
+
+    function generateQuestion() {
+      const hasNewWords = targetNewWords.length > 0;
+      const isNewWordTest = hasNewWords && (Math.random() < 0.75 || targetReviewWords.length === 0);
+      const primaryPool = (isNewWordTest && targetNewWords.length > 0)
+        ? targetNewWords
+        : (targetReviewWords.length > 0 ? targetReviewWords : allDistractorPool);
+
+      const shuffledPrimary = [...primaryPool].sort(() => Math.random() - 0.5);
+      let target = shuffledPrimary[0] || allDistractorPool[0];
+      if (target.word === lastTargetWord && shuffledPrimary.length > 1) {
+        target = shuffledPrimary[1];
+      }
+      lastTargetWord = target.word;
+
+      const poolWithoutTarget = allDistractorPool.filter(it => it.word !== target.word && it.emoji);
+      const candidateDistractors = poolWithoutTarget.sort(() => Math.random() - 0.5).slice(0, 2);
+
+      const options = [target, ...candidateDistractors].sort(() => Math.random() - 0.5);
+
+      return {
+        target: target,
+        options: options
+      };
+    }
+
+    const cardsArena = document.getElementById('cards-arena');
+    const promptWordLabel = document.getElementById('prompt-word-label');
+    const btnReplay = document.getElementById('btn-replay-prompt');
+
+    function updateStarsHud() {
+      for (let i = 1; i <= TARGET_STARS; i++) {
+        const star = document.getElementById(`star-${i}`);
+        if (star) {
+          star.classList.toggle('earned', i <= currentStars);
+        }
+      }
+    }
+
+    function renderQuestion() {
+      if (currentStars >= TARGET_STARS) {
+        showPassCelebration();
+        return;
+      }
+
+      isProcessing = false;
+      const q = generateQuestion();
+      currentTarget = q.target;
+      currentOptions = q.options;
+
+      promptWordLabel.innerText = `${currentTarget.word}!`;
+      cardsArena.innerHTML = '';
+
+      currentOptions.forEach(opt => {
+        const card = document.createElement('div');
+        card.className = 'option-card';
+        card.setAttribute('data-word', opt.word);
+        const iconHtml = (window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon)
+          ? ToddlerVocabulary.renderWordIcon(opt, 110)
+          : `<span class="card-emoji">${opt.emoji || '⭐'}</span>`;
+        card.innerHTML = iconHtml;
+
+        card.addEventListener('pointerdown', () => handleOptionClick(card, opt, currentTarget));
+        cardsArena.appendChild(card);
+      });
+
+      // Announce Motherese voice
+      setTimeout(() => {
+        ToddlerAudio.speakWord(currentTarget.word);
+      }, 450);
+    }
+
+    let lastClick = 0;
+    let shimmerTimer = null;
+
+    function handleOptionClick(cardElem, clickedItem, targetItem) {
+      if (isProcessing) return;
+      if (cardElem.classList.contains('disabled')) return;
+      if (Date.now() - lastClick < 250) return;
+      lastClick = Date.now();
+
+      clearTimeout(shimmerTimer);
+      ToddlerAudio.init();
+
+      if (clickedItem.word.toLowerCase() === targetItem.word.toLowerCase()) {
+        // MATCH (+1 STAR)
+        isProcessing = true;
+        cardElem.classList.remove('shimmer-guide');
+        cardElem.classList.add('correct');
+        currentStars = Math.min(TARGET_STARS, currentStars + 1);
+        updateStarsHud();
+
+        ToddlerAudio.playChime();
+        ToddlerAudio.speak(`${clickedItem.word}! Yay!`);
+
+        if (currentStars >= TARGET_STARS) {
+          setTimeout(showPassCelebration, 900);
+        } else {
+          setTimeout(renderQuestion, 1100);
+        }
+      } else {
+        // MISMATCH (Cơ chế sai trừ điểm: Giảm 1 sao nếu đang có sao + Hiệu ứng rung lắc & Huy hiệu -1 ⭐)
+        const starToLose = currentStars;
+        if (currentStars > 0) {
+          currentStars = Math.max(0, currentStars - 1);
+          updateStarsHud();
+
+          // Kích hoạt hoạt họa mất sao trên thanh HUD
+          const lostStarElem = document.getElementById(`star-${starToLose}`);
+          if (lostStarElem) {
+            lostStarElem.classList.add('lost-star');
+            setTimeout(() => lostStarElem.classList.remove('lost-star'), 600);
+          }
+        }
+
+        // Tạo huy hiệu nổi -1 ⭐ trên thẻ sai
+        const penaltyBadge = document.createElement('div');
+        penaltyBadge.className = 'penalty-badge';
+        penaltyBadge.innerText = '-1 ⭐';
+        cardElem.appendChild(penaltyBadge);
+        setTimeout(() => penaltyBadge.remove(), 950);
+
+        // Rung lắc thẻ cảnh báo sai
+        cardElem.classList.add('wrong');
+        setTimeout(() => {
+          cardElem.classList.remove('wrong');
+          cardElem.classList.add('disabled');
+        }, 450);
+
+        // Âm thanh thud và giọng nói ấm áp hướng dẫn tìm lại từ đúng
+        ToddlerAudio.playThud(140);
+        ToddlerAudio.speak(`Oops! Let's find ${targetItem.word}!`);
+
+        shimmerTimer = setTimeout(() => {
+          const correctCard = Array.from(cardsArena.children).find(c => c.getAttribute('data-word') === targetItem.word);
+          if (correctCard && !correctCard.classList.contains('disabled')) {
+            correctCard.classList.add('shimmer-guide');
+          }
+        }, 1800);
+      }
+    }
+
+    btnReplay.addEventListener('pointerdown', () => {
+      ToddlerAudio.init();
+      if (currentTarget) ToddlerAudio.speakWord(currentTarget.word);
+    });
+
+    // -------------------------------------------------------------
+    // PASS CELEBRATION MODAL
+    // -------------------------------------------------------------
+    const confettiLayer = document.getElementById('confetti-layer');
+
+    function showPassCelebration() {
+      // Record progress in MissionEngine
+      if (window.MissionEngine && MissionEngine.getProgress) {
+        const prog = MissionEngine.getProgress();
+        if (!prog.weekendTests) prog.weekendTests = {};
+        prog.weekendTests[`w${currentWeek}`] = {
+          passed: true,
+          stars: currentStars,
+          completedAt: new Date().toISOString()
+        };
+        MissionEngine.saveProgress(prog);
+      }
+
+      triggerConfetti();
+      ToddlerAudio.playFanfare();
+      ToddlerAudio.playWin();
+      ToddlerAudio.speak('Yay! 5 Stars!');
+
+      if (typeof BabyProfile !== 'undefined') {
+        const babyName = BabyProfile.getDisplayName();
+        const formatted = babyName.toLowerCase().startsWith('bé ')
+          ? babyName.toUpperCase()
+          : `BÉ ${babyName.toUpperCase()}`;
+        const titleEl = document.getElementById('pass-title');
+        if (titleEl) {
+          titleEl.innerText = `HOORAY! ${formatted} ĐẠT 5 SAO VÀNG!`;
+        }
+      }
+
+      document.getElementById('modal-pass').style.display = 'flex';
+    }
+
+    // Bé chơi tiếp vòng thử thách mới không giới hạn
+    let quizRoundCycle = 0;
+    function startNextQuizRound() {
+      document.getElementById('modal-pass').style.display = 'none';
+      quizRoundCycle++;
+      currentStars = 0;
+      updateStarsHud();
+
+      // Luân chuyển tuần từ vựng tiếp theo trong 52 tuần để nạp từ vựng mới
+      currentWeek = (currentWeek % 52) + 1;
+      const hudTitle = document.getElementById('hud-week-title');
+      if (hudTitle) hudTitle.innerText = `Bài Kiểm Tra Cuối Tuần ${currentWeek}`;
+      weekData = (window.ToddlerVocabulary) ? window.ToddlerVocabulary.build80_20Pack(currentWeek) : null;
+      if (weekData) {
+        const rawNew = (weekData.newWords) ? weekData.newWords : [];
+        const rawRev = (weekData.reviewWords) ? weekData.reviewWords : [];
+        targetNewWords.length = 0;
+        targetReviewWords.length = 0;
+        rawNew.filter(isConcreteNoun).forEach(w => targetNewWords.push(w));
+        rawRev.filter(isConcreteNoun).forEach(w => targetReviewWords.push(w));
+      }
+
+      if (window.ToddlerAudio) {
+        ToddlerAudio.playBoing();
+        ToddlerAudio.speak('New round!');
+      }
+
+      renderQuestion();
+    }
+
+    function triggerConfetti() {
+      const colors = ['#FF1744', '#FFEA00', '#00E676', '#00B0FF', '#D500F9', '#FF9100'];
+      for (let i = 0; i < 45; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+        piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.left = (Math.random() * 95) + 'vw';
+        piece.style.top = '-20px';
+        piece.style.animationDelay = (Math.random() * 0.6) + 's';
+        piece.style.transform = `rotate(${Math.random() * 360}deg)`;
+        confettiLayer.appendChild(piece);
+        setTimeout(() => piece.remove(), 2600);
+      }
+    }
+
+    // -------------------------------------------------------------
+    // PARENTAL GATE (Math Question for Parents)
+    // -------------------------------------------------------------
+    const btnMomsReward = document.getElementById('btn-open-moms-reward');
+    const modalPass = document.getElementById('modal-pass');
+    const modalGate = document.getElementById('modal-gate');
+    const modalShowcase = document.getElementById('modal-showcase');
+
+    let gateExpectedAnswer = 0;
+
+    function generateGateMathQuestion() {
+      const n1 = Math.floor(Math.random() * 5) + 1; // 1 to 5
+      const n2 = Math.floor(Math.random() * 5) + 1; // 1 to 5
+      gateExpectedAnswer = n1 + n2;
+      const mathText = document.getElementById('gate-math-text');
+      if (mathText) mathText.innerText = `${n1} + ${n2} = ?`;
+      const errMsg = document.getElementById('gate-error-msg');
+      if (errMsg) errMsg.innerText = '';
+
+      renderGateKeypad();
+    }
+
+    function renderGateKeypad() {
+      const keypad = document.getElementById('gate-keypad');
+      if (!keypad) return;
+      keypad.innerHTML = '';
+      for (let i = 1; i <= 10; i++) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'gate-num-btn';
+        btn.style.cssText = 'background: white; border: 2.5px solid #7E57C2; border-radius: 14px; font-size: 1.4rem; font-weight: 900; color: #4A148C; padding: 10px 0; cursor: pointer; transition: transform 0.1s, background 0.1s;';
+        btn.innerText = i;
+        btn.addEventListener('click', () => handleGateAnswer(i));
+        keypad.appendChild(btn);
+      }
+    }
+
+    function handleGateAnswer(selectedNum) {
+      if (selectedNum === gateExpectedAnswer) {
+        if (window.ToddlerAudio) ToddlerAudio.playChime();
+        unlockGate();
+      } else {
+        if (window.ToddlerAudio) ToddlerAudio.playThud();
+        generateGateMathQuestion();
+        const errMsg = document.getElementById('gate-error-msg');
+        if (errMsg) errMsg.innerText = 'Chưa chính xác, mẹ chọn lại nhé!';
+      }
+    }
+
+    function openParentGate() {
+      if (modalPass) modalPass.style.display = 'none';
+      generateGateMathQuestion();
+      if (modalGate) modalGate.style.display = 'flex';
+    }
+
+    function closeGateModal() {
+      if (modalGate) modalGate.style.display = 'none';
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('viewReward') === 'true') {
+        window.location.href = '../index.html';
+      } else if (modalPass) {
+        modalPass.style.display = 'flex';
+      }
+    }
+
+    if (btnMomsReward) {
+      btnMomsReward.addEventListener('click', openParentGate);
+    }
+
+    function startQuizFromShowcase() {
+      if (modalShowcase) modalShowcase.style.display = 'none';
+      currentStars = 0;
+      updateStarsHud();
+      renderQuestion();
+    }
+
+    // -------------------------------------------------------------
+    // UNLOCK AFFILIATE SHOWCASE
+    // -------------------------------------------------------------
+    function unlockGate() {
+      if (modalGate) modalGate.style.display = 'none';
+      if (modalShowcase) modalShowcase.style.display = 'flex';
+
+      const gift = (window.AffiliateConfig) 
+        ? window.AffiliateConfig.getWeeklyReward(currentWeek)
+        : null;
+
+      if (gift) {
+        document.getElementById('aff-hero-icon').innerText = gift.emoji;
+        document.getElementById('aff-product-title').innerText = gift.title;
+        document.getElementById('aff-rating').innerText = gift.rating;
+        document.getElementById('aff-badge').innerText = gift.badge;
+        document.getElementById('aff-why-box').innerHTML = `💡 <b>Lợi ích giáo dục:</b> ${gift.whyBuy}`;
+        document.getElementById('link-shopee').href = gift.shopeeUrl;
+
+        const ctaText = (window.AffiliateConfig && AffiliateConfig.getRandomCTA)
+          ? AffiliateConfig.getRandomCTA()
+          : '🎁 Mở Quà Shopee Khen Thưởng Bé ➜';
+        document.getElementById('txt-shopee').innerText = ctaText;
+      }
+    }
+
+    function finishAndGoHome() {
+      window.location.href = '../index.html';
+    }
+
+    // Start Quiz & BGM
+    updateStarsHud();
+
+    if (typeof BabyProfile !== 'undefined') {
+      BabyProfile.renderHeaderWidget('baby-profile-widget', '../');
+      window.addEventListener('baby-profile-updated', () => {
+        BabyProfile.renderHeaderWidget('baby-profile-widget', '../');
+      });
+    }
+
+    window.addEventListener('pointerdown', () => {
+      if (window.AudioEngine) {
+        AudioEngine.init();
+        AudioEngine.startBGM('caring');
+      }
+    }, { once: true });
+
+    setTimeout(() => {
+      ToddlerAudio.init();
+      const isDirectViewReward = urlParams.get('viewReward') === 'true';
+      if (isDirectViewReward) {
+        openParentGate();
+      } else {
+        renderQuestion();
+      }
+    }, 400);
+  </script>
+</body>
+</html>

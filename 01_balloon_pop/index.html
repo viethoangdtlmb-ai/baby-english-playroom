@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+  <title>Balloon Pop - English for Toddlers</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      margin: 0;
+      padding: 0;
+    }
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Comic Sans MS', 'Fredoka One', 'Nunito', cursive, sans-serif;
+      background: linear-gradient(180deg, #87CEEB 0%, #B0E0E6 60%, #98FB98 100%);
+      touch-action: none;
+    }
+    #game-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+    .hud {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      right: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+      pointer-events: none;
+    }
+    .btn-back {
+      pointer-events: auto;
+      background: #FFF;
+      color: #FF5722;
+      border: 3px solid #FF5722;
+      border-radius: 50px;
+      padding: 10px 24px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.1s;
+    }
+    .btn-back:active {
+      transform: scale(0.92);
+    }
+    .title-banner {
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 30px;
+      padding: 8px 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .title-banner h1 {
+      font-size: 1.5rem;
+      color: #E91E63;
+      letter-spacing: 1px;
+    }
+    .title-banner p {
+      font-size: 0.9rem;
+      color: #555;
+    }
+    .score-bubble {
+      background: #FFEB3B;
+      border: 3px solid #FBC02D;
+      border-radius: 30px;
+      padding: 8px 20px;
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #D84315;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+    .color-target-box {
+      pointer-events: auto;
+      background: white;
+      border: 3.5px solid #7E57C2;
+      border-radius: 35px;
+      padding: 8px 22px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 6px 16px rgba(126, 87, 194, 0.25);
+      cursor: pointer;
+      animation: targetPulse 2.4s infinite ease-in-out;
+      transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes targetPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.04); }
+    }
+    .color-target-box:active {
+      transform: scale(0.95);
+    }
+    .target-label {
+      font-size: 1.05rem;
+      font-weight: bold;
+      color: #6A1B9A;
+    }
+    .target-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2.5px solid white;
+      box-shadow: 0 0 8px rgba(0,0,0,0.25);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .target-color-name {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #311B92;
+      letter-spacing: 0.5px;
+    }
+    .target-speaker {
+      font-size: 1.25rem;
+    }
+
+    /* Floating clouds */
+    .cloud {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 100px;
+      pointer-events: none;
+      z-index: 0;
+      animation: floatCloud linear infinite;
+    }
+    @keyframes floatCloud {
+      from { transform: translateX(-200px); }
+      to { transform: translateX(110vw); }
+    }
+
+    /* MODAL: BALLOON POP CELEBRATION (Chốt qua bài rực rỡ) */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(233, 30, 99, 0.72);
+      backdrop-filter: blur(8px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .celebration-card {
+      background: white;
+      border-radius: 36px;
+      padding: 36px 32px;
+      text-align: center;
+      max-width: 440px;
+      width: 90%;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+      border: 6px solid #FF80AB;
+      animation: popCard 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes popCard {
+      from { transform: scale(0.65); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .modal-trophy-icon {
+      font-size: 5rem;
+      margin-bottom: 12px;
+      animation: floatTrophy 2s infinite ease-in-out;
+    }
+    @keyframes floatTrophy {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(6deg); }
+    }
+    .modal-title {
+      font-size: 2rem;
+      font-weight: 900;
+      color: #C2185B;
+      margin-bottom: 10px;
+    }
+    .modal-subtitle {
+      font-size: 1.15rem;
+      color: #546E7A;
+      font-weight: 600;
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+    .btn-modal-action {
+      background: linear-gradient(135deg, #FF4081 0%, #C2185B 100%);
+      color: white;
+      border: 4px solid #FF80AB;
+      border-radius: 50px;
+      padding: 15px 36px;
+      font-size: 1.35rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 10px 28px rgba(194, 24, 91, 0.4);
+      transition: transform 0.15s;
+    }
+    .btn-modal-action:active {
+      transform: scale(0.95);
+    }
+
+    /* Mobile Responsive Optimizations */
+    @media (max-width: 768px) {
+      body, html {
+        max-width: 100vw;
+        overflow-x: hidden;
+      }
+      .hud {
+        top: 10px;
+        left: 8px;
+        right: 8px;
+        gap: 6px;
+      }
+      .btn-back {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+      }
+      .color-target-box {
+        padding: 5px 10px;
+        gap: 6px;
+        border-width: 2.5px;
+      }
+      .target-label {
+        font-size: 0.8rem;
+      }
+      .target-color-name {
+        font-size: 0.95rem;
+      }
+      .target-speaker {
+        font-size: 0.95rem;
+      }
+      .score-bubble {
+        padding: 5px 10px;
+        font-size: 0.95rem;
+        border-width: 2.5px;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="../shared/styles.css">
+  <script src="../shared/audio.js"></script>
+  <script src="../shared/vocabulary.js"></script>
+  <script src="../shared/missions.js"></script>
+</head>
+<body>
+
+  <!-- MODAL: BALLOON CELEBRATION OVERLAY -->
+  <div class="modal-overlay" id="modal-celebration">
+    <div class="celebration-card">
+      <div class="modal-trophy-icon" id="modal-icon">🎈🏆✨</div>
+      <h2 class="modal-title" id="modal-title">Bé Bắn Bóng Siêu Đẳng!</h2>
+      <p class="modal-subtitle" id="modal-subtitle">Bé đã xuất sắc bắn nổ đủ 5 quả bóng sắc màu!</p>
+
+      <button type="button" class="btn-modal-action" id="btn-next-balloon" onclick="advanceToNextBalloonRound()">
+        <span>🎉 Thổi Bóng Mới Nào ➜</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Cloud background decorations -->
+  <div class="cloud" style="width: 140px; height: 50px; top: 12%; animation-duration: 35s;"></div>
+  <div class="cloud" style="width: 200px; height: 70px; top: 25%; animation-duration: 48s; animation-delay: -15s;"></div>
+  <div class="cloud" style="width: 120px; height: 45px; top: 40%; animation-duration: 28s; animation-delay: -5s;"></div>
+
+  <div class="hud">
+    <a href="../index.html" class="btn-back">⬅ Menu</a>
+    <!-- Color Target Badge: Khớp đúng màu bóng yêu cầu -->
+    <div class="color-target-box" id="target-color-box" title="Chạm để nghe lại màu yêu cầu">
+      <span class="target-label">Tìm:</span>
+      <span class="target-dot" id="target-dot" style="background: #FF5252;"></span>
+      <span class="target-color-name" id="target-color-name">RED</span>
+      <span class="target-speaker">🔊</span>
+    </div>
+    <div class="score-bubble">🎯 <span id="score-text">0/5</span></div>
+  </div>
+
+  <canvas id="game-canvas"></canvas>
+
+  <script>
+    // -------------------------------------------------------------
+    // GAME ENGINE & BALLOONS
+    // -------------------------------------------------------------
+    const canvas = document.getElementById('game-canvas');
+    const ctx = canvas.getContext('2d');
+    const scoreText = document.getElementById('score-text');
+
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    // -------------------------------------------------------------
+    // DYNAMIC 52-WEEK BALLOON ROTATION (Week Vocab / Color / Animal / Toy)
+    // -------------------------------------------------------------
+    const urlParams = new URLSearchParams(window.location.search);
+    const queryWeek = parseInt(urlParams.get('week'));
+    const currentWeek = queryWeek || ((window.MissionEngine && MissionEngine.getCurrentWeek) ? MissionEngine.getCurrentWeek() : 1);
+    const weekData = (window.ToddlerVocabulary) ? window.ToddlerVocabulary.build80_20Pack(currentWeek) : null;
+    let balloonMode = (weekData && weekData.balloonMode) ? weekData.balloonMode : 'color';
+
+    let score = 0;
+    const TARGET_GOAL_PER_ROUND = 5;
+    let roundMatchCount = 0;
+    let isRoundWon = false;
+
+    const colors = [
+      { name: 'Red', hex: '#FF5252', highlight: '#FF8A80', emoji: '🔴' },
+      { name: 'Blue', hex: '#448AFF', highlight: '#82B1FF', emoji: '🔵' },
+      { name: 'Yellow', hex: '#FFD600', highlight: '#FFFF8D', emoji: '🟡' },
+      { name: 'Green', hex: '#69F0AE', highlight: '#B9F6CA', emoji: '🟢' },
+      { name: 'Pink', hex: '#FF4081', highlight: '#FF80AB', emoji: '🌸' },
+      { name: 'Purple', hex: '#B388FF', highlight: '#D1C4E9', emoji: '🟣' }
+    ];
+
+    const vibrantColors = ['#FF5252', '#448AFF', '#FFD600', '#69F0AE', '#FF4081', '#AB47BC', '#FF9100', '#26A69A'];
+
+    const animalsPool = (window.ToddlerVocabulary && ToddlerVocabulary.CATEGORIES && ToddlerVocabulary.CATEGORIES.animals)
+      ? ToddlerVocabulary.CATEGORIES.animals.map((a, i) => ({ name: a.word, emoji: a.emoji, hex: vibrantColors[i % vibrantColors.length] }))
+      : [
+          { name: 'Cat', emoji: '🐱', hex: '#FFA726' },
+          { name: 'Dog', emoji: '🐶', hex: '#8D6E63' },
+          { name: 'Duck', emoji: '🦆', hex: '#FFD600' },
+          { name: 'Pig', emoji: '🐷', hex: '#FF80AB' },
+          { name: 'Rabbit', emoji: '🐰', hex: '#448AFF' },
+          { name: 'Frog', emoji: '🐸', hex: '#69F0AE' }
+        ];
+
+    const toysPool = (window.ToddlerVocabulary && ToddlerVocabulary.CATEGORIES && ToddlerVocabulary.CATEGORIES.toys)
+      ? ToddlerVocabulary.CATEGORIES.toys.map((t, i) => ({ name: t.word, emoji: t.emoji, hex: vibrantColors[i % vibrantColors.length] }))
+      : [
+          { name: 'Car', emoji: '🚗', hex: '#FF5252' },
+          { name: 'Ball', emoji: '⚽', hex: '#448AFF' },
+          { name: 'Train', emoji: '🚂', hex: '#FF9100' },
+          { name: 'Bus', emoji: '🚌', hex: '#FFD600' },
+          { name: 'Boat', emoji: '⛵', hex: '#69F0AE' },
+          { name: 'Doll', emoji: '🪆', hex: '#E040FB' }
+        ];
+
+    // Nạp từ vựng mới của tuần nếu có
+    let weekVocabPool = [];
+    if (weekData && weekData.newWords) {
+      weekVocabPool = weekData.newWords
+        .filter(w => w.emoji && !w.hex)
+        .map((w, idx) => ({
+          name: w.word,
+          emoji: w.emoji,
+          hex: vibrantColors[idx % vibrantColors.length],
+          isWeekVocab: true
+        }));
+    }
+
+    // Active pool ưu tiên từ mới của tuần (Ví dụ Tuần 1: Baby, Mommy, Daddy)
+    let activePool = (weekVocabPool.length >= 3)
+      ? weekVocabPool
+      : ((balloonMode === 'animal') ? animalsPool : ((balloonMode === 'toy') ? toysPool : colors));
+
+    let targetItem = activePool[0];
+    let balloons = [];
+
+    class Balloon {
+      constructor() {
+        this.reset();
+        this.y = height + Math.random() * 300; // start below
+      }
+
+      reset(forceGiant = false) {
+        this.isRainbowGiant = forceGiant;
+        this.isGiggle = !forceGiant && (Math.random() < 0.14); // 14% bóng nhột Slapstick
+        this.hitsNeeded = forceGiant ? 2 : (this.isGiggle ? 2 : 1);
+        this.hits = 0;
+        this.radius = forceGiant ? 105 : (this.isGiggle ? 76 : (58 + Math.random() * 16));
+        this.x = this.radius + Math.random() * (width - this.radius * 2);
+        this.y = height + this.radius + 40;
+        // Tốc độ bồng bềnh êm ái cho phản xạ trẻ 3 tuổi (0.45 - 0.72 px/frame)
+        this.speedY = forceGiant ? 0.42 : (0.46 + Math.random() * 0.32);
+
+        // GUARANTEED TARGET FLOW: Đảm bảo luôn có ít nhất 1 quả bóng mục tiêu đang bay
+        const existingTargets = (Array.isArray(balloons) && balloons.length > 0)
+          ? balloons.filter(b => b && b !== this && b.item && b.item.name === targetItem.name).length
+          : 0;
+
+        if (existingTargets === 0 && !forceGiant && !this.isGiggle) {
+          this.item = targetItem;
+        } else {
+          this.item = activePool[Math.floor(Math.random() * activePool.length)];
+        }
+
+        this.color = (this.item.hex) ? { hex: this.item.hex } : { hex: '#FF5252' };
+        this.icon = forceGiant ? '🌈' : (this.isGiggle ? '🤪' : (this.item.emoji || '⭐'));
+        this.img = (window.ToddlerVocabulary && ToddlerVocabulary.getWordImage && !forceGiant && !this.isGiggle)
+          ? ToddlerVocabulary.getWordImage(this.item)
+          : null;
+        this.wobble = Math.random() * Math.PI * 2;
+        this.wobbleSpeed = 0.012 + Math.random() * 0.012;
+        this.blinkCounter = Math.floor(Math.random() * 120);
+        this.isBlinking = false;
+        this.scaleMultiplier = 1;
+      }
+
+      update() {
+        this.y -= this.speedY;
+        this.wobble += this.wobbleSpeed;
+        this.x += Math.sin(this.wobble) * 0.65;
+
+        // Hoạt hình chớp mắt (Blinking Animation)
+        this.blinkCounter++;
+        if (this.blinkCounter > 150) {
+          this.isBlinking = true;
+          if (this.blinkCounter > 162) {
+            this.isBlinking = false;
+            this.blinkCounter = Math.floor(Math.random() * 50);
+          }
+        }
+
+        // Khôi phục scale nhún nhảy
+        if (this.scaleMultiplier > 1) {
+          this.scaleMultiplier -= 0.02;
+        }
+
+        if (this.y < -this.radius * 2.5) {
+          this.reset();
+        }
+      }
+
+      draw() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.scale(this.scaleMultiplier, this.scaleMultiplier);
+
+        const isTarget = (this.item && this.item.name === targetItem.name && !this.isRainbowGiant);
+
+        // 1. Dây bóng uốn lượn mềm mại
+        ctx.beginPath();
+        ctx.moveTo(0, this.radius);
+        ctx.quadraticCurveTo(
+          Math.sin(this.wobble) * 14,
+          this.radius + 22,
+          0,
+          this.radius + 48
+        );
+        ctx.strokeStyle = this.isRainbowGiant ? '#FFC107' : (isTarget ? '#FFA000' : '#888');
+        ctx.lineWidth = (this.isRainbowGiant || isTarget) ? 3.5 : 2;
+        ctx.stroke();
+
+        // 2. Vầng hào quang phát sáng nếu là bóng mục tiêu (Guaranteed Target Visual Aid)
+        if (isTarget) {
+          ctx.save();
+          ctx.shadowColor = '#FFD54F';
+          ctx.shadowBlur = 16;
+          ctx.strokeStyle = 'rgba(255, 213, 79, 0.85)';
+          ctx.lineWidth = 4;
+          ctx.beginPath();
+          ctx.ellipse(0, 0, this.radius * 0.89, this.radius + 3, 0, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        // 3. Thân bóng hình Oval tròn căng
+        ctx.beginPath();
+        ctx.ellipse(0, 0, this.radius * 0.85, this.radius, 0, 0, Math.PI * 2);
+        if (this.isRainbowGiant) {
+          const grad = ctx.createLinearGradient(-this.radius, -this.radius, this.radius, this.radius);
+          grad.addColorStop(0, '#FF4081');
+          grad.addColorStop(0.3, '#FFD600');
+          grad.addColorStop(0.6, '#00E676');
+          grad.addColorStop(1, '#00B0FF');
+          ctx.fillStyle = grad;
+        } else if (this.isGiggle) {
+          ctx.fillStyle = '#FF4081'; // Bóng nhột màu hồng kẹo
+        } else {
+          ctx.fillStyle = this.color.hex;
+        }
+        ctx.fill();
+
+        // 4. Ánh sáng lấp lánh (Shine reflection)
+        ctx.beginPath();
+        ctx.ellipse(
+          -this.radius * 0.35,
+          -this.radius * 0.35,
+          this.radius * 0.22,
+          this.radius * 0.36,
+          -0.6,
+          0,
+          Math.PI * 2
+        );
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.55)';
+        ctx.fill();
+
+        // 5. Nút thắt đuôi bóng (Knot)
+        ctx.beginPath();
+        ctx.moveTo(-7, this.radius);
+        ctx.lineTo(7, this.radius);
+        ctx.lineTo(0, this.radius + 9);
+        ctx.closePath();
+        ctx.fillStyle = this.isRainbowGiant ? '#FFC107' : this.color.hex;
+        ctx.fill();
+
+        // 6. ĐÔI MẮT HOẠT HÌNH SỐNG ĐỘNG (LIVING CARTOON EYES)
+        const eyeOffsetY = -this.radius * 0.38;
+        const eyeSpacing = this.radius * 0.26;
+        const eyeRadius = Math.max(5, this.radius * 0.12);
+
+        [-1, 1].forEach(side => {
+          const eyeX = side * eyeSpacing;
+          if (this.isBlinking) {
+            // Mắt nhắm hình vòng cung xinh xắn ^ ^
+            ctx.beginPath();
+            ctx.arc(eyeX, eyeOffsetY, eyeRadius * 0.9, 0.9 * Math.PI, 0.1 * Math.PI, true);
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2.5;
+            ctx.stroke();
+          } else {
+            // Lòng trắng mắt to tròn
+            ctx.beginPath();
+            ctx.arc(eyeX, eyeOffsetY, eyeRadius, 0, Math.PI * 2);
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(0,0,0,0.15)';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            // Con ngươi đen liếc nhìn theo góc lắc lư
+            const pupilShiftX = Math.sin(this.wobble) * 2;
+            ctx.beginPath();
+            ctx.arc(eyeX + pupilShiftX, eyeOffsetY, eyeRadius * 0.58, 0, Math.PI * 2);
+            ctx.fillStyle = '#212121';
+            ctx.fill();
+
+            // Điểm bắt sáng (Catchlight) long lanh
+            ctx.beginPath();
+            ctx.arc(eyeX + pupilShiftX - 1.5, eyeOffsetY - 1.5, eyeRadius * 0.22, 0, Math.PI * 2);
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fill();
+          }
+        });
+
+        // 7. Miệng cười tươi tắn hình vòng cung
+        ctx.beginPath();
+        ctx.arc(0, eyeOffsetY + eyeRadius + 6, eyeRadius * 0.9, 0.15 * Math.PI, 0.85 * Math.PI);
+        ctx.strokeStyle = '#333';
+        ctx.lineWidth = 2.2;
+        ctx.stroke();
+
+        // 8. Icon hình ảnh / Emoji ở trung tâm bóng (3D Fluent Icon hoặc Fallback Emoji)
+        if (this.img && this.img.complete && this.img.naturalWidth > 0) {
+          const imgSize = Math.floor(this.radius * 1.15);
+          ctx.drawImage(this.img, -imgSize / 2, -imgSize / 2 + this.radius * 0.16, imgSize, imgSize);
+        } else {
+          ctx.font = `${Math.floor(this.radius * 0.62)}px sans-serif`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(this.icon, 0, this.radius * 0.18);
+        }
+
+        // 9. Tên từ vựng nhỏ xinh dưới chân bóng (để bé nhận diện mặt chữ)
+        if (!this.isRainbowGiant && !this.isGiggle && this.item.name) {
+          ctx.font = `bold ${Math.max(12, Math.floor(this.radius * 0.22))}px "Fredoka One", Comic Sans MS, sans-serif`;
+          ctx.fillStyle = '#FFFFFF';
+          ctx.strokeStyle = 'rgba(0,0,0,0.4)';
+          ctx.lineWidth = 3;
+          ctx.strokeText(this.item.name, 0, this.radius * 0.65);
+          ctx.fillText(this.item.name, 0, this.radius * 0.65);
+        }
+
+        ctx.restore();
+      }
+
+      isTouched(tx, ty) {
+        const dx = tx - this.x;
+        const dy = ty - this.y;
+        return Math.sqrt(dx * dx + dy * dy) <= (this.radius * this.scaleMultiplier) + 48;
+      }
+    }
+
+    // Particle Burst
+    class Particle {
+      constructor(x, y, color) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 2 + Math.random() * 6;
+        this.vx = Math.cos(angle) * speed;
+        this.vy = Math.sin(angle) * speed;
+        this.radius = 4 + Math.random() * 6;
+        this.alpha = 1;
+        this.gravity = 0.15;
+      }
+
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.vy += this.gravity;
+        this.alpha -= 0.025;
+      }
+
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, this.alpha);
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    // Floating Word Banner Effect
+    class PopText {
+      constructor(x, y, text, color) {
+        this.x = x;
+        this.y = y;
+        this.text = text;
+        this.color = color;
+        this.alpha = 1;
+        this.scale = 0.5;
+      }
+
+      update() {
+        this.y -= 1.5;
+        this.alpha -= 0.02;
+        if (this.scale < 1.2) this.scale += 0.06;
+      }
+
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, this.alpha);
+        ctx.translate(this.x, this.y);
+        ctx.scale(this.scale, this.scale);
+        ctx.font = 'bold 36px "Fredoka One", Comic Sans MS, cursive, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#FFF';
+        ctx.strokeStyle = this.color;
+        ctx.lineWidth = 6;
+        ctx.strokeText(this.text, 0, 0);
+        ctx.fillText(this.text, 0, 0);
+        ctx.restore();
+      }
+    }
+
+    balloons = Array.from({ length: 6 }, () => new Balloon());
+    let particles = [];
+    let popTexts = [];
+
+    // -------------------------------------------------------------
+    // IDLE REMINDER PROMPT (Nhắc nhở nhẹ nhàng sau 4.5s)
+    // -------------------------------------------------------------
+    let idleTimer = null;
+    function resetIdleTimer() {
+      if (idleTimer) clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => {
+        if (targetBox) {
+          targetBox.style.transform = 'scale(1.12)';
+          setTimeout(() => { targetBox.style.transform = ''; }, 300);
+        }
+        if (window.ToddlerAudio) {
+          ToddlerAudio.playTone(523, 'triangle', 0.15);
+          ToddlerAudio.speak(targetItem.name + '!');
+        }
+      }, 4500);
+    }
+
+    // -------------------------------------------------------------
+    // MULTI-TOUCH INPUT HANDLING (Mom & Baby play together)
+    // -------------------------------------------------------------
+    function handlePop(tx, ty) {
+      AudioEngine.init();
+      resetIdleTimer();
+
+      for (let i = balloons.length - 1; i >= 0; i--) {
+        const b = balloons[i];
+        if (b.isTouched(tx, ty)) {
+          // Play pop sound
+          AudioEngine.playPop();
+
+          // 1. RAINBOW GIANT BALLOON SURPRISE!
+          if (b.isRainbowGiant) {
+            b.hits++;
+            if (b.hits < b.hitsNeeded) {
+              ToddlerAudio.playChime();
+              ToddlerAudio.speak('Tickle tickle! Tap again!');
+              for (let p = 0; p < 12; p++) {
+                particles.push(new Particle(b.x, b.y, '#FFD600'));
+              }
+              break;
+            } else {
+              // Giant Pop Explosion & Candy Storm!
+              ToddlerAudio.playFanfare();
+              ToddlerAudio.speak('Rainbow Surprise! Candy storm!');
+              for (let p = 0; p < 45; p++) {
+                const rainCols = ['#FF4081', '#FFD600', '#00E676', '#00B0FF', '#E040FB'];
+                particles.push(new Particle(b.x, b.y, rainCols[p % rainCols.length]));
+              }
+              const candyTreats = ['🍬 Candy!', '🍭 Yummy!', '⭐ Super Star!', '🎉 Hooray!'];
+              candyTreats.forEach((ct, cidx) => {
+                popTexts.push(new PopText(b.x + (cidx - 1.5) * 60, b.y - cidx * 30, ct, '#E91E63'));
+              });
+              score += 3;
+              scoreText.innerText = score;
+              if (window.MissionEngine && MissionEngine.recordAction) MissionEngine.recordAction();
+              b.reset(false);
+              break;
+            }
+          }
+
+          // 2. GIGGLE BALLOON SLAPSTICK (Bóng nhột phồng to nhún nhảy)
+          if (b.isGiggle) {
+            b.hits++;
+            if (b.hits < b.hitsNeeded) {
+              ToddlerAudio.playBoing();
+              ToddlerAudio.speak('Boing! Giggle!');
+              b.scaleMultiplier = 1.35;
+              for (let p = 0; p < 12; p++) {
+                particles.push(new Particle(b.x, b.y, '#FF4081'));
+              }
+              popTexts.push(new PopText(b.x, b.y - 20, '🤪 Giggle!', '#FF4081'));
+              break;
+            } else {
+              ToddlerAudio.playChime();
+              ToddlerAudio.speak('Pop! Good giggle!');
+              for (let p = 0; p < 25; p++) {
+                particles.push(new Particle(b.x, b.y, '#FF4081'));
+              }
+              score += 2;
+              scoreText.innerText = score;
+              b.reset(false);
+              break;
+            }
+          }
+
+          // 3. NORMAL BALLOON
+          const isMatch = (b.item.name.toLowerCase() === targetItem.name.toLowerCase());
+
+          if (isMatch) {
+            // MATCH!
+            ToddlerAudio.playChime();
+            ToddlerAudio.speak(b.item.name + '! Yay!');
+
+            // Spawn particles
+            for (let p = 0; p < 22; p++) {
+              particles.push(new Particle(b.x, b.y, b.color.hex));
+            }
+
+            // Spawn text
+            popTexts.push(new PopText(b.x, b.y, `⭐ ${b.item.name}!`, b.color.hex));
+
+            // Increment score & round matches
+            score++;
+            roundMatchCount++;
+            scoreText.innerText = `${roundMatchCount}/${TARGET_GOAL_PER_ROUND}`;
+
+            // Record action in shared MissionEngine (nếu có nhiệm vụ)
+            if (window.MissionEngine && MissionEngine.recordAction) {
+              MissionEngine.recordAction();
+            }
+
+            if (roundMatchCount >= TARGET_GOAL_PER_ROUND) {
+              isRoundWon = true;
+              // Bắn pháo hoa rực rỡ và nổ chuỗi hiệu ứng
+              for (let p = 0; p < 45; p++) {
+                const rainCols = ['#FF4081', '#FFD600', '#00E676', '#00B0FF', '#E040FB'];
+                particles.push(new Particle(width / 2 + (Math.random() - 0.5) * 260, height / 2 + (Math.random() - 0.5) * 260, rainCols[p % rainCols.length]));
+              }
+              ToddlerAudio.playFanfare();
+              AudioEngine.speak('Yay! All balloons!');
+
+              setTimeout(() => {
+                const modal = document.getElementById('modal-celebration');
+                const modalTitle = document.getElementById('modal-title');
+                const modalSubtitle = document.getElementById('modal-subtitle');
+                const modalIcon = document.getElementById('modal-icon');
+                if (modalTitle) modalTitle.innerText = 'Bé Bắn Bóng Siêu Đẳng! 🏆';
+                if (modalSubtitle) modalSubtitle.innerText = `Bé đã bắn nổ xuất sắc đủ ${TARGET_GOAL_PER_ROUND} quả bóng mục tiêu!`;
+                if (modalIcon) modalIcon.innerText = '🎈🏆🌟';
+                if (modal) modal.classList.add('active');
+              }, 900);
+            } else {
+              // Pick next target
+              setTimeout(() => {
+                pickNextTarget();
+              }, 700);
+
+              // Cứ mỗi 3 quả nổ -> Spawn Quả bóng cầu vồng khổng lồ bất ngờ!
+              const shouldSpawnGiant = (roundMatchCount % 3 === 0);
+              b.reset(shouldSpawnGiant);
+            }
+          } else {
+            // MISMATCH: Nhẹ nhàng lặp lại từ mục tiêu
+            ToddlerAudio.speak(targetItem.name);
+            for (let p = 0; p < 8; p++) {
+              particles.push(new Particle(b.x, b.y, b.color.hex));
+            }
+            b.reset(false);
+          }
+
+          break; // One pop per touch
+        }
+      }
+    }
+
+    // De-duplicated touch & pointer dispatcher (Chống nổ bóng 2 lần trên điện thoại)
+    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    if (isTouchDevice) {
+      window.addEventListener('touchstart', (e) => {
+        for (let i = 0; i < e.changedTouches.length; i++) {
+          const t = e.changedTouches[i];
+          handlePop(t.clientX, t.clientY);
+        }
+      }, { passive: true });
+    } else {
+      window.addEventListener('pointerdown', (e) => {
+        handlePop(e.clientX, e.clientY);
+      });
+    }
+
+    // -------------------------------------------------------------
+    // GAME LOOP (60 FPS)
+    // -------------------------------------------------------------
+    function loop() {
+      ctx.clearRect(0, 0, width, height);
+
+      // Draw Balloons
+      balloons.forEach(b => {
+        b.update();
+        b.draw();
+      });
+
+      // Draw Particles
+      for (let i = particles.length - 1; i >= 0; i--) {
+        particles[i].update();
+        particles[i].draw();
+        if (particles[i].alpha <= 0) particles.splice(i, 1);
+      }
+
+      // Draw Pop Texts
+      for (let i = popTexts.length - 1; i >= 0; i--) {
+        popTexts[i].update();
+        popTexts[i].draw();
+        if (popTexts[i].alpha <= 0) popTexts.splice(i, 1);
+      }
+
+      requestAnimationFrame(loop);
+    }
+
+    loop();
+
+    // -------------------------------------------------------------
+    // TARGET MATCHING SYSTEM (Color / Animal / Toy / Week Vocab)
+    // -------------------------------------------------------------
+    const targetBox = document.getElementById('target-color-box');
+    const targetDot = document.getElementById('target-dot');
+    const targetName = document.getElementById('target-color-name');
+
+    function updateTargetHud() {
+      if (balloonMode === 'color' && !targetItem.isWeekVocab) {
+        targetDot.style.background = targetItem.hex;
+        targetDot.innerText = '';
+        targetName.innerText = targetItem.name.toUpperCase();
+        targetName.style.color = targetItem.hex;
+      } else {
+        targetDot.style.background = 'transparent';
+        targetDot.innerHTML = (window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon)
+          ? ToddlerVocabulary.renderWordIcon(targetItem, 38)
+          : `<span style="font-size: 1.8rem;">${targetItem.emoji || '⭐'}</span>`;
+        targetName.innerText = targetItem.name.toUpperCase();
+        targetName.style.color = '#333';
+      }
+    }
+
+    function pickNextTarget() {
+      const others = activePool.filter(c => c.name !== targetItem.name);
+      targetItem = (others.length > 0) ? others[Math.floor(Math.random() * others.length)] : activePool[0];
+      updateTargetHud();
+
+      // Pure single word for 3yo
+      AudioEngine.speak(targetItem.name + '!');
+      resetIdleTimer();
+    }
+
+    targetBox.addEventListener('pointerdown', (e) => {
+      e.stopPropagation();
+      AudioEngine.speak(targetItem.name + '!');
+      targetBox.style.transform = 'scale(1.1)';
+      setTimeout(() => { targetBox.style.transform = ''; }, 200);
+      resetIdleTimer();
+    });
+
+    // Luân chuyển chủ đề đa dạng phong phú khi bé vượt qua màn 5 quả bóng
+    let currentCategoryIdx = 0;
+    const balloonCategories = [
+      { name: 'Colors', pool: colors, mode: 'color' },
+      { name: 'Animals', pool: animalsPool, mode: 'animal' },
+      { name: 'Toys', pool: toysPool, mode: 'toy' },
+      {
+        name: 'Fruits',
+        pool: (window.ToddlerVocabulary && ToddlerVocabulary.CATEGORIES && ToddlerVocabulary.CATEGORIES.fruits)
+          ? ToddlerVocabulary.CATEGORIES.fruits.map((f, i) => ({ name: f.word, emoji: f.emoji, hex: vibrantColors[i % vibrantColors.length] }))
+          : animalsPool,
+        mode: 'fruit'
+      }
+    ];
+
+    function advanceToNextBalloonRound() {
+      const modal = document.getElementById('modal-celebration');
+      if (modal) modal.classList.remove('active');
+
+      roundMatchCount = 0;
+      isRoundWon = false;
+      scoreText.innerText = `0/${TARGET_GOAL_PER_ROUND}`;
+
+      currentCategoryIdx = (currentCategoryIdx + 1) % balloonCategories.length;
+      const nextCat = balloonCategories[currentCategoryIdx];
+      activePool = nextCat.pool;
+      balloonMode = nextCat.mode;
+
+      targetItem = activePool[Math.floor(Math.random() * activePool.length)];
+      updateTargetHud();
+
+      // Thổi đàn bóng mới bay lên
+      balloons.forEach(b => b.reset());
+
+      if (window.ToddlerAudio) ToddlerAudio.playBoing();
+      AudioEngine.speak(`New balloons! Find the ${targetItem.name}!`);
+    }
+
+    // An toàn kiểm tra Mission URL nếu có
+    const queryMission = urlParams.get('mission');
+    if (queryMission && window.MissionEngine && MissionEngine.initGameMission) {
+      MissionEngine.initGameMission(queryMission, '.hud');
+    }
+
+    // Khởi động mục tiêu đầu tiên
+    setTimeout(() => {
+      updateTargetHud();
+      AudioEngine.speak(targetItem.name + '!');
+      resetIdleTimer();
+    }, 600);
+  </script>
+</body>
+</html>

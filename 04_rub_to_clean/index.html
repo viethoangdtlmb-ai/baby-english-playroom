@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+  <title>Bubble Bath & Clean Up - Tắm Rửa Sạch Sẽ (Chuẩn 52 Tuần)</title>
+  <link rel="stylesheet" href="../shared/styles.css">
+  <script src="../shared/vocabulary.js"></script>
+  <script src="../shared/audio.js"></script>
+  <script src="../shared/missions.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      margin: 0;
+      padding: 0;
+    }
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Comic Sans MS', 'Fredoka One', 'Nunito', cursive, sans-serif;
+      background: radial-gradient(circle at 50% 30%, #E0F7FA 0%, #B2DFDB 60%, #80CBC4 100%);
+      touch-action: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px;
+    }
+
+    /* Floating Translucent Background Soap Bubbles */
+    .bg-bubble {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8) 0%, rgba(178, 235, 242, 0.35) 60%, rgba(255, 255, 255, 0.6) 100%);
+      border: 1.5px solid rgba(255, 255, 255, 0.7);
+      box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.5), 0 4px 10px rgba(0, 0, 0, 0.05);
+      pointer-events: none;
+      z-index: 1;
+      animation: floatUpSlow infinite ease-in-out;
+    }
+    .bub-1 { width: 50px; height: 50px; left: 8%; bottom: -60px; animation-duration: 9s; }
+    .bub-2 { width: 80px; height: 80px; left: 22%; bottom: -90px; animation-duration: 13s; animation-delay: 2s; }
+    .bub-3 { width: 65px; height: 65px; right: 14%; bottom: -75px; animation-duration: 11s; animation-delay: 4s; }
+    .bub-4 { width: 40px; height: 40px; right: 28%; bottom: -50px; animation-duration: 8s; animation-delay: 1s; }
+
+    @keyframes floatUpSlow {
+      0% { transform: translateY(0) scale(0.9); opacity: 0; }
+      20% { opacity: 0.8; }
+      80% { opacity: 0.8; }
+      100% { transform: translateY(calc(-100vh - 100px)) scale(1.15); opacity: 0; }
+    }
+
+    /* Top HUD */
+    .hud {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 20;
+    }
+    .btn-back {
+      background: #FFF;
+      color: #00796B;
+      border: 3.5px solid #26A69A;
+      border-radius: 50px;
+      padding: 10px 24px;
+      font-size: 1.2rem;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: 0 4px 14px rgba(0, 121, 107, 0.2);
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+    .btn-back:active { transform: scale(0.94); }
+
+    /* Target Animal Pill */
+    .target-clean-pill {
+      background: white;
+      border: 4px solid #00ACC1;
+      border-radius: 36px;
+      padding: 8px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 6px 18px rgba(0, 172, 193, 0.25);
+      cursor: pointer;
+      animation: targetGlowPulse 2.5s infinite ease-in-out;
+      transition: transform 0.15s;
+    }
+    .target-clean-pill:active { transform: scale(0.96); }
+    @keyframes targetGlowPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.04); }
+    }
+    .clean-pill-emoji {
+      font-size: 2.2rem;
+      line-height: 1;
+    }
+    .clean-pill-name {
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: #00838F;
+      letter-spacing: 0.5px;
+    }
+    .clean-pill-speaker {
+      background: #E0F7FA;
+      border: 2px solid #80DEEA;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      cursor: pointer;
+    }
+
+    /* Giant Bath Stage / Ceramic Tub */
+    .wash-stage {
+      position: relative;
+      width: 340px;
+      height: 340px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: white;
+      box-shadow: 0 20px 45px rgba(0, 77, 64, 0.22), inset 0 0 24px rgba(128, 203, 196, 0.35);
+      border: 12px solid #80DEEA;
+      margin: 10px auto;
+      z-index: 10;
+      touch-action: none;
+    }
+
+    /* Ceramic Tub Rim Highlights */
+    .wash-stage::before {
+      content: '';
+      position: absolute;
+      top: 6px;
+      left: 15%;
+      width: 70%;
+      height: 24px;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 50%;
+      filter: blur(2px);
+      pointer-events: none;
+    }
+
+    /* Character inside Tub */
+    .clean-character {
+      width: 250px;
+      height: 250px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      z-index: 2;
+    }
+    .char-emoji {
+      font-size: 10rem;
+      line-height: 1;
+      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.18));
+      transition: transform 0.3s;
+    }
+    .char-emoji.happy-bounce {
+      animation: bounceWin 0.65s infinite alternate cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes bounceWin {
+      0% { transform: scale(1) translateY(0) rotate(-4deg); }
+      100% { transform: scale(1.22) translateY(-22px) rotate(4deg); }
+    }
+
+    /* Mud Scratch Canvas */
+    #mud-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      z-index: 5;
+      cursor: pointer;
+      touch-action: none;
+      transition: opacity 0.6s ease-out;
+    }
+
+    /* Interactive Floating Suds & Bubbles */
+    .suds-bubble {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #FFFFFF 0%, #E0F7FA 60%, rgba(128, 222, 234, 0.8) 100%);
+      border: 2px solid rgba(255, 255, 255, 0.95);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1), inset 0 0 8px rgba(255, 255, 255, 0.8);
+      pointer-events: none;
+      z-index: 12;
+      animation: bubblePopIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+    @keyframes bubblePopIn {
+      0% { transform: scale(0.2); opacity: 0; }
+      100% { transform: scale(1); opacity: 0.95; }
+    }
+
+    /* Animated Sponge Tool Cursor */
+    .sponge-tool {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      font-size: 3.2rem;
+      pointer-events: none;
+      z-index: 30;
+      display: none;
+      transform: translate(-50%, -50%);
+      filter: drop-shadow(0 6px 12px rgba(0,0,0,0.25));
+      animation: spongeSquish 0.3s infinite alternate ease-in-out;
+    }
+    @keyframes spongeSquish {
+      0% { transform: translate(-50%, -50%) scale(1) rotate(-6deg); }
+      100% { transform: translate(-50%, -50%) scale(1.12) rotate(6deg); }
+    }
+
+    /* Giant Shower Head Trigger Button */
+    .btn-shower-head {
+      position: absolute;
+      top: -35px;
+      right: -25px;
+      font-size: 4.4rem;
+      background: white;
+      border: 5px solid #29B6F6;
+      border-radius: 50%;
+      width: 95px;
+      height: 95px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 10px 28px rgba(41, 182, 246, 0.45);
+      z-index: 40;
+      animation: showerCall 0.9s infinite alternate ease-in-out;
+      transition: transform 0.15s;
+    }
+    .btn-shower-head:active { transform: scale(0.9); }
+    @keyframes showerCall {
+      0% { transform: scale(1) rotate(-12deg); }
+      100% { transform: scale(1.18) rotate(12deg); }
+    }
+    .shower-label-badge {
+      position: absolute;
+      bottom: -12px;
+      background: #0288D1;
+      color: white;
+      font-size: 0.85rem;
+      font-weight: 900;
+      padding: 3px 10px;
+      border-radius: 14px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      white-space: nowrap;
+    }
+
+    /* Real Water Spray Streams & Splashes */
+    .water-spray-overlay {
+      position: absolute;
+      inset: -10px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 25;
+      display: none;
+      overflow: hidden;
+    }
+    .water-drop {
+      position: absolute;
+      width: 8px;
+      height: 28px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, rgba(41, 182, 246, 0.9) 100%);
+      border-radius: 6px;
+      animation: waterDropFall 0.45s linear infinite;
+    }
+    @keyframes waterDropFall {
+      0% { transform: translateY(-50px); opacity: 0; }
+      30% { opacity: 1; }
+      100% { transform: translateY(380px); opacity: 0.7; }
+    }
+
+    /* Squeaky Clean Sparkling Diamond FX */
+    .sparkle-clean-fx {
+      position: absolute;
+      font-size: 3.5rem;
+      pointer-events: none;
+      z-index: 35;
+      animation: sparkleBurst 0.9s forwards ease-out;
+    }
+    @keyframes sparkleBurst {
+      0% { opacity: 0; transform: scale(0.3) rotate(0deg); }
+      50% { opacity: 1; transform: scale(1.4) rotate(90deg); }
+      100% { opacity: 0; transform: scale(1.8) rotate(180deg); }
+    }
+
+    /* Idle Ghost Hint Hand */
+    .ghost-hand-rub {
+      position: absolute;
+      font-size: 3.6rem;
+      pointer-events: none;
+      z-index: 50;
+      filter: drop-shadow(0 6px 14px rgba(0,0,0,0.3));
+      animation: ghostRubbing 1.6s infinite ease-in-out;
+      display: none;
+    }
+    @keyframes ghostRubbing {
+      0% { transform: translate(-30px, -20px) scale(1); }
+      50% { transform: translate(30px, 20px) scale(1.1); }
+      100% { transform: translate(-30px, -20px) scale(1); }
+    }
+
+    /* Bottom Status Pill */
+    .status-footer-pill {
+      background: white;
+      border: 3.5px solid #00ACC1;
+      border-radius: 36px;
+      padding: 10px 32px;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #00838F;
+      box-shadow: 0 6px 18px rgba(0, 172, 193, 0.18);
+      margin-bottom: 8px;
+    }
+
+    /* -------------------------------------------------------------
+       MODAL: SQUEAKY CLEAN CELEBRATION (Chốt qua bài rực rỡ)
+       ------------------------------------------------------------- */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(10px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 200;
+      padding: 16px;
+    }
+    .celebration-card {
+      background: linear-gradient(135deg, #FFFFFF 0%, #FFFDF7 100%);
+      border: 6px solid #4DD0E1;
+      border-radius: 44px;
+      padding: 34px 28px;
+      max-width: 520px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+      animation: popInModal 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes popInModal {
+      0% { transform: scale(0.6); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .modal-trophy-icon {
+      font-size: 5.6rem;
+      animation: floatTrophy 2s infinite ease-in-out alternate;
+    }
+    @keyframes floatTrophy {
+      0% { transform: translateY(0) rotate(-6deg); }
+      100% { transform: translateY(-14px) rotate(6deg); }
+    }
+    .modal-title {
+      font-size: 2.1rem;
+      color: #00838F;
+      margin: 12px 0 6px;
+    }
+    .modal-subtitle {
+      font-size: 1.25rem;
+      color: #37474F;
+      margin-bottom: 24px;
+      line-height: 1.4;
+      font-weight: 700;
+    }
+    .btn-modal-action {
+      background: linear-gradient(135deg, #00ACC1 0%, #00838F 100%);
+      color: white;
+      border: 4px solid #80DEEA;
+      border-radius: 50px;
+      padding: 15px 36px;
+      font-size: 1.35rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 10px 28px rgba(0, 131, 143, 0.4);
+      transition: transform 0.15s;
+    }
+    .btn-modal-action:active {
+      transform: scale(0.95);
+    }
+
+    /* Mobile Responsive Optimizations */
+    @media (max-width: 500px) {
+      body, html {
+        padding: 8px 6px;
+        max-width: 100vw;
+        overflow-x: hidden;
+      }
+      .hud {
+        gap: 6px;
+      }
+      .btn-back {
+        padding: 6px 12px;
+        font-size: 0.95rem;
+      }
+      .target-clean-pill {
+        padding: 5px 12px;
+        gap: 6px;
+      }
+      .clean-pill-emoji {
+        font-size: 1.5rem;
+      }
+      .clean-pill-name {
+        font-size: 1.05rem;
+      }
+      .clean-pill-speaker {
+        width: 30px;
+        height: 30px;
+        font-size: 0.95rem;
+      }
+      .wash-stage {
+        width: min(300px, calc(100vw - 28px));
+        height: min(300px, calc(100vw - 28px));
+        border-width: 8px;
+        margin: 6px auto;
+      }
+      .clean-character {
+        width: 200px;
+        height: 200px;
+      }
+      .char-emoji {
+        font-size: 7.5rem;
+      }
+      .btn-shower-head {
+        top: -15px;
+        right: 0px;
+        width: 72px;
+        height: 72px;
+        font-size: 3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- MODAL: SQUEAKY CLEAN CELEBRATION (Chốt qua bài rực rỡ) -->
+  <div class="modal-overlay" id="modal-celebration">
+    <div class="celebration-card">
+      <div class="modal-trophy-icon" id="modal-icon">✨🛁</div>
+      <h2 class="modal-title" id="modal-title">Bạn Nhỏ Đã Sạch Bong!</h2>
+      <p class="modal-subtitle" id="modal-subtitle">Bé đã tắm rửa cho bạn nhỏ thơm phức, sạch bong kin kít rồi!</p>
+
+      <button type="button" class="btn-modal-action" id="btn-next-clean" onclick="advanceToNextCleanTarget()">
+        <span>🎉 Tắm Cho Bạn Tiếp Theo ➜</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Floating Background Soap Bubbles -->
+  <div class="bg-bubble bub-1"></div>
+  <div class="bg-bubble bub-2"></div>
+  <div class="bg-bubble bub-3"></div>
+  <div class="bg-bubble bub-4"></div>
+
+  <!-- HUD with Target Pill & Shared Mission Tracker -->
+  <div class="hud">
+    <a href="../index.html" class="btn-back">⬅ Menu</a>
+
+    <!-- Target Character Pill: Chạm để nghe nhắc lại -->
+    <div class="target-clean-pill" id="target-clean-pill" title="Chạm để nghe gọi tên">
+      <span class="clean-pill-emoji" id="clean-pill-emoji">🐷</span>
+      <span class="clean-pill-name" id="clean-pill-name">DIRTY PIG</span>
+      <div class="clean-pill-speaker">🔊</div>
+    </div>
+
+    <!-- Placeholder for Mission HUD -->
+    <div style="width: 80px;"></div>
+  </div>
+
+  <!-- Bath Stage with Tub & Canvas -->
+  <div class="wash-stage" id="wash-stage">
+    <!-- Character waiting for bath -->
+    <div class="clean-character">
+      <span class="char-emoji" id="target-emoji">🐷</span>
+    </div>
+
+    <!-- Canvas with Rich Mud Texture -->
+    <canvas id="mud-canvas" width="340" height="340"></canvas>
+
+    <!-- Water Spray Stream Overlay -->
+    <div class="water-spray-overlay" id="water-spray-overlay"></div>
+
+    <!-- Giant Shower Head Button (Appears when soap lather is ready) -->
+    <div class="btn-shower-head" id="btn-shower-head" title="Chạm xịt vòi sen!">
+      🚿
+      <div class="shower-label-badge">Xịt Nước!</div>
+    </div>
+
+    <!-- Interactive Sponge Tool -->
+    <div class="sponge-tool" id="sponge-tool">🧽</div>
+
+    <!-- Ghost Hint Hand -->
+    <div class="ghost-hand-rub" id="ghost-hand-rub">👆🧽</div>
+  </div>
+
+  <!-- Realtime Status Footer Banner -->
+  <div class="status-footer-pill" id="status-footer-pill">
+    🧽 Chà sạch bùn nào!
+  </div>
+
+  <script>
+    // -------------------------------------------------------------
+    // DYNAMIC 52-WEEK RUB TO CLEAN SYSTEM (Chuẩn tâm lý trẻ 3 tuổi)
+    // -------------------------------------------------------------
+    const urlParams = new URLSearchParams(window.location.search);
+    const queryWeek = parseInt(urlParams.get('week'), 10);
+    const currentWeek = (!isNaN(queryWeek) && queryWeek >= 1 && queryWeek <= 52)
+      ? queryWeek
+      : ((window.MissionEngine && MissionEngine.getCurrentWeek) ? MissionEngine.getCurrentWeek() : 1);
+
+    const weekData = (window.ToddlerVocabulary) ? window.ToddlerVocabulary.build80_20Pack(currentWeek) : null;
+
+    // Lấy đúng đối tượng tắm của tuần (Tuần 1: Dirty Pig 🐷, Tuần 2: Muddy Dog 🐶, Tuần 3: Dusty Car 🚗...)
+    const activeTarget = (weekData && weekData.cleanTarget)
+      ? weekData.cleanTarget
+      : { id: 'pig', name: 'Dirty Pig', vnTitle: 'Tắm cho bạn Heo lấm bùn', emoji: '🐷', voice: 'Wash the Dirty Pig! Make it clean and pink!' };
+
+    const canvas = document.getElementById('mud-canvas');
+    const ctx = canvas.getContext('2d');
+    const targetEmoji = document.getElementById('target-emoji');
+    const cleanPillEmoji = document.getElementById('clean-pill-emoji');
+    const cleanPillName = document.getElementById('clean-pill-name');
+    const statusFooter = document.getElementById('status-footer-pill');
+    const btnShower = document.getElementById('btn-shower-head');
+    const waterSpray = document.getElementById('water-spray-overlay');
+    const spongeTool = document.getElementById('sponge-tool');
+    const ghostHand = document.getElementById('ghost-hand-rub');
+    const washStage = document.getElementById('wash-stage');
+
+    let isCleaned = false;
+    let showerReady = false;
+    let isDrawing = false;
+    let totalClearedPixels = 0;
+    let rubCount = 0;
+
+    // -------------------------------------------------------------
+    // VẼ LỚP BÙN TỰ NHIÊN & ĐẦY MÀU SẮC TRẺ THƠ (MUD GENERATOR)
+    // -------------------------------------------------------------
+    function drawRichMud() {
+      // Khôi phục cọ vẽ bùn bình thường sau khi tẩy xóa ở vòng trước
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Nền bùn tròn bo theo bồn tắm
+      ctx.fillStyle = '#6D4C41';
+      ctx.beginPath();
+      ctx.arc(170, 170, 160, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Các đốm bùn đậm nhạt tự nhiên
+      const mudPatches = [
+        { x: 110, y: 100, r: 65, col: '#5D4037' },
+        { x: 230, y: 110, r: 75, col: '#4E342E' },
+        { x: 130, y: 220, r: 85, col: '#5D4037' },
+        { x: 240, y: 230, r: 70, col: '#4E342E' },
+        { x: 170, y: 160, r: 60, col: '#795548' },
+        { x: 90,  y: 170, r: 45, col: '#3E2723' },
+        { x: 250, y: 170, r: 50, col: '#3E2723' }
+      ];
+      mudPatches.forEach(p => {
+        ctx.fillStyle = p.col;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // Vết chân bùn đất tinh nghịch
+      ctx.fillStyle = '#3E2723';
+      const pawPrints = [
+        { x: 140, y: 130 }, { x: 200, y: 140 }, { x: 170, y: 200 }
+      ];
+      pawPrints.forEach(pw => {
+        ctx.beginPath();
+        ctx.arc(pw.x, pw.y, 14, 0, Math.PI * 2);
+        ctx.fill();
+        for (let a = -0.6; a <= 0.6; a += 0.4) {
+          ctx.beginPath();
+          ctx.arc(pw.x + Math.sin(a) * 22, pw.y - Math.cos(a) * 22, 5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      });
+
+      // Hé lộ đôi mắt tinh nghịch của bạn nhỏ để bé nhận diện nhân vật ngay từ đầu
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.beginPath();
+      ctx.arc(135, 135, 22, 0, Math.PI * 2);
+      ctx.arc(205, 135, 22, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalCompositeOperation = 'source-over';
+    }
+
+    // -------------------------------------------------------------
+    // KHỞI TẠO MÀN TẮM RỬA (INITIALIZATION)
+    // -------------------------------------------------------------
+    function initBath(target) {
+      isCleaned = false;
+      showerReady = false;
+      totalClearedPixels = 0;
+      rubCount = 0;
+
+      canvas.style.opacity = '1';
+      canvas.style.pointerEvents = 'auto';
+      targetEmoji.classList.remove('happy-bounce');
+      btnShower.style.display = 'none';
+      waterSpray.style.display = 'none';
+
+      drawRichMud();
+
+      // Cập nhật thông tin nhân vật với icon 3D nổi khối
+      if (window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon) {
+        targetEmoji.innerHTML = ToddlerVocabulary.renderWordIcon(target.id || target.name, 190);
+        cleanPillEmoji.innerHTML = ToddlerVocabulary.renderWordIcon(target.id || target.name, 34);
+      } else {
+        targetEmoji.innerText = target.emoji;
+        cleanPillEmoji.innerText = target.emoji;
+      }
+      cleanPillName.innerText = target.name.toUpperCase();
+      statusFooter.innerText = `🧽 Chà sạch bùn nào!`;
+
+      // Giọng nói mở màn Motherese
+      setTimeout(() => {
+        AudioEngine.speak(target.voice || `Wash the ${target.name}! Rub, rub, rub!`);
+        scheduleIdleHint();
+      }, 600);
+    }
+
+    // -------------------------------------------------------------
+    // TẠO BỌT XÀ PHÒNG BỒNG BỀNH (SUDS & BUBBLES GENERATOR)
+    // -------------------------------------------------------------
+    function spawnSoapSuds(x, y) {
+      const bubble = document.createElement('div');
+      bubble.className = 'suds-bubble';
+      const size = 30 + Math.random() * 32;
+      bubble.style.width = size + 'px';
+      bubble.style.height = size + 'px';
+      bubble.style.left = (x - size / 2) + 'px';
+      bubble.style.top = (y - size / 2) + 'px';
+
+      washStage.appendChild(bubble);
+
+      // Bọt xà phòng trôi nhẹ rồi tự biến mất sau khi bé xối nước
+      setTimeout(() => {
+        if (bubble && bubble.parentNode) bubble.remove();
+      }, 4500);
+    }
+
+    // -------------------------------------------------------------
+    // SCRUBBING & LATHERING LOGIC (Chà vết bẩn tạo bọt)
+    // -------------------------------------------------------------
+    function scrub(x, y) {
+      hideGhostHint();
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.beginPath();
+      ctx.arc(x, y, 42, 0, Math.PI * 2);
+      ctx.fill();
+
+      rubCount++;
+
+      // Sinh bọt xà phòng và âm thanh mỗi 4 lần chà
+      if (rubCount % 4 === 0) {
+        spawnSoapSuds(x, y);
+        if (window.ToddlerAudio) {
+          ToddlerAudio.playPop(360 + Math.random() * 180);
+        }
+      }
+
+      // Kiểm tra tiến độ sạch
+      if (rubCount % 10 === 0 && !showerReady) {
+        checkBathProgress();
+      }
+    }
+
+    function checkBathProgress() {
+      const imgData = ctx.getImageData(50, 50, 240, 240).data;
+      let transparentCount = 0;
+      for (let i = 3; i < imgData.length; i += 32) {
+        if (imgData[i] === 0) transparentCount++;
+      }
+
+      const ratio = transparentCount / (imgData.length / 32);
+
+      if (ratio > 0.42 && !showerReady) {
+        showerReady = true;
+        btnShower.style.display = 'flex';
+        statusFooter.innerText = `🚿 Chạm vòi sen xịt nước nào!`;
+
+        if (window.ToddlerAudio) {
+          ToddlerAudio.playChime();
+          ToddlerAudio.speak('Now take a shower! Tap the shower!');
+        }
+
+        // Tự động nhắc nhở sau 4s nếu bé chưa bấm vòi sen
+        scheduleShowerHint();
+      }
+    }
+
+    // -------------------------------------------------------------
+    // SHOWER RINSE ACTION (Xối nước vòi sen cuốn trôi toàn bộ bọt)
+    // -------------------------------------------------------------
+    btnShower.addEventListener('pointerdown', (e) => {
+      e.stopPropagation();
+      triggerShowerRinse();
+    });
+
+    function triggerShowerRinse() {
+      if (isCleaned) return;
+      isCleaned = true;
+      btnShower.style.display = 'none';
+      hideGhostHint();
+
+      // Âm thanh nước xối róc rách & kèn chiến thắng
+      if (window.ToddlerAudio) {
+        ToddlerAudio.playSplash();
+        ToddlerAudio.playFanfare();
+        ToddlerAudio.speak('Whoosh! Splash! Squeaky clean!');
+      }
+
+      // Kích hoạt vòi phun nước rơi xối xả
+      waterSpray.innerHTML = '';
+      waterSpray.style.display = 'block';
+      for (let i = 0; i < 24; i++) {
+        const drop = document.createElement('div');
+        drop.className = 'water-drop';
+        drop.style.left = (15 + Math.random() * 310) + 'px';
+        drop.style.animationDelay = (Math.random() * 0.4) + 's';
+        waterSpray.appendChild(drop);
+      }
+
+      // Xóa sạch canvas và bọt xà phòng
+      canvas.style.opacity = '0';
+      canvas.style.pointerEvents = 'none';
+
+      document.querySelectorAll('.suds-bubble').forEach(b => {
+        b.style.transition = 'all 0.6s ease-out';
+        b.style.transform = 'translateY(120px) scale(0.2)';
+        b.style.opacity = '0';
+        setTimeout(() => b.remove(), 600);
+      });
+
+      // Tạo hiệu ứng kim cương lấp lánh thơm tho
+      const sparkles = ['✨', '💎', '⭐', '💖', '🌟'];
+      for (let i = 0; i < 10; i++) {
+        setTimeout(() => {
+          const sp = document.createElement('div');
+          sp.className = 'sparkle-clean-fx';
+          sp.innerText = sparkles[i % sparkles.length];
+          sp.style.left = (70 + Math.random() * 200) + 'px';
+          sp.style.top = (70 + Math.random() * 200) + 'px';
+          washStage.appendChild(sp);
+          setTimeout(() => sp.remove(), 900);
+        }, i * 160);
+      }
+
+      // Kết thúc xối nước
+      setTimeout(() => {
+        waterSpray.style.display = 'none';
+        targetEmoji.classList.add('happy-bounce');
+        statusFooter.innerText = `🎉 Hooray! ${currentActiveTarget.name} sạch bong kin kít!`;
+        AudioEngine.speak(`Squeaky clean! Look at the cute ${currentActiveTarget.name}! All clean!`);
+
+        // Ghi nhận hoàn thành nhiệm vụ Day 4
+        if (window.MissionEngine && MissionEngine.recordAction) {
+          MissionEngine.recordAction();
+        }
+
+        // Hiện modal chiến thắng sau 1 giây tạo cảm giác qua bài trọn vẹn
+        setTimeout(() => {
+          const modal = document.getElementById('modal-celebration');
+          const modalTitle = document.getElementById('modal-title');
+          const modalSubtitle = document.getElementById('modal-subtitle');
+          const modalIcon = document.getElementById('modal-icon');
+          if (modalTitle) modalTitle.innerText = `${currentActiveTarget.name} Đã Sạch Bong!`;
+          if (modalSubtitle) modalSubtitle.innerText = `Bé đã tắm cho bạn ${currentActiveTarget.name} thơm phức, sạch bong kin kít rồi!`;
+          if (modalIcon) modalIcon.innerText = `${currentActiveTarget.emoji}✨🛁`;
+          if (modal) modal.style.display = 'flex';
+          if (window.ToddlerAudio) ToddlerAudio.playFanfare();
+        }, 1000);
+      }, 1400);
+    }
+
+    // -------------------------------------------------------------
+    // DANH SÁCH XOAY VÒNG BẠN MỚI KHI CHƠI TIẾP
+    // -------------------------------------------------------------
+    const cleanTargetList = [
+      { id: 'pig', name: 'Dirty Pig', vnTitle: 'Tắm cho bạn Heo lấm bùn', emoji: '🐷', voice: 'Wash the Dirty Pig! Make it clean and pink!' },
+      { id: 'dog', name: 'Muddy Puppy', vnTitle: 'Tắm cho bạn Cún lấm lem', emoji: '🐶', voice: 'Wash the Muddy Puppy! Squeaky clean puppy!' },
+      { id: 'car', name: 'Dusty Car', vnTitle: 'Rửa xe ô tô dính bụi', emoji: '🚗', voice: 'Wash the Dusty Car! Beep beep clean!' },
+      { id: 'cat', name: 'Messy Kitten', vnTitle: 'Tắm cho bạn Mèo con', emoji: '🐱', voice: 'Wash the Messy Kitten! Meow clean!' },
+      { id: 'duck', name: 'Puddle Duck', vnTitle: 'Tắm cho bạn Vịt con', emoji: '🦆', voice: 'Wash the Puddle Duck! Quack quack clean!' },
+      { id: 'bear', name: 'Honey Bear', vnTitle: 'Tắm cho bạn Gấu dính mật', emoji: '🐻', voice: 'Wash the Bear! Clean and fluffy!' },
+      { id: 'elephant', name: 'Mud Elephant', vnTitle: 'Tắm cho bạn Voi con', emoji: '🐘', voice: 'Wash the Baby Elephant! Big splash!' }
+    ];
+    let currentTargetIdx = 0;
+    let currentActiveTarget = activeTarget;
+    const foundIdx = cleanTargetList.findIndex(t => t.id === activeTarget.id);
+    if (foundIdx !== -1) currentTargetIdx = foundIdx;
+
+    function advanceToNextCleanTarget() {
+      const modal = document.getElementById('modal-celebration');
+      if (modal) modal.style.display = 'none';
+      currentTargetIdx = (currentTargetIdx + 1) % cleanTargetList.length;
+      currentActiveTarget = cleanTargetList[currentTargetIdx];
+      initBath(currentActiveTarget);
+    }
+    window.advanceToNextCleanTarget = advanceToNextCleanTarget;
+
+    // -------------------------------------------------------------
+    // IDLE GHOST HINT HAND (Bàn tay chỉ dẫn thông minh)
+    // -------------------------------------------------------------
+    let idleTimer = null;
+    function scheduleIdleHint() {
+      hideGhostHint();
+      idleTimer = setTimeout(() => {
+        if (!showerReady && !isCleaned) {
+          showRubHint();
+        }
+      }, 3600);
+    }
+
+    function scheduleShowerHint() {
+      hideGhostHint();
+      idleTimer = setTimeout(() => {
+        if (showerReady && !isCleaned) {
+          showShowerHint();
+        }
+      }, 3800);
+    }
+
+    function hideGhostHint() {
+      if (idleTimer) clearTimeout(idleTimer);
+      ghostHand.style.display = 'none';
+    }
+
+    function showRubHint() {
+      ghostHand.innerText = '👆🧽';
+      ghostHand.style.left = '42%';
+      ghostHand.style.top = '40%';
+      ghostHand.style.display = 'block';
+      AudioEngine.speak('Rub, rub! Make bubbles!');
+      scheduleIdleHint();
+    }
+
+    function showShowerHint() {
+      ghostHand.innerText = '👆🚿';
+      ghostHand.style.left = '75%';
+      ghostHand.style.top = '10%';
+      ghostHand.style.display = 'block';
+      AudioEngine.speak('Tap the shower!');
+    }
+
+    // -------------------------------------------------------------
+    // TOUCH & POINTER HANDLING FOR MUD CANVAS
+    // -------------------------------------------------------------
+    function getCanvasCoords(e) {
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      return {
+        x: (clientX - rect.left) * (canvas.width / rect.width),
+        y: (clientY - rect.top) * (canvas.height / rect.height),
+        stageX: clientX - washStage.getBoundingClientRect().left,
+        stageY: clientY - washStage.getBoundingClientRect().top
+      };
+    }
+
+    canvas.addEventListener('pointerdown', (e) => {
+      AudioEngine.init();
+      isDrawing = true;
+      const c = getCanvasCoords(e);
+      spongeTool.style.display = 'block';
+      spongeTool.style.left = c.stageX + 'px';
+      spongeTool.style.top = c.stageY + 'px';
+      scrub(c.x, c.y);
+    });
+
+    window.addEventListener('pointermove', (e) => {
+      if (!isDrawing) return;
+      const c = getCanvasCoords(e);
+      spongeTool.style.left = c.stageX + 'px';
+      spongeTool.style.top = c.stageY + 'px';
+      scrub(c.x, c.y);
+    });
+
+    window.addEventListener('pointerup', () => {
+      isDrawing = false;
+      spongeTool.style.display = 'none';
+      if (!showerReady && !isCleaned) scheduleIdleHint();
+    });
+
+    // Chạm vào Pill trên HUD để nghe lại tên bạn nhỏ
+    document.getElementById('target-clean-pill').addEventListener('pointerdown', (e) => {
+      e.stopPropagation();
+      hideGhostHint();
+      AudioEngine.speak(`Wash the ${activeTarget.name}! Make it clean!`);
+    });
+
+    // -------------------------------------------------------------
+    // KHỞI ĐỘNG NHIỆM VỤ DAY 4 (MISSION ENGINE INTEGRATION)
+    // -------------------------------------------------------------
+    if (window.MissionEngine && MissionEngine.initGameMission) {
+      MissionEngine.initGameMission('mission_day_4', '.hud');
+    }
+
+    // Nạp đối tượng tắm tuần hiện tại
+    initBath(activeTarget);
+  </script>
+</body>
+</html>
