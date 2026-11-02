@@ -3,7 +3,7 @@
    Target Audience: 3-Year-Old Toddler + Co-Playing Parent
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@600;700;800&family=Outfit:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
 
 :root {
   /* Warm Pastel Palette (Dịu mắt, độ tương phản cao, khử Rainbow Slop) */
@@ -37,9 +37,9 @@
   --shadow-float: 0 14px 32px rgba(62, 39, 35, 0.12);
   --shadow-glow: 0 8px 24px rgba(255, 107, 139, 0.3);
   
-  /* Fonts */
-  --font-toddler: 'Fredoka', 'Nunito', cursive, sans-serif;
-  --font-parent: 'Outfit', 'Nunito', sans-serif;
+  /* Fonts - 100% Chuẩn Tiếng Việt có dấu, bo tròn thân thiện cho bé 3 tuổi */
+  --font-toddler: 'Nunito', 'Baloo 2', cursive, sans-serif;
+  --font-parent: 'Plus Jakarta Sans', 'Nunito', sans-serif;
 }
 
 /* Global Mobile Viewport Safety */

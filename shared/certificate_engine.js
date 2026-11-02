@@ -279,6 +279,9 @@ const CertificateEngine = {
    * Sinh Canvas Bằng Khen hoàn chỉnh
    */
   async generateCanvas(weekNum = 1, basePath = '') {
+    if (typeof document !== 'undefined' && document.fonts && document.fonts.ready) {
+      try { await document.fonts.ready; } catch (e) { /* ignore */ }
+    }
     const canvas = document.createElement('canvas');
     canvas.width = this.CANVAS_WIDTH;
     canvas.height = this.CANVAS_HEIGHT;
@@ -363,14 +366,14 @@ const CertificateEngine = {
     ctx.restore();
 
     ctx.fillStyle = '#FFFFFF';
-    ctx.font = '900 34px "Nunito", "Fredoka", sans-serif';
+    ctx.font = '900 34px "Nunito", "Baloo 2", sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('🌟 BẢNG VÀNG THÀNH TÍCH TIẾNG ANH 🌟', this.CANVAS_WIDTH / 2, ribbonY);
 
     // Dòng chữ "CHỨNG NHẬN XUẤT SẮC"
     ctx.fillStyle = '#C2185B';
-    ctx.font = '900 42px "Nunito", "Fredoka", sans-serif';
+    ctx.font = '900 42px "Nunito", "Baloo 2", sans-serif';
     ctx.fillText('CHỨNG NHẬN XUẤT SẮC', this.CANVAS_WIDTH / 2, 188);
 
     // Trích xuất chủ đề và danh sách từ vựng tuần thực tế từ 52 tuần
@@ -378,12 +381,12 @@ const CertificateEngine = {
 
     // Dòng 1: Chủ đề tuần
     ctx.fillStyle = '#5D4037';
-    ctx.font = '800 27px "Nunito", "Fredoka", sans-serif';
+    ctx.font = '800 27px "Nunito", "Baloo 2", sans-serif';
     ctx.fillText(curriculum.weekTitle, this.CANVAS_WIDTH / 2, 238);
 
     // Dòng 2: Từ vựng tinh thông của tuần
     ctx.fillStyle = '#2E7D32';
-    ctx.font = '700 22px "Nunito", "Fredoka", sans-serif';
+    ctx.font = '700 22px "Nunito", "Baloo 2", sans-serif';
     ctx.fillText(curriculum.wordsStr, this.CANVAS_WIDTH / 2, 274);
 
     // 5. VÒNG TRÒN ẢNH BÉ & VƯƠNG MIỆN (Hoàn toàn không đè chữ)
@@ -401,11 +404,11 @@ const CertificateEngine = {
     // 6. TÊN BÉ VÀ TUỔI
     const nameY = 690;
     ctx.fillStyle = '#D81B60';
-    ctx.font = '900 54px "Nunito", "Fredoka", sans-serif';
+    ctx.font = '900 54px "Nunito", "Baloo 2", sans-serif';
     ctx.fillText(formattedName, this.CANVAS_WIDTH / 2, nameY);
 
     ctx.fillStyle = '#8D6E63';
-    ctx.font = '800 28px "Nunito", "Fredoka", sans-serif';
+    ctx.font = '800 28px "Nunito", "Baloo 2", sans-serif';
     ctx.fillText(`✨ ${babyAge} Tuổi • Học Giỏi & Vui Khỏe Mỗi Ngày ✨`, this.CANVAS_WIDTH / 2, nameY + 46);
 
     // 7. DÃY 5 NGÔI SAO VÀNG ĐẠT ĐƯỢC
@@ -442,16 +445,16 @@ const CertificateEngine = {
 
     // Dòng chữ nhắn nhủ
     ctx.fillStyle = '#3E2723';
-    ctx.font = '800 30px "Nunito", "Fredoka", sans-serif';
+    ctx.font = '800 30px "Nunito", "Baloo 2", sans-serif';
     ctx.fillText('💌 LỜI NHẮN YÊU THƯƠNG TỪ BÉ', this.CANVAS_WIDTH / 2, cardY + 44);
 
     ctx.fillStyle = '#6D4C41';
-    ctx.font = '700 24px "Nunito", "Fredoka", sans-serif';
+    ctx.font = '700 24px "Nunito", "Baloo 2", sans-serif';
     ctx.fillText(loveMsg.line1, this.CANVAS_WIDTH / 2, cardY + 92);
     ctx.fillText(loveMsg.line2, this.CANVAS_WIDTH / 2, cardY + 132);
 
     ctx.fillStyle = '#E91E63';
-    ctx.font = '900 26px "Nunito", "Fredoka", sans-serif';
+    ctx.font = '900 26px "Nunito", "Baloo 2", sans-serif';
     ctx.fillText(loveMsg.line3, this.CANVAS_WIDTH / 2, cardY + 180);
 
     // 9. DƯỚI CÙNG: CON DẤU VÀ NGÀY CẤP (BÊN TRÁI) + MÃ QR QUÉT TẢI APP (BÊN PHẢI)
@@ -542,6 +545,9 @@ const CertificateEngine = {
    * Đảm bảo xuất file PNG an toàn tuyệt đối trên mọi nền tảng kể cả file://
    */
   async _renderPureVectorCanvas(weekNum = 1, basePath = '', prof = null) {
+    if (typeof document !== 'undefined' && document.fonts && document.fonts.ready) {
+      try { await document.fonts.ready; } catch (e) { /* ignore */ }
+    }
     const canvas = document.createElement('canvas');
     canvas.width = this.CANVAS_WIDTH;
     canvas.height = this.CANVAS_HEIGHT;
@@ -613,22 +619,22 @@ const CertificateEngine = {
     ctx.restore();
 
     ctx.fillStyle = '#FFFFFF';
-    ctx.font = '900 34px "Nunito", "Fredoka", sans-serif';
+    ctx.font = '900 34px "Nunito", "Baloo 2", sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('🌟 BẢNG VÀNG THÀNH TÍCH TIẾNG ANH 🌟', this.CANVAS_WIDTH / 2, ribbonY);
 
     ctx.fillStyle = '#C2185B';
-    ctx.font = '900 42px "Nunito", "Fredoka", sans-serif';
+    ctx.font = '900 42px "Nunito", "Baloo 2", sans-serif';
     ctx.fillText('CHỨNG NHẬN XUẤT SẮC', this.CANVAS_WIDTH / 2, 188);
 
     const curriculum = this.getWeekCurriculum(weekNum);
     ctx.fillStyle = '#5D4037';
-    ctx.font = '800 27px "Nunito", "Fredoka", sans-serif';
+    ctx.font = '800 27px "Nunito", "Baloo 2", sans-serif';
     ctx.fillText(curriculum.weekTitle, this.CANVAS_WIDTH / 2, 238);
 
     ctx.fillStyle = '#2E7D32';
-    ctx.font = '700 22px "Nunito", "Fredoka", sans-serif';
+    ctx.font = '700 22px "Nunito", "Baloo 2", sans-serif';
     ctx.fillText(curriculum.wordsStr, this.CANVAS_WIDTH / 2, 274);
 
     // 4. VÒNG TRÒN AVATAR BÉ & VƯƠNG MIỆN
@@ -675,11 +681,11 @@ const CertificateEngine = {
     // 5. TÊN BÉ
     const nameY = 690;
     ctx.fillStyle = '#D81B60';
-    ctx.font = '900 54px "Nunito", "Fredoka", sans-serif';
+    ctx.font = '900 54px "Nunito", "Baloo 2", sans-serif';
     ctx.fillText(formattedName, this.CANVAS_WIDTH / 2, nameY);
 
     ctx.fillStyle = '#8D6E63';
-    ctx.font = '800 28px "Nunito", "Fredoka", sans-serif';
+    ctx.font = '800 28px "Nunito", "Baloo 2", sans-serif';
     ctx.fillText(`✨ ${babyAge} Tuổi • Học Giỏi & Vui Khỏe Mỗi Ngày ✨`, this.CANVAS_WIDTH / 2, nameY + 46);
 
     // 6. DÃY 5 NGÔI SAO VÀNG (Chống lỗi wireframe, luôn đổ bóng vàng 3D lấp lánh)
@@ -709,16 +715,16 @@ const CertificateEngine = {
     ctx.restore();
 
     ctx.fillStyle = '#3E2723';
-    ctx.font = '800 30px "Nunito", "Fredoka", sans-serif';
+    ctx.font = '800 30px "Nunito", "Baloo 2", sans-serif';
     ctx.fillText('💌 LỜI NHẮN YÊU THƯƠNG TỪ BÉ', this.CANVAS_WIDTH / 2, cardY + 44);
 
     ctx.fillStyle = '#6D4C41';
-    ctx.font = '700 24px "Nunito", "Fredoka", sans-serif';
+    ctx.font = '700 24px "Nunito", "Baloo 2", sans-serif';
     ctx.fillText(loveMsg.line1, this.CANVAS_WIDTH / 2, cardY + 92);
     ctx.fillText(loveMsg.line2, this.CANVAS_WIDTH / 2, cardY + 132);
 
     ctx.fillStyle = '#E91E63';
-    ctx.font = '900 26px "Nunito", "Fredoka", sans-serif';
+    ctx.font = '900 26px "Nunito", "Baloo 2", sans-serif';
     ctx.fillText(loveMsg.line3, this.CANVAS_WIDTH / 2, cardY + 180);
 
     // 8. DƯỚI CÙNG: CON DẤU VÀ NGÀY CẤP (BÊN TRÁI) + MÃ QR QUÉT TẢI APP (BÊN PHẢI)
