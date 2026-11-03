@@ -348,7 +348,7 @@
     <div class="color-target-box" id="target-color-box" title="Chạm để nghe lại màu yêu cầu">
       <span class="target-label">Tìm:</span>
       <span class="target-dot" id="target-dot" style="background: #FF5252;"></span>
-      <span class="target-color-name" id="target-color-name">RED</span>
+      <span class="target-color-name" id="target-color-name">...</span>
       <span class="target-speaker">🔊</span>
     </div>
     <div class="score-bubble">🎯 <span id="score-text">0/5</span></div>
@@ -870,10 +870,7 @@
           if (isMatch) {
             // MATCH!
             ToddlerAudio.playChime();
-            const contextPhrase = (window.ToddlerVocabulary && ToddlerVocabulary.getWordContextPhrase)
-              ? ToddlerVocabulary.getWordContextPhrase(b.item.name)
-              : (b.item.name + '! Yay!');
-            ToddlerAudio.speak(contextPhrase);
+            AudioEngine.speak(`${b.item.name}! Yay!`);
 
             // Spawn particles
             for (let p = 0; p < 22; p++) {
@@ -928,21 +925,23 @@
                 }
                 if (modalIcon) modalIcon.innerText = '🎈🏆🌟';
                 if (modal) modal.classList.add('active');
-              }, 1600);
+              }, 1400);
             } else {
-              // Chờ 1800ms để câu ngữ cảnh đọc trọn vẹn rồi mới chuyển sang từ mục tiêu tiếp theo
+              // Chờ 1300ms rồi mới chuyển sang từ mục tiêu tiếp theo
               setTimeout(() => {
                 if (!isRoundWon) pickNextTarget();
-              }, 1800);
+              }, 1300);
 
               // Cứ mỗi 3 quả nổ -> Spawn Quả bóng cầu vồng khổng lồ bất ngờ!
               const shouldSpawnGiant = (roundMatchCount % 3 === 0);
               b.reset(shouldSpawnGiant);
             }
           } else {
-            // MISMATCH: Nhẹ nhàng lặp lại từ mục tiêu
-            ToddlerAudio.speak(targetItem.name);
-            for (let p = 0; p < 8; p++) {
+            // MISMATCH: Bé bấm trúng bóng nào thì máy đọc CHÍNH XÁC từ vựng của bóng đó!
+            ToddlerAudio.playPop();
+            AudioEngine.speak(`${b.item.name}!`);
+            popTexts.push(new PopText(b.x, b.y, `${b.item.name}!`, b.color.hex));
+            for (let p = 0; p < 12; p++) {
               particles.push(new Particle(b.x, b.y, b.color.hex));
             }
             b.reset(false);
@@ -1094,13 +1093,15 @@
       MissionEngine.initGameMission(queryMission, '.hud');
     }
 
-    // Khởi động mục tiêu đầu tiên
+    // Cập nhật HUD & bóng mục tiêu ngay lập tức để đồng bộ hoàn toàn giữa hình ảnh và âm thanh
+    updateTargetHud();
+    ensureTargetOnScreen();
+
+    // Khởi động mục tiêu đầu tiên sau khi UI đã sẵn sàng
     setTimeout(() => {
-      updateTargetHud();
-      ensureTargetOnScreen();
       AudioEngine.speak(targetItem.name + '!');
       resetIdleTimer();
-    }, 600);
+    }, 450);
   </script>
 </body>
 </html>

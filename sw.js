@@ -1,4 +1,4 @@
-const CACHE_NAME = 'baby-english-v5-cache';
+const CACHE_NAME = 'baby-english-v6-cache';
 const CORE_ASSETS = [
   './',
   './index.html',
