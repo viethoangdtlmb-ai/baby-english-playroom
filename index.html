@@ -817,6 +817,102 @@
       color: var(--toddler-choco);
     }
 
+    /* Parent Bedtime Segmented Control Card (Chuẩn UI/UX Marshmallow) */
+    .parent-bedtime-card {
+      background: linear-gradient(135deg, #FFF9C4 0%, #FFF3E0 100%);
+      border: 2.5px solid #FFE082;
+      border-radius: 24px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 14px rgba(255, 160, 0, 0.1);
+    }
+    .bedtime-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1.5px dashed rgba(255, 179, 0, 0.4);
+    }
+    .bedtime-title-icon {
+      font-size: 2.2rem;
+      line-height: 1;
+      filter: drop-shadow(0 3px 6px rgba(0,0,0,0.1));
+    }
+    .bedtime-title-text {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      text-align: left;
+    }
+    .bedtime-title-main {
+      font-size: 0.96rem;
+      font-weight: 800;
+      color: #E65100;
+      letter-spacing: 0.2px;
+    }
+    .bedtime-status-pill {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #795548;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 2px 10px;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .bedtime-status-pill.active {
+      color: #00796B;
+      background: #E0F2F1;
+      border: 1px solid #80CBC4;
+    }
+    .bedtime-buttons-row {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+    }
+    .bedtime-btn {
+      flex: 1;
+      min-height: 42px;
+      background: white;
+      border: 2.5px solid #FFD54F;
+      border-radius: 20px;
+      padding: 6px 4px;
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: #E65100;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .bedtime-btn:active {
+      transform: scale(0.93);
+    }
+    .bedtime-btn.active {
+      background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+      color: white;
+      border-color: #FFE082;
+      box-shadow: 0 4px 12px rgba(245, 124, 0, 0.35);
+      transform: scale(1.03);
+    }
+    .bedtime-btn.btn-turn-off {
+      border-color: #CFD8DC;
+      color: #78909C;
+    }
+    .bedtime-btn.btn-turn-off.active {
+      background: linear-gradient(135deg, #90A4AE 0%, #607D8B 100%);
+      color: white;
+      border-color: #ECEFF1;
+      box-shadow: 0 4px 10px rgba(96, 125, 139, 0.3);
+    }
+
     /* Mobile Responsive Optimizations */
     @media (max-width: 768px) {
       .top-bar {
@@ -1339,15 +1435,33 @@
 
         <p style="font-size: 0.92rem; color: #555; text-align: center; margin-bottom: 12px;" id="gate-week-topic">Chủ đề: Khám Phá Bé Yêu</p>
 
-        <!-- Đồng hồ Bạn Gấu Đi Ngủ (Bảo vệ mắt bé) -->
-        <div style="background: #E8EAF6; border: 2px solid #9FA8DA; border-radius: 18px; padding: 10px 14px; margin-bottom: 12px; text-align: center;">
-          <div style="font-size: 0.95rem; font-weight: 800; color: #283593; margin-bottom: 6px;">🌙 Đồng Hồ "Bạn Gấu Đi Ngủ" (Bảo Vệ Mắt Bé)</div>
-          <div id="gate-bedtime-status" style="font-size: 0.82rem; color: #3949AB; margin-bottom: 8px;">Chưa bật hẹn giờ nghỉ mắt</div>
-          <div style="display: flex; gap: 6px; justify-content: center; flex-wrap: wrap;">
-            <button type="button" onclick="setParentBedtime(15)" style="background:#3949AB; color:#FFF; border:none; border-radius:14px; padding:6px 12px; font-weight:700; font-size:0.82rem; cursor:pointer;">⏱️ 15 Phút</button>
-            <button type="button" onclick="setParentBedtime(20)" style="background:#3949AB; color:#FFF; border:none; border-radius:14px; padding:6px 12px; font-weight:700; font-size:0.82rem; cursor:pointer;">⏱️ 20 Phút</button>
-            <button type="button" onclick="setParentBedtime(30)" style="background:#3949AB; color:#FFF; border:none; border-radius:14px; padding:6px 12px; font-weight:700; font-size:0.82rem; cursor:pointer;">⏱️ 30 Phút</button>
-            <button type="button" onclick="setParentBedtime(0)" style="background:#FFF; color:#5C6BC0; border:1.5px solid #9FA8DA; border-radius:14px; padding:6px 12px; font-weight:700; font-size:0.82rem; cursor:pointer;">✕ Tắt</button>
+        <!-- Đồng hồ Bạn Gấu Đi Ngủ (Bảo vệ mắt bé) - Redesigned Marshmallow Segmented Style -->
+        <div class="parent-bedtime-card">
+          <div class="bedtime-header">
+            <span class="bedtime-title-icon">🐻💤</span>
+            <div class="bedtime-title-text">
+              <span class="bedtime-title-main">Bạn Gấu Nhắc Bé Nghỉ Mắt</span>
+              <span class="bedtime-status-pill" id="gate-bedtime-status">⚪ Đang tắt hẹn giờ</span>
+            </div>
+          </div>
+          
+          <div class="bedtime-buttons-row">
+            <button type="button" class="bedtime-btn" data-minutes="15" onclick="setParentBedtime(15)">
+              <span>⏱️</span>
+              <span>15 Phút</span>
+            </button>
+            <button type="button" class="bedtime-btn" data-minutes="20" onclick="setParentBedtime(20)">
+              <span>⏱️</span>
+              <span>20 Phút</span>
+            </button>
+            <button type="button" class="bedtime-btn" data-minutes="30" onclick="setParentBedtime(30)">
+              <span>⏱️</span>
+              <span>30 Phút</span>
+            </button>
+            <button type="button" class="bedtime-btn btn-turn-off" data-minutes="0" onclick="setParentBedtime(0)">
+              <span>✕</span>
+              <span>Tắt</span>
+            </button>
           </div>
         </div>
 
@@ -1357,24 +1471,13 @@
           <div id="gate-vocab-pills-list" style="display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; max-height: 110px; overflow-y: auto; padding: 4px;"></div>
         </div>
 
-        <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
-          <button type="button" style="background: #FFF0F5; border: 2px solid #FF80AB; color: #D81B60; border-radius: 20px; padding: 8px 14px; font-weight: 700; cursor: pointer;" onclick="BabyProfile.openEditModal('')">
-            ✏️ Đổi Tên & Ảnh Bé
+        <!-- 2 Nút Hành Động Tinh Gọn: Đặt lại tuần này & Xong và quay lại -->
+        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 14px;">
+          <button type="button" style="background: #FFEBEE; border: 2.5px solid #FFCDD2; color: #C62828; border-radius: 28px; padding: 11px 22px; font-size: 0.98rem; font-weight: 800; cursor: pointer; box-shadow: 0 4px 12px rgba(198, 40, 40, 0.15); display: inline-flex; align-items: center; gap: 6px;" onclick="resetWeekProgress()">
+            <span>🔄</span> <span>Đặt lại tuần này</span>
           </button>
-          <button type="button" style="background: #FFF8E1; border: 2px solid #FFE082; color: #E65100; border-radius: 20px; padding: 8px 14px; font-weight: 700; cursor: pointer;" onclick="CertificateEngine.openCertificateModal(MissionEngine.getCurrentWeek())">
-            🏅 Xem & Tải Bằng Khen
-          </button>
-          <button type="button" style="background: #E3F2FD; border: 2px solid #90CAF9; color: #1565C0; border-radius: 20px; padding: 8px 14px; font-weight: 700; cursor: pointer;" onclick="exportProgressBackup()">
-            💾 Sao Lưu Đổi Máy
-          </button>
-          <button type="button" style="background: #F3E5F5; border: 2px solid #CE93D8; color: #6A1B9A; border-radius: 20px; padding: 8px 14px; font-weight: 700; cursor: pointer;" onclick="importProgressBackup()">
-            📥 Khôi Phục Tiến Độ
-          </button>
-          <button type="button" style="background: #FFEBEE; border: 2px solid #FFCDD2; color: #C62828; border-radius: 20px; padding: 8px 14px; font-weight: 700; cursor: pointer;" onclick="resetWeekProgress()">
-            🔄 Đặt lại tuần này
-          </button>
-          <button type="button" style="background: #E0F2F1; border: 2px solid #80CBC4; color: #00695C; border-radius: 20px; padding: 8px 14px; font-weight: 700; cursor: pointer;" onclick="closeParentGate()">
-            ✅ Xong & Quay lại
+          <button type="button" style="background: #E0F2F1; border: 2.5px solid #80CBC4; color: #00695C; border-radius: 28px; padding: 11px 26px; font-size: 0.98rem; font-weight: 800; cursor: pointer; box-shadow: 0 4px 12px rgba(0, 105, 92, 0.15); display: inline-flex; align-items: center; gap: 6px;" onclick="closeParentGate()">
+            <span>✅</span> <span>Xong & Quay lại</span>
           </button>
         </div>
       </div>
@@ -1583,14 +1686,37 @@
       if (weekData) {
         document.getElementById('gate-week-topic').innerText = `Chủ đề: ${weekData.title} • Nhân vật: ${weekData.feedingChar.vnName}`;
       }
-      // Cập nhật trạng thái hẹn giờ nghỉ mắt
+      
+      // Cập nhật trạng thái hẹn giờ nghỉ mắt & Active State cho các nút
       const remSec = (window.MissionEngine && MissionEngine.getBedtimeRemainingSec) ? MissionEngine.getBedtimeRemainingSec() : null;
       const bedEl = document.getElementById('gate-bedtime-status');
+      let activeMinutes = 0;
+      try {
+        const raw = localStorage.getItem('toddler_bedtime_guard');
+        if (raw) {
+          const d = JSON.parse(raw);
+          if (d && d.expiresAt > Date.now()) {
+            activeMinutes = d.minutes || 0;
+          }
+        }
+      } catch (e) {}
+
       if (bedEl) {
-        bedEl.innerText = (remSec !== null && remSec > 0)
-          ? `⏳ Đang bật: Còn khoảng ${Math.ceil(remSec / 60)} phút nữa Bạn Gấu sẽ nhắc bé nghỉ mắt`
-          : 'Chưa bật hẹn giờ nghỉ mắt';
+        if (remSec !== null && remSec > 0) {
+          const m = Math.ceil(remSec / 60);
+          bedEl.innerText = `⏳ Còn khoảng ${m} phút nữa`;
+          bedEl.className = 'bedtime-status-pill active';
+        } else {
+          bedEl.innerText = '⚪ Đang tắt hẹn giờ';
+          bedEl.className = 'bedtime-status-pill';
+        }
       }
+
+      document.querySelectorAll('.bedtime-btn').forEach(btn => {
+        const m = parseInt(btn.getAttribute('data-minutes'), 10);
+        btn.classList.toggle('active', m === activeMinutes);
+      });
+
       // Cập nhật Sổ Từ Vựng của Bé đến tuần hiện tại
       const pillsEl = document.getElementById('gate-vocab-pills-list');
       const titleEl = document.getElementById('gate-vocab-summary-title');
@@ -1621,41 +1747,6 @@
         MissionEngine.setBedtimeTimer(minutes);
         if (window.ToddlerAudio) ToddlerAudio.playChime();
         updateGateWeekInfo();
-      }
-    }
-
-    function exportProgressBackup() {
-      try {
-        const payload = {
-          progress: localStorage.getItem('baby_english_progress') || '{}',
-          profile: localStorage.getItem('toddler_baby_profile') || '{}'
-        };
-        const code = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(code).then(() => {
-            alert('✅ Đã sao chép Mã Sao Lưu vào bộ nhớ tạm! Mẹ có thể dán (Paste) lưu vào Zalo/Ghi chú để khôi phục khi đổi điện thoại nhé.');
-          }).catch(() => {
-            prompt('Mẹ hãy sao chép (Copy) Mã Sao Lưu dưới đây:', code);
-          });
-        } else {
-          prompt('Mẹ hãy sao chép (Copy) Mã Sao Lưu dưới đây:', code);
-        }
-      } catch (e) {
-        alert('Không thể tạo mã sao lưu: ' + e.message);
-      }
-    }
-
-    function importProgressBackup() {
-      const code = prompt('Mẹ hãy dán (Paste) Mã Sao Lưu tiến độ của bé vào đây:');
-      if (!code || !code.trim()) return;
-      try {
-        const decoded = JSON.parse(decodeURIComponent(escape(atob(code.trim()))));
-        if (decoded.progress) localStorage.setItem('baby_english_progress', decoded.progress);
-        if (decoded.profile) localStorage.setItem('toddler_baby_profile', decoded.profile);
-        alert('🎉 Đã khôi phục thành công toàn bộ Sticker và Hồ sơ của bé!');
-        location.reload();
-      } catch (e) {
-        alert('Mã sao lưu không hợp lệ, mẹ vui lòng kiểm tra lại nhé!');
       }
     }
 
