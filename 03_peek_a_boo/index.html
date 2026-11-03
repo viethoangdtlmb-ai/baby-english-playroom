@@ -527,7 +527,31 @@
       color: #546E7A;
       font-weight: 600;
       line-height: 1.5;
-      margin-bottom: 24px;
+      margin-bottom: 14px;
+    }
+    .parent-tip-box {
+      background: #E1F5FE;
+      border: 2px dashed #0288D1;
+      border-radius: 20px;
+      padding: 10px 14px;
+      margin-bottom: 18px;
+      font-size: 0.95rem;
+      color: #01579B;
+      line-height: 1.4;
+      text-align: left;
+    }
+    .round-stars-pill {
+      background: #FFF8E1;
+      border: 2.5px solid #FFB300;
+      border-radius: 30px;
+      padding: 4px 12px;
+      font-size: 0.98rem;
+      font-weight: 900;
+      color: #E65100;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: 4px;
     }
     .btn-modal-action {
       background: linear-gradient(135deg, #0288D1 0%, #01579B 100%);
@@ -580,6 +604,10 @@
         width: 34px;
         height: 34px;
         font-size: 0.95rem;
+      }
+      .round-stars-pill {
+        font-size: 0.82rem;
+        padding: 2px 8px;
       }
       .hud > div:last-child {
         display: none;
@@ -639,6 +667,10 @@
       .popup-emoji {
         font-size: 3.2rem;
       }
+      .popup-emoji img {
+        width: 68px !important;
+        height: 68px !important;
+      }
       .popup-label {
         font-size: 0.85rem;
         padding: 4px 10px;
@@ -687,6 +719,7 @@
       <div class="modal-trophy-icon" id="modal-icon"><img src="../assets/icons/crown.png" style="width: 88px; height: 88px; object-fit: contain; filter: drop-shadow(0 10px 20px rgba(255, 193, 7, 0.5));" alt="🎁"></div>
       <h2 class="modal-title" id="modal-title">Bé Thật Tinh Mắt!</h2>
       <p class="modal-subtitle" id="modal-subtitle">Bé đã tìm thấy tất cả bạn nhỏ ú òa trong hộp quà rồi!</p>
+      <div class="parent-tip-box" id="modal-parent-tip">💡 Mẹo cho Bố Mẹ: Chơi trò ú òa (Peek-a-boo!) cùng đồ vật quanh nhà để bé nhớ từ thật lâu nhé!</div>
 
       <button type="button" class="btn-modal-action" id="btn-next-peek" onclick="advanceToNextPeekRound()">
         <span>🎉 Mở Hộp Quà Mới Nào ➜</span>
@@ -709,6 +742,7 @@
       <span class="target-emoji" id="target-emoji"><img src="../assets/icons/baby.png" style="width: 36px; height: 36px; object-fit: contain;" alt="👶"></span>
       <span class="target-name" id="target-name">BABY</span>
       <div class="target-speaker">🔊</div>
+      <div class="round-stars-pill" id="round-stars-pill">⭐ 0/3</div>
     </div>
 
     <!-- Empty placeholder (will be replaced or aligned by MissionEngine) -->
@@ -783,47 +817,81 @@
       : ((window.MissionEngine && MissionEngine.getCurrentWeek) ? MissionEngine.getCurrentWeek() : 1);
     const weekData = (window.ToddlerVocabulary) ? window.ToddlerVocabulary.build80_20Pack(currentWeek) : null;
 
+    // Build 100% 3D-Icon-Valid Peek-a-boo Themes (Every item includes its exact `id`)
     const peekThemes = [
       (weekData && weekData.peekBox && weekData.peekBox.hidingAnimals && weekData.peekBox.hidingAnimals.length >= 3)
-        ? weekData.peekBox.hidingAnimals
+        ? weekData.peekBox.hidingAnimals.map(w => ({ id: w.id, word: w.word, emoji: w.emoji, sound: w.sound }))
         : [
-            { word: 'Baby', emoji: '👶', sound: 'Cute baby' },
-            { word: 'Mommy', emoji: '👩', sound: 'Sweet mommy' },
-            { word: 'Daddy', emoji: '👨', sound: 'Strong daddy' }
+            { id: 'baby', word: 'Baby', emoji: '👶', sound: 'Cute baby' },
+            { id: 'mommy', word: 'Mommy', emoji: '👩', sound: 'Sweet mommy' },
+            { id: 'daddy', word: 'Daddy', emoji: '👨', sound: 'Strong daddy' }
           ],
       [
-        { word: 'Puppy', emoji: '🐶', sound: 'Playful puppy' },
-        { word: 'Kitty', emoji: '🐱', sound: 'Fluffy kitty' },
-        { word: 'Bunny', emoji: '🐰', sound: 'Hoppy bunny' }
+        { id: 'chair', word: 'Chair', emoji: '🪑', sound: 'Little chair' },
+        { id: 'table', word: 'Table', emoji: '🪵', sound: 'Big table' },
+        { id: 'fan', word: 'Fan', emoji: '🪭', sound: 'Cool fan' }
       ],
       [
-        { word: 'Apple', emoji: '🍎', sound: 'Yummy red apple' },
-        { word: 'Banana', emoji: '🍌', sound: 'Sweet banana' },
-        { word: 'Strawberry', emoji: '🍓', sound: 'Juicy strawberry' }
+        { id: 'book', word: 'Book', emoji: '📖', sound: 'Picture book' },
+        { id: 'pen', word: 'Pen', emoji: '🖋️', sound: 'Blue pen' },
+        { id: 'computer', word: 'Computer', emoji: '🖥️', sound: 'Smart computer' }
       ],
       [
-        { word: 'Car', emoji: '🚗', sound: 'Fast red car' },
-        { word: 'Bus', emoji: '🚌', sound: 'Big yellow bus' },
-        { word: 'Train', emoji: '🚂', sound: 'Choo choo train' }
+        { id: 'cup', word: 'Cup', emoji: '🥤', sound: 'Water cup' },
+        { id: 'spoon', word: 'Spoon', emoji: '🥄', sound: 'Little spoon' },
+        { id: 'plate', word: 'Plate', emoji: '🍽️', sound: 'Clean plate' }
       ],
       [
-        { word: 'Teddy Bear', emoji: '🧸', sound: 'Soft teddy bear' },
-        { word: 'Robot', emoji: '🤖', sound: 'Beep boop robot' },
-        { word: 'Ball', emoji: '⚽', sound: 'Bouncing ball' }
+        { id: 'dog', word: 'Dog', emoji: '🐶', sound: 'Woof woof' },
+        { id: 'cat', word: 'Cat', emoji: '🐱', sound: 'Meow meow' },
+        { id: 'rabbit', word: 'Rabbit', emoji: '🐰', sound: 'Hop hop' }
+      ],
+      [
+        { id: 'apple', word: 'Apple', emoji: '🍎', sound: 'Yummy red apple' },
+        { id: 'banana', word: 'Banana', emoji: '🍌', sound: 'Sweet banana' },
+        { id: 'strawberry', word: 'Strawberry', emoji: '🍓', sound: 'Juicy strawberry' }
+      ],
+      [
+        { id: 'car', word: 'Car', emoji: '🚗', sound: 'Fast red car' },
+        { id: 'bus', word: 'Bus', emoji: '🚌', sound: 'Big yellow bus' },
+        { id: 'train', word: 'Train', emoji: '🚂', sound: 'Choo choo train' }
+      ],
+      [
+        { id: 'teddy', word: 'Teddy bear', emoji: '🧸', sound: 'Soft teddy bear' },
+        { id: 'robot', word: 'Robot', emoji: '🤖', sound: 'Beep boop robot' },
+        { id: 'ball', word: 'Ball', emoji: '⚽', sound: 'Bouncing ball' }
       ]
     ];
+
+    // If weekData has reviewWords >= 3, insert them as the 2nd round theme for 80/20 spaced repetition!
+    if (weekData && weekData.reviewWords && weekData.reviewWords.length >= 3) {
+      const validReviews = weekData.reviewWords.filter(w => w && w.id && !w.hex).slice(0, 3);
+      if (validReviews.length === 3) {
+        peekThemes.splice(1, 0, validReviews.map(w => ({ id: w.id, word: w.word, emoji: w.emoji, sound: w.sound })));
+      }
+    }
+
     let currentThemeIdx = 0;
     let hidingAnimals = peekThemes[0];
 
     let currentTargetIdx = 0;
     let targetAnimal = hidingAnimals[currentTargetIdx] || hidingAnimals[0];
     let roundFoundCount = 0;
+    let isBusy = true;
+    let peekCloseTimer = null;
 
     const targetEmoji = document.getElementById('target-emoji');
     const targetName = document.getElementById('target-name');
     const promptFooter = document.getElementById('prompt-footer');
+    const roundStarsPill = document.getElementById('round-stars-pill');
 
     let boxContents = [];
+
+    function updateRoundStarsUI() {
+      if (roundStarsPill) {
+        roundStarsPill.innerText = `⭐ ${Math.min(3, roundFoundCount)}/3`;
+      }
+    }
 
     // Luân chuyển sang nhóm bạn nhỏ mới khi chiến thắng
     function advanceToNextPeekRound() {
@@ -835,14 +903,24 @@
       currentTargetIdx = 0;
       targetAnimal = hidingAnimals[0];
       roundFoundCount = 0;
+      updateRoundStarsUI();
 
-      setupBoxes();
-      updateTargetHud();
-      isBusy = false;
+      setupBoxesAndPrompt();
     }
 
-    // Shuffle and assign animals to 3 boxes
-    function setupBoxes() {
+    // Shuffle and assign animals to 3 boxes, show 1.25s Memory Peek, then close lids & prompt target
+    function setupBoxesAndPrompt() {
+      isBusy = true;
+      hideGhostHint();
+      if (peekCloseTimer) clearTimeout(peekCloseTimer);
+
+      // Update HUD visuals immediately so child sees who to look for
+      targetEmoji.innerHTML = (window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon)
+        ? ToddlerVocabulary.renderWordIcon(targetAnimal, 42)
+        : targetAnimal.emoji;
+      targetName.innerText = targetAnimal.word.toUpperCase();
+      promptFooter.innerText = `👀 Nhìn kỹ xem ${targetAnimal.word} trốn hộp nào nhé!`;
+
       // Shuffle hiding items
       const shuffled = [...hidingAnimals].sort(() => Math.random() - 0.5);
       boxContents = shuffled.slice(0, 3);
@@ -867,24 +945,29 @@
         }
         if (labelElem) labelElem.innerText = item.word;
 
-        if (lidElem) lidElem.classList.remove('open');
+        if (lidElem) lidElem.classList.add('open');
         if (popupElem) {
-          popupElem.classList.remove('revealed');
+          popupElem.classList.add('revealed');
           popupElem.classList.remove('dancing');
         }
       }
-    }
 
-    function updateTargetHud() {
-      targetEmoji.innerHTML = (window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon)
-        ? ToddlerVocabulary.renderWordIcon(targetAnimal, 42)
-        : targetAnimal.emoji;
-      targetName.innerText = targetAnimal.word.toUpperCase();
-      promptFooter.innerText = `🎁 Tìm ${targetAnimal.word} nào!`;
+      // Quick Memory Peek: Mở hé cả 3 hộp trong 1.25 giây đầu để bé ghi nhớ vị trí trước khi úp hộp đố!
+      peekCloseTimer = setTimeout(() => {
+        if (window.ToddlerAudio) ToddlerAudio.playThud(260);
+        for (let i = 0; i < 3; i++) {
+          const lidElem = document.getElementById(`lid-${i}`);
+          const popupElem = document.getElementById(`popup-${i}`);
+          if (lidElem) lidElem.classList.remove('open');
+          if (popupElem) popupElem.classList.remove('revealed');
+        }
+        promptFooter.innerText = `🎁 Chạm mở hộp tìm ${targetAnimal.word} nào!`;
+        isBusy = false;
 
-      // Motherese spoken prompt
-      AudioEngine.speak(`Where is ${targetAnimal.word}?`);
-      scheduleIdleHint();
+        // Speak target prompt right as the boxes finish closing
+        AudioEngine.speak(`Where is ${targetAnimal.word}?`);
+        scheduleIdleHint();
+      }, 1250);
     }
 
     // -------------------------------------------------------------
@@ -917,14 +1000,15 @@
     }
 
     // -------------------------------------------------------------
-    // IDLE GHOST HINT HAND (Bàn tay chỉ dẫn sau 3.8s)
+    // IDLE GHOST HINT HAND (Bàn tay chỉ dẫn sau 4.2s)
     // -------------------------------------------------------------
     let idleTimer = null;
     function scheduleIdleHint() {
       hideGhostHint();
+      if (roundFoundCount >= 3) return;
       idleTimer = setTimeout(() => {
         showGhostHint();
-      }, 3800);
+      }, 4200);
     }
 
     function hideGhostHint() {
@@ -934,7 +1018,7 @@
     }
 
     function showGhostHint() {
-      if (isBusy) return;
+      if (isBusy || roundFoundCount >= 3) return;
       // Tìm hộp chứa mục tiêu để gõ nhẹ gợi ý
       let targetBoxIdx = boxContents.findIndex(a => a.word.toLowerCase() === targetAnimal.word.toLowerCase());
       if (targetBoxIdx === -1) targetBoxIdx = 0;
@@ -956,7 +1040,7 @@
       ghost.style.top = (rect.top + 10) + 'px';
       ghost.style.display = 'block';
 
-      AudioEngine.speak(`Tap! Where is ${targetAnimal.word}?`);
+      AudioEngine.speak(`Tap here! ${targetAnimal.word}!`);
 
       setTimeout(() => {
         if (ghost) ghost.style.display = 'none';
@@ -986,8 +1070,6 @@
     // -------------------------------------------------------------
     // BOX CLICK INTERACTION (Slapstick Pop-up & Gentle Guidance)
     // -------------------------------------------------------------
-    let isBusy = false;
-
     function handleBoxClick(index) {
       if (isBusy) return;
       hideGhostHint();
@@ -999,7 +1081,7 @@
       const item = boxContents[index];
 
       // If already open, do nothing
-      if (lidElem.classList.contains('open')) return;
+      if (!item || lidElem.classList.contains('open')) return;
 
       isBusy = true;
       AudioEngine.playBoing();
@@ -1018,7 +1100,10 @@
           // -----------------------------------------------------------
           popupElem.classList.add('dancing');
           if (window.ToddlerAudio) ToddlerAudio.playChime();
-          AudioEngine.speak(`Peek-a-boo! I see you, ${item.word}! Hooray!`);
+          const contextPhrase = (window.ToddlerVocabulary && ToddlerVocabulary.getWordContextPhrase)
+            ? ToddlerVocabulary.getWordContextPhrase(item)
+            : `Peek-a-boo! I see you, ${item.word}!`;
+          AudioEngine.speak(contextPhrase);
 
           const rect = popupElem.getBoundingClientRect();
           spawnConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2);
@@ -1029,40 +1114,48 @@
           }
 
           roundFoundCount++;
+          updateRoundStarsUI();
 
           if (roundFoundCount >= 3) {
-            // Đã tìm đủ 3 bạn trong vòng -> Mở Modal Chiến Thắng Qua Màn!
+            // Đã tìm đủ 3 bạn trong vòng -> Chờ 1850ms cho câu ngữ cảnh đọc xong rồi mở Modal Chiến Thắng!
             setTimeout(() => {
               const modal = document.getElementById('modal-celebration');
               const modalTitle = document.getElementById('modal-title');
               const modalSubtitle = document.getElementById('modal-subtitle');
               const modalIcon = document.getElementById('modal-icon');
+              const tipBox = document.getElementById('modal-parent-tip');
               if (modalTitle) modalTitle.innerText = `Bé Thật Tinh Mắt! 🏆`;
-              if (modalSubtitle) modalSubtitle.innerText = `Bé đã tìm thấy tất cả ${roundFoundCount} bạn nhỏ ú òa trong hộp quà rồi!`;
-              if (modalIcon) modalIcon.innerText = `🎁🌟🎉`;
+              if (modalSubtitle) {
+                const foundNames = hidingAnimals.map(a => a.word).join(', ');
+                modalSubtitle.innerText = `Bé đã tìm thấy cả 3 hộp quà (${foundNames}) rồi!`;
+              }
+              if (modalIcon && window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon) {
+                modalIcon.innerHTML = ToddlerVocabulary.renderWordIcon(item, 88);
+              }
+              if (tipBox && window.ToddlerVocabulary && ToddlerVocabulary.getRealWorldParentTip) {
+                const phrase = ToddlerVocabulary.getWordContextPhrase(item);
+                tipBox.innerHTML = `💡 <strong>Mẹo cho Bố Mẹ:</strong> Hãy lấy một chiếc khăn che nhẹ lên đồ vật thật quanh nhà và chơi <em>"Peek-a-boo! ${phrase}"</em> cùng bé nhé!`;
+              }
               if (modal) modal.classList.add('active');
               if (window.ToddlerAudio) ToddlerAudio.playFanfare();
-              AudioEngine.speak('Hooray! You found all the friends! Good job!');
-            }, 1200);
+              AudioEngine.speak('Hooray! Peek-a-boo! Good job!');
+            }, 1850);
           } else {
-            // Còn bạn nhỏ tiếp theo trong vòng
+            // Còn bạn nhỏ tiếp theo trong vòng: Chờ 2100ms để câu ngữ cảnh đọc trọn vẹn
             setTimeout(() => {
               currentTargetIdx = (currentTargetIdx + 1) % hidingAnimals.length;
               targetAnimal = hidingAnimals[currentTargetIdx];
-
-              setupBoxes();
-              updateTargetHud();
-              isBusy = false;
-            }, 2000);
+              setupBoxesAndPrompt();
+            }, 2100);
           }
 
         } else {
           // -----------------------------------------------------------
           // CASE 2: MISMATCH (Hướng dẫn tích cực, không quở mắng)
           // -----------------------------------------------------------
-          AudioEngine.speak(`Hello! Peek-a-boo! I am ${item.word}! Where is ${targetAnimal.word}?`);
+          AudioEngine.speak(`Peek-a-boo! ${item.word}! Find ${targetAnimal.word}!`);
 
-          // Để bạn nhỏ xuất hiện chào bé 2 giây rồi nhẹ nhàng thụt xuống
+          // Để bạn nhỏ xuất hiện chào bé 1.9 giây rồi nhẹ nhàng thụt xuống
           setTimeout(() => {
             if (window.ToddlerAudio) ToddlerAudio.playThud(220);
             lidElem.classList.remove('open');
@@ -1070,7 +1163,7 @@
             popupElem.classList.remove('dancing');
             isBusy = false;
             scheduleIdleHint();
-          }, 2000);
+          }, 1900);
         }
       }, 250);
     }
@@ -1088,8 +1181,11 @@
     for (let i = 0; i < 3; i++) {
       const slot = document.getElementById(`slot-${i}`);
       if (slot) {
-        slot.addEventListener('pointerdown', () => safeClick(i));
-        slot.addEventListener('click', () => safeClick(i));
+        slot.removeAttribute('onclick');
+        slot.addEventListener('pointerdown', (e) => {
+          e.preventDefault();
+          safeClick(i);
+        });
       }
     }
 
@@ -1097,7 +1193,7 @@
     document.getElementById('peek-target-box').addEventListener('pointerdown', (e) => {
       e.stopPropagation();
       hideGhostHint();
-      AudioEngine.speak(`Find ${targetAnimal.word}! Where is ${targetAnimal.word}?`);
+      AudioEngine.speak(`Where is ${targetAnimal.word}?`);
       scheduleIdleHint();
     });
 
@@ -1107,12 +1203,9 @@
     }
 
     // Initialize game
-    setupBoxes();
+    updateRoundStarsUI();
+    setupBoxesAndPrompt();
     startCuriosityWobble();
-
-    setTimeout(() => {
-      updateTargetHud();
-    }, 600);
   </script>
 </body>
 </html>

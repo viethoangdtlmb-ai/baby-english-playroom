@@ -37,13 +37,14 @@ var ToddlerAudio = window.ToddlerAudio || {
   currentTrackName: 'hub',
   _duckTimer: null,
 
-  TRACKS: ['hub', 'sunshine', 'action', 'caring', 'puzzle'],
+  TRACKS: ['hub', 'sunshine', 'action', 'caring', 'puzzle', 'nap'],
   TRACK_NAMES: {
     hub: "March Theme",
     sunshine: "Happy Tune",
     action: "Happy Adventure",
     caring: "Wintery Loop",
-    puzzle: "Crystal Cave"
+    puzzle: "Crystal Cave",
+    nap: "Gentle Nap"
   },
 
   setBgmVolume(val) {
@@ -92,7 +93,8 @@ var ToddlerAudio = window.ToddlerAudio || {
       action: prefix + 'assets/audio/bgm/bgm_game_action.mp3',
       caring: prefix + 'assets/audio/bgm/bgm_game_caring.mp3',
       sunshine: prefix + 'assets/audio/bgm/bgm_happy_sunshine.mp3',
-      puzzle: prefix + 'assets/audio/bgm/bgm_puzzle_play.mp3'
+      puzzle: prefix + 'assets/audio/bgm/bgm_puzzle_play.mp3',
+      nap: prefix + 'assets/audio/bgm/bgm_gentle_nap.mp3'
     };
     return map[trackName] || map.hub;
   },
@@ -507,6 +509,10 @@ var ToddlerAudio = window.ToddlerAudio || {
     this.playChime();
   },
 
+  playSuccess() {
+    this.playWin();
+  },
+
   // -----------------------------------------------------------------
   // MOTHERESE FEMALE TEACHER SPEECH ENGINE (Strict Zira Lock & Async Guard)
   // -----------------------------------------------------------------
@@ -690,5 +696,33 @@ if (typeof window !== 'undefined') {
   window.addEventListener('pointerdown', unlockAudio, { passive: true });
   window.addEventListener('touchstart', unlockAudio, { passive: true });
   window.addEventListener('click', unlockAudio, { passive: true });
+
+  // Mobile Lifecycle Guard: Auto-pause BGM & TTS when phone locks or app goes to background
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      if (ToddlerAudio.bgmAudioEl && !ToddlerAudio.bgmAudioEl.paused) {
+        try { ToddlerAudio.bgmAudioEl.pause(); } catch (e) {}
+      }
+      if (window.speechSynthesis) {
+        try { window.speechSynthesis.cancel(); } catch (e) {}
+      }
+    } else {
+      if (ToddlerAudio.ctx && ToddlerAudio.ctx.state === 'suspended') {
+        ToddlerAudio.ctx.resume().catch(() => {});
+      }
+      if (ToddlerAudio.bgmEnabled && ToddlerAudio.bgmAudioEl && ToddlerAudio.bgmAudioEl.paused) {
+        ToddlerAudio.bgmAudioEl.play().catch(() => {});
+      }
+    }
+  });
+
+  window.addEventListener('pagehide', () => {
+    if (ToddlerAudio.bgmAudioEl) {
+      try { ToddlerAudio.bgmAudioEl.pause(); } catch (e) {}
+    }
+    if (window.speechSynthesis) {
+      try { window.speechSynthesis.cancel(); } catch (e) {}
+    }
+  });
 }
 

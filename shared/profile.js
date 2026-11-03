@@ -123,6 +123,15 @@ const BabyProfile = {
     reader.readAsDataURL(file);
   },
 
+  escapeHtml(str) {
+    return String(str || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  },
+
   /**
    * Render HTML Widget hồ sơ bé cho Header
    * @param {string} basePath Đường dẫn tương đối đến root
@@ -133,7 +142,7 @@ const BabyProfile = {
 
     const prof = this.getProfile();
     const avatarSrc = this.getAvatarSrc(basePath);
-    const displayName = this.getDisplayName();
+    const displayName = this.escapeHtml(this.getDisplayName());
     const age = this.getAge();
 
     container.innerHTML = `
@@ -163,8 +172,14 @@ const BabyProfile = {
     }
 
     const prof = this.getProfile();
+    this._selectedAge = prof.age || 3;
+    this._tempAvatarType = prof.avatarType || 'preset';
+    this._tempPresetId = prof.presetId || 'baby';
+    this._tempPhotoBase64 = prof.photoBase64 || null;
+
     const prefix = basePath ? (basePath.endsWith('/') ? basePath : basePath + '/') : '';
     const curAvatar = this.getAvatarSrc(basePath);
+    const safeName = this.escapeHtml(prof.name || '');
 
     modal.innerHTML = `
       <div class="baby-profile-modal-box">
@@ -194,7 +209,7 @@ const BabyProfile = {
             <label class="baby-form-label" for="baby-name-input">Tên thân mật của bé:</label>
             <div class="baby-input-wrap">
               <span class="baby-input-icon">💖</span>
-              <input type="text" id="baby-name-input" class="baby-text-input" placeholder="Ví dụ: Bé Bắp, Miu, Đậu..." value="${prof.name || ''}" maxlength="24">
+              <input type="text" id="baby-name-input" class="baby-text-input" placeholder="Ví dụ: Bé Bắp, Miu, Đậu..." value="${safeName}" maxlength="24">
             </div>
           </div>
 
@@ -324,8 +339,12 @@ const BabyProfile = {
     this.renderHeaderWidget('baby-profile-widget', basePath);
 
     // Phát âm thanh động viên nếu có
-    if (typeof ToddlerAudio !== 'undefined' && ToddlerAudio.playSuccess) {
-      ToddlerAudio.playSuccess();
+    if (typeof ToddlerAudio !== 'undefined') {
+      if (ToddlerAudio.playSuccess) {
+        ToddlerAudio.playSuccess();
+      } else if (ToddlerAudio.playWin) {
+        ToddlerAudio.playWin();
+      }
     }
   }
 };

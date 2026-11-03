@@ -170,7 +170,15 @@
       width: 6px;
       background: #FFF;
       border-radius: 4px;
-      animation: waveDance 0.8s ease-in-out infinite alternate;
+      animation: waveDance 1.2s ease-in-out infinite alternate;
+    }
+    .soundwave-box.speaking .wave-bar {
+      animation-duration: 0.35s !important;
+    }
+    .talking-star-host.speaking {
+      transform: scale(1.05);
+      border-color: #FFD54F;
+      box-shadow: 0 0 25px rgba(255, 213, 79, 0.7);
     }
     .wave-bar:nth-child(1) { height: 14px; animation-delay: 0.1s; }
     .wave-bar:nth-child(2) { height: 28px; animation-delay: 0.3s; }
@@ -274,7 +282,7 @@
       80% { transform: translateY(-28px) scale(1); opacity: 1; }
       100% { transform: translateY(-42px) scale(0.85); opacity: 0; }
     }
-    .hud-star.lost-star {
+    .q-star.lost-star, .hud-star.lost-star {
       animation: starLost 0.6s ease-in-out;
     }
     @keyframes starLost {
@@ -302,6 +310,37 @@
     @keyframes shimmerGuide {
       0%, 100% { transform: scale(1); box-shadow: 0 12px 28px rgba(255, 160, 0, 0.2); }
       50% { transform: scale(1.08); box-shadow: 0 0 30px rgba(255, 179, 0, 0.75); border-color: #E65100; }
+    }
+    .option-icon-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      width: 100%;
+      pointer-events: none;
+    }
+    .option-card img.toddler-3d-word-icon {
+      max-width: 110px;
+      max-height: 110px;
+      width: auto !important;
+      height: auto !important;
+      object-fit: contain;
+      pointer-events: none;
+      filter: drop-shadow(0 8px 18px rgba(0,0,0,0.16));
+    }
+    .option-card .toddler-fallback-emoji {
+      font-size: 5rem;
+      line-height: 1;
+      pointer-events: none;
+    }
+    .option-word {
+      font-size: 1.45rem;
+      font-weight: 900;
+      color: #E65100;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+      pointer-events: none;
+      text-transform: capitalize;
     }
     .card-emoji {
       font-size: 6.8rem;
@@ -674,16 +713,24 @@
         max-width: 100%;
       }
       .option-card {
-        height: 125px;
-        border-radius: 22px;
+        height: 140px;
+        border-radius: 24px;
         border-width: 3px;
+        padding: 6px 4px;
       }
-      .option-emoji {
-        font-size: 3.2rem;
+      .option-card img.toddler-3d-word-icon {
+        max-width: 68px !important;
+        max-height: 68px !important;
+      }
+      .option-card .toddler-fallback-emoji {
+        font-size: 3rem !important;
       }
       .option-word {
-        font-size: 0.95rem;
-        margin-top: 4px;
+        font-size: 1.05rem;
+        margin-bottom: 2px;
+      }
+      .card-emoji {
+        font-size: 3.2rem;
       }
       .footer-tip {
         font-size: 0.8rem;
@@ -735,16 +782,23 @@
         max-width: 840px;
       }
       .option-card {
-        height: min(98px, 27vh);
+        height: min(104px, 28vh);
         border-radius: 18px;
         padding: 4px;
+      }
+      .option-card img.toddler-3d-word-icon {
+        max-width: min(58px, 16vh) !important;
+        max-height: min(58px, 16vh) !important;
+      }
+      .option-card .toddler-fallback-emoji {
+        font-size: min(2.4rem, 14vh) !important;
       }
       .option-emoji {
         font-size: min(2.4rem, 14vh);
       }
       .option-word {
         font-size: 0.85rem;
-        margin-top: 2px;
+        margin-top: 1px;
       }
       .footer-tip {
         display: none;
@@ -821,6 +875,9 @@
       <div class="pass-trophy"><img src="../assets/icons/crown.png" style="width: 110px; height: 110px; object-fit: contain; filter: drop-shadow(0 12px 24px rgba(255, 193, 7, 0.6));" alt="🏆"></div>
       <h2 class="pass-title" id="pass-title">HOORAY! BÉ ĐẠT 5 SAO VÀNG!</h2>
       <p class="pass-subtitle">Bé thật là xuất sắc! Mẹ và bé hãy cùng tải Bằng Khen khoe Ông Bà hoặc mở "Phần Thưởng Của Mẹ" nhé!</p>
+
+      <!-- Parent Real-World Transfer Tip -->
+      <div class="parent-tip-box" id="modal-pass-parent-tip" style="background: #FFF8E1; border: 2.5px dashed #FFA000; border-radius: 20px; padding: 12px 16px; font-family: 'Nunito', sans-serif; font-size: 0.95rem; font-weight: 700; color: #5D4037; margin: 12px auto 16px; max-width: 480px; text-align: left; line-height: 1.4; display: none;"></div>
 
       <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 6px;">
         <button type="button" class="btn-cert-share" id="btn-cert-share-win" onclick="CertificateEngine.openCertificateModal(currentWeek, '../')">
@@ -937,7 +994,7 @@
     let isProcessing = false;
 
     function isConcreteNoun(item) {
-      if (!item) return false;
+      if (!item || !item.word) return false;
       if (item.hex) return false;
       if (item.type === 'verb' || item.type === 'adjective') return false;
       return !!item.emoji;
@@ -949,7 +1006,8 @@
     const targetNewWords = rawNewWords.filter(isConcreteNoun);
     const targetReviewWords = rawReviewWords.filter(isConcreteNoun);
 
-    const allDistractorPool = (window.ToddlerVocabulary)
+    // Khử trùng lặp từ vựng trong kho distractor
+    const rawAllDistractors = (window.ToddlerVocabulary)
       ? [
           ...ToddlerVocabulary.CATEGORIES.animals,
           ...ToddlerVocabulary.CATEGORIES.food,
@@ -966,6 +1024,16 @@
           { word: 'Ball', emoji: '⚽', type: 'noun' }
         ];
 
+    const uniqueDistractorMap = new Map();
+    rawAllDistractors.forEach(item => {
+      const k = (item.word || '').toLowerCase();
+      if (k && !uniqueDistractorMap.has(k)) {
+        uniqueDistractorMap.set(k, item);
+      }
+    });
+    const allDistractorPool = Array.from(uniqueDistractorMap.values());
+
+    const sessionUsedWords = new Set();
     let lastTargetWord = '';
     let currentTarget = null;
     let currentOptions = [];
@@ -977,15 +1045,32 @@
         ? targetNewWords
         : (targetReviewWords.length > 0 ? targetReviewWords : allDistractorPool);
 
-      const shuffledPrimary = [...primaryPool].sort(() => Math.random() - 0.5);
-      let target = shuffledPrimary[0] || allDistractorPool[0];
-      if (target.word === lastTargetWord && shuffledPrimary.length > 1) {
-        target = shuffledPrimary[1];
+      // Ưu tiên các từ chưa được hỏi trong phiên 5 sao hiện tại
+      let candidateTargets = primaryPool.filter(it => !sessionUsedWords.has(it.word.toLowerCase()));
+      if (candidateTargets.length === 0) {
+        candidateTargets = primaryPool.filter(it => it.word.toLowerCase() !== lastTargetWord.toLowerCase());
+        if (candidateTargets.length === 0) candidateTargets = primaryPool;
       }
-      lastTargetWord = target.word;
 
-      const poolWithoutTarget = allDistractorPool.filter(it => it.word !== target.word && it.emoji);
-      const candidateDistractors = poolWithoutTarget.sort(() => Math.random() - 0.5).slice(0, 2);
+      const shuffledTargets = [...candidateTargets].sort(() => Math.random() - 0.5);
+      let target = shuffledTargets[0] || allDistractorPool[0];
+      lastTargetWord = target.word;
+      sessionUsedWords.add(target.word.toLowerCase());
+
+      // Chọn 2 lựa chọn gây nhiễu duy nhất không trùng target và không trùng nhau
+      const poolWithoutTarget = allDistractorPool.filter(it => it.word.toLowerCase() !== target.word.toLowerCase());
+      const shuffledDistractors = [...poolWithoutTarget].sort(() => Math.random() - 0.5);
+      const candidateDistractors = [];
+      const distractorWords = new Set([target.word.toLowerCase()]);
+
+      for (const item of shuffledDistractors) {
+        const k = item.word.toLowerCase();
+        if (!distractorWords.has(k)) {
+          distractorWords.add(k);
+          candidateDistractors.push(item);
+          if (candidateDistractors.length === 2) break;
+        }
+      }
 
       const options = [target, ...candidateDistractors].sort(() => Math.random() - 0.5);
 
@@ -998,6 +1083,30 @@
     const cardsArena = document.getElementById('cards-arena');
     const promptWordLabel = document.getElementById('prompt-word-label');
     const btnReplay = document.getElementById('btn-replay-prompt');
+    const starHostEl = document.querySelector('.talking-star-host');
+    const soundwaveEl = document.querySelector('.soundwave-box');
+
+    function setHostSpeaking(speaking, durationMs = 1500) {
+      if (soundwaveEl) soundwaveEl.classList.toggle('speaking', speaking);
+      if (starHostEl) starHostEl.classList.toggle('speaking', speaking);
+      if (speaking && durationMs > 0) {
+        setTimeout(() => {
+          if (soundwaveEl) soundwaveEl.classList.remove('speaking');
+          if (starHostEl) starHostEl.classList.remove('speaking');
+        }, durationMs);
+      }
+    }
+
+    function playHostPrompt() {
+      if (!currentTarget) return;
+      const safeAudio = window.ToddlerAudio || AudioEngine;
+      setHostSpeaking(true, 1800);
+      if (currentStars === TARGET_STARS - 1 && window.ToddlerVocabulary && ToddlerVocabulary.getWordContextPhrase) {
+        safeAudio.speak(ToddlerVocabulary.getWordContextPhrase(currentTarget.word));
+      } else {
+        safeAudio.speakWord(currentTarget.word);
+      }
+    }
 
     function updateStarsHud() {
       for (let i = 1; i <= TARGET_STARS; i++) {
@@ -1029,7 +1138,11 @@
         const iconHtml = (window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon)
           ? ToddlerVocabulary.renderWordIcon(opt, 110)
           : `<span class="card-emoji">${opt.emoji || '⭐'}</span>`;
-        card.innerHTML = iconHtml;
+
+        card.innerHTML = `
+          <div class="option-icon-wrap">${iconHtml}</div>
+          <div class="option-word">${opt.word}</div>
+        `;
 
         card.addEventListener('pointerdown', () => handleOptionClick(card, opt, currentTarget));
         cardsArena.appendChild(card);
@@ -1037,7 +1150,7 @@
 
       // Announce Motherese voice
       setTimeout(() => {
-        ToddlerAudio.speakWord(currentTarget.word);
+        playHostPrompt();
       }, 450);
     }
 
@@ -1051,7 +1164,8 @@
       lastClick = Date.now();
 
       clearTimeout(shimmerTimer);
-      ToddlerAudio.init();
+      const safeAudio = window.ToddlerAudio || AudioEngine;
+      safeAudio.init();
 
       if (clickedItem.word.toLowerCase() === targetItem.word.toLowerCase()) {
         // MATCH (+1 STAR)
@@ -1061,13 +1175,17 @@
         currentStars = Math.min(TARGET_STARS, currentStars + 1);
         updateStarsHud();
 
-        ToddlerAudio.playChime();
-        ToddlerAudio.speak(`${clickedItem.word}! Yay!`);
+        if (window.MissionEngine && MissionEngine.recordAction) {
+          MissionEngine.recordAction();
+        }
+
+        safeAudio.playChime();
+        safeAudio.speak(`${clickedItem.word}! Yay!`);
 
         if (currentStars >= TARGET_STARS) {
-          setTimeout(showPassCelebration, 900);
+          setTimeout(showPassCelebration, 1400);
         } else {
-          setTimeout(renderQuestion, 1100);
+          setTimeout(renderQuestion, 1150);
         }
       } else {
         // MISMATCH (Cơ chế sai trừ điểm: Giảm 1 sao nếu đang có sao + Hiệu ứng rung lắc & Huy hiệu -1 ⭐)
@@ -1080,7 +1198,7 @@
           const lostStarElem = document.getElementById(`star-${starToLose}`);
           if (lostStarElem) {
             lostStarElem.classList.add('lost-star');
-            setTimeout(() => lostStarElem.classList.remove('lost-star'), 600);
+            setTimeout(() => lostStarElem.classList.remove('lost-star'), 650);
           }
         }
 
@@ -1099,8 +1217,8 @@
         }, 450);
 
         // Âm thanh thud và giọng nói ấm áp hướng dẫn tìm lại từ đúng
-        ToddlerAudio.playThud(140);
-        ToddlerAudio.speak(`Oops! Let's find ${targetItem.word}!`);
+        safeAudio.playThud(140);
+        safeAudio.speak(`Oops! Let's find ${targetItem.word}!`);
 
         shimmerTimer = setTimeout(() => {
           const correctCard = Array.from(cardsArena.children).find(c => c.getAttribute('data-word') === targetItem.word);
@@ -1112,8 +1230,9 @@
     }
 
     btnReplay.addEventListener('pointerdown', () => {
-      ToddlerAudio.init();
-      if (currentTarget) ToddlerAudio.speakWord(currentTarget.word);
+      const safeAudio = window.ToddlerAudio || AudioEngine;
+      safeAudio.init();
+      playHostPrompt();
     });
 
     // -------------------------------------------------------------
@@ -1122,7 +1241,7 @@
     const confettiLayer = document.getElementById('confetti-layer');
 
     function showPassCelebration() {
-      // Record progress in MissionEngine
+      // Record progress in MissionEngine & unlock Day 7 Crown Sticker
       if (window.MissionEngine && MissionEngine.getProgress) {
         const prog = MissionEngine.getProgress();
         if (!prog.weekendTests) prog.weekendTests = {};
@@ -1131,13 +1250,30 @@
           stars: currentStars,
           completedAt: new Date().toISOString()
         };
+        if (!prog.completedDays) prog.completedDays = [];
+        const day7Key = `w${currentWeek}_d7`;
+        if (!prog.completedDays.includes(day7Key)) {
+          prog.completedDays.push(day7Key);
+        }
+        if (!prog.stickers) prog.stickers = {};
+        const sticker7Id = `sticker_w${currentWeek}_d7`;
+        prog.stickers[sticker7Id] = {
+          id: sticker7Id,
+          word: 'crown',
+          icon: '👑✨',
+          name: `Huy Chương Tuần ${currentWeek}`,
+          week: currentWeek,
+          day: 7,
+          unlockedAt: new Date().toISOString()
+        };
         MissionEngine.saveProgress(prog);
       }
 
+      const safeAudio = window.ToddlerAudio || AudioEngine;
       triggerConfetti();
-      ToddlerAudio.playFanfare();
-      ToddlerAudio.playWin();
-      ToddlerAudio.speak('Yay! 5 Stars!');
+      safeAudio.playFanfare();
+      safeAudio.playWin();
+      safeAudio.speak('Yay! 5 Stars!');
 
       if (typeof BabyProfile !== 'undefined') {
         const babyName = BabyProfile.getDisplayName();
@@ -1150,6 +1286,14 @@
         }
       }
 
+      // Nạp gợi ý chuyển giao đời thực cho Ba Mẹ
+      const tipBox = document.getElementById('modal-pass-parent-tip');
+      if (tipBox && window.ToddlerVocabulary && ToddlerVocabulary.getRealWorldParentTip) {
+        const tipObj = ToddlerVocabulary.getRealWorldParentTip(currentWeek);
+        tipBox.innerHTML = `<strong>💡 Mẹo chuyển giao đời thực cho Ba Mẹ:</strong><br>${tipObj.tipText || tipObj}`;
+        tipBox.style.display = 'block';
+      }
+
       document.getElementById('modal-pass').style.display = 'flex';
     }
 
@@ -1157,8 +1301,12 @@
     let quizRoundCycle = 0;
     function startNextQuizRound() {
       document.getElementById('modal-pass').style.display = 'none';
+      const tipBox = document.getElementById('modal-pass-parent-tip');
+      if (tipBox) tipBox.style.display = 'none';
+
       quizRoundCycle++;
       currentStars = 0;
+      sessionUsedWords.clear();
       updateStarsHud();
 
       // Luân chuyển tuần từ vựng tiếp theo trong 52 tuần để nạp từ vựng mới
@@ -1175,10 +1323,9 @@
         rawRev.filter(isConcreteNoun).forEach(w => targetReviewWords.push(w));
       }
 
-      if (window.ToddlerAudio) {
-        ToddlerAudio.playBoing();
-        ToddlerAudio.speak('New round!');
-      }
+      const safeAudio = window.ToddlerAudio || AudioEngine;
+      safeAudio.playBoing();
+      safeAudio.speak('New round!');
 
       renderQuestion();
     }
@@ -1270,6 +1417,7 @@
     function startQuizFromShowcase() {
       if (modalShowcase) modalShowcase.style.display = 'none';
       currentStars = 0;
+      sessionUsedWords.clear();
       updateStarsHud();
       renderQuestion();
     }

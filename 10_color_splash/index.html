@@ -156,6 +156,36 @@
       transform: scale(1.35) rotate(12deg);
     }
 
+    /* Model Selector Buttons (Xe & Các Bạn Thú Đa Dạng) */
+    .model-switch-row {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      align-items: center;
+      margin: 6px 0 10px;
+      z-index: 18;
+      flex-wrap: wrap;
+    }
+    .model-btn {
+      background: rgba(255, 255, 255, 0.95);
+      border: 2.5px solid #FFB74D;
+      border-radius: 24px;
+      padding: 5px 14px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #5D4037;
+      cursor: pointer;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .model-btn.active {
+      background: linear-gradient(135deg, #FFA000 0%, #FF6F00 100%);
+      color: white;
+      border-color: #FFE082;
+      transform: scale(1.08);
+      box-shadow: 0 6px 14px rgba(255, 111, 0, 0.35);
+    }
+
     /* Paint Splash Canvas */
     #splash-canvas {
       position: absolute;
@@ -240,14 +270,137 @@
       transition: fill 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    /* Spinning Wheels during drive */
-    .car-container.drive-loop .wheel-spoke {
-      animation: wheelSpin 0.25s linear infinite;
+    /* Spinning Wheels during drive (Fixed transform-box so wheels rotate around their own axles) */
+    .wheel-rotor {
+      transform-box: fill-box;
       transform-origin: center;
+    }
+    .car-container.drive-loop .wheel-rotor {
+      animation: wheelSpin 0.25s linear infinite;
     }
     @keyframes wheelSpin {
       from { transform: rotate(0deg); }
       to { transform: rotate(360deg); }
+    }
+
+    /* 3D Door Decal Sticker on Car Body */
+    .car-decal-badge {
+      position: absolute;
+      top: 52%;
+      left: 48%;
+      width: 44px;
+      height: 44px;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      filter: drop-shadow(0 3px 6px rgba(0,0,0,0.18));
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .car-decal-badge.pop {
+      transform: translate(-50%, -50%) scale(1.32) rotate(10deg);
+    }
+    .car-decal-badge img.toddler-3d-word-icon {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: contain;
+    }
+
+    /* Interactive Test Drive Button */
+    .btn-test-drive {
+      position: absolute;
+      bottom: 12px;
+      right: 16px;
+      background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+      color: #FFF;
+      border: 3px solid #FFF;
+      border-radius: 30px;
+      padding: 8px 18px;
+      font-family: 'Fredoka One', cursive;
+      font-size: 0.98rem;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(245, 124, 0, 0.32);
+      z-index: 25;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .btn-test-drive:active {
+      transform: scale(0.92);
+    }
+
+    /* Victory Celebration Modal */
+    .victory-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(49, 27, 146, 0.68);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 120;
+      padding: 16px;
+    }
+    .victory-modal.show {
+      display: flex;
+    }
+    .victory-card {
+      background: #FFFDF7;
+      border: 5px solid #BA68C8;
+      border-radius: 36px;
+      padding: 24px 28px;
+      max-width: 460px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+      animation: popInModal 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes popInModal {
+      0% { transform: scale(0.6); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .victory-card h3 {
+      font-size: 1.65rem;
+      color: #6A1B9A;
+      margin-bottom: 6px;
+    }
+    .victory-card p {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      color: #4A148C;
+      font-size: 1rem;
+      margin-bottom: 12px;
+    }
+    .parent-tip-box {
+      background: #F3E5F5;
+      border: 2.5px dashed #AB47BC;
+      border-radius: 20px;
+      padding: 10px 14px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #4A148C;
+      margin-bottom: 16px;
+      text-align: left;
+      line-height: 1.4;
+    }
+    .btn-play-again {
+      background: linear-gradient(135deg, #00E676 0%, #00C853 100%);
+      color: #FFF;
+      border: 3.5px solid #FFF;
+      border-radius: 40px;
+      padding: 12px 28px;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.15rem;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0, 200, 83, 0.35);
+      transition: transform 0.15s;
+    }
+    .btn-play-again:active {
+      transform: scale(0.94);
     }
 
     /* Headlight Beam */
@@ -462,32 +615,53 @@
       .banner p {
         font-size: 0.75rem;
       }
+      .studio-stage {
+        max-width: 96vw;
+        height: auto;
+        min-height: 150px;
+        flex: 1;
+        overflow: hidden;
+      }
       .car-container {
-        width: min(380px, 86vw);
-        height: 180px;
+        width: min(330px, 84vw);
+        height: 155px;
       }
       .headlight-glow {
         right: 0px;
         width: 60px;
       }
-      .studio-stage {
-        max-width: 96vw;
-        height: auto;
-        min-height: 140px;
-        flex: 1;
-        overflow: hidden;
+      .btn-test-drive {
+        bottom: 6px;
+        right: 8px;
+        padding: 6px 12px;
+        font-size: 0.82rem;
       }
-      .car-container {
-        width: min(320px, 84vw);
-        height: 140px;
-      }
-      .palettes-row {
+      .buckets-bar {
         gap: 6px;
-        padding: 0 4px;
+        padding: 4px 6px;
       }
-      .color-can {
-        width: 42px;
-        height: 52px;
+      .bucket-card {
+        min-width: 68px;
+        width: auto;
+        height: auto;
+        padding: 6px 8px;
+        border-radius: 22px;
+        border-width: 3px;
+      }
+      .bucket-graphic {
+        width: 38px;
+        height: 38px;
+      }
+      .bucket-graphic img {
+        width: 34px !important;
+        height: 34px !important;
+      }
+      .bucket-name {
+        font-size: 0.82rem;
+      }
+      .word-popup {
+        padding: 6px 20px;
+        font-size: 1.55rem;
       }
       .footer-tip {
         display: none;
@@ -519,19 +693,39 @@
         min-height: 130px;
       }
       .car-container {
-        height: 130px;
-        width: min(320px, 60vw);
+        height: 135px;
+        width: min(310px, 58vw);
       }
       .studio-floor {
         height: 40px;
         width: 360px;
       }
-      .palettes-row {
-        gap: 6px;
+      .btn-test-drive {
+        padding: 4px 10px;
+        font-size: 0.78rem;
+        bottom: 4px;
       }
-      .color-can {
-        width: 42px;
-        height: 52px;
+      .buckets-bar {
+        gap: 5px;
+        padding: 2px 4px;
+      }
+      .bucket-card {
+        min-width: 62px;
+        width: auto;
+        height: auto;
+        padding: 4px 7px;
+        border-radius: 18px;
+      }
+      .bucket-graphic {
+        width: 32px;
+        height: 32px;
+      }
+      .bucket-graphic img {
+        width: 28px !important;
+        height: 28px !important;
+      }
+      .bucket-name {
+        font-size: 0.75rem;
       }
       .footer-tip {
         display: none;
@@ -552,7 +746,7 @@
     <a href="../index.html" class="btn-back">⬅ Menu</a>
 
     <!-- Center Banner / Prompt -->
-    <div class="banner" id="banner-box">
+    <div class="banner" id="banner-box" title="Chạm để nghe lại">
       <h2 id="banner-title">🎨 Magic Rainbow Paint Studio!</h2>
       <p id="banner-sub">🎨 Chọn màu tô xe nào!</p>
     </div>
@@ -582,6 +776,14 @@
     <span id="popup-text">Red</span>
   </div>
 
+  <!-- Model Selector Row (Xe & Các Bạn Thú Đa Dạng) -->
+  <div class="model-switch-row" id="model-switch-row">
+    <button type="button" class="model-btn active" data-model="car" onclick="switchStudioModel('car')">🚗 Xe Ô Tô</button>
+    <button type="button" class="model-btn" data-model="puppy" onclick="switchStudioModel('puppy')">🐶 Chú Chó</button>
+    <button type="button" class="model-btn" data-model="kitty" onclick="switchStudioModel('kitty')">🐱 Bé Mèo</button>
+    <button type="button" class="model-btn" data-model="bear" onclick="switchStudioModel('bear')">🐻 Gấu Bông</button>
+  </div>
+
   <!-- Main Studio Stage -->
   <div class="studio-stage" id="studio-stage">
     <div class="studio-floor"></div>
@@ -589,7 +791,9 @@
     <!-- The Scalable Cute Cartoon Car -->
     <div class="car-container" id="car-container">
       <div class="headlight-glow"></div>
-      
+      <!-- 3D Door Decal Sticker -->
+      <div class="car-decal-badge" id="car-decal-badge"></div>
+
       <svg class="car-svg" viewBox="0 0 380 240">
         <defs>
           <linearGradient id="windowGrad" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -606,12 +810,12 @@
         <rect x="25" y="172" width="28" height="14" rx="4" fill="#78909C" stroke="#455A64" stroke-width="3"/>
 
         <!-- Car Body (Main chassis) -->
-        <path id="car-body" class="car-part-body" 
+        <path id="car-body" class="car-part-body" data-part="body"
           d="M 50 160 C 50 125, 90 120, 110 120 L 140 65 C 155 45, 230 45, 255 65 L 305 120 C 340 120, 355 138, 355 162 L 350 188 C 338 194, 312 194, 300 188 L 255 188 C 242 194, 185 194, 172 188 L 125 188 C 112 194, 70 194, 50 160 Z" 
           fill="#EEEEEE" stroke="#37474F" stroke-width="6"/>
 
         <!-- Car Roof Accent -->
-        <path id="car-roof" class="car-part-roof"
+        <path id="car-roof" class="car-part-roof" data-part="roof"
           d="M 142 68 C 155 50, 225 50, 252 68 L 290 115 L 118 115 Z"
           fill="#E0E0E0" stroke="#37474F" stroke-width="4"/>
 
@@ -634,29 +838,34 @@
         <path d="M 325 174 Q 345 185 352 174" fill="none" stroke="#37474F" stroke-width="5" stroke-linecap="round"/>
 
         <!-- Wheels (Left & Right) -->
-        <g id="wheel-left-group">
+        <g id="wheel-left-group" data-part="wheels">
           <!-- Tire -->
           <circle id="wheel-left" class="car-part-wheel" cx="108" cy="188" r="34" fill="#37474F" stroke="#212121" stroke-width="5"/>
-          <!-- Rim -->
-          <circle cx="108" cy="188" r="18" fill="url(#rimGrad)" stroke="#90A4AE" stroke-width="3"/>
-          <circle cx="108" cy="188" r="7" fill="#455A64"/>
-          <!-- Spokes -->
-          <line class="wheel-spoke" x1="108" y1="172" x2="108" y2="204" stroke="#78909C" stroke-width="3"/>
-          <line class="wheel-spoke" x1="92" y1="188" x2="124" y2="188" stroke="#78909C" stroke-width="3"/>
+          <!-- Rim & Spokes Rotor -->
+          <g class="wheel-rotor">
+            <circle cx="108" cy="188" r="18" fill="url(#rimGrad)" stroke="#90A4AE" stroke-width="3"/>
+            <line class="wheel-spoke" x1="108" y1="172" x2="108" y2="204" stroke="#78909C" stroke-width="3"/>
+            <line class="wheel-spoke" x1="92" y1="188" x2="124" y2="188" stroke="#78909C" stroke-width="3"/>
+            <circle cx="108" cy="188" r="7" fill="#455A64"/>
+          </g>
         </g>
 
-        <g id="wheel-right-group">
+        <g id="wheel-right-group" data-part="wheels">
           <!-- Tire -->
           <circle id="wheel-right" class="car-part-wheel" cx="278" cy="188" r="34" fill="#37474F" stroke="#212121" stroke-width="5"/>
-          <!-- Rim -->
-          <circle cx="278" cy="188" r="18" fill="url(#rimGrad)" stroke="#90A4AE" stroke-width="3"/>
-          <circle cx="278" cy="188" r="7" fill="#455A64"/>
-          <!-- Spokes -->
-          <line class="wheel-spoke" x1="278" y1="172" x2="278" y2="204" stroke="#78909C" stroke-width="3"/>
-          <line class="wheel-spoke" x1="262" y1="188" x2="294" y2="188" stroke="#78909C" stroke-width="3"/>
+          <!-- Rim & Spokes Rotor -->
+          <g class="wheel-rotor">
+            <circle cx="278" cy="188" r="18" fill="url(#rimGrad)" stroke="#90A4AE" stroke-width="3"/>
+            <line class="wheel-spoke" x1="278" y1="172" x2="278" y2="204" stroke="#78909C" stroke-width="3"/>
+            <line class="wheel-spoke" x1="262" y1="188" x2="294" y2="188" stroke="#78909C" stroke-width="3"/>
+            <circle cx="278" cy="188" r="7" fill="#455A64"/>
+          </g>
         </g>
       </svg>
     </div>
+
+    <!-- Interactive Test Drive Button -->
+    <button class="btn-test-drive" id="btn-test-drive" title="Cho xe chạy thử!">🚗 Lái Thử!</button>
   </div>
 
   <!-- 3D Marshmallow Paint Buckets Bar -->
@@ -691,6 +900,11 @@
       <div class="bucket-graphic" style="background: transparent; box-shadow: none;"><img src="../assets/icons/purple.png" style="width: 48px; height: 48px; object-fit: contain; filter: drop-shadow(0 4px 10px rgba(74,20,140,0.3));" alt="Purple"></div>
       <div class="bucket-name" style="color: #4A148C;">Purple</div>
     </div>
+    <!-- Pink -->
+    <div class="bucket-card" style="border-color: #E91E63;" data-word="Pink" data-color="#FF4081" data-fruit="Peach">
+      <div class="bucket-graphic" style="background: transparent; box-shadow: none;"><img src="../assets/icons/pink.png" style="width: 48px; height: 48px; object-fit: contain; filter: drop-shadow(0 4px 10px rgba(194,24,91,0.3));" alt="Pink"></div>
+      <div class="bucket-name" style="color: #C2185B;">Pink</div>
+    </div>
   </div>
 
   <!-- Bottom Tip -->
@@ -699,29 +913,43 @@
     <span id="tip-text">Bấm vào xô màu để bắn tia sơn cầu vồng lên chiếc xe nhé! 🎨🚗</span>
   </div>
 
+  <!-- Victory Celebration Modal -->
+  <div class="victory-modal" id="victory-modal">
+    <div class="victory-card">
+      <div style="font-size: 3.3rem; margin-bottom: 6px;">🏆🎨🚗</div>
+      <h3 id="victory-title">Hoàn Thành: Chiếc Xe Cầu Vồng!</h3>
+      <p id="victory-sub">Hoan hô! Bé là Thợ Sơn Nhí xuất sắc nhất!</p>
+      <div class="parent-tip-box" id="parent-tip-text">
+        💡 Mẹo thực hành cùng ba mẹ: Khi đi dạo phố hoặc chơi đồ chơi, ba mẹ hãy chỉ vào những chiếc xe và đố bé gọi tên màu sắc bằng tiếng Anh nhé!
+      </div>
+      <button class="btn-play-again" id="btn-play-again">🔄 Sơn Chiếc Xe Tiếp Theo!</button>
+    </div>
+  </div>
+
   <!-- Confetti Layer -->
   <div class="confetti-layer" id="confetti-layer"></div>
 
   <script src="../shared/audio.js"></script>
   <script src="../shared/vocabulary.js"></script>
+  <script src="../shared/missions.js"></script>
   <script>
     // -------------------------------------------------------------
     // WEBAUDIO PAINT SPLAT SOUND SYNTHESIZER
-    // (Khắc phục hoàn toàn lỗi playSplat is not a function)
     // -------------------------------------------------------------
     function playPaintSplashSound(colorWord) {
       ToddlerAudio.init();
       if (!ToddlerAudio.ctx) return;
       const ctx = ToddlerAudio.ctx;
 
-      // Color to musical frequency mapping
+      // Color to musical frequency mapping (all 7 colors included)
       const freqMap = {
         'Red': 320,
-        'Blue': 440,
-        'Yellow': 580,
-        'Green': 500,
-        'Orange': 380,
-        'Purple': 640
+        'Orange': 370,
+        'Yellow': 440,
+        'Green': 495,
+        'Blue': 555,
+        'Purple': 620,
+        'Pink': 680
       };
       const baseFreq = freqMap[colorWord] || 450;
 
@@ -749,7 +977,7 @@
     }
 
     // -------------------------------------------------------------
-    // JUICY CANVAS PAINT SPLATTER ENGINE
+    // JUICY CANVAS PAINT SPLATTER ENGINE (With Flying Arc + Impact Burst)
     // -------------------------------------------------------------
     const canvas = document.getElementById('splash-canvas');
     const ctx = canvas.getContext('2d');
@@ -770,10 +998,11 @@
         this.targetX = targetX;
         this.targetY = targetY;
         this.color = color;
+        this.flightProgress = 0; // 0 -> 1 flight arc, then impact burst
         this.alpha = 1.0;
-        this.radius = 35 + Math.random() * 20;
+        this.radius = 36 + Math.random() * 18;
 
-        // Satellite droplets radiating outwards
+        // Satellite droplets radiating outwards on impact
         this.droplets = [];
         const count = 18 + Math.floor(Math.random() * 10);
         for (let i = 0; i < count; i++) {
@@ -789,10 +1018,34 @@
 
       draw() {
         ctx.save();
-        ctx.globalAlpha = Math.max(0, this.alpha);
         ctx.fillStyle = this.color;
 
-        // Main blob
+        if (this.flightProgress < 1) {
+          // Flying paint projectile from bucket to car part
+          this.flightProgress = Math.min(1, this.flightProgress + 0.22);
+          const t = this.flightProgress;
+          const curX = this.startX + (this.targetX - this.startX) * t;
+          const arcLift = Math.sin(t * Math.PI) * 65;
+          const curY = this.startY + (this.targetY - this.startY) * t - arcLift;
+
+          ctx.globalAlpha = 0.95;
+          ctx.beginPath();
+          ctx.arc(curX, curY, 18 + t * 10, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Gloss highlight on flying drop
+          ctx.fillStyle = '#FFFFFF';
+          ctx.globalAlpha = 0.6;
+          ctx.beginPath();
+          ctx.arc(curX - 5, curY - 5, 5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+          return;
+        }
+
+        ctx.globalAlpha = Math.max(0, this.alpha);
+
+        // Main impact blob
         ctx.beginPath();
         ctx.arc(this.targetX, this.targetY, this.radius, 0, Math.PI * 2);
         ctx.fill();
@@ -812,10 +1065,11 @@
         ctx.fill();
 
         ctx.restore();
-        this.alpha -= 0.016;
+        this.alpha -= 0.018;
       }
     }
 
+    let isSplatLoopRunning = false;
     function renderSplats() {
       ctx.clearRect(0, 0, width, height);
       for (let i = splats.length - 1; i >= 0; i--) {
@@ -824,28 +1078,173 @@
           splats.splice(i, 1);
         }
       }
-      requestAnimationFrame(renderSplats);
+      if (splats.length > 0) {
+        requestAnimationFrame(renderSplats);
+      } else {
+        isSplatLoopRunning = false;
+      }
     }
-    requestAnimationFrame(renderSplats);
+    function ensureSplatLoop() {
+      if (!isSplatLoopRunning) {
+        isSplatLoopRunning = true;
+        requestAnimationFrame(renderSplats);
+      }
+    }
 
     // -------------------------------------------------------------
     // GAME STATE & VOCABULARY PACK
     // -------------------------------------------------------------
     const colorsList = [
-      { word: 'Red', color: '#FF1744', voice: 'Red!', prompt: 'Red!' },
-      { word: 'Blue', color: '#0091EA', voice: 'Blue!', prompt: 'Blue!' },
-      { word: 'Yellow', color: '#FFD600', voice: 'Yellow!', prompt: 'Yellow!' },
-      { word: 'Green', color: '#00E676', voice: 'Green!', prompt: 'Green!' },
-      { word: 'Orange', color: '#FF6D00', voice: 'Orange!', prompt: 'Orange!' },
-      { word: 'Purple', color: '#AA00FF', voice: 'Purple!', prompt: 'Purple!' }
+      { id: 'red', word: 'Red', vi: 'Màu Đỏ', color: '#FF1744', stickerId: 'apple', voice: 'Red! Red apple!', prompt: 'Paint it Red!' },
+      { id: 'blue', word: 'Blue', vi: 'Màu Xanh Dương', color: '#0091EA', stickerId: 'whale', voice: 'Blue! Blue sky!', prompt: 'Paint it Blue!' },
+      { id: 'yellow', word: 'Yellow', vi: 'Màu Vàng', color: '#FFD600', stickerId: 'sun', voice: 'Yellow! Yellow sun!', prompt: 'Paint it Yellow!' },
+      { id: 'green', word: 'Green', vi: 'Màu Xanh Lá', color: '#00E676', stickerId: 'tree', voice: 'Green! Green tree!', prompt: 'Paint it Green!' },
+      { id: 'orange', word: 'Orange', vi: 'Màu Cam', color: '#FF6D00', stickerId: 'orange', voice: 'Orange! Sweet orange!', prompt: 'Paint it Orange!' },
+      { id: 'purple', word: 'Purple', vi: 'Màu Tím', color: '#AA00FF', stickerId: 'grapes', voice: 'Purple! Purple grapes!', prompt: 'Paint it Purple!' },
+      { id: 'pink', word: 'Pink', vi: 'Màu Hồng', color: '#FF4081', stickerId: 'peach', voice: 'Pink! Pretty pink!', prompt: 'Paint it Pink!' }
     ];
 
     let currentMode = 'free'; // 'free' or 'quiz'
     let targetQuizColor = null;
     let quizStarsCount = 0;
+    let isQuizResolving = false;
     const MAX_STARS = 5;
     let paintCount = 0;
+    let lastSelectedColor = colorsList[0];
+    let currentWeek = 1;
     let popTimer = null;
+    let driveVoiceTimer = null;
+
+    // -------------------------------------------------------------
+    // MULTI-MODEL STUDIO: CAR & CUTE LIVING ANIMALS
+    // -------------------------------------------------------------
+    const modelMeta = {
+      car: { name: 'Xe Ô Tô', action: '🚗 Lái Thử!', sound: 'Beep beep!', prompt: 'Car! Paint the car! Beep beep!' },
+      puppy: { name: 'Chú Cún', action: '🐶 Chạy Nhảy!', sound: 'Woof woof!', prompt: 'Puppy! Paint the cute puppy! Woof woof!' },
+      kitty: { name: 'Bé Mèo', action: '🐱 Nhào Lộn!', sound: 'Meow meow!', prompt: 'Kitty! Paint the sweet kitty! Meow meow!' },
+      bear: { name: 'Gấu Bông', action: '🐻 Nhảy Múa!', sound: 'Hooray!', prompt: 'Teddy Bear! Paint the friendly bear!' }
+    };
+
+    const modelSvgs = {
+      car: `
+        <defs>
+          <linearGradient id="windowGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#E1F5FE"/>
+            <stop offset="100%" stop-color="#B3E5FC"/>
+          </linearGradient>
+          <linearGradient id="rimGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#ECEFF1"/>
+            <stop offset="100%" stop-color="#CFD8DC"/>
+          </linearGradient>
+        </defs>
+        <rect x="25" y="172" width="28" height="14" rx="4" fill="#78909C" stroke="#455A64" stroke-width="3"/>
+        <path id="car-body" class="car-part-body" data-part="body" d="M 50 160 C 50 125, 90 120, 110 120 L 140 65 C 155 45, 230 45, 255 65 L 305 120 C 340 120, 355 138, 355 162 L 350 188 C 338 194, 312 194, 300 188 L 255 188 C 242 194, 185 194, 172 188 L 125 188 C 112 194, 70 194, 50 160 Z" fill="#EEEEEE" stroke="#37474F" stroke-width="6"/>
+        <path id="car-roof" class="car-part-roof" data-part="roof" d="M 142 68 C 155 50, 225 50, 252 68 L 290 115 L 118 115 Z" fill="#E0E0E0" stroke="#37474F" stroke-width="4"/>
+        <path d="M 148 72 L 188 72 L 188 112 L 124 112 Z" fill="url(#windowGrad)" stroke="#37474F" stroke-width="4"/>
+        <path d="M 200 72 L 244 72 L 282 112 L 200 112 Z" fill="url(#windowGrad)" stroke="#37474F" stroke-width="4"/>
+        <g id="car-eyes">
+          <circle cx="218" cy="92" r="10" fill="#212121"/>
+          <circle cx="215" cy="89" r="3.5" fill="#FFF"/>
+          <circle cx="242" cy="92" r="10" fill="#212121"/>
+          <circle cx="239" cy="89" r="3.5" fill="#FFF"/>
+        </g>
+        <ellipse cx="342" cy="145" rx="10" ry="15" fill="#FFF59D" stroke="#FBC02D" stroke-width="4"/>
+        <path d="M 325 174 Q 345 185 352 174" fill="none" stroke="#37474F" stroke-width="5" stroke-linecap="round"/>
+        <g id="wheel-left-group" data-part="wheels">
+          <circle id="wheel-left" class="car-part-wheel" data-part="wheels" cx="108" cy="188" r="34" fill="#37474F" stroke="#212121" stroke-width="5"/>
+          <g class="wheel-rotor">
+            <circle cx="108" cy="188" r="18" fill="url(#rimGrad)" stroke="#90A4AE" stroke-width="3"/>
+            <line class="wheel-spoke" x1="108" y1="172" x2="108" y2="204" stroke="#78909C" stroke-width="3"/>
+            <line class="wheel-spoke" x1="92" y1="188" x2="124" y2="188" stroke="#78909C" stroke-width="3"/>
+            <circle cx="108" cy="188" r="7" fill="#455A64"/>
+          </g>
+        </g>
+        <g id="wheel-right-group" data-part="wheels">
+          <circle id="wheel-right" class="car-part-wheel" data-part="wheels" cx="278" cy="188" r="34" fill="#37474F" stroke="#212121" stroke-width="5"/>
+          <g class="wheel-rotor">
+            <circle cx="278" cy="188" r="18" fill="url(#rimGrad)" stroke="#90A4AE" stroke-width="3"/>
+            <line class="wheel-spoke" x1="278" y1="172" x2="278" y2="204" stroke="#78909C" stroke-width="3"/>
+            <line class="wheel-spoke" x1="262" y1="188" x2="294" y2="188" stroke="#78909C" stroke-width="3"/>
+            <circle cx="278" cy="188" r="7" fill="#455A64"/>
+          </g>
+        </g>
+      `,
+      puppy: `
+        <!-- Puppy Floppy Ears (Roof slot) -->
+        <path class="car-part-roof" data-part="roof" d="M 115 80 C 75 95 70 170 110 175 C 130 165 135 110 125 80 Z" fill="#D7CCC8" stroke="#4E342E" stroke-width="5" stroke-linejoin="round"/>
+        <path class="car-part-roof" data-part="roof" d="M 265 80 C 305 95 310 170 270 175 C 250 165 245 110 255 80 Z" fill="#D7CCC8" stroke="#4E342E" stroke-width="5" stroke-linejoin="round"/>
+        <!-- Puppy Body & Head -->
+        <circle id="car-body" class="car-part-body" data-part="body" cx="190" cy="120" r="82" fill="#EEEEEE" stroke="#4E342E" stroke-width="6"/>
+        <circle cx="140" cy="135" r="14" fill="#FF80AB" opacity="0.4"/>
+        <circle cx="240" cy="135" r="14" fill="#FF80AB" opacity="0.4"/>
+        <ellipse cx="190" cy="142" rx="44" ry="32" fill="#FFFFFF" stroke="#8D6E63" stroke-width="3.5"/>
+        <ellipse cx="190" cy="130" rx="14" ry="10" fill="#212121"/>
+        <path d="M 190 140 L 190 148 M 178 148 Q 190 158 202 148" fill="none" stroke="#212121" stroke-width="4" stroke-linecap="round"/>
+        <path d="M 184 154 Q 190 166 196 154 Z" fill="#FF5252"/>
+        <circle cx="156" cy="106" r="12" fill="#212121"/><circle cx="152" cy="102" r="4.5" fill="#FFF"/><circle cx="159" cy="109" r="2" fill="#FFF"/>
+        <circle cx="224" cy="106" r="12" fill="#212121"/><circle cx="220" cy="102" r="4.5" fill="#FFF"/><circle cx="227" cy="109" r="2" fill="#FFF"/>
+        <!-- Puppy Collar (Wheels slot) -->
+        <rect class="car-part-wheel" data-part="wheels" x="140" y="194" width="100" height="20" rx="10" fill="#FF5252" stroke="#B71C1C" stroke-width="3.5"/>
+        <circle cx="190" cy="216" r="9" fill="#FFD54F" stroke="#FF8F00" stroke-width="2.5"/>
+      `,
+      kitty: `
+        <!-- Kitty Pointy Ears (Roof slot) -->
+        <path class="car-part-roof" data-part="roof" d="M 125 75 C 115 30 140 15 165 52 Z" fill="#FFA726" stroke="#E65100" stroke-width="5" stroke-linejoin="round"/>
+        <polygon points="132,68 142,38 158,54" fill="#FFCC80"/>
+        <path class="car-part-roof" data-part="roof" d="M 255 75 C 265 30 240 15 215 52 Z" fill="#FFA726" stroke="#E65100" stroke-width="5" stroke-linejoin="round"/>
+        <polygon points="248,68 238,38 222,54" fill="#FFCC80"/>
+        <!-- Kitty Head -->
+        <circle id="car-body" class="car-part-body" data-part="body" cx="190" cy="120" r="80" fill="#EEEEEE" stroke="#E65100" stroke-width="6"/>
+        <line x1="125" y1="126" x2="95" y2="122" stroke="#5D4037" stroke-width="3.5" stroke-linecap="round"/>
+        <line x1="125" y1="136" x2="95" y2="140" stroke="#5D4037" stroke-width="3.5" stroke-linecap="round"/>
+        <line x1="255" y1="126" x2="285" y2="122" stroke="#5D4037" stroke-width="3.5" stroke-linecap="round"/>
+        <line x1="255" y1="136" x2="285" y2="140" stroke="#5D4037" stroke-width="3.5" stroke-linecap="round"/>
+        <circle cx="156" cy="106" r="12" fill="#2E7D32"/><circle cx="152" cy="102" r="4.5" fill="#FFF"/>
+        <circle cx="224" cy="106" r="12" fill="#2E7D32"/><circle cx="220" cy="102" r="4.5" fill="#FFF"/>
+        <polygon points="190,126 182,118 198,118" fill="#E91E63"/>
+        <path d="M 180 134 Q 190 144 200 134" fill="none" stroke="#212121" stroke-width="4" stroke-linecap="round"/>
+        <!-- Cute Bowtie (Wheels slot) -->
+        <polygon class="car-part-wheel" data-part="wheels" points="160,195 190,188 190,202" fill="#E91E63" stroke="#880E4F" stroke-width="2.5"/>
+        <polygon class="car-part-wheel" data-part="wheels" points="220,195 190,188 190,202" fill="#E91E63" stroke="#880E4F" stroke-width="2.5"/>
+        <circle cx="190" cy="195" r="7" fill="#FFD54F" stroke="#FF8F00" stroke-width="2"/>
+      `,
+      bear: `
+        <!-- Bear Round Ears (Roof slot) -->
+        <circle class="car-part-roof" data-part="roof" cx="122" cy="65" r="28" fill="#BCAAA4" stroke="#4E342E" stroke-width="5"/>
+        <circle cx="122" cy="65" r="16" fill="#D7CCC8"/>
+        <circle class="car-part-roof" data-part="roof" cx="258" cy="65" r="28" fill="#BCAAA4" stroke="#4E342E" stroke-width="5"/>
+        <circle cx="258" cy="65" r="16" fill="#D7CCC8"/>
+        <!-- Bear Head -->
+        <circle id="car-body" class="car-part-body" data-part="body" cx="190" cy="120" r="82" fill="#EEEEEE" stroke="#4E342E" stroke-width="6"/>
+        <ellipse cx="190" cy="140" rx="42" ry="32" fill="#D7CCC8" stroke="#8D6E63" stroke-width="3"/>
+        <ellipse cx="190" cy="128" rx="14" ry="10" fill="#212121"/>
+        <path d="M 182 142 Q 190 150 198 142" fill="none" stroke="#212121" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="156" cy="106" r="10" fill="#212121"/><circle cx="153" cy="103" r="3.5" fill="#FFF"/>
+        <circle cx="224" cy="106" r="10" fill="#212121"/><circle cx="221" cy="103" r="3.5" fill="#FFF"/>
+        <!-- Heart Badge (Wheels slot) -->
+        <circle class="car-part-wheel" data-part="wheels" cx="190" cy="195" r="16" fill="#FF4081" stroke="#C2185B" stroke-width="3"/>
+        <text x="190" y="201" font-size="16" text-anchor="middle" fill="#FFF">⭐</text>
+      `
+    };
+
+    let currentModel = 'car';
+
+    function switchStudioModel(modelId) {
+      if (!modelSvgs[modelId]) return;
+      currentModel = modelId;
+      document.querySelectorAll('.model-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.model === modelId);
+      });
+      const svgEl = carContainer.querySelector('.car-svg');
+      if (svgEl) {
+        svgEl.innerHTML = modelSvgs[modelId];
+      }
+      btnTestDrive.innerText = modelMeta[modelId].action;
+      bannerSub.innerText = `🎨 Chọn màu tô cho ${modelMeta[modelId].name} nào!`;
+      tipText.innerText = `Bấm vào xô màu để bắn tia sơn cầu vồng lên ${modelMeta[modelId].name} nhé! 🎨`;
+      ToddlerAudio.speak(modelMeta[modelId].prompt);
+    }
+    window.switchStudioModel = switchStudioModel;
 
     // DOM Elements
     const carContainer = document.getElementById('car-container');
@@ -853,6 +1252,10 @@
     const carRoof = document.getElementById('car-roof');
     const wheelLeft = document.getElementById('wheel-left');
     const wheelRight = document.getElementById('wheel-right');
+    const wheelLeftGroup = document.getElementById('wheel-left-group');
+    const wheelRightGroup = document.getElementById('wheel-right-group');
+    const carDecalBadge = document.getElementById('car-decal-badge');
+    const btnTestDrive = document.getElementById('btn-test-drive');
 
     const wordPopup = document.getElementById('word-popup');
     const popupIcon = document.getElementById('popup-icon');
@@ -867,51 +1270,102 @@
     const btnModeQuiz = document.getElementById('btn-mode-quiz');
     const quizStarTracker = document.getElementById('quiz-star-tracker');
     const confettiLayer = document.getElementById('confetti-layer');
+    const victoryModal = document.getElementById('victory-modal');
+    const victoryTitle = document.getElementById('victory-title');
+    const victorySub = document.getElementById('victory-sub');
+    const parentTipText = document.getElementById('parent-tip-text');
+    const btnPlayAgain = document.getElementById('btn-play-again');
 
     const bucketCards = document.querySelectorAll('.bucket-card');
 
+    function initCurriculumAndDecal() {
+      if (window.MissionEngine && typeof MissionEngine.init === 'function') {
+        MissionEngine.init();
+      }
+      if (window.ToddlerVocabulary) {
+        if (typeof ToddlerVocabulary.getCurrentWeek === 'function') {
+          currentWeek = ToddlerVocabulary.getCurrentWeek() || 1;
+        }
+        updateCarDecalSticker('star');
+      }
+    }
+
+    function updateCarDecalSticker(iconId) {
+      if (!carDecalBadge || !window.ToddlerVocabulary || !ToddlerVocabulary.renderWordIcon) return;
+      carDecalBadge.innerHTML = ToddlerVocabulary.renderWordIcon(iconId, 42);
+      carDecalBadge.classList.remove('pop');
+      void carDecalBadge.offsetWidth;
+      carDecalBadge.classList.add('pop');
+    }
+
+    function getRichColorPhrase(cData) {
+      if (!cData) return '';
+      if (window.ToddlerVocabulary && typeof ToddlerVocabulary.getWordContextPhrase === 'function') {
+        const phrase = ToddlerVocabulary.getWordContextPhrase(cData);
+        if (phrase) return phrase;
+      }
+      return cData.voice;
+    }
+
     // -------------------------------------------------------------
-    // COLORING LOGIC
+    // COLORING LOGIC (Zero Audio Collisions)
     // -------------------------------------------------------------
-    function applyColorToCar(word, color, sourceX, sourceY) {
+    function applyColorToCar(word, color, sourceX, sourceY, forcedPart = null, autoDriveAllowed = true) {
       paintCount++;
+      const cData = colorsList.find(c => c.word.toLowerCase() === word.toLowerCase()) || colorsList[0];
+      lastSelectedColor = cData;
 
       // Sound synthesizer
       playPaintSplashSound(word);
 
-      // Target Car Coordinates for Splat
-      const carRect = carContainer.getBoundingClientRect();
-      const carCenterX = carRect.left + carRect.width / 2 + (Math.random() - 0.5) * 80;
-      const carCenterY = carRect.top + carRect.height / 2 + (Math.random() - 0.5) * 50;
-
-      // Create juicy splat
-      splats.push(new JuicySplat(sourceX, sourceY, carCenterX, carCenterY, color));
-
-      // Paint car parts in cycle: Body -> Wheels -> Roof
+      // Determine which car part to paint: forcedPart or cycle (Body -> Wheels -> Roof)
       const partIdx = paintCount % 3;
-      if (partIdx === 1) {
-        carBody.style.fill = color;
-      } else if (partIdx === 2) {
-        wheelLeft.style.fill = color;
-        wheelRight.style.fill = color;
-      } else {
-        carRoof.style.fill = color;
+      const targetPart = forcedPart || (partIdx === 1 ? 'body' : (partIdx === 2 ? 'wheels' : 'roof'));
+
+      // Target Coordinates on Car SVG
+      const carRect = carContainer.getBoundingClientRect();
+      let targetX = carRect.left + carRect.width * 0.52;
+      let targetY = carRect.top + carRect.height * 0.58;
+      if (targetPart === 'roof') {
+        targetY = carRect.top + carRect.height * 0.34;
+      } else if (targetPart === 'wheels') {
+        targetX = carRect.left + carRect.width * (paintCount % 2 === 0 ? 0.72 : 0.28);
+        targetY = carRect.top + carRect.height * 0.78;
       }
 
-      // Show Big 3D Word Popup
-      showWordPopup(word, color);
+      // Create flying juicy splat
+      splats.push(new JuicySplat(sourceX, sourceY, targetX, targetY, color));
+      ensureSplatLoop();
 
-      // Drive loop after every 3 paints
-      if (paintCount % 3 === 0) {
-        setTimeout(() => {
-          triggerCarDrive(word);
-        }, 550);
+      // Apply fill color when projectile lands (~140ms)
+      setTimeout(() => {
+        const matchingParts = carContainer.querySelectorAll(`[data-part="${targetPart}"]`);
+        if (matchingParts.length > 0) {
+          matchingParts.forEach(el => el.style.fill = color);
+        } else {
+          // Fallback to body
+          const bodyEl = carContainer.querySelector('[data-part="body"]');
+          if (bodyEl) bodyEl.style.fill = color;
+        }
+        updateCarDecalSticker(cData.stickerId || cData.id);
+      }, 130);
+
+      // Show Big 3D Word Popup
+      showWordPopup(cData, word, color);
+
+      // Auto-drive loop after every 3 paints in Free Mode (Delayed to 1550ms with silentVoice so speech is NEVER cut off!)
+      if (autoDriveAllowed && paintCount % 3 === 0) {
+        clearTimeout(driveVoiceTimer);
+        driveVoiceTimer = setTimeout(() => {
+          const meta = modelMeta[currentModel] || modelMeta.car;
+          triggerCarDrive(`${word} ${meta.name}`, true);
+        }, 1550);
       }
     }
 
-    function showWordPopup(word, color) {
+    function showWordPopup(cData, word, color) {
       if (window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon) {
-        popupIcon.innerHTML = ToddlerVocabulary.renderWordIcon(word.toLowerCase(), 64);
+        popupIcon.innerHTML = ToddlerVocabulary.renderWordIcon(cData || word.toLowerCase(), 64);
       } else {
         popupIcon.innerText = '🎨';
       }
@@ -923,21 +1377,33 @@
       clearTimeout(popTimer);
       popTimer = setTimeout(() => {
         wordPopup.classList.remove('show');
-      }, 1200);
+      }, 1350);
     }
 
-    function triggerCarDrive(lastColor) {
+    function triggerCarDrive(labelText, silentVoice = false) {
+      carContainer.classList.remove('drive-loop');
+      void carContainer.offsetWidth;
       carContainer.classList.add('drive-loop');
-      bannerSub.innerText = '🎉 Vroom Vroom! Xe phóng nè!';
 
-      ToddlerAudio.playHorn();
-      setTimeout(() => ToddlerAudio.playVroom(), 350);
-      ToddlerAudio.speak(`${lastColor} car!`);
+      const meta = modelMeta[currentModel] || modelMeta.car;
+      bannerSub.innerText = `🎉 ${meta.name} đang biểu diễn vui nhộn!`;
+
+      if (currentModel === 'car') {
+        ToddlerAudio.playHorn();
+        setTimeout(() => ToddlerAudio.playVroom(), 320);
+      } else {
+        if (ToddlerAudio.playCheer) ToddlerAudio.playCheer();
+        if (ToddlerAudio.playBoing) setTimeout(() => ToddlerAudio.playBoing(), 300);
+      }
+
+      if (!silentVoice && labelText) {
+        ToddlerAudio.speak(`${labelText}! ${meta.sound}`);
+      }
 
       setTimeout(() => {
         carContainer.classList.remove('drive-loop');
         if (currentMode === 'free') {
-          bannerSub.innerText = '🎨 Chọn màu tô xe nào!';
+          bannerSub.innerText = `🎨 Chọn màu hoặc chạm vào các phần của ${meta.name} để tô màu nhé!`;
         }
       }, 1900);
     }
@@ -947,6 +1413,7 @@
     // -------------------------------------------------------------
     bucketCards.forEach(card => {
       card.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
         const word = card.dataset.word;
         const color = card.dataset.color;
         const rect = card.getBoundingClientRect();
@@ -954,9 +1421,13 @@
         const sourceY = rect.top;
 
         if (currentMode === 'free') {
-          applyColorToCar(word, color, sourceX, sourceY);
+          applyColorToCar(word, color, sourceX, sourceY, null, true);
           const cData = colorsList.find(c => c.word === word);
-          if (cData) ToddlerAudio.speak(cData.voice);
+          if (cData) {
+            const meta = modelMeta[currentModel] || modelMeta.car;
+            ToddlerAudio.speak(getRichColorPhrase(cData));
+            tipText.innerText = `${cData.word} (${cData.vi}): Chạm vào ${meta.name} hoặc bấm nút bên phải nhé! 🎨`;
+          }
         } else {
           // Quiz Mode Check
           handleQuizColorPick(word, color, sourceX, sourceY);
@@ -964,14 +1435,50 @@
       });
     });
 
-    // Tap directly on car -> Honk & Jump!
-    carContainer.addEventListener('pointerdown', () => {
-      ToddlerAudio.playHorn();
-      ToddlerAudio.speak('Car! Beep beep!');
-      carContainer.style.transform = 'scale(1.15) translateY(-15px)';
+    // Tap directly on specific parts in Free Mode to paint that exact zone, or hear sound!
+    carContainer.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      const targetPartEl = e.target.closest('[data-part]');
+      const meta = modelMeta[currentModel] || modelMeta.car;
+      if (currentMode === 'free' && targetPartEl && lastSelectedColor) {
+        const partName = targetPartEl.dataset.part;
+        applyColorToCar(lastSelectedColor.word, lastSelectedColor.color, e.clientX, e.clientY + 40, partName, false);
+        ToddlerAudio.speak(`${lastSelectedColor.word} ${meta.name}! ${meta.sound}`);
+        return;
+      }
+      if (currentModel === 'car') {
+        ToddlerAudio.playHorn();
+      } else {
+        if (ToddlerAudio.playBoing) ToddlerAudio.playBoing();
+      }
+      if (currentMode === 'free') {
+        ToddlerAudio.speak(`${lastSelectedColor ? lastSelectedColor.word : ''} ${meta.name}! ${meta.sound}`);
+      } else if (targetQuizColor && !isQuizResolving) {
+        ToddlerAudio.speak(targetQuizColor.prompt);
+      }
+      carContainer.style.transform = 'scale(1.12) translateY(-12px)';
       setTimeout(() => {
         carContainer.style.transform = '';
       }, 250);
+    });
+
+    // Test Drive / Action Button
+    btnTestDrive.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      ToddlerAudio.init();
+      const meta = modelMeta[currentModel] || modelMeta.car;
+      const label = lastSelectedColor ? `${lastSelectedColor.word} ${meta.name}` : `Rainbow ${meta.name}`;
+      triggerCarDrive(label, currentMode === 'quiz' && isQuizResolving);
+    });
+
+    // Replay Prompt Banner Tap
+    bannerBox.addEventListener('pointerdown', () => {
+      ToddlerAudio.init();
+      if (currentMode === 'quiz' && targetQuizColor) {
+        ToddlerAudio.speak(targetQuizColor.prompt);
+      } else {
+        ToddlerAudio.speak('Let\'s paint the car!');
+      }
     });
 
     // -------------------------------------------------------------
@@ -979,6 +1486,9 @@
     // -------------------------------------------------------------
     function setMode(mode) {
       currentMode = mode;
+      isQuizResolving = false;
+      clearTimeout(driveVoiceTimer);
+      victoryModal.classList.remove('show');
       btnModeFree.classList.toggle('active', mode === 'free');
       btnModeQuiz.classList.toggle('active', mode === 'quiz');
 
@@ -987,9 +1497,9 @@
       if (mode === 'free') {
         quizStarTracker.style.display = 'none';
         bannerTitle.innerHTML = '🎨 Magic Rainbow Paint Studio!';
-        bannerSub.innerText = 'Bấm vào xô màu kẹo ngọt để bắn sơn tô màu cho chiếc xe nhé!';
+        bannerSub.innerText = 'Bấm vào xô màu hoặc chạm từng bộ phận xe để sơn màu nhé!';
         tipText.innerText = 'Bấm vào xô màu để bắn tia sơn cầu vồng lên chiếc xe nhé! 🎨🚗';
-        ToddlerAudio.speak('Paint car!');
+        ToddlerAudio.speak('Paint the car!');
       } else {
         quizStarTracker.style.display = 'flex';
         quizStarsCount = 0;
@@ -999,6 +1509,7 @@
     }
 
     function pickNextQuizColor() {
+      isQuizResolving = false;
       let nextC;
       do {
         nextC = colorsList[Math.floor(Math.random() * colorsList.length)];
@@ -1006,10 +1517,12 @@
 
       targetQuizColor = nextC;
 
-      // Update Banner
-      bannerTitle.innerHTML = `⭐ Paint the car <b>${targetQuizColor.word.toUpperCase()}</b>!`;
-      bannerSub.innerText = `Bé hãy tìm xô màu ${targetQuizColor.word} để sơn xe nhé!`;
-      tipText.innerText = `Đang tìm: Xô màu ${targetQuizColor.word} 🪣`;
+      const iconHtml = (window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon)
+        ? ToddlerVocabulary.renderWordIcon(targetQuizColor, 34)
+        : '🎨';
+      bannerTitle.innerHTML = `⭐ Paint the car <b>${targetQuizColor.word.toUpperCase()}</b> ${iconHtml}!`;
+      bannerSub.innerText = `🔍 Đố bé tìm xô màu: ${targetQuizColor.word} (${targetQuizColor.vi}) để sơn xe nhé!`;
+      tipText.innerText = `Đang tìm: Xô màu ${targetQuizColor.word} (${targetQuizColor.vi}) 🪣`;
 
       // Call bucket with bounce animation
       bucketCards.forEach(card => {
@@ -1020,36 +1533,46 @@
         }
       });
 
-      // Voice
       ToddlerAudio.speak(targetQuizColor.prompt);
     }
 
     function handleQuizColorPick(pickedWord, color, sourceX, sourceY) {
-      if (!targetQuizColor) return;
+      if (!targetQuizColor || isQuizResolving) return;
 
       if (pickedWord.toLowerCase() === targetQuizColor.word.toLowerCase()) {
         // MATCH!
-        applyColorToCar(pickedWord, color, sourceX, sourceY);
+        isQuizResolving = true;
+        applyColorToCar(pickedWord, color, sourceX, sourceY, null, false);
         quizStarsCount++;
         updateQuizStars();
 
+        if (window.MissionEngine && typeof MissionEngine.recordAction === 'function') {
+          MissionEngine.recordAction();
+        }
+
         bucketCards.forEach(b => b.classList.remove('target-calling'));
 
-        ToddlerAudio.speak(`${pickedWord}! Super!`);
-        setTimeout(() => ToddlerAudio.playWin(), 400);
+        const fullPhrase = getRichColorPhrase(targetQuizColor);
+        ToddlerAudio.speak(fullPhrase || `${pickedWord}! Super!`);
+        setTimeout(() => ToddlerAudio.playWin(), 320);
 
         if (quizStarsCount >= MAX_STARS) {
-          setTimeout(onQuizWin, 900);
+          // Wait 2000ms so the 5th color's full sentence finishes speaking before victory drive!
+          setTimeout(onQuizWin, 2000);
         } else {
-          setTimeout(pickNextQuizColor, 1700);
+          // Wait 2100ms before speaking the next color prompt
+          setTimeout(pickNextQuizColor, 2100);
         }
       } else {
         // MISMATCH (Gentle redirect)
         playPaintSplashSound(pickedWord);
-        showWordPopup(pickedWord, color);
+        const pickedData = colorsList.find(c => c.word.toLowerCase() === pickedWord.toLowerCase());
+        showWordPopup(pickedData, pickedWord, color);
         setTimeout(() => {
-          ToddlerAudio.speak(targetQuizColor.word);
-        }, 500);
+          if (currentMode === 'quiz' && targetQuizColor && !isQuizResolving) {
+            ToddlerAudio.speak(targetQuizColor.prompt);
+          }
+        }, 700);
       }
     }
 
@@ -1075,29 +1598,43 @@
     function onQuizWin() {
       triggerConfetti();
       const currentTheme = carQuestThemes[currentCarQuestIdx];
-      triggerCarDrive(currentTheme.name);
+      triggerCarDrive(currentTheme.name, false);
       bannerTitle.innerHTML = `🎉 Hoàn Thành: ${currentTheme.title}!`;
       bannerSub.innerText = 'Hoan hô! Bé là Thợ Sơn Nhí xuất sắc nhất!';
 
-      setTimeout(() => {
-        currentCarQuestIdx = (currentCarQuestIdx + 1) % carQuestThemes.length;
-        const nextTheme = carQuestThemes[currentCarQuestIdx];
-        quizStarsCount = 0;
-        updateQuizStars();
-
-        // Reset màu xe để bé sơn chiếc xe mới
-        carBody.style.fill = '#ECEFF1';
-        carRoof.style.fill = '#CFD8DC';
-        wheelLeft.style.fill = '#37474F';
-        wheelRight.style.fill = '#37474F';
-
-        bannerTitle.innerHTML = `⭐ Thử Thách Mới: Sơn ${nextTheme.title}!`;
-        if (window.ToddlerAudio) {
-          ToddlerAudio.speak(nextTheme.name);
+      victoryTitle.innerText = `Hoàn Thành: ${currentTheme.title}`;
+      victorySub.innerText = `Hoan hô! Bé đã sơn đủ 5 ngôi sao sắc màu!`;
+      if (window.ToddlerVocabulary && typeof ToddlerVocabulary.getRealWorldParentTip === 'function') {
+        const tip = ToddlerVocabulary.getRealWorldParentTip(currentWeek);
+        const tipStr = (tip && tip.tipText) ? tip.tipText : tip;
+        if (tipStr) {
+          parentTipText.innerHTML = `💡 <b>Mẹo thực hành cùng ba mẹ (Tuần ${currentWeek}):</b> ${tipStr}`;
         }
-        pickNextQuizColor();
-      }, 3400);
+      }
+
+      setTimeout(() => {
+        if (currentMode === 'quiz') {
+          victoryModal.classList.add('show');
+        }
+      }, 1500);
     }
+
+    btnPlayAgain.addEventListener('pointerdown', () => {
+      victoryModal.classList.remove('show');
+      currentCarQuestIdx = (currentCarQuestIdx + 1) % carQuestThemes.length;
+      const nextTheme = carQuestThemes[currentCarQuestIdx];
+      quizStarsCount = 0;
+      updateQuizStars();
+
+      // Reset màu xe để bé sơn chiếc xe mới
+      carBody.style.fill = '#ECEFF1';
+      carRoof.style.fill = '#CFD8DC';
+      wheelLeft.style.fill = '#37474F';
+      wheelRight.style.fill = '#37474F';
+
+      bannerTitle.innerHTML = `⭐ Thử Thách Mới: Sơn ${nextTheme.title}!`;
+      pickNextQuizColor();
+    });
 
     function triggerConfetti() {
       const colors = ['#FF1744', '#FFEA00', '#00E676', '#00B0FF', '#D500F9', '#FF9100'];
@@ -1118,11 +1655,14 @@
     btnModeFree.addEventListener('pointerdown', () => setMode('free'));
     btnModeQuiz.addEventListener('pointerdown', () => setMode('quiz'));
 
+    // Boot
+    initCurriculumAndDecal();
+
     // Welcome Voice
     setTimeout(() => {
       ToddlerAudio.init();
-      ToddlerAudio.speak('Colors!');
-    }, 450);
+      ToddlerAudio.speak('Let\'s paint the car!');
+    }, 500);
   </script>
 </body>
 </html>

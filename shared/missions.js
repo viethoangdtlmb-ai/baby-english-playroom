@@ -76,6 +76,8 @@ const MissionEngine = {
     return null;
   },
 
+  DEFAULT_ROADMAP: [],
+
   /**
    * Sinh động lộ trình 7 ngày riêng biệt cho tuần được chọn
    * Mỗi tuần các bạn nhỏ, món ăn, chế độ bắn bóng, đối tượng tắm đều thay đổi
@@ -133,7 +135,19 @@ const MissionEngine = {
 
     return [
       day1Mission,
-      {
+      isEvenWeek ? {
+        day: 2,
+        dayName: 'Tuesday',
+        dayVn: 'Thứ Ba',
+        id: 'mission_day_2',
+        title: 'Chạm nổ 3 bong bóng cứu bạn nhỏ!',
+        englishTitle: 'Bubble Bath Rescue',
+        gameUrl: `18_bubble_bath/index.html?mission=mission_day_2&week=${week}&day=2`,
+        targetCount: 3,
+        actionText: 'Nổ bong bóng',
+        sticker: { id: `sticker_w${week}_d2`, word: 'bubble', icon: '🫧✨', name: 'Bé Tắm Bong Bóng Giỏi' },
+        voiceIntro: 'Bubble Bath!'
+      } : {
         day: 2,
         dayName: 'Tuesday',
         dayVn: 'Thứ Ba',
@@ -146,7 +160,19 @@ const MissionEngine = {
         sticker: { id: `sticker_w${week}_d2`, word: 'apple', icon: '🍎✨', name: 'Bé Hái Quả Giỏi' },
         voiceIntro: 'Fruit Harvest!'
       },
-      {
+      isEvenWeek ? {
+        day: 3,
+        dayName: 'Wednesday',
+        dayVn: 'Thứ Tư',
+        id: 'mission_day_3',
+        title: 'Lái xe vượt 3 cổng đố vui về nhà!',
+        englishTitle: 'Trace & Solve 3 Gates',
+        gameUrl: `08_car_tracing/index.html?mission=mission_day_3&week=${week}&day=3`,
+        targetCount: 3,
+        actionText: 'Mở cổng đố vui',
+        sticker: { id: `sticker_w${week}_d3`, word: 'car', icon: '🚗✨', name: `Tay Đua Thông Thái Tuần ${week}` },
+        voiceIntro: 'Car Tracing!'
+      } : {
         day: 3,
         dayName: 'Wednesday',
         dayVn: 'Thứ Tư',
@@ -159,7 +185,7 @@ const MissionEngine = {
         sticker: { id: `sticker_w${week}_d3`, word: peekTarget.word || peekTarget.id, icon: peekTarget.emoji + '✨', name: `Bé Tìm Thấy ${peekTarget.word}` },
         voiceIntro: `${peekTarget.word}!`
       },
-      {
+      isEvenWeek ? {
         day: 4,
         dayName: 'Thursday',
         dayVn: 'Thứ Năm',
@@ -171,6 +197,25 @@ const MissionEngine = {
         actionText: 'Tắm sạch sẽ',
         sticker: { id: `sticker_w${week}_d4`, word: clean.id || clean.name, icon: clean.emoji + '✨', name: `${clean.name} Sạch Sẽ` },
         voiceIntro: `${clean.name}!`
+      } : {
+        day: 4,
+        dayName: 'Thursday',
+        dayVn: 'Thứ Năm',
+        id: 'mission_day_4',
+        title: (weekData.newWords && weekData.newWords.length > 0)
+          ? `Nghe & đập trứng tìm: ${weekData.newWords.slice(0, 3).map(w => w.word).join(', ')}!`
+          : 'Nghe âm thanh & tìm đúng hình!',
+        englishTitle: 'Listen & Hatch Surprise Egg',
+        gameUrl: `11_find_the_word/index.html?mission=mission_day_4&week=${week}&day=4`,
+        targetCount: 3,
+        actionText: 'Nghe & chọn đúng',
+        sticker: {
+          id: `sticker_w${week}_d4`,
+          word: (weekData.newWords && weekData.newWords[1]) ? weekData.newWords[1].id : 'star',
+          icon: ((weekData.newWords && weekData.newWords[1]) ? weekData.newWords[1].emoji : '🥚') + '✨',
+          name: `Đôi Tai Vàng Tuần ${week}`
+        },
+        voiceIntro: (weekData.newWords && weekData.newWords[1]) ? `${weekData.newWords[1].word}!` : 'Listen and Find!'
       },
       {
         day: 5,
@@ -194,7 +239,19 @@ const MissionEngine = {
         },
         voiceIntro: (weekData.shadowPool && weekData.shadowPool[0]) ? `${weekData.shadowPool[0].word}!` : 'Shadow Match!'
       },
-      {
+      isEvenWeek ? {
+        day: 6,
+        dayName: 'Saturday',
+        dayVn: 'Thứ Bảy',
+        id: 'mission_day_6',
+        title: 'Ghép câu 3 từ tạo hình bạn nhỏ!',
+        englishTitle: 'Mix & Match 3-Word Sentences',
+        gameUrl: `12_mix_and_match/index.html?mission=mission_day_6&week=${week}&day=6`,
+        targetCount: 1,
+        actionText: 'Ghép đúng mẫu',
+        sticker: { id: `sticker_w${week}_d6`, word: 'star', icon: '🎨✨', name: `Vua Ghép Câu Tuần ${week}` },
+        voiceIntro: 'Mix and Match!'
+      } : {
         day: 6,
         dayName: 'Saturday',
         dayVn: 'Thứ Bảy',
@@ -212,13 +269,13 @@ const MissionEngine = {
         dayName: 'Sunday',
         dayVn: 'Chủ Nhật',
         id: 'mission_day_7',
-        title: `Ghép hình mẫu bạn nhỏ!`,
-        englishTitle: `Match the Visual Challenge`,
-        gameUrl: `12_mix_and_match/index.html?mission=mission_day_7&week=${week}&day=7`,
-        targetCount: 1,
-        actionText: 'Biểu diễn',
-        sticker: { id: `sticker_w${week}_d7`, word: 'crown', icon: '👑✨', name: `Vua Sáng Tạo Tuần ${week}` },
-        voiceIntro: `${weekData.mixerRecipe.animal}!`
+        title: 'Nghỉ ngơi & Thi mở Quà Của Mẹ!',
+        englishTitle: 'Sunday Rest & Weekend Star Quiz',
+        gameUrl: `13_weekend_test/index.html?week=${week}`,
+        targetCount: 5,
+        actionText: 'Thi 5 Sao',
+        sticker: { id: `sticker_w${week}_d7`, word: 'crown', icon: '👑✨', name: `Huy Chương Tuần ${week}` },
+        voiceIntro: 'Weekend Star Quiz!'
       }
     ];
   },
@@ -307,9 +364,14 @@ const MissionEngine = {
   idleTimer: null,
   scheduleIdleHint() {
     if (this.idleTimer) clearTimeout(this.idleTimer);
+    const babyAge = (typeof window !== 'undefined' && window.BabyProfile && BabyProfile.getAge)
+      ? BabyProfile.getAge()
+      : 3;
+    const hintDelayMs = babyAge >= 4 ? 5200 : 3200;
+
     this.idleTimer = setTimeout(() => {
       this.spawnGhostHand();
-    }, 3200);
+    }, hintDelayMs);
 
     const onUserTouch = () => {
       if (this.idleTimer) clearTimeout(this.idleTimer);
@@ -329,8 +391,20 @@ const MissionEngine = {
       ghost.id = 'shared-ghost-hand';
       ghost.className = 'ghost-hand-hint';
       ghost.innerText = '👆';
-      ghost.style.left = '45%';
-      ghost.style.top = '50%';
+
+      // Smart target detection: point directly at active game element if present
+      let leftPos = '45%';
+      let topPos = '50%';
+      const targetEl = document.querySelector('.target-calling, .box-slot:not(.opened), .drag-card:not(.matched), .option-card:not(.wrong), .bucket-card, .bubble');
+      if (targetEl && targetEl.getBoundingClientRect) {
+        const rect = targetEl.getBoundingClientRect();
+        if (rect.width > 10 && rect.height > 10) {
+          leftPos = Math.round(rect.left + rect.width * 0.5) + 'px';
+          topPos = Math.round(rect.top + rect.height * 0.55) + 'px';
+        }
+      }
+      ghost.style.left = leftPos;
+      ghost.style.top = topPos;
       document.body.appendChild(ghost);
       setTimeout(() => { if (ghost) ghost.remove(); }, 4800);
     }
@@ -428,16 +502,35 @@ const MissionEngine = {
       ? 'Bé đã học xong bài Thứ 7! Đấu trường cuối tuần đã mở để nhận "Phần Thưởng Của Mẹ" rồi nè!'
       : (isPastCatchUp ? `Bé đã dán bù thành công Sticker Ngày ${mission.day} (${mission.dayVn || ''}) vào Sổ Thần Kỳ!` : 'Bé thật là giỏi! Nhận được Sticker mới vào Sổ Thần Kỳ!');
 
-    modal.innerHTML = `
-      <div class="shared-victory-card" style="background: linear-gradient(180deg, #FFFFFF 0%, #FFFDF5 100%); border: 5px solid #FFC107; border-radius: 36px; padding: 32px 28px; max-width: 480px; width: 100%; text-align: center; box-shadow: 0 24px 60px rgba(0,0,0,0.35); position:relative; z-index:100000;">
-        <div class="shared-trophy" style="font-size: 5rem; margin-bottom: 6px;">🏆</div>
-        <h2 class="shared-victory-title" style="font-size: 1.6rem; font-weight: 900; color: #E65100; margin: 10px 0 6px;">${victoryTitle}</h2>
-        <p class="shared-victory-sub" style="font-size: 1.05rem; font-weight: 700; color: #5D4037; margin-bottom: 18px; line-height: 1.4;">${victorySub}</p>
-        
-        <div class="shared-sticker-box" style="background: #FFFDF5; border: 3.5px dashed #FFB300; border-radius: 24px; padding: 14px 24px; display: inline-flex; flex-direction: column; align-items: center; margin-bottom: 20px;">
-          <div class="shared-sticker-icon" style="font-size: 4rem;">${mission.sticker.icon}</div>
-          <div class="shared-sticker-name" style="font-size: 1.15rem; font-weight: 800; color: #E65100; margin-top: 4px;">${mission.sticker.name}</div>
+    let realWorldHtml = '';
+    if (typeof window !== 'undefined' && window.ToddlerVocabulary && ToddlerVocabulary.getRealWorldParentTip) {
+      const tipInfo = ToddlerVocabulary.getRealWorldParentTip(currentWeek);
+      const pillsHtml = (tipInfo.words || []).slice(0, 4).map(w => {
+        const phrase = ToddlerVocabulary.getWordContextPhrase(w).replace(/'/g, "\\'");
+        return `<button type="button" onclick="if(window.ToddlerAudio){ToddlerAudio.playPop();ToddlerAudio.speak('${phrase}');}" style="background:#FFF8E1; border:2px solid #FFB300; border-radius:20px; padding:5px 12px; font-weight:800; font-size:0.88rem; color:#E65100; cursor:pointer; display:inline-flex; align-items:center; gap:4px;"><span>${w.emoji || '⭐'}</span><span>${w.word}</span><span>🔊</span></button>`;
+      }).join('');
+
+      realWorldHtml = `
+        <div style="background:#E8F5E9; border:2.5px dashed #66BB6A; border-radius:20px; padding:12px 14px; margin-bottom:16px; text-align:left;">
+          <div style="font-size:0.9rem; font-weight:900; color:#1B5E20; margin-bottom:6px;">💡 Thử Thách 10 Giây Ngoài Đời Cùng Mẹ:</div>
+          <div style="font-size:0.85rem; font-weight:700; color:#2E7D32; line-height:1.35; margin-bottom:8px;">${tipInfo.tipText}</div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap; justify-content:center;">${pillsHtml}</div>
         </div>
+      `;
+    }
+
+    modal.innerHTML = `
+      <div class="shared-victory-card" style="background: linear-gradient(180deg, #FFFFFF 0%, #FFFDF5 100%); border: 5px solid #FFC107; border-radius: 36px; padding: 26px 24px; max-width: 490px; width: 100%; text-align: center; box-shadow: 0 24px 60px rgba(0,0,0,0.35); position:relative; z-index:100000; max-height:94vh; overflow-y:auto;">
+        <div class="shared-trophy" style="font-size: 4.2rem; margin-bottom: 4px;">🏆</div>
+        <h2 class="shared-victory-title" style="font-size: 1.45rem; font-weight: 900; color: #E65100; margin: 6px 0;">${victoryTitle}</h2>
+        <p class="shared-victory-sub" style="font-size: 0.98rem; font-weight: 700; color: #5D4037; margin-bottom: 14px; line-height: 1.35;">${victorySub}</p>
+        
+        <div class="shared-sticker-box" style="background: #FFFDF5; border: 3.5px dashed #FFB300; border-radius: 24px; padding: 10px 20px; display: inline-flex; flex-direction: column; align-items: center; margin-bottom: 14px;">
+          <div class="shared-sticker-icon" style="font-size: 3.4rem;">${mission.sticker.icon}</div>
+          <div class="shared-sticker-name" style="font-size: 1.08rem; font-weight: 800; color: #E65100; margin-top: 2px;">${mission.sticker.name}</div>
+        </div>
+
+        ${realWorldHtml}
         
         <div class="shared-modal-actions" style="display: flex; flex-direction: column; gap: 10px; justify-content: center; align-items: center;">
           ${actionsHtml}
@@ -462,9 +555,87 @@ const MissionEngine = {
       ToddlerAudio.playChime();
       ToddlerAudio.speakWord('Yay! Have fun!');
     }
+  },
+
+  // -------------------------------------------------------------
+  // GENTLE BEDTIME / EYE-CARE GUARD (Đồng hồ Bạn Gấu Đi Ngủ bảo vệ mắt bé)
+  // -------------------------------------------------------------
+  BEDTIME_KEY: 'toddler_bedtime_guard',
+  _bedtimeInterval: null,
+
+  setBedtimeTimer(minutes) {
+    try {
+      if (!minutes || minutes <= 0) {
+        localStorage.removeItem(this.BEDTIME_KEY);
+        const overlay = document.getElementById('toddler-bedtime-overlay');
+        if (overlay) overlay.remove();
+        return null;
+      }
+      const expiresAt = Date.now() + minutes * 60 * 1000;
+      const data = { minutes, expiresAt };
+      localStorage.setItem(this.BEDTIME_KEY, JSON.stringify(data));
+      this.startBedtimeWatcher();
+      return data;
+    } catch (e) {
+      return null;
+    }
+  },
+
+  getBedtimeRemainingSec() {
+    try {
+      const raw = localStorage.getItem(this.BEDTIME_KEY);
+      if (!raw) return null;
+      const data = JSON.parse(raw);
+      if (!data || !data.expiresAt) return null;
+      return Math.max(0, Math.floor((data.expiresAt - Date.now()) / 1000));
+    } catch (e) {
+      return null;
+    }
+  },
+
+  startBedtimeWatcher() {
+    if (this._bedtimeInterval) clearInterval(this._bedtimeInterval);
+    this._bedtimeInterval = setInterval(() => {
+      const rem = this.getBedtimeRemainingSec();
+      if (rem !== null && rem <= 0) {
+        this.showBedtimeSleepOverlay();
+      }
+    }, 3000);
+  },
+
+  showBedtimeSleepOverlay() {
+    if (document.getElementById('toddler-bedtime-overlay')) return;
+    if (window.ToddlerAudio) {
+      ToddlerAudio.startBGM('nap');
+      ToddlerAudio.speak('Teddy is sleepy now! Good night, see you tomorrow!');
+    }
+    const overlay = document.createElement('div');
+    overlay.id = 'toddler-bedtime-overlay';
+    overlay.style.cssText = 'position:fixed; inset:0; z-index:200000; background:linear-gradient(180deg, #1A237E 0%, #0D47A1 60%, #1565C0 100%); color:#FFF; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; text-align:center; font-family:var(--font-toddler, sans-serif);';
+    overlay.innerHTML = `
+      <div style="font-size:5.5rem; margin-bottom:10px; filter:drop-shadow(0 8px 20px rgba(0,0,0,0.4));">🧸💤🌙</div>
+      <h2 style="font-size:1.85rem; font-weight:900; color:#FFF59D; margin-bottom:10px;">Bạn Gấu Bông Buồn Ngủ Rồi!</h2>
+      <p style="font-size:1.1rem; font-weight:700; color:#E3F2FD; max-width:440px; line-height:1.5; margin-bottom:22px;">
+        Đôi mắt xinh của bé đã học rất chăm chỉ! Bé cho bạn Gấu đi ngủ và nghỉ mắt một chút nhé, ngày mai mình lại chơi tiếp nha! 🌟
+      </p>
+      <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center;">
+        <button type="button" onclick="if(window.ToddlerAudio){ToddlerAudio.speak('Good night! Sweet dreams!');}" style="background:linear-gradient(135deg, #FFD54F, #FFB300); color:#3E2723; border:none; border-radius:40px; padding:14px 28px; font-size:1.15rem; font-weight:900; cursor:pointer; box-shadow:0 8px 20px rgba(0,0,0,0.3);">
+          👋 Chúc Bạn Gấu Ngủ Ngon!
+        </button>
+        <button type="button" onclick="MissionEngine.setBedtimeTimer(10); document.getElementById('toddler-bedtime-overlay').remove(); if(window.ToddlerAudio){ToddlerAudio.startBGM('hub');}" style="background:rgba(255,255,255,0.14); color:#BBDEFB; border:2px solid rgba(255,255,255,0.3); border-radius:40px; padding:12px 20px; font-size:0.9rem; font-weight:700; cursor:pointer;">
+          🔓 Mẹ cho chơi thêm 10 phút
+        </button>
+      </div>
+    `;
+    document.body.appendChild(overlay);
   }
 };
 
 if (typeof window !== 'undefined') {
   window.MissionEngine = MissionEngine;
+  window.addEventListener('DOMContentLoaded', () => {
+    if (MissionEngine.getBedtimeRemainingSec() !== null) {
+      MissionEngine.startBedtimeWatcher();
+    }
+  });
 }

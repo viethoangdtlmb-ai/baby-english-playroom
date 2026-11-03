@@ -84,14 +84,34 @@
       background: white;
       border: 3.5px solid #FFA726;
       border-radius: 40px;
-      padding: 8px 24px;
+      padding: 6px 14px 6px 20px;
       display: flex;
       align-items: center;
       gap: 10px;
       box-shadow: 0 6px 18px rgba(255, 167, 38, 0.25);
-      font-size: 1.25rem;
+      font-size: 1.18rem;
       font-weight: 800;
       color: #E65100;
+      cursor: pointer;
+    }
+    .btn-next-stage {
+      background: linear-gradient(135deg, #FFA726 0%, #FB8C00 100%);
+      color: #FFF;
+      border: none;
+      border-radius: 24px;
+      padding: 6px 13px;
+      font-size: 0.92rem;
+      font-weight: 800;
+      font-family: inherit;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      box-shadow: 0 3px 8px rgba(251, 140, 0, 0.3);
+      transition: transform 0.15s;
+    }
+    .btn-next-stage:active {
+      transform: scale(0.93);
     }
 
     /* Star Score Badge */
@@ -136,7 +156,7 @@
       width: 180px;
       height: 180px;
       border-radius: 36px;
-      background: rgba(255, 255, 255, 0.72);
+      background: rgba(255, 255, 255, 0.78);
       border: 4px dashed #81C784;
       display: flex;
       flex-direction: column;
@@ -165,6 +185,7 @@
       display: none;
       animation: starHintHop 0.7s infinite alternate ease-in-out;
       filter: drop-shadow(0 4px 8px rgba(255, 167, 38, 0.5));
+      z-index: 30;
     }
     .shadow-slot.target-calling .slot-star-hint {
       display: block;
@@ -178,7 +199,10 @@
     .shadow-silhouette {
       font-size: 5.6rem;
       line-height: 1;
-      filter: brightness(0) opacity(0.38) drop-shadow(0 4px 6px rgba(0,0,0,0.25));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      filter: brightness(0) contrast(200%) opacity(0.42) drop-shadow(0 4px 6px rgba(0,0,0,0.25));
       pointer-events: none;
       transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s;
     }
@@ -187,10 +211,15 @@
     .slot-shadow-label {
       font-size: 1.15rem;
       font-weight: 800;
-      color: rgba(55, 71, 79, 0.4);
-      margin-top: 4px;
+      color: rgba(55, 71, 79, 0.48);
+      margin-top: 6px;
       pointer-events: none;
       letter-spacing: 0.5px;
+      text-align: center;
+      max-width: 94%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     /* Matched Awakened State */
@@ -211,12 +240,12 @@
 
     @keyframes awakeningPop {
       0% { transform: scale(0.4) rotate(-15deg); filter: brightness(0) opacity(0.3); }
-      60% { transform: scale(1.35) rotate(8deg); filter: none; }
-      80% { transform: scale(0.95) rotate(-4deg); }
-      100% { transform: scale(1.1) rotate(0deg); filter: drop-shadow(0 8px 16px rgba(0,0,0,0.22)); }
+      60% { transform: scale(1.28) rotate(8deg); filter: none; }
+      80% { transform: scale(0.95) rotate(-4deg); filter: none; }
+      100% { transform: scale(1.08) rotate(0deg); filter: drop-shadow(0 8px 16px rgba(0,0,0,0.22)); }
     }
 
-    /* Source Row: 3 Draggable Living Puppet Cards */
+    /* Source Row: 3 Draggable Living Puppet Cards with Zero-Shift Slots */
     .source-cards-row {
       display: flex;
       justify-content: center;
@@ -224,6 +253,16 @@
       gap: 36px;
       width: 100%;
       z-index: 20;
+    }
+
+    .source-card-slot {
+      width: 160px;
+      height: 168px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      flex-shrink: 0;
     }
 
     .drag-card {
@@ -261,20 +300,28 @@
     .drag-emoji {
       font-size: 5rem;
       line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       pointer-events: none;
       filter: drop-shadow(0 6px 12px rgba(0,0,0,0.16));
       transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     .drag-card:active .drag-emoji, .drag-card.dragging .drag-emoji {
-      transform: scale(1.22);
+      transform: scale(1.18);
     }
 
     .drag-label {
-      font-size: 1.35rem;
+      font-size: 1.25rem;
       font-weight: 900;
       color: #37474F;
       pointer-events: none;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.4px;
+      text-align: center;
+      max-width: 96%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     /* Matched Disappear Animation */
@@ -325,6 +372,108 @@
       letter-spacing: 0.3px;
     }
 
+    /* Theater Superstar Celebration Modal */
+    .victory-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(38, 50, 56, 0.68);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 220;
+      padding: 16px;
+    }
+    .victory-modal-overlay.active {
+      display: flex;
+    }
+    .victory-card {
+      background: #FFFFFF;
+      border: 5px solid #FFD54F;
+      border-radius: 36px;
+      padding: 24px 22px;
+      max-width: 460px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.28);
+      animation: victoryPopIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes victoryPopIn {
+      0% { transform: scale(0.75); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .victory-icon {
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      align-items: center;
+    }
+    .victory-title {
+      font-size: 1.7rem;
+      font-weight: 900;
+      color: #2E7D32;
+      margin-bottom: 6px;
+    }
+    .victory-sub {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #5D4037;
+      margin-bottom: 14px;
+    }
+    .parent-tip-box {
+      background: #FFF8E1;
+      border: 2.5px dashed #FFB300;
+      border-radius: 22px;
+      padding: 12px 14px;
+      text-align: left;
+      margin-bottom: 16px;
+      font-size: 0.94rem;
+      color: #4E342E;
+      line-height: 1.45;
+    }
+    .parent-tip-title {
+      font-weight: 900;
+      color: #E65100;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .victory-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn-victory-action {
+      border: none;
+      border-radius: 30px;
+      padding: 12px 24px;
+      font-size: 1.1rem;
+      font-weight: 900;
+      cursor: pointer;
+      font-family: inherit;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.15s;
+    }
+    .btn-victory-action:active {
+      transform: scale(0.94);
+    }
+    .btn-play-again {
+      background: linear-gradient(135deg, #66BB6A 0%, #2E7D32 100%);
+      color: #FFFFFF;
+      box-shadow: 0 6px 16px rgba(46, 125, 50, 0.35);
+    }
+    .btn-home-menu {
+      background: #E1F5FE;
+      color: #0277BD;
+      border: 2.5px solid #4FC3F7;
+    }
+
     /* Spotlight Wrap Container & Mobile Rules */
     .spotlight-wrap {
       position: absolute;
@@ -363,11 +512,15 @@
       .level-badge-pill {
         order: 3;
         width: 100%;
-        justify-content: center;
-        padding: 4px 8px;
-        font-size: 0.85rem;
+        justify-content: space-between;
+        padding: 4px 8px 4px 12px;
+        font-size: 0.82rem;
         border-width: 2px;
         gap: 6px;
+      }
+      .btn-next-stage {
+        padding: 4px 10px;
+        font-size: 0.76rem;
       }
       .theater-stage {
         width: 100%;
@@ -380,36 +533,52 @@
       }
       .shadow-slot {
         width: 31%;
-        max-width: 105px;
-        height: 105px;
+        max-width: 108px;
+        height: 112px;
         border-radius: 18px;
         border-width: 2.5px;
+      }
+      .slot-star-hint {
+        top: -32px;
+        font-size: 1.7rem;
       }
       .shadow-silhouette {
         font-size: 3rem;
       }
+      .shadow-silhouette img.toddler-3d-word-icon {
+        width: 58px !important;
+        height: 58px !important;
+      }
       .slot-shadow-label {
-        font-size: 0.72rem;
-        margin-top: 2px;
+        font-size: 0.74rem;
+        margin-top: 3px;
       }
       .source-cards-row {
         gap: 6px;
         width: 100%;
       }
-      .drag-card {
+      .source-card-slot {
         width: 31%;
-        max-width: 105px;
-        height: 108px;
+        max-width: 108px;
+        height: 114px;
+      }
+      .drag-card {
+        width: 100%;
+        height: 100%;
         border-radius: 18px;
         border-width: 2.5px;
         padding: 8px 4px 6px;
         box-shadow: 0 4px 0 #FFB300, 0 6px 12px rgba(0,0,0,0.12);
       }
-      .card-avatar {
+      .drag-emoji {
         font-size: 2.5rem;
       }
-      .card-word {
-        font-size: 0.72rem;
+      .drag-emoji img.toddler-3d-word-icon {
+        width: 56px !important;
+        height: 56px !important;
+      }
+      .drag-label {
+        font-size: 0.74rem;
       }
       .prompt-footer-pill {
         font-size: 0.8rem;
@@ -431,8 +600,12 @@
         font-size: 0.85rem;
       }
       .level-badge-pill {
-        padding: 3px 12px;
-        font-size: 0.85rem;
+        padding: 3px 10px;
+        font-size: 0.82rem;
+      }
+      .btn-next-stage {
+        padding: 3px 8px;
+        font-size: 0.75rem;
       }
       .star-hud-badge {
         padding: 3px 10px;
@@ -448,15 +621,27 @@
       }
       .shadow-slot {
         width: min(130px, 24vw);
-        height: min(95px, 27vh);
+        height: min(98px, 28vh);
         border-radius: 18px;
       }
       .shadow-silhouette {
         font-size: min(2.6rem, 15vh);
       }
-      .drag-card {
+      .shadow-silhouette img.toddler-3d-word-icon {
+        width: 46px !important;
+        height: 46px !important;
+      }
+      .slot-shadow-label {
+        font-size: 0.72rem;
+        margin-top: 2px;
+      }
+      .source-card-slot {
         width: min(130px, 24vw);
-        height: min(95px, 27vh);
+        height: min(98px, 28vh);
+      }
+      .drag-card {
+        width: 100%;
+        height: 100%;
         border-radius: 18px;
         padding: 6px 4px 4px;
         box-shadow: 0 4px 0 #FFB300, 0 6px 12px rgba(0,0,0,0.12);
@@ -464,8 +649,12 @@
       .drag-emoji {
         font-size: min(2.6rem, 15vh);
       }
+      .drag-emoji img.toddler-3d-word-icon {
+        width: 46px !important;
+        height: 46px !important;
+      }
       .drag-label {
-        font-size: 0.8rem;
+        font-size: 0.74rem;
       }
       .prompt-footer-pill {
         display: none;
@@ -486,15 +675,17 @@
     <a href="../index.html" class="btn-back">⬅ Menu</a>
 
     <!-- Level Pill -->
-    <div class="level-badge-pill" id="level-badge-pill">
-      <span>🎭</span>
-      <span id="level-title-text">Màn 1: Các Bạn Thú</span>
+    <div class="level-badge-pill" id="level-badge-pill" onclick="announceNextUnmatchedShadow()" title="Chạm để nghe câu đố">
+      <span>🎭 <span id="level-title-text">Màn 1: Các Bạn Thú</span></span>
+      <button type="button" class="btn-next-stage" onclick="event.stopPropagation(); skipToNextLevel();" title="Chuyển sang màn tiếp theo">
+        <span>⏭️ Đổi Màn</span>
+      </button>
     </div>
 
     <!-- Star Count Badge -->
     <div class="star-hud-badge">
       <span>⭐</span>
-      <span id="star-score-text">3 Stars</span>
+      <span id="star-score-text">0 Stars</span>
     </div>
   </div>
 
@@ -512,6 +703,27 @@
     🎭 Ghép bạn nhỏ vào bóng!
   </div>
 
+  <!-- Theater Superstar Celebration Modal -->
+  <div class="victory-modal-overlay" id="victory-modal">
+    <div class="victory-card">
+      <div class="victory-icon" id="victory-icon">🌟</div>
+      <div class="victory-title"> Bậc Thầy Rối Bóng! 🎭</div>
+      <div class="victory-sub" id="victory-sub">Bé đã tinh mắt ghép đúng tất cả các bóng hình!</div>
+      <div class="parent-tip-box">
+        <div class="parent-tip-title">💡 Góc Đồng Hành Cùng Mẹ:</div>
+        <div id="parent-tip-text">Mẹ hãy cùng bé bật đèn pin chiếu bóng tay lên tường và gọi tên các đồ vật quanh phòng nhé!</div>
+      </div>
+      <div class="victory-actions">
+        <button type="button" class="btn-victory-action btn-play-again" onclick="closeVictoryModal()">
+          <span>🎭 Chơi Tiếp</span>
+        </button>
+        <a href="../index.html" class="btn-victory-action btn-home-menu">
+          <span>🏠 Về Menu</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
   <script>
     // -------------------------------------------------------------
     // MAGIC SHADOW MATCH ENGINE (100% Natural Touch for 3yo)
@@ -519,31 +731,93 @@
     const AudioEngine = window.AudioEngine || window.ToddlerAudio || {};
 
     const urlParams = new URLSearchParams(window.location.search);
-    const queryWeek = parseInt(urlParams.get('week'));
+    const queryWeek = parseInt(urlParams.get('week'), 10);
     const currentWeek = queryWeek || ((window.MissionEngine && MissionEngine.getCurrentWeek) ? MissionEngine.getCurrentWeek() : 1);
     const weekData = (window.ToddlerVocabulary) ? window.ToddlerVocabulary.build80_20Pack(currentWeek) : null;
 
-    // Bộ sưu tập từ vựng chuẩn 52 tuần với hình bóng đặc trưng cao độ
-    const weekShadowPool = (weekData && weekData.shadowPool && weekData.shadowPool.length >= 3)
-      ? weekData.shadowPool.map(item => ({
-          id: item.id || item.word.toLowerCase(),
-          name: item.word,
-          emoji: item.emoji || '⭐',
-          sound: item.sound || 'Hello'
-        }))
-      : [
-          { id: 'elephant', name: 'Elephant', emoji: '🐘', sound: 'Pawoo pawoo' },
-          { id: 'giraffe', name: 'Giraffe', emoji: '🦒', sound: 'Tall giraffe' },
-          { id: 'rabbit', name: 'Rabbit', emoji: '🐰', sound: 'Hop hop hop' }
-        ];
+    const fallbackShadowPool = [
+      { id: 'elephant', name: 'Elephant', emoji: '🐘', sound: 'Pawoo pawoo' },
+      { id: 'giraffe', name: 'Giraffe', emoji: '🦒', sound: 'Tall giraffe' },
+      { id: 'rabbit', name: 'Rabbit', emoji: '🐰', sound: 'Hop hop hop' }
+    ];
 
-    const levels = [
+    function normalizeShadowItems(rawList, fallbackList) {
+      const seen = new Set();
+      const result = [];
+      const candidates = [...(rawList || []), ...(fallbackList || []), ...fallbackShadowPool];
+      for (const item of candidates) {
+        if (!item) continue;
+        const wordStr = item.word || item.name;
+        if (!wordStr) continue;
+        const idStr = (item.id || wordStr).toLowerCase().trim().replace(/\s+/g, '_');
+        if (!seen.has(idStr)) {
+          seen.add(idStr);
+          result.push({
+            id: idStr,
+            name: wordStr,
+            emoji: item.emoji || '⭐',
+            sound: item.sound || `Look at the ${wordStr.toLowerCase()}`
+          });
+        }
+        if (result.length >= 3) break;
+      }
+      return result;
+    }
+
+    // Bộ sưu tập từ vựng chuẩn 52 tuần (80% Từ Mới + 20% Ôn Tập)
+    const weekShadowPool = normalizeShadowItems(
+      weekData && weekData.shadowPool ? weekData.shadowPool : (weekData && weekData.newWords ? weekData.newWords : []),
+      fallbackShadowPool
+    );
+
+    const weekReviewShadowPool = normalizeShadowItems(
+      [
+        ...(weekData && weekData.reviewWords ? weekData.reviewWords : []),
+        ...(weekData && weekData.newWords ? weekData.newWords.slice(1) : []),
+        ...(weekData && weekData.pianoKeys ? weekData.pianoKeys : [])
+      ].filter(w => !weekShadowPool.some(s => s.id === (w.id || (w.word || '').toLowerCase()))),
+      [
+        { id: 'dog', name: 'Dog', emoji: '🐶', sound: 'Woof woof' },
+        { id: 'cat', name: 'Cat', emoji: '🐱', sound: 'Meow meow' },
+        { id: 'duck', name: 'Duck', emoji: '🦆', sound: 'Quack quack' }
+      ]
+    );
+
+    const rawThematicLevels = [
       {
-        title: `Màn 1: Bạn Nhỏ Quen Thuộc (Tuần ${currentWeek})`,
+        topic: `Từ Mới Tuần ${currentWeek}`,
         items: weekShadowPool
       },
       {
-        title: 'Màn 2: Rừng Xanh Kỳ Thú',
+        topic: `Ôn Tập Tuần ${currentWeek}`,
+        items: weekReviewShadowPool
+      },
+      {
+        topic: 'Đồ Vật Trong Nhà Bé',
+        items: [
+          { id: 'chair', name: 'Chair', emoji: '🪑', sound: 'Sit on chair' },
+          { id: 'table', name: 'Table', emoji: '🪵', sound: 'Big table' },
+          { id: 'fan', name: 'Fan', emoji: '🪭', sound: 'Cool wind fan' }
+        ]
+      },
+      {
+        topic: 'Góc Học Tập & Máy Tính',
+        items: [
+          { id: 'book', name: 'Book', emoji: '📖', sound: 'Read a book' },
+          { id: 'pen', name: 'Pen', emoji: '🖋️', sound: 'Write with pen' },
+          { id: 'computer', name: 'Computer', emoji: '🖥️', sound: 'Smart computer' }
+        ]
+      },
+      {
+        topic: 'Đồ Dùng Bàn Ăn Của Bé',
+        items: [
+          { id: 'cup', name: 'Cup', emoji: '🥤', sound: 'Drink from cup' },
+          { id: 'spoon', name: 'Spoon', emoji: '🥄', sound: 'Eat with spoon' },
+          { id: 'plate', name: 'Plate', emoji: '🍽️', sound: 'Yummy plate' }
+        ]
+      },
+      {
+        topic: 'Rừng Xanh Kỳ Thú',
         items: [
           { id: 'lion', name: 'Lion', emoji: '🦁', sound: 'Roar roar' },
           { id: 'monkey', name: 'Monkey', emoji: '🐵', sound: 'Ooh ooh aah aah' },
@@ -551,7 +825,7 @@
         ]
       },
       {
-        title: 'Màn 3: Hoa Quả Ngọt Lành',
+        topic: 'Hoa Quả Ngọt Lành',
         items: [
           { id: 'apple', name: 'Apple', emoji: '🍎', sound: 'Crunch crunch' },
           { id: 'banana', name: 'Banana', emoji: '🍌', sound: 'Yummy banana' },
@@ -559,7 +833,7 @@
         ]
       },
       {
-        title: 'Màn 4: Phương Tiện Vi Vu',
+        topic: 'Phương Tiện Vi Vu',
         items: [
           { id: 'train', name: 'Train', emoji: '🚂', sound: 'Choo choo' },
           { id: 'plane', name: 'Plane', emoji: '✈️', sound: 'Whoosh' },
@@ -567,7 +841,7 @@
         ]
       },
       {
-        title: 'Màn 5: Khám Phá Vũ Trụ',
+        topic: 'Khám Phá Vũ Trụ',
         items: [
           { id: 'rocket', name: 'Rocket', emoji: '🚀', sound: 'Blast off' },
           { id: 'rainbow', name: 'Rainbow', emoji: '🌈', sound: 'Beautiful rainbow' },
@@ -575,7 +849,7 @@
         ]
       },
       {
-        title: 'Màn 6: Nông Trại Vui Vẻ',
+        topic: 'Nông Trại Vui Vẻ',
         items: [
           { id: 'duck', name: 'Duck', emoji: '🦆', sound: 'Quack quack' },
           { id: 'pig', name: 'Pig', emoji: '🐷', sound: 'Oink oink' },
@@ -583,7 +857,7 @@
         ]
       },
       {
-        title: 'Màn 7: Thế Giới Đại Dương',
+        topic: 'Thế Giới Đại Dương',
         items: [
           { id: 'fish', name: 'Fish', emoji: '🐟', sound: 'Swim swim' },
           { id: 'whale', name: 'Whale', emoji: '🐳', sound: 'Big whale' },
@@ -591,7 +865,7 @@
         ]
       },
       {
-        title: 'Màn 8: Khu Vườn Xinh Xắn',
+        topic: 'Khu Vườn Xinh Xắn',
         items: [
           { id: 'butterfly', name: 'Butterfly', emoji: '🦋', sound: 'Flutter flutter' },
           { id: 'bee', name: 'Bee', emoji: '🐝', sound: 'Buzzz buzzz' },
@@ -599,7 +873,7 @@
         ]
       },
       {
-        title: 'Màn 9: Món Ngon Của Bé',
+        topic: 'Món Ngon Của Bé',
         items: [
           { id: 'icecream', name: 'Ice Cream', emoji: '🍦', sound: 'Cold and sweet' },
           { id: 'cake', name: 'Cake', emoji: '🎂', sound: 'Yummy cake' },
@@ -607,7 +881,7 @@
         ]
       },
       {
-        title: 'Màn 10: Giờ Chơi Sôi Nổi',
+        topic: 'Giờ Chơi Sôi Nổi',
         items: [
           { id: 'ball', name: 'Ball', emoji: '⚽', sound: 'Bounce bounce' },
           { id: 'car', name: 'Car', emoji: '🚗', sound: 'Vroom vroom' },
@@ -615,23 +889,23 @@
         ]
       },
       {
-        title: 'Màn 11: Đầm Lầy Tinh Nghịch',
+        topic: 'Đầm Lầy Tinh Nghịch',
         items: [
           { id: 'frog', name: 'Frog', emoji: '🐸', sound: 'Ribbit ribbit' },
           { id: 'turtle', name: 'Turtle', emoji: '🐢', sound: 'Slow turtle' },
-          { id: 'croc', name: 'Crocodile', emoji: '🐊', sound: 'Snap snap' }
+          { id: 'crocodile', name: 'Crocodile', emoji: '🐊', sound: 'Snap snap' }
         ]
       },
       {
-        title: 'Màn 12: Xứ Sở Băng Giá',
+        topic: 'Xứ Sở Băng Giá',
         items: [
           { id: 'penguin', name: 'Penguin', emoji: '🐧', sound: 'Waddle waddle' },
           { id: 'bear', name: 'Bear', emoji: '🐻', sound: 'Warm teddy bear' },
-          { id: 'snow', name: 'Snowman', emoji: '☃️', sound: 'Cold cold' }
+          { id: 'snowman', name: 'Snowman', emoji: '⛄', sound: 'Cold cold' }
         ]
       },
       {
-        title: 'Màn 13: Giai Điệu Rộn Ràng',
+        topic: 'Giai Điệu Rộn Ràng',
         items: [
           { id: 'guitar', name: 'Guitar', emoji: '🎸', sound: 'Strum strum' },
           { id: 'drum', name: 'Drum', emoji: '🥁', sound: 'Boom boom' },
@@ -639,7 +913,7 @@
         ]
       },
       {
-        title: 'Màn 14: Bầu Trời Yêu Thương',
+        topic: 'Bầu Trời Yêu Thương',
         items: [
           { id: 'sun', name: 'Sun', emoji: '☀️', sound: 'Bright sun' },
           { id: 'moon', name: 'Moon', emoji: '🌙', sound: 'Good night moon' },
@@ -647,20 +921,29 @@
         ]
       },
       {
-        title: 'Màn 15: Vương Quốc Vinh Quang',
+        topic: 'Vương Quốc Vinh Quang',
         items: [
-          { id: 'dino', name: 'Dinosaur', emoji: '🦖', sound: 'Rawr rawr dino' },
+          { id: 'dinosaur', name: 'Dinosaur', emoji: '🦖', sound: 'Rawr rawr dino' },
           { id: 'crown', name: 'Crown', emoji: '👑', sound: 'Royal crown' },
-          { id: 'cup', name: 'Trophy', emoji: '🏆', sound: 'Number one trophy' }
+          { id: 'trophy', name: 'Trophy', emoji: '🏆', sound: 'Number one trophy' }
         ]
       }
     ];
 
+    const levels = rawThematicLevels.map((lvl, idx) => ({
+      title: `Màn ${idx + 1}/${rawThematicLevels.length}: ${lvl.topic}`,
+      items: lvl.items
+    }));
+
     let currentLevel = 0;
     let matchCount = 0;
+    let completedLevelsCount = 0;
     let selectedCard = null;
     let isTransitioning = false;
-    let earnedStars = 3;
+    let earnedStars = 0;
+    let promptTimer = null;
+    let levelWinTimer = null;
+    let nextLevelTimer = null;
 
     const targetRow = document.getElementById('target-shadow-row');
     const sourceRow = document.getElementById('source-cards-row');
@@ -668,10 +951,33 @@
     const levelTitle = document.getElementById('level-title-text');
     const starScoreText = document.getElementById('star-score-text');
 
+    function clearPendingTimers() {
+      if (promptTimer) {
+        clearTimeout(promptTimer);
+        promptTimer = null;
+      }
+      if (levelWinTimer) {
+        clearTimeout(levelWinTimer);
+        levelWinTimer = null;
+      }
+      if (nextLevelTimer) {
+        clearTimeout(nextLevelTimer);
+        nextLevelTimer = null;
+      }
+    }
+
+    function render3dIconOrEmoji(itemOrId, size, fallbackEmoji) {
+      if (window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon) {
+        return ToddlerVocabulary.renderWordIcon(itemOrId, size);
+      }
+      return fallbackEmoji || '⭐';
+    }
+
     // -------------------------------------------------------------
     // TẢI CẤP ĐỘ MỚI (LOAD LEVEL)
     // -------------------------------------------------------------
-    function loadLevel(lvlIdx) {
+    function loadLevel(lvlIdx, isInitialLoad = false) {
+      clearPendingTimers();
       matchCount = 0;
       selectedCard = null;
       isTransitioning = false;
@@ -694,9 +1000,7 @@
         slot.dataset.name = item.name;
         slot.dataset.sound = item.sound;
 
-        const iconHtml = (window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon)
-          ? ToddlerVocabulary.renderWordIcon(item, 88)
-          : item.emoji;
+        const iconHtml = render3dIconOrEmoji(item, 88, item.emoji);
 
         slot.innerHTML = `
           <div class="slot-star-hint">⭐👆</div>
@@ -704,20 +1008,28 @@
           <span class="slot-shadow-label">${item.name}</span>
         `;
 
-        // Chạm vào bóng khi đã chọn thẻ bài (Tap & Snap)
+        // Chạm vào bóng khi đã chọn thẻ bài (Tap & Snap) hoặc khi đã thức giấc
         function handleSlotAction() {
-          if (isTransitioning || slot.classList.contains('matched')) return;
+          if (isTransitioning) return;
+
+          // Nếu bóng đã được đánh thức: Chạm để nghe lại câu ngữ cảnh vui nhộn
+          if (slot.classList.contains('matched')) {
+            slot.style.transform = 'scale(1.14)';
+            setTimeout(() => slot.style.transform = '', 240);
+            if (AudioEngine.playPop) AudioEngine.playPop();
+            const phrase = (window.ToddlerVocabulary && ToddlerVocabulary.getWordContextPhrase)
+              ? ToddlerVocabulary.getWordContextPhrase(item)
+              : `${item.name}! ${item.sound}!`;
+            AudioEngine.speak(phrase);
+            return;
+          }
 
           if (selectedCard) {
             if (selectedCard.dataset.id === slot.dataset.id) {
               performSuccessMatch(selectedCard, slot);
             } else {
               // Bấm nhầm bóng khác: Rung nhẹ báo hiệu
-              slot.style.transform = 'translateX(-8px)';
-              setTimeout(() => slot.style.transform = 'translateX(8px)', 80);
-              setTimeout(() => slot.style.transform = '', 160);
-              if (AudioEngine.playBoing) AudioEngine.playBoing();
-              AudioEngine.speak(`No, find ${selectedCard.dataset.name}'s shadow!`);
+              wiggleWrongSlot(slot, selectedCard.dataset.name);
             }
           } else {
             // Chạm bóng khi chưa chọn thẻ: Gợi ý tìm bạn
@@ -730,16 +1042,15 @@
           e.stopPropagation();
           handleSlotAction();
         });
-        slot.addEventListener('click', (e) => {
-          e.stopPropagation();
-          handleSlotAction();
-        });
 
         targetRow.appendChild(slot);
       });
 
-      // 2. Tạo 3 thẻ bài bạn nhỏ (Draggable Cards)
+      // 2. Tạo 3 thẻ bài bạn nhỏ bọc trong .source-card-slot (Chống nhảy bố cục 100%)
       shuffledItems.forEach(item => {
+        const cardSlot = document.createElement('div');
+        cardSlot.className = 'source-card-slot';
+
         const card = document.createElement('div');
         card.className = 'drag-card';
         card.id = 'card-' + item.id;
@@ -747,9 +1058,7 @@
         card.dataset.name = item.name;
         card.dataset.sound = item.sound;
 
-        const cardIconHtml = (window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon)
-          ? ToddlerVocabulary.renderWordIcon(item, 84)
-          : item.emoji;
+        const cardIconHtml = render3dIconOrEmoji(item, 84, item.emoji);
 
         card.innerHTML = `
           <span class="drag-emoji">${cardIconHtml}</span>
@@ -764,7 +1073,7 @@
           if (isTransitioning) return;
           if (activeDrag && activeDrag.hasMoved) return;
 
-          AudioEngine.init();
+          if (AudioEngine.init) AudioEngine.init();
           AudioEngine.speak(`${item.name}!`);
 
           // Bỏ chọn thẻ cũ
@@ -783,15 +1092,45 @@
           }
         }
 
-        card.addEventListener('pointerdown', (e) => {
-          handleCardSelect();
-        });
-        card.addEventListener('click', (e) => {
+        card.addEventListener('pointerdown', () => {
           handleCardSelect();
         });
 
-        sourceRow.appendChild(card);
+        cardSlot.appendChild(card);
+        sourceRow.appendChild(cardSlot);
       });
+
+      // Voice Spotlight Prompt cho bóng đen đầu tiên chưa ghép (Không xung đột giọng đọc khi mới vào trang)
+      promptTimer = setTimeout(() => {
+        announceNextUnmatchedShadow(isInitialLoad);
+      }, isInitialLoad ? 650 : 480);
+    }
+
+    function skipToNextLevel() {
+      if (isTransitioning) return;
+      currentLevel = (currentLevel + 1) % levels.length;
+      loadLevel(currentLevel, false);
+    }
+
+    function wiggleWrongSlot(slot, expectedCardName) {
+      slot.style.transform = 'translateX(-8px)';
+      setTimeout(() => slot.style.transform = 'translateX(8px)', 80);
+      setTimeout(() => slot.style.transform = '', 160);
+      if (AudioEngine.playBoing) AudioEngine.playBoing();
+      promptPill.innerText = `🔍 Đó là bóng của ${slot.dataset.name}! Hãy tìm bóng của ${expectedCardName} nhé!`;
+      AudioEngine.speak(`No, find ${expectedCardName}'s shadow!`);
+    }
+
+    function announceNextUnmatchedShadow(withWelcomePrefix = false) {
+      if (isTransitioning) return;
+      const unmatchedSlot = document.querySelector('.shadow-slot:not(.matched)');
+      if (!unmatchedSlot) return;
+      document.querySelectorAll('.shadow-slot').forEach(s => s.classList.remove('target-calling'));
+      unmatchedSlot.classList.add('target-calling');
+      const targetName = unmatchedSlot.dataset.name;
+      promptPill.innerText = `🔍 Đố bé bóng đen của ${targetName} ở đâu nhỉ?`;
+      const prefix = withWelcomePrefix ? 'Shadow Match! ' : '';
+      AudioEngine.speak(`${prefix}Where is ${targetName}? Find ${targetName}'s shadow!`);
     }
 
     function highlightMatchingCard(itemId) {
@@ -807,21 +1146,29 @@
     // -------------------------------------------------------------
     function performSuccessMatch(card, targetSlot) {
       if (targetSlot.classList.contains('matched')) return;
+      clearPendingTimers();
 
       document.querySelectorAll('.shadow-slot').forEach(s => s.classList.remove('target-calling'));
       document.querySelectorAll('.drag-card').forEach(c => c.classList.remove('selected-tap'));
 
       targetSlot.classList.add('matched');
 
-      // Âm thanh chuông ngân & Giọng đọc Motherese
+      // Âm thanh chuông ngân & Giọng đọc câu ngữ cảnh đầy đủ theo đúng ID từ vựng
       if (AudioEngine.playChime) AudioEngine.playChime();
-      AudioEngine.speak(`Yes! ${targetSlot.dataset.name}! ${targetSlot.dataset.sound}! Good job!`);
+      const lookupKey = targetSlot.dataset.id || targetSlot.dataset.name;
+      const contextPhrase = (window.ToddlerVocabulary && ToddlerVocabulary.getWordContextPhrase)
+        ? ToddlerVocabulary.getWordContextPhrase(lookupKey)
+        : `${targetSlot.dataset.name}! ${targetSlot.dataset.sound}!`;
+      AudioEngine.speak(`Yes! ${contextPhrase}`);
 
       // Hiệu ứng pháo hoa sao nhỏ
       const rect = targetSlot.getBoundingClientRect();
       spawnSparkles(rect.left + rect.width / 2, rect.top + rect.height / 2);
 
-      // Thẻ bài biến mất mượt mà
+      // Thẻ bài biến mất mượt mà bên trong .source-card-slot (Giữ nguyên vị trí các thẻ còn lại)
+      card.style.position = 'relative';
+      card.style.left = '0px';
+      card.style.top = '0px';
       card.classList.add('card-matched-away');
       setTimeout(() => card.remove(), 420);
 
@@ -835,21 +1182,26 @@
 
       promptPill.innerText = `✨ Tuyệt vời! Bé đã tìm đúng ${targetSlot.dataset.name}!`;
 
-      // Nếu đã ghép đủ 3 bạn nhỏ
+      // Nếu đã ghép đủ 3 bạn nhỏ: Chờ 1900ms để bé nghe trọn vẹn câu ngữ cảnh của từ thứ 3
       if (matchCount >= 3) {
         onLevelCompleted();
+      } else {
+        promptTimer = setTimeout(() => {
+          announceNextUnmatchedShadow(false);
+        }, 1950);
       }
     }
 
     // Ăn mừng hoàn thành cấp độ & Tự động sang màn mới
     function onLevelCompleted() {
       isTransitioning = true;
+      completedLevelsCount++;
       earnedStars += 3;
-      starScoreText.innerText = `${earnedStars} Stars ⭐`;
+      starScoreText.innerText = `${earnedStars} Stars`;
 
       promptPill.innerText = '🎉 Hoan hô! Bé đã ghép đúng tất cả các bạn nhỏ! 🌟';
 
-      setTimeout(() => {
+      levelWinTimer = setTimeout(() => {
         if (AudioEngine.playFanfare) AudioEngine.playFanfare();
         AudioEngine.speak('Wonderful! All shadows matched! You did it!');
 
@@ -861,12 +1213,47 @@
         // Bung nở 24 pháo hoa ngôi sao
         spawnGrandCelebration();
 
-        // Tự động chuyển cấp độ mới sau 2.4s (Không cần ấn nút chữ!)
-        setTimeout(() => {
+        // Sau mỗi 3 màn hoàn thành, mở bảng Vinh Danh Bậc Thầy Rối Bóng kèm Góc Cha Mẹ
+        nextLevelTimer = setTimeout(() => {
+          if (completedLevelsCount >= 3 && completedLevelsCount % 3 === 0) {
+            showVictoryModal();
+            return;
+          }
           currentLevel = (currentLevel + 1) % levels.length;
-          loadLevel(currentLevel);
-        }, 2400);
-      }, 500);
+          loadLevel(currentLevel, false);
+        }, 2800);
+      }, 1900);
+    }
+
+    function showVictoryModal() {
+      const modal = document.getElementById('victory-modal');
+      const vIcon = document.getElementById('victory-icon');
+      const vSub = document.getElementById('victory-sub');
+      const tipTextElem = document.getElementById('parent-tip-text');
+      const curItems = levels[currentLevel % levels.length].items;
+
+      if (vIcon) {
+        vIcon.innerHTML =
+          render3dIconOrEmoji({ id: 'crown', word: 'Crown', emoji: '👑' }, 58, '👑') +
+          render3dIconOrEmoji(curItems[0], 54, curItems[0].emoji);
+      }
+      if (vSub) {
+        vSub.innerText = `Bé đã vượt qua ${completedLevelsCount} màn Rối Bóng và đạt ${earnedStars} Ngôi Sao!`;
+      }
+      if (tipTextElem && window.ToddlerVocabulary && ToddlerVocabulary.getRealWorldParentTip) {
+        const tipInfo = ToddlerVocabulary.getRealWorldParentTip(currentWeek);
+        tipTextElem.innerText = `${tipInfo.tipText} (Từ vựng tuần ${currentWeek}: ${tipInfo.wordListStr})`;
+      }
+      if (modal) {
+        modal.classList.add('active');
+      }
+    }
+
+    function closeVictoryModal() {
+      const modal = document.getElementById('victory-modal');
+      if (modal) modal.classList.remove('active');
+      currentLevel = (currentLevel + 1) % levels.length;
+      loadLevel(currentLevel, false);
     }
 
     // -------------------------------------------------------------
@@ -877,7 +1264,7 @@
     function attachMagneticDrag(card) {
       card.addEventListener('pointerdown', (e) => {
         if (isTransitioning) return;
-        AudioEngine.init();
+        if (AudioEngine.init) AudioEngine.init();
 
         const rect = card.getBoundingClientRect();
         activeDrag = {
@@ -902,8 +1289,10 @@
           activeDrag.hasMoved = true;
           card.classList.add('dragging');
           card.style.position = 'fixed';
+          card.style.width = `${card.parentElement ? card.parentElement.offsetWidth : 150}px`;
+          card.style.height = `${card.parentElement ? card.parentElement.offsetHeight : 156}px`;
           card.style.zIndex = '100';
-          card.style.transform = 'scale(1.25)';
+          card.style.transform = 'scale(1.18)';
           card.style.left = `${e.clientX - activeDrag.offsetX}px`;
           card.style.top = `${e.clientY - activeDrag.offsetY}px`;
 
@@ -964,12 +1353,31 @@
         }
       }
 
+      // Kiểm tra nếu bé thả nhầm vào một khung bóng khác chưa ghép để nhắc nhẹ nhàng
+      const allUnmatchedSlots = document.querySelectorAll('.shadow-slot:not(.matched)');
+      for (const otherSlot of allUnmatchedSlots) {
+        if (otherSlot.dataset.id === card.dataset.id) continue;
+        const oRect = otherSlot.getBoundingClientRect();
+        const ox = oRect.left + oRect.width / 2;
+        const oy = oRect.top + oRect.height / 2;
+        if (Math.hypot(cx - ox, cy - oy) < 125) {
+          wiggleWrongSlot(otherSlot, card.dataset.name);
+          resetCardPosition(card);
+          if (targetSlot && !targetSlot.classList.contains('matched')) {
+            targetSlot.classList.add('target-calling');
+          }
+          return;
+        }
+      }
+
       // Không khớp: Thẻ nảy đàn hồi về vị trí cũ
       resetCardPosition(card);
     }
 
     function resetCardPosition(card) {
       card.style.position = 'relative';
+      card.style.width = '100%';
+      card.style.height = '100%';
       card.style.left = '0px';
       card.style.top = '0px';
       card.style.zIndex = '1';
@@ -1024,7 +1432,10 @@
 
     // Expose helpers globally
     window.loadLevel = loadLevel;
+    window.skipToNextLevel = skipToNextLevel;
+    window.announceNextUnmatchedShadow = announceNextUnmatchedShadow;
     window.performSuccessMatch = performSuccessMatch;
+    window.closeVictoryModal = closeVictoryModal;
 
     // Initialize Day 5 Mission (Roadmap integration & Sticker Unlock)
     if (window.MissionEngine && MissionEngine.initGameMission) {
@@ -1032,7 +1443,7 @@
     }
 
     // Khởi tạo Màn 1
-    loadLevel(0);
+    loadLevel(0, true);
 
     window.addEventListener('pointerdown', () => {
       if (window.AudioEngine) {
@@ -1040,10 +1451,6 @@
         AudioEngine.startBGM('action');
       }
     }, { once: true });
-
-    setTimeout(() => {
-      AudioEngine.speak('Shadow Match!');
-    }, 600);
   </script>
 </body>
 </html>

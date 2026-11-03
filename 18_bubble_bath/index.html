@@ -380,18 +380,18 @@
     .rainbow-wand {
       position: absolute;
       top: 15px;
-      left: -20px;
+      left: -15px;
       background: linear-gradient(135deg, #FF4081 0%, #FFD54F 50%, #40C4FF 100%);
       border: 3.5px solid white;
-      border-radius: 40px;
-      padding: 8px 16px;
+      border-radius: 50px;
+      padding: 9px 18px;
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       font-weight: 800;
       color: white;
-      box-shadow: 0 8px 20px rgba(0, 172, 193, 0.35);
+      box-shadow: 0 8px 24px rgba(255, 64, 129, 0.4);
       cursor: pointer;
       z-index: 25;
       animation: wandGlow 2.5s infinite ease-in-out alternate;
@@ -408,18 +408,18 @@
     .rainbow-showerhead {
       position: absolute;
       top: 15px;
-      right: 0px;
+      right: -5px;
       background: linear-gradient(135deg, #00E676 0%, #00B0FF 50%, #D500F9 100%);
       border: 3.5px solid white;
-      border-radius: 40px;
-      padding: 8px 16px;
+      border-radius: 50px;
+      padding: 9px 18px;
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       font-weight: 800;
       color: white;
-      box-shadow: 0 8px 20px rgba(0, 172, 193, 0.35);
+      box-shadow: 0 8px 24px rgba(0, 176, 255, 0.4);
       cursor: pointer;
       z-index: 25;
       animation: showerGlow 2.8s infinite ease-in-out alternate;
@@ -439,17 +439,26 @@
       50% { transform: rotate(10deg) scale(1.1); }
     }
 
+    /* Sóng nước nhấp nhô mạnh khi xịt nước vòi sen */
+    .tub-water.wave-surge {
+      animation: waterSurge 0.35s ease-in-out 3 alternate !important;
+    }
+    @keyframes waterSurge {
+      0% { transform: translateY(0) scaleY(1); }
+      100% { transform: translateY(-16px) scaleY(1.18); filter: brightness(1.25); }
+    }
+
     /* Water Spray Particle Jet */
     .spray-jet-drop {
       position: absolute;
-      width: 8px;
-      height: 8px;
+      width: 10px;
+      height: 10px;
       background: #FFFFFF;
       border-radius: 50%;
-      box-shadow: 0 0 8px rgba(64, 196, 255, 0.8);
+      box-shadow: 0 0 10px rgba(64, 196, 255, 0.9);
       pointer-events: none;
       z-index: 22;
-      animation: jetSpray 0.5s ease-out forwards;
+      animation: jetSpray 0.55s ease-out forwards;
     }
     @keyframes jetSpray {
       0% { transform: translate(0, 0) scale(1); opacity: 1; }
@@ -457,21 +466,21 @@
     }
 
     /* -------------------------------------------------------------
-       MAGIC SOAPS TRAY (Color Bath Magic)
+       MAGIC SOAPS TRAY (Color Bath Magic - Bo Tròn Mềm Mại)
        ------------------------------------------------------------- */
     .soaps-shelf {
       position: absolute;
-      bottom: -4px;
+      bottom: -6px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(255, 255, 255, 0.95);
-      border: 3px solid #26C6DA;
-      border-radius: 30px;
-      padding: 4px 14px;
+      background: rgba(255, 255, 255, 0.96);
+      border: 3.5px solid #26C6DA;
+      border-radius: 40px;
+      padding: 5px 16px;
       display: flex;
       align-items: center;
-      gap: 12px;
-      box-shadow: 0 6px 16px rgba(0, 131, 143, 0.25);
+      gap: 10px;
+      box-shadow: 0 8px 24px rgba(0, 131, 143, 0.28);
       z-index: 30;
     }
     .shelf-label {
@@ -484,10 +493,18 @@
     }
     .soap-pill {
       background: white;
-      border: 2.5px solid #E0E0E0;
-      border-radius: 20px;
-      padding: 4px 10px;
-      font-size: 1.3rem;
+      border: 3px solid #E0E0E0;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+      transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.15s;
+    }
       display: flex;
       align-items: center;
       justify-content: center;
@@ -615,29 +632,34 @@
       }
       .bath-title-badge {
         order: 3;
-        width: 100%;
+        width: auto;
+        max-width: 90%;
+        margin: 2px auto 0;
         justify-content: center;
-        padding: 4px 10px;
+        padding: 4px 14px;
+        border-radius: 30px;
         border-width: 2.5px;
       }
       .bath-title-badge h2 {
-        font-size: 1rem;
+        font-size: 0.95rem;
       }
       .bath-title-badge img {
-        width: 24px !important;
-        height: 24px !important;
+        width: 22px !important;
+        height: 22px !important;
       }
       .rainbow-wand {
-        left: 0;
+        left: 4px;
         top: 6px;
-        padding: 6px 10px;
+        padding: 6px 12px;
         font-size: 0.85rem;
+        border-radius: 30px;
       }
       .rainbow-showerhead {
-        right: 0;
+        right: 4px;
         top: 6px;
-        padding: 6px 10px;
+        padding: 6px 12px;
         font-size: 0.85rem;
+        border-radius: 30px;
       }
       .bathtub-container {
         width: 96%;
@@ -664,9 +686,26 @@
         height: 26px;
       }
       .swimmers-container {
-        width: 80%;
+        width: 75%;
         left: 10px;
         bottom: 12px;
+        gap: 6px;
+      }
+      .swimmers-container img, .swimming-pal img {
+        width: 36px !important;
+        height: 36px !important;
+      }
+      .swimming-pal {
+        font-size: 2.2rem;
+      }
+      .rubber-duck-host {
+        bottom: 25px;
+        right: 25px;
+        font-size: 4rem;
+      }
+      .rubber-duck-host img {
+        width: 62px !important;
+        height: 62px !important;
       }
       .target-bubble-banner {
         font-size: 0.85rem;
@@ -774,7 +813,7 @@
 
         <!-- Squeaky Rubber Duck Host -->
         <div class="rubber-duck-host" id="rubber-duck" onclick="tapRubberDuck(event)" title="Chạm chít chít!">
-          🐥
+          <img src="../assets/icons/duck.png" style="width: 88px; height: 88px; object-fit: contain; pointer-events: none; vertical-align: middle;" alt="Duck" onerror="this.outerHTML='🐥'">
         </div>
 
       </div>
@@ -799,6 +838,9 @@
       <h2 class="modal-title" id="modal-title">Bé Thổi Bọt Tuyệt Đỉnh!</h2>
       <p class="modal-subtitle" id="modal-subtitle">Bé đã giải cứu đủ 5 bạn nhỏ vào bồn tắm bơi lội tung tăng! Chú vịt vàng quack quack reo vang!</p>
 
+      <!-- Parent Real-World Transfer Tip -->
+      <div class="parent-tip-box" id="modal-parent-tip" style="background: rgba(255, 255, 255, 0.95); border: 2.5px dashed #00ACC1; border-radius: 20px; padding: 12px 16px; font-family: 'Nunito', sans-serif; font-size: 0.95rem; font-weight: 700; color: #006064; margin: 12px auto 18px; max-width: 460px; text-align: left; line-height: 1.45; display: none;"></div>
+
       <button type="button" class="btn-modal-action" onclick="restartBubbleGame()">
         <span>🫧 Thổi Bọt Tiếp Nào ➜</span>
       </button>
@@ -807,9 +849,33 @@
 
   <script>
     // -------------------------------------------------------------
-    // SAFE WEB AUDIO SYNTHESIZER (No playSqueak missing crash!)
+    // SAFE WEB AUDIO SYNTHESIZER & FALLBACK
     // -------------------------------------------------------------
-    const AudioEngine = window.ToddlerAudio || {};
+    const AudioEngine = window.ToddlerAudio || window.AudioEngine || {
+      ctx: null,
+      init() {
+        try {
+          if (!this.ctx && (window.AudioContext || window.webkitAudioContext)) {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            this.ctx = new AudioCtx();
+          }
+          if (this.ctx && this.ctx.state === 'suspended') {
+            this.ctx.resume();
+          }
+        } catch (e) {}
+      },
+      playTone() {},
+      playChime() {},
+      playWin() {},
+      playFanfare() {},
+      playPop() {},
+      playThud() {},
+      speak(t) {},
+      speakWord(w) {}
+    };
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentWeek = parseInt(urlParams.get('week'), 10) || (window.MissionEngine && MissionEngine.getCurrentWeek ? MissionEngine.getCurrentWeek() : 1);
 
     // 1. Synthesize adorable high-pitch rubber duck squeak
     function playRubberDuckSqueak() {
@@ -1014,7 +1080,7 @@
       } else {
         promptIcon.innerText = currentTarget.emoji;
       }
-      promptText.innerText = `Chạm nổ bạn ${currentTarget.name}!`;
+      promptText.innerHTML = `Chạm nổ bạn <strong>${currentTarget.name}</strong> <span style="font-size: 0.95rem; opacity: 0.85;">(${currentTarget.vnName})</span>`;
 
       setTimeout(() => {
         if (AudioEngine.speak) {
@@ -1073,6 +1139,7 @@
       // Rút tuần tự từ Túi Xáo Trộn: Mỗi con vật giữ nguyên xác suất 1/18 (5.55%),
       // bảo đảm 100% không con nào bị bỏ sót hay biến mất!
       const target = specificTarget || getNextTargetFromBag();
+      bubble.targetData = target;
 
       bubble.setAttribute('data-target-id', (target.id || target.name).toLowerCase());
 
@@ -1092,7 +1159,7 @@
       // Auto clean up when floated off top
       setTimeout(() => {
         if (bubble.parentElement) bubble.remove();
-      }, dur * 1000);
+      }, parseFloat(dur) * 1000 + 300);
     }
 
     // -------------------------------------------------------------
@@ -1110,8 +1177,10 @@
       // Check if target matches quest
       if (currentTarget && target.name.toLowerCase() === currentTarget.name.toLowerCase()) {
         // CORRECT TARGET RESCUE!
+        const rescued = currentTarget;
+        currentTarget = null; // Lock immediately so no duplicate quest triggers
         bubbleElem.remove();
-        handleCorrectRescue(target, cx, cy);
+        handleCorrectRescue(rescued, cx, cy);
       } else {
         // FREE PLAY POP
         bubbleElem.remove();
@@ -1126,7 +1195,13 @@
     function handleCorrectRescue(target, startX, startY) {
       playWaterSplashSound();
       if (AudioEngine.speak) {
-        AudioEngine.speak(`Yes! ${target.name}! Good job!`);
+        const phrase = (window.ToddlerVocabulary && ToddlerVocabulary.getWordContextPhrase)
+          ? ToddlerVocabulary.getWordContextPhrase(target.name)
+          : `${target.name}! Good job!`;
+        AudioEngine.speak(`Yes! ${phrase}`);
+      }
+      if (window.MissionEngine && MissionEngine.recordAction) {
+        MissionEngine.recordAction();
       }
 
       // 1. Diving Animal Animation (Flies down to the tub)
@@ -1142,8 +1217,9 @@
       document.body.appendChild(diver);
 
       const tubRect = document.getElementById('tub-basin').getBoundingClientRect();
-      const targetX = tubRect.left + 80 + Math.random() * (tubRect.width - 200);
-      const targetY = tubRect.bottom - 80;
+      const maxOffset = Math.max(20, tubRect.width - 120);
+      const targetX = tubRect.left + 40 + Math.random() * maxOffset;
+      const targetY = tubRect.bottom - 70;
 
       setTimeout(() => {
         diver.style.left = `${targetX}px`;
@@ -1170,8 +1246,8 @@
         updateStarsHud();
 
         if (rescuedCount >= TARGET_STARS) {
-          // CELEBRATION!
-          triggerGrandBathCelebration();
+          // CELEBRATION! Wait for diving animal to finish splash and rescue speech to complete cleanly
+          setTimeout(triggerGrandBathCelebration, 1100);
         } else {
           // NEXT QUEST
           setTimeout(nextTargetQuest, 1200);
@@ -1243,33 +1319,61 @@
     function sprayRainbowShower() {
       playShowerSpraySound();
       showerhead.classList.add('spraying');
-      setTimeout(() => showerhead.classList.remove('spraying'), 800);
+      setTimeout(() => showerhead.classList.remove('spraying'), 900);
 
       if (AudioEngine.speak) {
         AudioEngine.speak('Rainbow shower! Splash splash!');
       }
 
-      // Spawn spray jet drops towards tub center
+      // 1. Water surge in bathtub (Sóng nước dâng trào trong bồn tắm)
+      const tubWater = document.getElementById('tub-water');
+      if (tubWater) {
+        tubWater.classList.add('wave-surge');
+        setTimeout(() => tubWater.classList.remove('wave-surge'), 1100);
+      }
+
+      // 2. Chú vịt vàng nhảy nhót và kêu quack quack
+      const duck = document.getElementById('rubber-duck');
+      if (duck) {
+        duck.style.transform = 'scale(1.25) rotate(-12deg)';
+        setTimeout(() => duck.style.transform = '', 350);
+      }
+
+      // 3. Spawn big spray jet drops towards tub center
       const rect = showerhead.getBoundingClientRect();
-      for (let i = 0; i < 16; i++) {
+      for (let i = 0; i < 22; i++) {
         const drop = document.createElement('div');
         drop.className = 'spray-jet-drop';
         drop.style.left = `${rect.left + 20}px`;
-        drop.style.top = `${rect.top + 30}px`;
+        drop.style.top = `${rect.top + 25}px`;
 
-        const dx = -(Math.random() * 220 + 80);
-        const dy = (Math.random() * 120 + 30);
+        const dx = -(Math.random() * 260 + 80);
+        const dy = (Math.random() * 150 + 20);
         drop.style.setProperty('--dx', `${dx}px`);
         drop.style.setProperty('--dy', `${dy}px`);
 
         document.body.appendChild(drop);
-        setTimeout(() => drop.remove(), 520);
+        setTimeout(() => drop.remove(), 550);
       }
 
-      // Spawn 3 extra bubbles from shower spray with guaranteed target
-      for (let i = 0; i < 3; i++) {
+      // 4. TÍNH NĂNG XỊT NƯỚC CÓ TÁC DỤNG THẬT: Tia nước xịt làm nổ các bóng bóng đang bay!
+      const activeBubbles = Array.from(document.querySelectorAll('.bubble'));
+      activeBubbles.forEach((bElem, bIdx) => {
+        const bRect = bElem.getBoundingClientRect();
+        // Kiểm tra bong bóng trong vùng tia nước vòi sen chạm tới
+        if (bRect.top > window.innerHeight * 0.22 && bRect.top < window.innerHeight * 0.88) {
+          setTimeout(() => {
+            if (bElem.parentNode && bElem.targetData) {
+              handleBubblePop(bElem, bElem.targetData, bRect.left + bRect.width / 2, bRect.top + bRect.height / 2);
+            }
+          }, 120 + bIdx * 90);
+        }
+      });
+
+      // 5. Spawn thêm 2 bóng mới từ tia nước tạo bọt
+      for (let i = 0; i < 2; i++) {
         const isTarget = (i === 0 && currentTarget);
-        setTimeout(() => spawnBubble(isTarget ? currentTarget : null), i * 200);
+        setTimeout(() => spawnBubble(isTarget ? currentTarget : null), 450 + i * 200);
       }
     }
 
@@ -1306,8 +1410,8 @@
         AudioEngine.speak(config.voice);
       }
 
-      // Splash ripples in tub
-      playWaterSplashSound();
+      // Splash ripples in tub with slight stagger so magic chime sounds crisp
+      setTimeout(playWaterSplashSound, 160);
       const tubRect = tubWater.getBoundingClientRect();
       spawnPopDroplets(tubRect.left + tubRect.width / 2, tubRect.top + 30);
 
@@ -1335,18 +1439,29 @@
 
       launchBathConfetti();
 
+      // Populate Parent Real-World Transfer Tip
+      const tipBox = document.getElementById('modal-parent-tip');
+      if (tipBox && window.ToddlerVocabulary && ToddlerVocabulary.getRealWorldParentTip) {
+        const tipObj = ToddlerVocabulary.getRealWorldParentTip(currentWeek);
+        tipBox.innerHTML = `<strong>💡 Mẹo vui cùng bé khi tắm:</strong><br>${tipObj.tipText || 'Khi tắm cho bé, ba mẹ hãy cùng bé gọi tên các bạn đồ chơi bằng tiếng Anh như "Look, the yellow duck!" hoặc "Splash, little fish!" để bé ghi nhớ tự nhiên nhé!'}`;
+        tipBox.style.display = 'block';
+      }
+
       setTimeout(() => {
         modalCelebration.style.display = 'flex';
-      }, 1500);
+      }, 1600);
     }
 
     function restartBubbleGame() {
       modalCelebration.style.display = 'none';
+      const tipBox = document.getElementById('modal-parent-tip');
+      if (tipBox) tipBox.style.display = 'none';
       rescuedCount = 0;
       bubbleBag = [];
       isSpawning = true;
       updateStarsHud();
       swimmersContainer.innerHTML = '';
+      bubbleSky.innerHTML = '';
       nextTargetQuest();
     }
 
@@ -1419,12 +1534,15 @@
     // INITIALIZATION
     // -------------------------------------------------------------
     window.addEventListener('DOMContentLoaded', () => {
+      if (window.MissionEngine && MissionEngine.initGameMission) {
+        MissionEngine.initGameMission('mission_day_2', '.hud');
+      }
       updateStarsHud();
       nextTargetQuest();
 
-      // Continuous gentle bubble spawning
+      // Continuous gentle bubble spawning (paused when tab is hidden)
       spawnTimer = setInterval(() => {
-        if (isSpawning) spawnBubble();
+        if (isSpawning && !document.hidden) spawnBubble();
       }, 1600);
     });
   </script>

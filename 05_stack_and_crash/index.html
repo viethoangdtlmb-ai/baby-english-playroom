@@ -178,12 +178,13 @@
       100% { transform: translateY(0) scale(1, 1); opacity: 1; }
     }
 
-    /* Rocket Nose Tip styling for Top Block */
+    /* Rocket Nose Tip styling for Top Block (Dome arch so text/icon are never clipped) */
     .block.rocket-tip {
-      clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
-      height: 85px;
-      width: 210px;
-      border-radius: 20px 20px 8px 8px;
+      height: 82px;
+      width: 230px;
+      border-radius: 90px 90px 22px 22px;
+      padding-top: 8px;
+      border-top: 5px solid #FFE082;
     }
 
     /* Crash fling animation */
@@ -282,25 +283,211 @@
       100% { transform: translateX(40px) scale(1); }
     }
 
+    /* Cartoon Eyes on Blocks */
+    .block-eyes {
+      display: inline-flex;
+      font-size: 1.15rem;
+      vertical-align: middle;
+      animation: eyeBlink 3.5s infinite;
+      margin-left: 6px;
+    }
+    @keyframes eyeBlink {
+      0%, 96%, 100% { transform: scaleY(1); }
+      98% { transform: scaleY(0.1); }
+    }
+
+    /* Crash Tools Selector Row */
+    .crash-tools-row {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      align-items: center;
+      margin-top: 6px;
+      z-index: 25;
+      flex-wrap: wrap;
+    }
+    .crash-tool-btn {
+      background: white;
+      border: 3px solid #FF7043;
+      border-radius: 28px;
+      padding: 6px 14px;
+      font-size: 1rem;
+      font-weight: 800;
+      color: #D84315;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 12px rgba(255, 112, 67, 0.25);
+      animation: crashToolPulse 1.8s infinite alternate ease-in-out;
+      transition: transform 0.15s;
+    }
+    .crash-tool-btn:active {
+      transform: scale(0.92);
+    }
+    @keyframes crashToolPulse {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.06); }
+    }
+
+    /* Dino / Bowling Running Actor */
+    .crash-actor {
+      position: absolute;
+      font-size: 4.6rem;
+      z-index: 120;
+      pointer-events: none;
+      transition: all 0.75s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
     /* Bottom Prompt Pill (Friendly Toddler Banner) */
     .prompt-footer-pill {
       background: white;
       border: 3.5px solid #FFA726;
       border-radius: 36px;
-      padding: 10px 32px;
-      font-size: 1.3rem;
+      padding: 10px 28px;
+      font-size: 1.25rem;
       font-weight: 800;
       color: #E65100;
       box-shadow: 0 6px 18px rgba(255, 167, 38, 0.22);
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       z-index: 20;
       letter-spacing: 0.3px;
       text-align: center;
       cursor: pointer;
     }
+
+    /* MODAL: TOWER & ROCKET CELEBRATION */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(10px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 300;
+      padding: 16px;
+    }
+    .celebration-card {
+      background: linear-gradient(135deg, #FFFFFF 0%, #FFFDF7 100%);
+      border: 6px solid #FFB300;
+      border-radius: 44px;
+      padding: 30px 26px;
+      max-width: 520px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+      animation: popInModal 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes popInModal {
+      0% { transform: scale(0.6); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .modal-trophy-icon {
+      font-size: 5rem;
+      margin-bottom: 8px;
+    }
+    .modal-title {
+      font-size: 2rem;
+      color: #E65100;
+      margin: 8px 0 6px;
+    }
+    .modal-subtitle {
+      font-size: 1.18rem;
+      color: #5D4037;
+      margin-bottom: 14px;
+      line-height: 1.4;
+      font-weight: 700;
+    }
+    .parent-tip-box {
+      background: #FFF8E1;
+      border: 2px dashed #FFA000;
+      border-radius: 20px;
+      padding: 10px 14px;
+      margin-bottom: 18px;
+      font-size: 0.95rem;
+      color: #5D4037;
+      line-height: 1.4;
+      text-align: left;
+    }
+    .btn-modal-action {
+      background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+      color: white;
+      border: 4px solid #FFE082;
+      border-radius: 50px;
+      padding: 14px 34px;
+      font-size: 1.3rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 10px 28px rgba(245, 124, 0, 0.4);
+      transition: transform 0.15s;
+    }
+    .btn-modal-action:active { transform: scale(0.95); }
+
+    /* Responsive Mobile Optimizations */
+    @media (max-width: 768px) {
+      body, html { padding: 8px 6px; }
+      .btn-back { padding: 6px 14px; font-size: 0.95rem; }
+      .mode-selector { padding: 4px 10px; gap: 6px; }
+      .mode-tab-btn { padding: 6px 12px; font-size: 0.95rem; }
+      .block {
+        width: 225px;
+        height: 58px;
+        font-size: 1.4rem;
+        margin-bottom: 6px;
+        border-radius: 20px;
+      }
+      .block.rocket-tip {
+        width: 210px;
+        height: 66px;
+      }
+      .prompt-footer-pill {
+        font-size: 1rem;
+        padding: 8px 18px;
+      }
+    }
+
+    @media (max-height: 540px) and (orientation: landscape) {
+      body, html { padding: 4px 8px; }
+      .stage-wrapper { height: 74%; }
+      .block {
+        width: 210px;
+        height: 44px;
+        font-size: 1.2rem;
+        margin-bottom: 4px;
+        border-radius: 16px;
+        box-shadow: 0 6px 0 rgba(0,0,0,0.18), 0 8px 16px rgba(0,0,0,0.12);
+      }
+      .block.rocket-tip {
+        width: 195px;
+        height: 48px;
+      }
+      .prompt-footer-pill {
+        font-size: 0.9rem;
+        padding: 4px 16px;
+        margin-bottom: 2px;
+      }
+    }
   </style>
 </head>
 <body>
+
+  <!-- MODAL: CELEBRATION OVERLAY -->
+  <div class="modal-overlay" id="modal-celebration">
+    <div class="celebration-card">
+      <div class="modal-trophy-icon" id="modal-icon">🏗️🌟</div>
+      <h2 class="modal-title" id="modal-title">Tháp Cao Tuyệt Vời!</h2>
+      <p class="modal-subtitle" id="modal-subtitle">Bé đã xếp đủ 5 tầng tháp và xô đổ thật vui nhộn!</p>
+      <div class="parent-tip-box" id="modal-parent-tip">💡 Mẹo cho Bố Mẹ: Cùng bé xếp các khối gỗ hoặc hộp giấy ở nhà và đếm to <em>"One, two, three... Crash!"</em> nhé!</div>
+
+      <button type="button" class="btn-modal-action" id="btn-next-tower" onclick="continueAfterModal()">
+        <span>🎉 Xây Tháp Tiếp Theo ➜</span>
+      </button>
+    </div>
+  </div>
 
   <!-- Floating Sky Clouds -->
   <div class="bg-sky-cloud cld-1"></div>
@@ -313,7 +500,7 @@
     <!-- Visual Mode Selector -->
     <div class="mode-selector">
       <button type="button" class="mode-tab-btn active" id="tab-numbers" onclick="switchMode('numbers')">
-        <span>🔢 Tháp Số</span>
+        <span>🧱 Xây Tháp</span>
       </button>
       <button type="button" class="mode-tab-btn" id="tab-rocket" onclick="switchMode('rocket')">
         <span>🚀 Tên Lửa</span>
@@ -347,84 +534,121 @@
     👆 Chạm để xây tháp!
   </div>
 
+  <!-- Slapstick Demolition Weapons Row -->
+  <div class="crash-tools-row" id="crash-tools-row" style="display: none;">
+    <button type="button" class="crash-tool-btn" onclick="crashWithTool('dino')">🦖 Khủng Long Húc!</button>
+    <button type="button" class="crash-tool-btn" onclick="crashWithTool('bowling')">🎳 Bowling Strike!</button>
+    <button type="button" class="crash-tool-btn" onclick="crashWithTool('whoosh')">🌬️ Cơn Gió Thổi!</button>
+  </div>
+
   <script>
     // -------------------------------------------------------------
     // STACK, ROCKET & CRASH LOGIC (100% Natural Touch for 3yo)
     // -------------------------------------------------------------
-    // Single Source of Truth Audio
     const AudioEngine = window.AudioEngine || window.ToddlerAudio || {};
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const queryWeek = parseInt(urlParams.get('week'), 10);
+    const currentWeek = (!isNaN(queryWeek) && queryWeek >= 1 && queryWeek <= 52)
+      ? queryWeek
+      : ((window.MissionEngine && MissionEngine.getCurrentWeek) ? MissionEngine.getCurrentWeek() : 1);
+    const weekData = (window.ToddlerVocabulary) ? window.ToddlerVocabulary.build80_20Pack(currentWeek) : null;
 
     let currentMode = 'numbers'; // 'numbers' | 'rocket'
     let isBusy = false;
+    let isModalOpen = false;
     let roundCompletedCount = 0;
+    let readyPromptTimer = null;
 
-    // 1. Thư viện 5 Chủ đề Tháp Khối Gỗ (Số đếm, Chữ cái, Màu sắc, Bạn thú, Trái cây)
+    const BLOCK_PALETTE = ['#FF5252', '#FFA726', '#FFCA28', '#66BB6A', '#42A5F5'];
+
+    // 1. Thư viện Chủ đề Tháp Khối Gỗ (100% có id chuẩn khớp bộ Icon 3D PNG)
     const towerThemes = [
       {
         name: 'Số Đếm 1 - 5',
         intro: 'Count the blocks! One, two, three!',
         blocks: [
-          { num: 'ONE', count: 1, color: '#FF5252', icon: '🍎' },
-          { num: 'TWO', count: 2, color: '#FFA726', icon: '🍌' },
-          { num: 'THREE', count: 3, color: '#FFCA28', icon: '🍯' },
-          { num: 'FOUR', count: 4, color: '#66BB6A', icon: '🥛' },
-          { num: 'FIVE', count: 5, color: '#42A5F5', icon: '🍞' }
+          { id: 'one', word: 'One', num: 'ONE', count: 1, color: '#FF5252', icon: '1️⃣' },
+          { id: 'two', word: 'Two', num: 'TWO', count: 2, color: '#FFA726', icon: '2️⃣' },
+          { id: 'three', word: 'Three', num: 'THREE', count: 3, color: '#FFCA28', icon: '3️⃣' },
+          { id: 'four', word: 'Four', num: 'FOUR', count: 4, color: '#66BB6A', icon: '4️⃣' },
+          { id: 'five', word: 'Five', num: 'FIVE', count: 5, color: '#42A5F5', icon: '5️⃣' }
         ]
       },
       {
         name: 'Chữ Cái Vàng A - E',
-        intro: 'Alphabet tower! A, B, C, D, E!',
+        intro: 'Alphabet tower! Apple, Ball, Cat, Dog, Elephant!',
         blocks: [
-          { num: 'A - APPLE', count: 'A', color: '#E91E63', icon: '🍎' },
-          { num: 'B - BALL', count: 'B', color: '#9C27B0', icon: '⚽' },
-          { num: 'C - CAT', count: 'C', color: '#3F51B5', icon: '🐱' },
-          { num: 'D - DOG', count: 'D', color: '#00BCD4', icon: '🐶' },
-          { num: 'E - ELEPHANT', count: 'E', color: '#4CAF50', icon: '🐘' }
+          { id: 'apple', word: 'Apple', num: 'A • APPLE', count: 'A', color: '#E91E63', icon: '🍎' },
+          { id: 'ball', word: 'Ball', num: 'B • BALL', count: 'B', color: '#9C27B0', icon: '⚽' },
+          { id: 'cat', word: 'Cat', num: 'C • CAT', count: 'C', color: '#3F51B5', icon: '🐱' },
+          { id: 'dog', word: 'Dog', num: 'D • DOG', count: 'D', color: '#00BCD4', icon: '🐶' },
+          { id: 'elephant', word: 'Elephant', num: 'E • ELEPHANT', count: 'E', color: '#4CAF50', icon: '🐘' }
         ]
       },
       {
         name: 'Sắc Màu Cầu Vồng',
-        intro: 'Rainbow colors! Red, Blue, Yellow!',
+        intro: 'Rainbow colors! Red, Blue, Yellow, Green, Purple!',
         blocks: [
-          { num: 'RED', count: '🔴', color: '#FF5252', icon: '🍓' },
-          { num: 'BLUE', count: '🔵', color: '#448AFF', icon: '🐬' },
-          { num: 'YELLOW', count: '🟡', color: '#FFD600', icon: '⭐' },
-          { num: 'GREEN', count: '🟢', color: '#69F0AE', icon: '🐸' },
-          { num: 'PURPLE', count: '🟣', color: '#B388FF', icon: '🍇' }
+          { id: 'red', word: 'Red', num: 'RED', count: '1', color: '#FF5252', icon: '🔴' },
+          { id: 'blue', word: 'Blue', num: 'BLUE', count: '2', color: '#448AFF', icon: '🔵' },
+          { id: 'yellow', word: 'Yellow', num: 'YELLOW', count: '3', color: '#FBC02D', icon: '🟡' },
+          { id: 'green', word: 'Green', num: 'GREEN', count: '4', color: '#43A047', icon: '🟢' },
+          { id: 'purple', word: 'Purple', num: 'PURPLE', count: '5', color: '#8E24AA', icon: '🟣' }
         ]
       },
       {
         name: 'Bạn Thú Đáng Yêu',
-        intro: 'Animal friends tower! Cat, Dog, Duck!',
+        intro: 'Animal friends tower! Dog, Cat, Duck, Pig, Bear!',
         blocks: [
-          { num: 'PUPPY', count: '🐶', color: '#FFA726', icon: '🐾' },
-          { num: 'KITTY', count: '🐱', color: '#FF80AB', icon: '💖' },
-          { num: 'DUCKY', count: '🦆', color: '#FFD54F', icon: '🌊' },
-          { num: 'PIGGY', count: '🐷', color: '#F48FB1', icon: '🌸' },
-          { num: 'BEAR', count: '🐻', color: '#8D6E63', icon: '🍯' }
+          { id: 'dog', word: 'Dog', num: 'DOG', count: '1', color: '#FFA726', icon: '🐶' },
+          { id: 'cat', word: 'Cat', num: 'CAT', count: '2', color: '#EC407A', icon: '🐱' },
+          { id: 'duck', word: 'Duck', num: 'DUCK', count: '3', color: '#FBC02D', icon: '🦆' },
+          { id: 'pig', word: 'Pig', num: 'PIG', count: '4', color: '#F06292', icon: '🐷' },
+          { id: 'bear', word: 'Bear', num: 'BEAR', count: '5', color: '#8D6E63', icon: '🐻' }
         ]
       },
       {
         name: 'Trái Cây Tươi Ngon',
-        intro: 'Yummy fruits tower! Apple, Banana!',
+        intro: 'Yummy fruits tower! Apple, Banana, Orange, Strawberry, Grape!',
         blocks: [
-          { num: 'APPLE', count: '🍎', color: '#FF5252', icon: '✨' },
-          { num: 'BANANA', count: '🍌', color: '#FFD600', icon: '💛' },
-          { num: 'ORANGE', count: '🍊', color: '#FF9800', icon: '☀️' },
-          { num: 'STRAWBERRY', count: '🍓', color: '#E91E63', icon: '🌸' },
-          { num: 'GRAPES', count: '🍇', color: '#9C27B0', icon: '🍇' }
+          { id: 'apple', word: 'Apple', num: 'APPLE', count: '1', color: '#FF5252', icon: '🍎' },
+          { id: 'banana', word: 'Banana', num: 'BANANA', count: '2', color: '#FBC02D', icon: '🍌' },
+          { id: 'orange_food', word: 'Orange', num: 'ORANGE', count: '3', color: '#FF9800', icon: '🍊' },
+          { id: 'strawberry', word: 'Strawberry', num: 'STRAWBERRY', count: '4', color: '#E91E63', icon: '🍓' },
+          { id: 'grape', word: 'Grape', num: 'GRAPE', count: '5', color: '#9C27B0', icon: '🍇' }
         ]
       }
     ];
+
+    // Nạp Chủ đề Từ vựng 80/20 của Tuần hiện tại lên vị trí đầu tiên!
+    if (weekData && weekData.newWords && weekData.newWords.length) {
+      const combinedWeekWords = [...weekData.newWords, ...(weekData.reviewWords || [])].filter(w => w && w.id).slice(0, 5);
+      if (combinedWeekWords.length === 5) {
+        towerThemes.unshift({
+          name: `Từ Vựng Tuần ${currentWeek}`,
+          intro: `Let us stack Week ${currentWeek} words!`,
+          blocks: combinedWeekWords.map((w, idx) => ({
+            id: w.id,
+            word: w.word,
+            num: w.word.toUpperCase(),
+            count: idx + 1,
+            color: BLOCK_PALETTE[idx % BLOCK_PALETTE.length],
+            icon: w.emoji || '⭐'
+          }))
+        });
+      }
+    }
+
     let currentThemeIdx = 0;
 
-    // 2. Chế độ Tên Lửa Vũ Trụ 5 Tầng
+    // 2. Chế độ Tên Lửa Vũ Trụ 5 Tầng (100% Từ vựng bầu trời & vũ trụ chuẩn mầm non có Icon 3D PNG)
     const rocketBlocks = [
-      { name: 'ENGINE', num: '1', color: '#78909C', icon: '⛽' },
-      { name: 'BODY', num: '2', color: '#42A5F5', icon: '🚀' },
-      { name: 'WINDOW', num: '3', color: '#FFCA28', icon: '👨‍🚀' },
-      { name: 'WINGS', num: '4', color: '#26A69A', icon: '🛸' },
-      { name: 'ROCKET NOSE', num: '5', color: '#FF1744', icon: '⭐', isTip: true }
+      { id: 'cloud', word: 'Cloud', name: '1 • CLOUD', num: '1', color: '#5C6BC0', icon: '☁️' },
+      { id: 'sun', word: 'Sun', name: '2 • SUN', num: '2', color: '#FFA726', icon: '☀️' },
+      { id: 'moon', word: 'Moon', name: '3 • MOON', num: '3', color: '#26A69A', icon: '🌙' },
+      { id: 'star_sky', word: 'Star', name: '4 • STAR', num: '4', color: '#42A5F5', icon: '⭐' },
+      { id: 'rocket', word: 'Rocket', name: '5 • ROCKET', num: '5', color: '#FF1744', icon: '🚀', isTip: true }
     ];
 
     let currentStack = [];
@@ -449,25 +673,25 @@
       document.getElementById('tab-numbers').classList.toggle('active', currentMode === 'numbers');
       document.getElementById('tab-rocket').classList.toggle('active', currentMode === 'rocket');
 
-      resetTowerClean();
+      resetTowerClean(false);
+      addNextBlock(true);
 
       if (currentMode === 'numbers') {
-        promptPill.innerText = '👆 Chạm để xây tháp!';
-        AudioEngine.speak('Count the blocks! One, two, three!');
+        AudioEngine.speak(towerThemes[currentThemeIdx].intro);
       } else {
-        promptPill.innerText = '🚀 Chạm để lắp tên lửa!';
-        AudioEngine.speak('Build the Rocket! Tap to build!');
+        AudioEngine.speak('Build the Rocket! Cloud, Sun, Moon, Star, Rocket!');
       }
       scheduleIdleHint();
     }
 
     // -------------------------------------------------------------
-    // THÊM KHỐI MỚI (ADD BLOCK WITH DELIGHTFUL PHYSICS)
+    // THÊM KHỐI MỚI (ADD BLOCK WITH DELIGHTFUL PHYSICS & CLEAN AUDIO PACING)
     // -------------------------------------------------------------
-    function addNextBlock() {
-      if (isBusy) return;
+    function addNextBlock(silentInit = false) {
+      if (isBusy || isModalOpen) return;
       hideGhostHint();
-      AudioEngine.init();
+      if (readyPromptTimer) clearTimeout(readyPromptTimer);
+      if (!silentInit) AudioEngine.init();
 
       const pool = getActivePool();
 
@@ -489,24 +713,28 @@
       if (bInfo.isTip) blockElem.classList.add('rocket-tip');
       blockElem.style.background = bInfo.color;
 
-      const blockWord = (currentMode === 'numbers') ? (bInfo.num.split(' - ').pop() || bInfo.num) : (bInfo.name || '');
-      const iconHtml = (window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon && blockWord)
-        ? ToddlerVocabulary.renderWordIcon(blockWord.toLowerCase(), 36)
+      const iconHtml = (window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon)
+        ? ToddlerVocabulary.renderWordIcon({ id: bInfo.id, word: bInfo.word, emoji: bInfo.icon }, 40)
         : `<span>${bInfo.icon}</span>`;
 
+      const eyesHtml = `<span class="block-eyes">👀</span>`;
+
       if (currentMode === 'numbers') {
-        blockElem.innerHTML = `<span>${bInfo.count}.</span> <span>${bInfo.num}</span> ${iconHtml}`;
+        blockElem.innerHTML = `<span>${bInfo.count}.</span> <span>${bInfo.num}</span> ${iconHtml} ${eyesHtml}`;
       } else {
-        blockElem.innerHTML = `<span>${bInfo.name}</span> ${iconHtml}`;
+        blockElem.innerHTML = `<span>${bInfo.name}</span> ${iconHtml} ${eyesHtml}`;
       }
 
       towerColumn.appendChild(blockElem);
       currentStack.push(blockElem);
 
-      // Âm thanh gõ gỗ & Phát âm Motherese
-      if (window.ToddlerAudio) {
+      // Âm thanh gõ gỗ & Phát âm câu ngữ cảnh đầy đủ (Không bị cắt ngang ở khối thứ 5!)
+      if (!silentInit && window.ToddlerAudio) {
         ToddlerAudio.playXylophone(400 + idx * 80);
-        ToddlerAudio.speak(currentMode === 'numbers' ? `${bInfo.num}!` : `${bInfo.name}!`);
+        const contextPhrase = (window.ToddlerVocabulary && ToddlerVocabulary.getWordContextPhrase)
+          ? ToddlerVocabulary.getWordContextPhrase({ id: bInfo.id, word: bInfo.word })
+          : `${bInfo.word}!`;
+        ToddlerAudio.speak(contextPhrase);
       }
 
       // Càng cao càng rung rinh (Jelly Wobble Tension)
@@ -514,16 +742,31 @@
 
       // Cập nhật biểu ngữ hướng dẫn
       if (currentStack.length >= pool.length) {
+        const toolsRow = document.getElementById('crash-tools-row');
         if (currentMode === 'rocket') {
-          promptPill.innerText = '🚀 Tên Lửa Hoàn Thành! Chạm để PHÓNG NGAY!';
-          AudioEngine.speak('Rocket ready! Tap to blast off!');
+          if (toolsRow) toolsRow.style.display = 'none';
+          promptPill.innerText = '🚀 Tên Lửa Đủ 5 Tầng! Chạm để PHÓNG NGAY!';
+          readyPromptTimer = setTimeout(() => {
+            if (!isBusy && currentStack.length >= pool.length) {
+              AudioEngine.speak('Rocket ready! Tap to blast off!');
+            }
+          }, 1850);
         } else {
-          promptPill.innerText = '💥 Chạm xô đổ tháp nào!';
-          AudioEngine.speak('So tall! Tap to crash!');
+          if (toolsRow) toolsRow.style.display = 'flex';
+          promptPill.innerText = '💥 Tháp Cao 5 Tầng! Chọn vũ khí xô đổ nào!';
+          readyPromptTimer = setTimeout(() => {
+            if (!isBusy && currentStack.length >= pool.length) {
+              AudioEngine.speak('So tall! Choose a tool to crash!');
+            }
+          }, 1850);
         }
         scheduleIdleHint();
       } else {
-        promptPill.innerText = `🏗️ Tầng ${currentStack.length}! Chạm xây tiếp nhé!`;
+        const toolsRow = document.getElementById('crash-tools-row');
+        if (toolsRow) toolsRow.style.display = 'none';
+        const nextBlock = pool[currentStack.length];
+        const nextLabel = nextBlock ? (nextBlock.word || nextBlock.name || nextBlock.num) : '';
+        promptPill.innerText = `🏗️ Tầng ${currentStack.length}/5! Chạm đặt tiếp: ${nextLabel} nhé!`;
         scheduleIdleHint();
       }
     }
@@ -544,7 +787,10 @@
       if (isBusy || currentStack.length === 0) return;
       isBusy = true;
       hideGhostHint();
+      if (readyPromptTimer) clearTimeout(readyPromptTimer);
       towerColumn.classList.remove('wobble-mild', 'wobble-wild');
+
+      const wasFullTower = (currentStack.length >= getActivePool().length);
 
       // Âm thanh đổ rầm rầm vui nhộn
       if (window.ToddlerAudio) {
@@ -552,14 +798,14 @@
         ToddlerAudio.speak('Crash! Boom! Fall down! Hahaha!');
       }
 
-      promptPill.innerText = '🎉 Đổ ầm rồi! Hahaha! Chạm để xây tháp mới nhé!';
+      promptPill.innerText = '🎉 Đổ ầm rồi! Hahaha!';
 
       // Bắn pháo hoa ngôi sao tung tóe
       const rect = towerColumn.getBoundingClientRect();
       spawnStarExplosion(rect.left + rect.width / 2, rect.top + rect.height / 2);
 
       // Các khối văng tứ tung và xoay vòng bật nảy
-      currentStack.forEach((block, i) => {
+      currentStack.forEach((block) => {
         block.classList.add('crashed');
         const angle = (Math.random() - 0.5) * 160;
         const tx = (Math.random() - 0.5) * 380;
@@ -572,10 +818,15 @@
       recordRoundWin();
 
       setTimeout(() => {
-        resetTowerClean(true);
-        isBusy = false;
-        scheduleIdleHint();
-      }, 1400);
+        if (wasFullTower) {
+          showVictoryModal('tower');
+        } else {
+          resetTowerClean(false);
+          addNextBlock(true);
+          isBusy = false;
+          scheduleIdleHint();
+        }
+      }, 1500);
     }
 
     // -------------------------------------------------------------
@@ -585,11 +836,11 @@
       if (isBusy || currentStack.length === 0) return;
       isBusy = true;
       hideGhostHint();
+      if (readyPromptTimer) clearTimeout(readyPromptTimer);
       towerColumn.classList.remove('wobble-mild', 'wobble-wild');
 
       // Phụt lửa và bốc khói
       exhaustFlames.style.display = 'block';
-
       promptPill.innerText = '🚀 3... 2... 1... BLAST OFF! 🌟';
 
       if (window.ToddlerAudio) {
@@ -612,16 +863,55 @@
 
         setTimeout(() => {
           exhaustFlames.style.display = 'none';
-          resetTowerClean(false);
           towerColumn.classList.remove('blastoff-rocket');
-          promptPill.innerText = '✨ Tên lửa bay vào vũ trụ rồi! Xếp tháp mới nào!';
-          isBusy = false;
-          scheduleIdleHint();
-        }, 1800);
+          showVictoryModal('rocket');
+        }, 1700);
       }, 1000);
     }
 
+    function showVictoryModal(type) {
+      isModalOpen = true;
+      const modal = document.getElementById('modal-celebration');
+      const modalIcon = document.getElementById('modal-icon');
+      const modalTitle = document.getElementById('modal-title');
+      const modalSubtitle = document.getElementById('modal-subtitle');
+      const tipBox = document.getElementById('modal-parent-tip');
+      const pool = getActivePool();
+      const topItem = pool[pool.length - 1];
+
+      if (modalIcon && window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon) {
+        modalIcon.innerHTML = ToddlerVocabulary.renderWordIcon(topItem, 88);
+      }
+      if (type === 'rocket') {
+        if (modalTitle) modalTitle.innerText = 'Tên Lửa Bay Vào Vũ Trụ! 🚀';
+        if (modalSubtitle) modalSubtitle.innerText = 'Bé đã lắp đủ 5 tầng (Cloud, Sun, Moon, Star, Rocket) và phóng tên lửa thành công!';
+        if (tipBox) tipBox.innerHTML = '💡 <strong>Mẹo cho Bố Mẹ:</strong> Tối nay hãy cùng bé nhìn lên bầu trời hoặc tranh ảnh, chỉ vào mặt trăng, ngôi sao và đếm ngược <em>"3, 2, 1... Rocket blast off!"</em> nhé!';
+      } else {
+        const theme = towerThemes[currentThemeIdx];
+        const wordsList = theme.blocks.map(b => b.word).join(', ');
+        if (modalTitle) modalTitle.innerText = `Hoàn Thành ${theme.name}! 🏆`;
+        if (modalSubtitle) modalSubtitle.innerText = `Bé đã xếp cao 5 tầng (${wordsList}) và xô đổ thật sảng khoái!`;
+        if (tipBox) tipBox.innerHTML = `💡 <strong>Mẹo cho Bố Mẹ:</strong> Hãy cùng bé xếp chồng 5 món đồ chơi hoặc cốc nhựa ở nhà, vừa xếp vừa đọc to <em>"${wordsList}"</em> rồi hô <em>"Crash!"</em> nhé!`;
+      }
+      if (modal) modal.style.display = 'flex';
+    }
+
+    function continueAfterModal() {
+      const modal = document.getElementById('modal-celebration');
+      if (modal) modal.style.display = 'none';
+      isModalOpen = false;
+      resetTowerClean(currentMode === 'numbers');
+      addNextBlock(true);
+      isBusy = false;
+      scheduleIdleHint();
+    }
+    window.continueAfterModal = continueAfterModal;
+
     function resetTowerClean(advanceTheme = false) {
+      if (readyPromptTimer) clearTimeout(readyPromptTimer);
+      const toolsRow = document.getElementById('crash-tools-row');
+      if (toolsRow) toolsRow.style.display = 'none';
+
       towerColumn.innerHTML = '';
       towerColumn.appendChild(exhaustFlames);
       towerColumn.classList.remove('wobble-mild', 'wobble-wild');
@@ -644,6 +934,73 @@
         }
       }
     }
+
+    // -------------------------------------------------------------
+    // SLAPSTICK DEMOLITION TOOLS (Dino, Bowling, Big Wind)
+    // -------------------------------------------------------------
+    function crashWithTool(toolType) {
+      if (isBusy || currentStack.length === 0) return;
+      const toolsRow = document.getElementById('crash-tools-row');
+      if (toolsRow) toolsRow.style.display = 'none';
+
+      const stage = document.getElementById('stage-wrapper') || document.body;
+      const actor = document.createElement('div');
+      actor.className = 'crash-actor';
+
+      if (toolType === 'dino') {
+        actor.innerText = '🦖';
+        actor.style.left = '-120px';
+        actor.style.top = '40%';
+        stage.appendChild(actor);
+        if (window.ToddlerAudio) {
+          if (ToddlerAudio.playBoing) ToddlerAudio.playBoing();
+          ToddlerAudio.speak('Roar! Dino smash!');
+        }
+        requestAnimationFrame(() => {
+          actor.style.left = '42%';
+          actor.style.transform = 'scale(1.35) rotate(12deg)';
+        });
+        setTimeout(() => {
+          crashTowerWithFun();
+          actor.style.transform = 'scale(1.15) rotate(-18deg)';
+          setTimeout(() => actor.remove(), 900);
+        }, 550);
+      } else if (toolType === 'bowling') {
+        actor.innerText = '🎳';
+        actor.style.right = '-120px';
+        actor.style.top = '48%';
+        stage.appendChild(actor);
+        if (window.ToddlerAudio) {
+          if (ToddlerAudio.playCheer) ToddlerAudio.playCheer();
+          ToddlerAudio.speak('Strike! Bowling ball roll!');
+        }
+        requestAnimationFrame(() => {
+          actor.style.right = '42%';
+          actor.style.transform = 'rotate(-720deg) scale(1.3)';
+        });
+        setTimeout(() => {
+          crashTowerWithFun();
+          setTimeout(() => actor.remove(), 900);
+        }, 520);
+      } else { // whoosh
+        actor.innerText = '🌬️💨';
+        actor.style.left = '-150px';
+        actor.style.top = '32%';
+        stage.appendChild(actor);
+        if (window.ToddlerAudio) {
+          ToddlerAudio.speak('Big wind! Whooooosh!');
+        }
+        requestAnimationFrame(() => {
+          actor.style.left = '40%';
+          actor.style.transform = 'scale(1.5)';
+        });
+        setTimeout(() => {
+          crashTowerWithFun();
+          setTimeout(() => actor.remove(), 900);
+        }, 500);
+      }
+    }
+    window.crashWithTool = crashWithTool;
 
     // -------------------------------------------------------------
     // GHI NHẬN TIẾN ĐỘ & MỞ KHÓA STICKER (MISSION ENGINE)
@@ -681,18 +1038,17 @@
     let idleTimer = null;
     function scheduleIdleHint() {
       hideGhostHint();
+      if (isModalOpen) return;
       idleTimer = setTimeout(() => {
-        if (isBusy) return;
-        if (currentStack.length === 0) {
-          // Gợi ý chạm sàn để đặt khối đầu tiên
+        if (isBusy || isModalOpen) return;
+        if (currentStack.length < getActivePool().length) {
           ghostHand.className = 'ghost-hand-stack tap-hint';
           ghostHand.innerText = '👆';
           ghostHand.style.left = '48%';
           ghostHand.style.bottom = '120px';
           ghostHand.style.display = 'block';
           AudioEngine.speak('Tap to stack!');
-        } else if (currentStack.length >= 4) {
-          // Gợi ý hích tay xô đổ tháp
+        } else {
           ghostHand.className = 'ghost-hand-stack crash-hint';
           ghostHand.innerText = (currentMode === 'rocket') ? '👆🚀' : '👆💥';
           ghostHand.style.left = '48%';
@@ -700,7 +1056,7 @@
           ghostHand.style.display = 'block';
           AudioEngine.speak(currentMode === 'rocket' ? 'Tap to blast off!' : 'Tap to crash!');
         }
-      }, 3500);
+      }, 4200);
     }
 
     function hideGhostHint() {
@@ -712,10 +1068,9 @@
     // NATURAL TOUCH INTERACTION (Chạm màn hình & Chạm tháp)
     // -------------------------------------------------------------
     function handleStageTap() {
-      if (isBusy) return;
+      if (isBusy || isModalOpen) return;
       hideGhostHint();
 
-      // Nếu đã đủ 5 khối -> Chạm để Xô đổ hoặc Phóng tên lửa
       if (currentStack.length >= getActivePool().length) {
         if (currentMode === 'rocket') {
           launchRocketSequence();
@@ -723,18 +1078,17 @@
           crashTowerWithFun();
         }
       } else {
-        // Chưa đủ -> Thêm khối tiếp theo
-        addNextBlock();
+        addNextBlock(false);
       }
     }
 
-    // Lắng nghe tương tác chạm / click toàn màn hình
+    // Lắng nghe tương tác chạm / click toàn màn hình (Trừ HUD & Modal)
     let lastTapTime = 0;
     function onScreenTap(e) {
-      if (isBusy) return;
-      if (e && e.target && e.target.closest && e.target.closest('.hud')) return;
+      if (isBusy || isModalOpen) return;
+      if (e && e.target && e.target.closest && (e.target.closest('.hud') || e.target.closest('.modal-overlay'))) return;
       const now = Date.now();
-      if (now - lastTapTime < 250) return;
+      if (now - lastTapTime < 260) return;
       lastTapTime = now;
       handleStageTap();
     }
@@ -764,7 +1118,6 @@
       if (e.changedTouches && e.changedTouches[0]) {
         const dx = e.changedTouches[0].clientX - touchStartX;
         const dy = e.changedTouches[0].clientY - touchStartY;
-        // Vuốt ngang dứt khoát qua tháp để xô đổ sớm
         if (Math.abs(dx) > 60 && Math.abs(dy) < 80 && currentStack.length >= 2) {
           if (currentMode === 'rocket' && currentStack.length >= 5) {
             launchRocketSequence();
@@ -779,12 +1132,17 @@
     window.handleStageTap = handleStageTap;
     window.switchMode = switchMode;
 
-    // Tự động nạp sẵn khối khởi đầu để bé thấy nhân vật/khối ngay từ đầu
-    addNextBlock();
+    // Initialize Mission HUD
+    if (window.MissionEngine && MissionEngine.initGameMission) {
+      MissionEngine.initGameMission('mission_day_2', '.hud');
+    }
+
+    // Tự động nạp sẵn khối khởi đầu (silentInit = true để không đụng độ âm thanh chào mừng)
+    addNextBlock(true);
 
     // Khởi động âm thanh khi bắt đầu
     setTimeout(() => {
-      AudioEngine.speak('Count the blocks! Tap to build!');
+      AudioEngine.speak(towerThemes[currentThemeIdx].intro);
       scheduleIdleHint();
     }, 600);
   </script>

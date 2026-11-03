@@ -130,34 +130,43 @@
     .stage-center-pod {
       position: relative;
       width: 100%;
-      max-width: 600px;
-      height: 90px;
+      max-width: 780px;
+      min-height: 90px;
       display: flex;
       align-items: center;
       justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
       z-index: 25;
       margin-top: 4px;
     }
     .singer-bubble {
-      background: rgba(255, 255, 255, 0.92);
+      background: rgba(255, 255, 255, 0.95);
       border: 3.5px solid #81C784;
       border-radius: 40px;
-      padding: 8px 24px;
+      padding: 8px 22px;
       display: flex;
       align-items: center;
       gap: 12px;
       box-shadow: 0 8px 20px rgba(76, 175, 80, 0.2);
       transition: all 0.2s ease-out;
       transform: scale(1);
+      cursor: pointer;
+    }
+    .singer-bubble:active {
+      transform: scale(0.95);
     }
     .singer-bubble.singing {
-      transform: scale(1.1) translateY(-6px);
+      transform: scale(1.08) translateY(-5px);
       border-color: #FF7043;
       box-shadow: 0 12px 28px rgba(255, 112, 67, 0.35);
     }
     .singer-avatar {
       font-size: 2.8rem;
       line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
     }
     .singer-text {
@@ -165,14 +174,68 @@
       flex-direction: column;
     }
     .singer-title {
-      font-size: 1.35rem;
+      font-size: 1.3rem;
       font-weight: 900;
       color: #2E7D32;
     }
     .singer-sub {
-      font-size: 1.05rem;
+      font-size: 1rem;
       font-weight: 700;
       color: #E65100;
+    }
+
+    /* Stage Controls Bar (Song Tools & Deck Switcher) */
+    .stage-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .stage-tool-btn {
+      background: #FFFFFF;
+      border: 3px solid #29B6F6;
+      border-radius: 30px;
+      padding: 8px 15px;
+      font-size: 0.98rem;
+      font-weight: 800;
+      color: #0277BD;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 12px rgba(41, 182, 246, 0.22);
+      transition: transform 0.15s, background 0.15s;
+      font-family: inherit;
+    }
+    .stage-tool-btn:active {
+      transform: scale(0.93);
+    }
+    .stage-tool-btn.btn-demo {
+      background: linear-gradient(135deg, #FFF8E1 0%, #FFE082 100%);
+      border-color: #FFA000;
+      color: #E65100;
+    }
+    .stage-tool-btn.btn-deck {
+      background: linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 100%);
+      border-color: #AB47BC;
+      color: #6A1B9A;
+    }
+    .song-progress-pill {
+      background: #FFF9C4;
+      border: 2.5px solid #FBC02D;
+      border-radius: 24px;
+      padding: 6px 14px;
+      font-size: 0.98rem;
+      font-weight: 900;
+      color: #F57F17;
+      display: none;
+      align-items: center;
+      gap: 5px;
+      box-shadow: 0 4px 10px rgba(251, 192, 45, 0.22);
+    }
+    .song-progress-pill.visible {
+      display: inline-flex;
     }
 
     /* Rainbow Piano Board - 7 Keys Spread */
@@ -209,6 +272,20 @@
     .key:active, .key.pressed {
       transform: translateY(10px);
       box-shadow: 0 2px 0 rgba(0, 0, 0, 0.16), 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Huy hiệu chữ cái to rõ giáo dục chữ cái & Phonics */
+    .key-letter-badge {
+      background: rgba(255, 255, 255, 0.95);
+      border: 2px solid rgba(0, 0, 0, 0.12);
+      border-radius: 14px;
+      padding: 2px 10px;
+      font-size: 1.15rem;
+      font-weight: 900;
+      color: #37474F;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+      pointer-events: none;
+      margin-bottom: 2px;
     }
 
     /* Magic Guide Glow for Song Mode */
@@ -252,22 +329,39 @@
     .key-animal {
       font-size: 3.6rem;
       line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.18));
       pointer-events: none;
       transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     .key.pressed .key-animal {
-      transform: scale(1.36) translateY(-16px) rotate(-6deg);
+      transform: scale(1.32) translateY(-14px) rotate(-6deg);
+    }
+    .key.wrong-wobble {
+      animation: keyWrongWobble 0.36s ease-in-out;
+    }
+    @keyframes keyWrongWobble {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
     }
 
     /* English Animal Word on Key */
     .key-name {
-      font-size: 1.35rem;
+      font-size: 1.25rem;
       font-weight: 900;
       color: white;
       text-shadow: 0 2px 5px rgba(0, 0, 0, 0.35);
       pointer-events: none;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.4px;
+      text-align: center;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      padding: 0 2px;
     }
 
     /* Solfege Note Pill at Bottom */
@@ -334,6 +428,108 @@
       letter-spacing: 0.3px;
     }
 
+    /* Concert Finale Celebration Modal */
+    .victory-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(38, 50, 56, 0.68);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      padding: 16px;
+    }
+    .victory-modal-overlay.active {
+      display: flex;
+    }
+    .victory-card {
+      background: #FFFFFF;
+      border: 5px solid #FFD54F;
+      border-radius: 36px;
+      padding: 24px 22px;
+      max-width: 460px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.28);
+      animation: victoryPopIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes victoryPopIn {
+      0% { transform: scale(0.75); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .victory-icon {
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      align-items: center;
+    }
+    .victory-title {
+      font-size: 1.75rem;
+      font-weight: 900;
+      color: #D81B60;
+      margin-bottom: 6px;
+    }
+    .victory-sub {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #5D4037;
+      margin-bottom: 14px;
+    }
+    .parent-tip-box {
+      background: #FFF8E1;
+      border: 2.5px dashed #FFB300;
+      border-radius: 22px;
+      padding: 12px 14px;
+      text-align: left;
+      margin-bottom: 16px;
+      font-size: 0.94rem;
+      color: #4E342E;
+      line-height: 1.45;
+    }
+    .parent-tip-title {
+      font-weight: 900;
+      color: #E65100;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .victory-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn-victory-action {
+      border: none;
+      border-radius: 30px;
+      padding: 12px 24px;
+      font-size: 1.1rem;
+      font-weight: 900;
+      cursor: pointer;
+      font-family: inherit;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.15s;
+    }
+    .btn-victory-action:active {
+      transform: scale(0.94);
+    }
+    .btn-play-again {
+      background: linear-gradient(135deg, #FF6B8B 0%, #E91E63 100%);
+      color: #FFFFFF;
+      box-shadow: 0 6px 16px rgba(233, 30, 99, 0.35);
+    }
+    .btn-home-menu {
+      background: #E1F5FE;
+      color: #0277BD;
+      border: 2.5px solid #4FC3F7;
+    }
+
     /* Spotlight Container & Mobile Rules */
     .spotlight-wrap {
       position: absolute;
@@ -385,11 +581,13 @@
       }
       .stage-center-pod {
         height: auto;
-        min-height: 85px;
+        min-height: 76px;
         flex: 1;
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
+        gap: 6px;
         margin: 2px 0;
       }
       .singer-bubble {
@@ -397,13 +595,26 @@
         gap: 8px;
       }
       .singer-avatar {
-        font-size: 2.2rem;
+        font-size: 2rem;
+      }
+      .singer-avatar img.toddler-3d-word-icon {
+        width: 36px !important;
+        height: 36px !important;
       }
       .singer-title {
-        font-size: 1rem;
+        font-size: 0.96rem;
       }
       .singer-sub {
-        font-size: 0.8rem;
+        font-size: 0.78rem;
+      }
+      .stage-tool-btn {
+        padding: 5px 10px;
+        font-size: 0.76rem;
+        border-width: 2px;
+      }
+      .song-progress-pill {
+        padding: 4px 10px;
+        font-size: 0.76rem;
       }
       .piano-board {
         width: 100%;
@@ -417,15 +628,23 @@
         border-width: 2px;
         padding: 8px 1px 4px;
       }
+      .key-star-pointer {
+        top: -36px;
+        font-size: 1.7rem;
+      }
       .key-animal {
         font-size: 1.8rem;
       }
+      .key-animal img.toddler-3d-word-icon {
+        width: clamp(26px, 9.5vw, 42px) !important;
+        height: clamp(26px, 9.5vw, 42px) !important;
+      }
       .key-name {
-        font-size: 0.65rem;
+        font-size: 0.62rem;
         letter-spacing: 0;
       }
       .key-note {
-        font-size: 0.68rem;
+        font-size: 0.66rem;
         padding: 2px 4px;
         border-radius: 8px;
       }
@@ -456,11 +675,20 @@
         font-size: 0.85rem;
       }
       .stage-center-pod {
-        height: 55px;
+        min-height: 50px;
+        flex-direction: row;
         margin: 2px 0;
       }
       .piano-board {
-        height: min(150px, 42vh);
+        height: min(155px, 44vh);
+      }
+      .key-animal img.toddler-3d-word-icon {
+        width: 34px !important;
+        height: 34px !important;
+      }
+      .key-star-pointer {
+        top: -32px;
+        font-size: 1.5rem;
       }
       .prompt-footer-pill {
         display: none;
@@ -493,18 +721,34 @@
     <!-- Star Count Badge -->
     <div class="star-hud-badge">
       <span>⭐</span>
-      <span id="star-score">3 Stars</span>
+      <span id="star-score">0 Stars</span>
     </div>
   </div>
 
-  <!-- Active Singer Stage Pod -->
+  <!-- Active Singer Stage Pod & Interactive Controls -->
   <div class="stage-center-pod">
-    <div class="singer-bubble" id="singer-bubble">
+    <div class="singer-bubble" id="singer-bubble" onclick="onSingerStageTap()" title="Chạm để nghe phát âm">
       <div class="singer-avatar" id="singer-avatar">🐶</div>
       <div class="singer-text">
         <span class="singer-title" id="singer-title">DOG SINGS</span>
         <span class="singer-sub" id="singer-sub">Woof woof! 🎵</span>
       </div>
+    </div>
+
+    <div class="stage-controls">
+      <button type="button" class="stage-tool-btn btn-deck" id="btn-deck-switch" onclick="toggleKeyboardDeck()">
+        <span id="deck-btn-label">📚 Đổi Sang Từ Tuần</span>
+      </button>
+      <div class="song-progress-pill" id="song-progress-pill">
+        <span>🎵</span>
+        <span id="song-progress-text">1 / 14</span>
+      </div>
+      <button type="button" class="stage-tool-btn btn-demo" id="btn-song-demo" style="display:none;" onclick="playSongDemo()">
+        <span>🔊 Nghe Mẫu</span>
+      </button>
+      <button type="button" class="stage-tool-btn" id="btn-song-next" style="display:none;" onclick="cycleNextSong()">
+        <span>⏭️ Đổi Bài</span>
+      </button>
     </div>
   </div>
 
@@ -515,7 +759,28 @@
 
   <!-- Bottom Guidance Pill -->
   <div class="prompt-footer-pill" id="prompt-footer-pill">
-    🎵 Bấm phím nghe bạn thú hát!
+    🎵 Bấm hoặc lướt phím nghe bạn thú hát!
+  </div>
+
+  <!-- Concert Finale Celebration Modal -->
+  <div class="victory-modal-overlay" id="victory-modal">
+    <div class="victory-card">
+      <div class="victory-icon" id="victory-icon">👑</div>
+      <div class="victory-title">Nhạc Sĩ Nhí Tài Ba! 🎹</div>
+      <div class="victory-sub" id="victory-sub">Bé đã biểu diễn xuất sắc các bản nhạc cầu vồng!</div>
+      <div class="parent-tip-box" id="parent-tip-box">
+        <div class="parent-tip-title">💡 Góc Đồng Hành Cùng Mẹ:</div>
+        <div id="parent-tip-text">Mẹ hãy cùng bé ngân nga giai điệu và gọi tên các từ vựng ngoài đời thực nhé!</div>
+      </div>
+      <div class="victory-actions">
+        <button type="button" class="btn-victory-action btn-play-again" onclick="closeVictoryModal()">
+          <span>🎹 Đàn Tiếp</span>
+        </button>
+        <a href="../index.html" class="btn-victory-action btn-home-menu">
+          <span>🏠 Về Menu</span>
+        </a>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -525,13 +790,27 @@
     const AudioEngine = window.AudioEngine || window.ToddlerAudio || {};
 
     let currentMode = 'free'; // 'free' | 'song'
+    let currentDeck = 'animals'; // 'animals' | 'weekVocab'
     let isBusy = false;
-    let earnedStars = 3;
+    let isDemoPlaying = false;
+    let earnedStars = 0;
+    let songsCompletedCount = 0;
+    let freePlayTapCount = 0;
+    let activeSingerIdx = 0;
+    let isPointerDownOnBoard = false;
+    let lastSlidKeyIdx = -1;
+    let demoTimers = [];
+    let nextSongTimer = null;
+    let lastWrongHintTime = 0;
 
     const urlParams = new URLSearchParams(window.location.search);
-    const queryWeek = parseInt(urlParams.get('week'));
+    const queryWeek = parseInt(urlParams.get('week'), 10);
     const currentWeek = queryWeek || ((window.MissionEngine && MissionEngine.getCurrentWeek) ? MissionEngine.getCurrentWeek() : 1);
     const weekData = (window.ToddlerVocabulary) ? window.ToddlerVocabulary.build80_20Pack(currentWeek) : null;
+
+    if (window.MissionEngine && MissionEngine.init) {
+      MissionEngine.init();
+    }
 
     // Thang âm 7 nốt C4-B4 chuẩn nhạc lý quốc tế
     const pitchSolfege = [
@@ -544,32 +823,79 @@
       { note: 493.88, solfege: 'Si', bg: 'linear-gradient(180deg, #F06292 0%, #D81B60 100%)', height: '82%' }
     ];
 
+    const fallbackAnimals = [
+      { id: 'dog', word: 'Dog', emoji: '🐶', sound: 'Woof woof', category: 'animals' },
+      { id: 'cat', word: 'Cat', emoji: '🐱', sound: 'Meow meow', category: 'animals' },
+      { id: 'duck', word: 'Duck', emoji: '🦆', sound: 'Quack quack', category: 'animals' },
+      { id: 'frog', word: 'Frog', emoji: '🐸', sound: 'Ribbit ribbit', category: 'animals' },
+      { id: 'pig', word: 'Pig', emoji: '🐷', sound: 'Oink oink', category: 'animals' },
+      { id: 'sheep', word: 'Sheep', emoji: '🐑', sound: 'Baa baa', category: 'animals' },
+      { id: 'cow', word: 'Cow', emoji: '🐮', sound: 'Moo moo', category: 'animals' }
+    ];
+
     const animalKeysList = (weekData && weekData.pianoKeys && weekData.pianoKeys.length >= 7)
       ? weekData.pianoKeys
       : (window.ToddlerVocabulary && ToddlerVocabulary.CATEGORIES && ToddlerVocabulary.CATEGORIES.animals)
         ? [0, 1, 2, 3, 4, 5, 6].map(i => ToddlerVocabulary.CATEGORIES.animals[((currentWeek - 1) * 2 + i) % ToddlerVocabulary.CATEGORIES.animals.length])
-        : [
-            { word: 'Dog', emoji: '🐶', sound: 'Woof woof' },
-            { word: 'Cat', emoji: '🐱', sound: 'Meow meow' },
-            { word: 'Duck', emoji: '🦆', sound: 'Quack quack' },
-            { word: 'Frog', emoji: '🐸', sound: 'Ribbit ribbit' },
-            { word: 'Pig', emoji: '🐷', sound: 'Oink oink' },
-            { word: 'Sheep', emoji: '🐑', sound: 'Baa baa' },
-            { word: 'Cow', emoji: '🐮', sound: 'Moo moo' }
-          ];
+        : fallbackAnimals;
 
-    const rainbowNotes = pitchSolfege.map((item, idx) => {
-      const anim = animalKeysList[idx % animalKeysList.length];
-      return {
-        ...item,
-        word: anim.word,
-        emoji: anim.emoji,
-        sound: anim.sound || `${anim.word} sings`
-      };
-    });
+    // Xây dựng bộ 7 từ vựng mục tiêu 80/20 của Tuần hiện tại
+    function buildWeekVocabDeck() {
+      const seenIds = new Set();
+      const result = [];
+      const candidates = [
+        ...(weekData && weekData.newWords ? weekData.newWords : []),
+        ...(weekData && weekData.reviewWords ? weekData.reviewWords : []),
+        ...animalKeysList,
+        ...fallbackAnimals
+      ];
+      for (const item of candidates) {
+        if (!item || !item.word) continue;
+        const keyId = item.id || item.word.toLowerCase();
+        if (!seenIds.has(keyId)) {
+          seenIds.add(keyId);
+          result.push(item);
+        }
+        if (result.length >= 7) break;
+      }
+      return result;
+    }
 
-    // Danh sách bài hát chuẩn nhạc lý 7 nốt cho mầm non
+    const weekVocabKeysList = buildWeekVocabDeck();
+
+    let rainbowNotes = [];
+
+    function rebuildRainbowNotes() {
+      const sourceDeck = (currentDeck === 'weekVocab') ? weekVocabKeysList : animalKeysList;
+      rainbowNotes = pitchSolfege.map((item, idx) => {
+        const entry = sourceDeck[idx % sourceDeck.length] || fallbackAnimals[idx];
+        return {
+          ...item,
+          id: entry.id || entry.word.toLowerCase().replace(/\s+/g, '_'),
+          word: entry.word,
+          emoji: entry.emoji || '🎵',
+          category: entry.category || '',
+          sound: entry.sound || `${entry.word}!`
+        };
+      });
+    }
+
+    rebuildRainbowNotes();
+
+    // Danh sách 7 bài hát chuẩn nhạc lý 7 nốt cho mầm non (Bổ sung bài Chữ Cái ABC, Baa Baa Sheep, Row Row Boat)
     const songPlaylists = [
+      {
+        title: 'The ABC Phonics Song',
+        vietTitle: 'Bài Ca Bảng Chữ Cái ABC',
+        // Do Do Sol Sol La La Sol, Fa Fa Mi Mi Re Re Do
+        notes: [0, 0, 4, 4, 5, 5, 4, 3, 3, 2, 2, 1, 1, 0],
+        lyrics: [
+          'A-B,', 'C-D,', 'E-F,', 'G!',
+          'H-I,', 'J-K,', 'L-M-N-O-P!',
+          'Q-R,', 'S-T,', 'U-V,', 'W!',
+          'X-Y,', 'Z! Now', 'I know my ABCs!'
+        ]
+      },
       {
         title: 'Twinkle, Twinkle, Little Star',
         vietTitle: 'Ngôi Sao Lấp Lánh',
@@ -593,6 +919,51 @@
           'And on', 'that farm', 'he had', 'a cow,',
           'E-I-', 'E-I-', 'O!'
         ]
+      },
+      {
+        title: 'Mary Had a Little Lamb',
+        vietTitle: 'Chú Cừu Nhỏ Của Mary',
+        // Mi Re Do Re Mi Mi Mi, Re Re Re, Mi Sol Sol
+        notes: [2, 1, 0, 1, 2, 2, 2, 1, 1, 1, 2, 4, 4],
+        lyrics: [
+          'Ma-ry', 'had a', 'lit-tle', 'lamb,',
+          'lit-tle', 'lamb,', 'lit-tle lamb!',
+          'Lit-tle', 'white', 'lamb!',
+          'Ma-ry', 'loves', 'lamb!'
+        ]
+      },
+      {
+        title: 'Row, Row, Row Your Boat',
+        vietTitle: 'Chèo Thuyền Bồng Bềnh',
+        // Do Do Do Re Mi, Mi Re Mi Fa Sol
+        notes: [0, 0, 0, 1, 2, 2, 1, 2, 3, 4],
+        lyrics: [
+          'Row,', 'row,', 'row your', 'boat,',
+          'Gent-ly', 'down the', 'stream!',
+          'Mer-ri-ly,', 'mer-ri-ly,', 'life is a dream!'
+        ]
+      },
+      {
+        title: 'Baa, Baa, Black Sheep',
+        vietTitle: 'Chú Cừu Đen Baa Baa',
+        // Do Do Sol Sol La La La La Sol, Fa Fa Mi Mi Re Re Do
+        notes: [0, 0, 4, 4, 5, 5, 4, 3, 3, 2, 2, 1, 1, 0],
+        lyrics: [
+          'Baa, baa,', 'black sheep,', 'have you', 'wool?',
+          'Yes, sir,', 'yes, sir,', 'three bags full!',
+          'One for', 'the mas-ter,', 'one for', 'the dame,',
+          'One for', 'the lit-tle', 'boy who lives down the lane!'
+        ]
+      },
+      {
+        title: 'Baby Shark Groove',
+        vietTitle: 'Điệu Nhảy Cá Mập Con',
+        // Re Mi Sol Sol Sol Sol Sol Sol
+        notes: [1, 2, 4, 4, 4, 4, 4, 4],
+        lyrics: [
+          'Ba-by', 'Shark,', 'doo', 'doo',
+          'doo', 'doo', 'doo', 'doo!'
+        ]
       }
     ];
 
@@ -606,9 +977,31 @@
     const singerSub = document.getElementById('singer-sub');
     const promptPill = document.getElementById('prompt-footer-pill');
     const starScoreElem = document.getElementById('star-score');
+    const songProgressPill = document.getElementById('song-progress-pill');
+    const songProgressText = document.getElementById('song-progress-text');
+    const btnSongDemo = document.getElementById('btn-song-demo');
+    const btnSongNext = document.getElementById('btn-song-next');
+    const deckBtnLabel = document.getElementById('deck-btn-label');
+
+    function render3dIconOrEmoji(itemOrId, size, fallbackEmoji) {
+      if (window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon) {
+        return ToddlerVocabulary.renderWordIcon(itemOrId, size);
+      }
+      return fallbackEmoji || '🎵';
+    }
+
+    function clearAllDemoTimers() {
+      while (demoTimers.length > 0) {
+        clearTimeout(demoTimers.pop());
+      }
+      isDemoPlaying = false;
+      if (btnSongDemo) {
+        btnSongDemo.innerHTML = '<span>🔊 Nghe Mẫu</span>';
+      }
+    }
 
     // -------------------------------------------------------------
-    // KHỞI TẠO 7 PHÍM ĐÀN CẦU VỒNG
+    // KHỞI TẠO 7 PHÍM ĐÀN CẦU VỒNG & HỖ TRỢ LƯỚT PHÍM (GLISSANDO)
     // -------------------------------------------------------------
     function renderPianoKeys() {
       pianoBoard.innerHTML = '';
@@ -620,11 +1013,11 @@
         key.style.height = item.height;
         key.setAttribute('data-index', index);
 
-        const iconHtml = (window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon)
-          ? ToddlerVocabulary.renderWordIcon(item, 52)
-          : item.emoji;
+        const iconHtml = render3dIconOrEmoji(item, 52, item.emoji);
+        const letter = String.fromCharCode(65 + index); // A, B, C, D, E, F, G
 
         key.innerHTML = `
+          <div class="key-letter-badge">${letter}</div>
           <div class="key-star-pointer">⭐👆</div>
           <div class="key-animal" id="avatar-${index}">${iconHtml}</div>
           <div class="key-name">${item.word.toUpperCase()}</div>
@@ -633,6 +1026,8 @@
 
         key.addEventListener('pointerdown', (e) => {
           e.stopPropagation();
+          isPointerDownOnBoard = true;
+          lastSlidKeyIdx = index;
           onKeyTrigger(index);
         });
 
@@ -640,11 +1035,66 @@
       });
     }
 
+    // Hỗ trợ lướt ngón tay qua nhiều phím đàn (Glissando trong chế độ Tự Do)
+    pianoBoard.addEventListener('pointermove', (e) => {
+      if (!isPointerDownOnBoard || currentMode !== 'free' || isBusy) return;
+      const elem = document.elementFromPoint(e.clientX, e.clientY);
+      if (!elem) return;
+      const keyElem = elem.closest('.key');
+      if (!keyElem) return;
+      const idx = parseInt(keyElem.getAttribute('data-index'), 10);
+      if (!isNaN(idx) && idx !== lastSlidKeyIdx) {
+        lastSlidKeyIdx = idx;
+        onKeyTrigger(idx, true);
+      }
+    });
+
+    window.addEventListener('pointerup', () => {
+      isPointerDownOnBoard = false;
+      lastSlidKeyIdx = -1;
+    });
+    window.addEventListener('pointercancel', () => {
+      isPointerDownOnBoard = false;
+      lastSlidKeyIdx = -1;
+    });
+
+    // -------------------------------------------------------------
+    // CHUYỂN ĐỔI DÀN NHẠC: DÀN THÚ <-> TỪ VỰNG TUẦN
+    // -------------------------------------------------------------
+    function toggleKeyboardDeck() {
+      if (isBusy) return;
+      clearAllDemoTimers();
+      currentDeck = (currentDeck === 'animals') ? 'weekVocab' : 'animals';
+      rebuildRainbowNotes();
+      renderPianoKeys();
+
+      if (currentDeck === 'weekVocab') {
+        deckBtnLabel.innerText = '🐾 Đổi Sang Dàn Thú';
+        promptPill.innerText = `📚 Đàn Từ Vựng Tuần ${currentWeek}: Chạm phím để nghe câu mẫu!`;
+        updateSingerPod(rainbowNotes[0]);
+        AudioEngine.speak(`Week ${currentWeek} words! Tap to play!`);
+      } else {
+        deckBtnLabel.innerText = `📚 Đổi Sang Từ Tuần ${currentWeek}`;
+        promptPill.innerText = '🎵 Bấm hoặc lướt phím nghe bạn thú hát!';
+        updateSingerPod(rainbowNotes[0]);
+        AudioEngine.speak('Animal Band! Tap the animals!');
+      }
+
+      if (currentMode === 'song') {
+        highlightCurrentSongKey();
+      }
+    }
+
     // -------------------------------------------------------------
     // CHUYỂN ĐỔI CHẾ ĐỘ CHƠI (MODE SWITCHING)
     // -------------------------------------------------------------
     function switchMode(mode) {
       if (currentMode === mode || isBusy) return;
+      clearAllDemoTimers();
+      if (nextSongTimer) {
+        clearTimeout(nextSongTimer);
+        nextSongTimer = null;
+      }
       currentMode = mode;
 
       document.getElementById('tab-free').classList.toggle('active', currentMode === 'free');
@@ -653,32 +1103,145 @@
       clearGuideGlow();
 
       if (currentMode === 'free') {
-        promptPill.innerText = '🎵 Bấm phím nghe bạn thú hát!';
+        songProgressPill.classList.remove('visible');
+        btnSongDemo.style.display = 'none';
+        btnSongNext.style.display = 'none';
+
+        promptPill.innerText = '🎵 Bấm hoặc lướt phím nghe bạn thú hát!';
         singerTitle.innerText = 'STAGE READY';
-        singerSub.innerText = 'Tap any animal to play! 🎶';
-        singerAvatar.innerText = '🎵';
-        AudioEngine.speak('Free play! Tap the animals!');
+        singerSub.innerText = 'Tap any key to make music! 🎶';
+        singerAvatar.innerHTML = render3dIconOrEmoji({ id: 'bell', word: 'Bell', emoji: '🔔' }, 44, '🎵');
+        AudioEngine.speak('Free play! Tap the keys!');
       } else {
         songStep = 0;
         const curSong = songPlaylists[currentSongIdx];
-        promptPill.innerText = `⭐ Chạm phím phát sáng nhé!`;
+        songProgressPill.classList.add('visible');
+        btnSongDemo.style.display = 'inline-flex';
+        btnSongNext.style.display = 'inline-flex';
+        updateSongProgressUi();
+
         singerTitle.innerText = curSong.title.toUpperCase();
-        singerSub.innerText = 'Follow the golden star light! 🌟';
-        singerAvatar.innerText = '⭐';
+        singerSub.innerText = `${curSong.vietTitle} 🌟`;
+        singerAvatar.innerHTML = render3dIconOrEmoji({ id: 'star', word: 'Star', emoji: '⭐' }, 44, '⭐');
         AudioEngine.speak(`Song mode! Follow the star! ${curSong.title}!`);
         highlightCurrentSongKey();
       }
+    }
+
+    function updateSongProgressUi() {
+      const curSong = songPlaylists[currentSongIdx];
+      if (songProgressText && curSong) {
+        const displayStep = Math.min(songStep + 1, curSong.notes.length);
+        songProgressText.innerText = `${displayStep} / ${curSong.notes.length}`;
+      }
+    }
+
+    function cycleNextSong() {
+      if (isBusy) return;
+      clearAllDemoTimers();
+      currentSongIdx = (currentSongIdx + 1) % songPlaylists.length;
+      songStep = 0;
+      const curSong = songPlaylists[currentSongIdx];
+      singerTitle.innerText = curSong.title.toUpperCase();
+      singerSub.innerText = `${curSong.vietTitle} 🌟`;
+      singerAvatar.innerHTML = render3dIconOrEmoji({ id: 'star', word: 'Star', emoji: '⭐' }, 44, '⭐');
+      updateSongProgressUi();
+      highlightCurrentSongKey();
+      AudioEngine.speak(`${curSong.title}! Follow the star!`);
+    }
+
+    // -------------------------------------------------------------
+    // NGHE MẪU GIAI ĐIỆU TỰ ĐỘNG (AUTO-PLAY DEMO MELODY)
+    // -------------------------------------------------------------
+    function playSongDemo() {
+      if (isBusy || currentMode !== 'song') return;
+      if (isDemoPlaying) {
+        clearAllDemoTimers();
+        highlightCurrentSongKey();
+        return;
+      }
+
+      clearAllDemoTimers();
+      clearGuideGlow();
+      isDemoPlaying = true;
+      btnSongDemo.innerHTML = '<span>⏹️ Dừng Mẫu</span>';
+
+      const curSong = songPlaylists[currentSongIdx];
+      promptPill.innerText = `🎶 Đang đàn mẫu: ${curSong.title}...`;
+
+      curSong.notes.forEach((noteIdx, stepIdx) => {
+        const t = setTimeout(() => {
+          const item = rainbowNotes[noteIdx];
+          const keyElem = document.getElementById(`key-${noteIdx}`);
+          playCrystalChime(item.note);
+          if (keyElem) {
+            keyElem.classList.add('pressed');
+            setTimeout(() => keyElem.classList.remove('pressed'), 220);
+          }
+          spawnNoteBubble(keyElem, item.emoji);
+          singerTitle.innerText = curSong.title.toUpperCase();
+          singerSub.innerText = `"${curSong.lyrics[stepIdx] || item.solfege}" 🎵`;
+          singerAvatar.innerHTML = render3dIconOrEmoji(item, 44, item.emoji);
+        }, stepIdx * 420);
+        demoTimers.push(t);
+      });
+
+      const endTimer = setTimeout(() => {
+        clearAllDemoTimers();
+        highlightCurrentSongKey();
+      }, curSong.notes.length * 420 + 250);
+      demoTimers.push(endTimer);
+    }
+
+    // -------------------------------------------------------------
+    // CHẠM SÂN KHẤU CA SĨ (STAGE POD INTERACTION)
+    // -------------------------------------------------------------
+    function onSingerStageTap() {
+      if (isBusy) return;
+      if (currentMode === 'song') {
+        const curSong = songPlaylists[currentSongIdx];
+        const targetIdx = curSong.notes[songStep] || 0;
+        const targetItem = rainbowNotes[targetIdx] || rainbowNotes[0];
+        playCrystalChime(targetItem.note);
+        AudioEngine.speak(`Tap ${targetItem.word}! ${targetItem.solfege}!`);
+        return;
+      }
+      const item = rainbowNotes[activeSingerIdx] || rainbowNotes[0];
+      playCrystalChime(item.note);
+      updateSingerPod(item);
+      const phrase = getKeySpeechPhrase(item);
+      AudioEngine.speak(phrase);
+    }
+
+    function getKeySpeechPhrase(item, index = activeSingerIdx) {
+      const letter = String.fromCharCode(65 + (index >= 0 ? index % 7 : 0));
+      if (currentDeck === 'weekVocab' && window.ToddlerVocabulary && ToddlerVocabulary.getWordContextPhrase) {
+        return `${letter}! ${item.word}! ` + ToddlerVocabulary.getWordContextPhrase(item);
+      }
+      if (item.sound && item.sound !== `${item.word}!`) {
+        return `${letter}! ${item.word}! ${item.sound}!`;
+      }
+      if (window.ToddlerVocabulary && ToddlerVocabulary.getWordContextPhrase) {
+        return `${letter} is for ${item.word}! ` + ToddlerVocabulary.getWordContextPhrase(item);
+      }
+      return `${letter} is for ${item.word}!`;
     }
 
     // -------------------------------------------------------------
     // KÍCH HOẠT PHÍM ĐÀN (KEY PRESS & SOUND SYNTHESIS)
     // -------------------------------------------------------------
     let lastKeyTime = 0;
-    function onKeyTrigger(index) {
+    function onKeyTrigger(index, isSlide = false) {
+      if (isBusy) return;
       const now = Date.now();
-      if (now - lastKeyTime < 90) return; // Bảo vệ đa chạm mượt mà
+      if (now - lastKeyTime < (isSlide ? 65 : 85)) return; // Bảo vệ đa chạm & lướt phím mượt mà
       lastKeyTime = now;
 
+      if (isDemoPlaying) {
+        clearAllDemoTimers();
+      }
+
+      activeSingerIdx = index;
       const item = rainbowNotes[index];
       const keyElem = document.getElementById(`key-${index}`);
 
@@ -699,22 +1262,26 @@
 
       // Xử lý chế độ Đàn Theo Bài
       if (currentMode === 'song') {
-        handleSongStep(index);
+        handleSongStep(index, keyElem);
       } else {
-        // Chế độ Tự Do: Phát âm Motherese nhẹ nhàng
+        // Chế độ Tự Do: Đếm lượt khám phá thưởng sao & phát âm không ngắt quãng
+        freePlayTapCount++;
+        if (freePlayTapCount % 7 === 0) {
+          earnedStars++;
+          starScoreElem.innerText = `${earnedStars} Stars`;
+        }
         speakAnimalSoundDebounced(item);
       }
     }
 
     // Cập nhật bục ca sĩ trên sân khấu
     function updateSingerPod(item) {
-      if (window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon) {
-        singerAvatar.innerHTML = ToddlerVocabulary.renderWordIcon(item, 46);
-      } else {
-        singerAvatar.innerText = item.emoji;
-      }
-      singerTitle.innerText = `${item.word.toUpperCase()} SINGS`;
-      singerSub.innerText = `${item.sound}! (${item.solfege}) 🎵`;
+      singerAvatar.innerHTML = render3dIconOrEmoji(item, 46, item.emoji);
+      singerTitle.innerText = `${item.word.toUpperCase()} (${item.solfege.toUpperCase()})`;
+      const subLabel = (currentDeck === 'weekVocab' && window.ToddlerVocabulary && ToddlerVocabulary.getWordContextPhrase)
+        ? ToddlerVocabulary.getWordContextPhrase(item)
+        : `${item.sound}! 🎵`;
+      singerSub.innerText = subLabel;
       singerBubble.classList.add('singing');
       setTimeout(() => singerBubble.classList.remove('singing'), 350);
     }
@@ -722,53 +1289,86 @@
     let speakTimer = null;
     function speakAnimalSoundDebounced(item) {
       if (speakTimer) clearTimeout(speakTimer);
+      // Chờ 340ms sau khi bé dừng lướt phím để tiếng chuông ngân vang trọn vẹn rồi mới đọc câu
       speakTimer = setTimeout(() => {
-        AudioEngine.speak(`${item.word}! ${item.sound}!`);
-      }, 160);
+        AudioEngine.speak(getKeySpeechPhrase(item));
+      }, 340);
     }
 
     // -------------------------------------------------------------
     // CHẾ ĐỘ ĐÀN THEO BÀI HÁT (PLAY-ALONG SONG MODE)
     // -------------------------------------------------------------
-    function handleSongStep(pressedIndex) {
+    function handleSongStep(pressedIndex, keyElem) {
       const curSong = songPlaylists[currentSongIdx];
       const expectedIndex = curSong.notes[songStep];
 
       if (pressedIndex === expectedIndex) {
         // Bấm đúng nốt!
         const lyric = curSong.lyrics[songStep] || 'Good!';
+        singerTitle.innerText = curSong.title.toUpperCase();
         singerSub.innerText = `"${lyric}" 🌟`;
 
         songStep++;
 
         if (songStep >= curSong.notes.length) {
           // HOÀN THÀNH BÀI HÁT XUẤT SẮC!
+          songProgressText.innerText = `${curSong.notes.length} / ${curSong.notes.length}`;
           onSongCompleted(curSong);
         } else {
+          updateSongProgressUi();
           highlightCurrentSongKey();
         }
       } else {
-        // Bấm chưa đúng nốt: Nhấp nháy nhẹ nốt cần bấm để hướng dẫn
-        promptPill.innerText = `⭐ Nốt tiếp theo ở phím phát sáng nhé!`;
+        // Bấm chưa đúng nốt: Lắc nhẹ phím vừa bấm & nhấp nháy phím mục tiêu
+        if (keyElem) {
+          keyElem.classList.remove('wrong-wobble');
+          void keyElem.offsetWidth;
+          keyElem.classList.add('wrong-wobble');
+        }
+        const targetItem = rainbowNotes[expectedIndex] || rainbowNotes[0];
+        promptPill.innerText = `⭐ Chạm phím ${targetItem.word} (${targetItem.solfege}) đang phát sáng nhé!`;
         highlightCurrentSongKey();
+
+        const now = Date.now();
+        if (now - lastWrongHintTime > 2200) {
+          lastWrongHintTime = now;
+          AudioEngine.speak(`Tap ${targetItem.word}!`);
+        }
       }
     }
 
+    let starHintTimer = null;
     function highlightCurrentSongKey() {
       clearGuideGlow();
       if (currentMode !== 'song') return;
 
       const curSong = songPlaylists[currentSongIdx];
       const targetIdx = curSong.notes[songStep];
-      const targetKey = document.getElementById(`key-${targetIdx}`);
-      if (targetKey) {
-        targetKey.classList.add('guide-glow');
-        const targetItem = rainbowNotes[targetIdx];
-        promptPill.innerText = `⭐ Bấm phím ${targetItem.word} (${targetItem.solfege}) nào!`;
-      }
+      const targetItem = rainbowNotes[targetIdx];
+      if (!targetItem) return;
+
+      const letter = String.fromCharCode(65 + targetIdx);
+
+      // 1. Giáo dục chữ cái và luyện nghe chủ động TRƯỚC (Bé đọc và nghe từ vựng)
+      promptPill.innerText = `🎧 Lắng nghe: Tìm phím "${targetItem.word}" (Chữ ${letter}) nào!`;
+      singerTitle.innerText = `${targetItem.word.toUpperCase()} • CHỮ ${letter}`;
+      singerSub.innerText = `Lắng nghe và chạm phím "${targetItem.word}" 🎶`;
+      singerAvatar.innerHTML = render3dIconOrEmoji(targetItem, 46, targetItem.emoji);
+
+      // 2. Chế độ nâng cao nhận thức: CHỈ hiện ngôi sao chỉ dẫn sau 3 giây nếu bé chưa nhận biết được
+      starHintTimer = setTimeout(() => {
+        if (currentMode === 'song') {
+          const targetKey = document.getElementById(`key-${targetIdx}`);
+          if (targetKey) {
+            targetKey.classList.add('guide-glow');
+            promptPill.innerText = `⭐ Gợi ý: Phím ${targetItem.word} (Chữ ${letter}) đang phát sáng nè!`;
+          }
+        }
+      }, 3000);
     }
 
     function clearGuideGlow() {
+      if (starHintTimer) clearTimeout(starHintTimer);
       document.querySelectorAll('.key').forEach(k => k.classList.remove('guide-glow'));
     }
 
@@ -776,17 +1376,26 @@
     function onSongCompleted(song) {
       isBusy = true;
       clearGuideGlow();
+      if (speakTimer) clearTimeout(speakTimer);
 
+      songsCompletedCount++;
       earnedStars += 3;
-      starScoreElem.innerText = `${earnedStars} Stars ⭐`;
+      starScoreElem.innerText = `${earnedStars} Stars`;
 
       promptPill.innerText = `🎉 Hoan Hô! Bé Đã Đàn Xong: ${song.title}! 🌟`;
       singerTitle.innerText = '🌟 SUPERSTAR! 🌟';
       singerSub.innerText = 'Hooray! Beautiful music! 👏';
-      singerAvatar.innerText = '👑';
+      singerAvatar.innerHTML = render3dIconOrEmoji({ id: 'crown', word: 'Crown', emoji: '👑' }, 46, '👑');
 
       if (AudioEngine.playFanfare) AudioEngine.playFanfare();
-      AudioEngine.speak(`Wonderful! You played ${song.title}! Good job!`);
+
+      const firstNoteIdx = (song.notes && song.notes.length > 0) ? song.notes[0] : 0;
+      const firstNoteObj = rainbowNotes[firstNoteIdx] || rainbowNotes[0];
+      const contextPhrase = (firstNoteObj && window.ToddlerVocabulary && ToddlerVocabulary.getWordContextPhrase)
+        ? ToddlerVocabulary.getWordContextPhrase(firstNoteObj)
+        : '';
+
+      AudioEngine.speak(`Wonderful! You played ${song.title}! ${contextPhrase}`);
 
       // Bắn pháo hoa ngôi sao cầu vồng
       spawnRainbowCelebration();
@@ -796,32 +1405,68 @@
         MissionEngine.recordAction();
       }
 
-      setTimeout(() => {
-        // Chuyển bài hát tiếp theo
-        currentSongIdx = (currentSongIdx + 1) % songPlaylists.length;
-        songStep = 0;
-        isBusy = false;
-        if (currentMode === 'song') {
-          const nextSong = songPlaylists[currentSongIdx];
-          promptPill.innerText = `⭐ Tiếp theo: ${nextSong.title}! Sẵn sàng nào!`;
-          highlightCurrentSongKey();
+      if (nextSongTimer) clearTimeout(nextSongTimer);
+      nextSongTimer = setTimeout(() => {
+        // Sau 2 bài hát hoàn thành, hiển thị bảng vinh danh Nhạc Sĩ Nhí kèm Góc Cha Mẹ
+        if (songsCompletedCount >= 2 && songsCompletedCount % 2 === 0) {
+          showVictoryModal(song);
+          return;
         }
-      }, 3500);
+        advanceToNextSong();
+      }, 4100);
+    }
+
+    function advanceToNextSong() {
+      currentSongIdx = (currentSongIdx + 1) % songPlaylists.length;
+      songStep = 0;
+      isBusy = false;
+      if (currentMode === 'song') {
+        const nextSong = songPlaylists[currentSongIdx];
+        singerTitle.innerText = nextSong.title.toUpperCase();
+        singerSub.innerText = `${nextSong.vietTitle} 🌟`;
+        singerAvatar.innerHTML = render3dIconOrEmoji({ id: 'star', word: 'Star', emoji: '⭐' }, 44, '⭐');
+        updateSongProgressUi();
+        promptPill.innerText = `⭐ Tiếp theo: ${nextSong.title}! Sẵn sàng nào!`;
+        highlightCurrentSongKey();
+        AudioEngine.speak(`Next song! ${nextSong.title}!`);
+      }
+    }
+
+    function showVictoryModal(lastSong) {
+      const modal = document.getElementById('victory-modal');
+      const vIcon = document.getElementById('victory-icon');
+      const vSub = document.getElementById('victory-sub');
+      const tipTextElem = document.getElementById('parent-tip-text');
+
+      if (vIcon) {
+        vIcon.innerHTML =
+          render3dIconOrEmoji({ id: 'crown', word: 'Crown', emoji: '👑' }, 58, '👑') +
+          render3dIconOrEmoji(rainbowNotes[0], 54, rainbowNotes[0].emoji);
+      }
+      if (vSub && lastSong) {
+        vSub.innerText = `Bé đã đàn hoàn chỉnh "${lastSong.title}" và nhận được ${earnedStars} Ngôi Sao!`;
+      }
+      if (tipTextElem && window.ToddlerVocabulary && ToddlerVocabulary.getRealWorldParentTip) {
+        const tipInfo = ToddlerVocabulary.getRealWorldParentTip(currentWeek);
+        tipTextElem.innerText = `${tipInfo.tipText} (Từ vựng tuần ${currentWeek}: ${tipInfo.wordListStr})`;
+      }
+      if (modal) {
+        modal.classList.add('active');
+      }
+    }
+
+    function closeVictoryModal() {
+      const modal = document.getElementById('victory-modal');
+      if (modal) modal.classList.remove('active');
+      advanceToNextSong();
     }
 
     // -------------------------------------------------------------
     // TẠO ÂM THANH XYLOPHONE / CRYSTAL CHIME POLYPHONIC
     // -------------------------------------------------------------
     function playCrystalChime(freq) {
-      if (!window.AudioContext && !window.webkitAudioContext) return;
-      if (!window._sharedAudioCtx) {
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        window._sharedAudioCtx = new AudioCtx();
-      }
-      const ctx = window._sharedAudioCtx;
-      if (ctx.state === 'suspended') {
-        ctx.resume().catch(() => {});
-      }
+      const ctx = (window.ToddlerAudio && ToddlerAudio.init) ? ToddlerAudio.init() : null;
+      if (!ctx) return;
 
       const st = ctx.currentTime;
 
@@ -901,9 +1546,16 @@
     // Expose helpers globally
     window.switchMode = switchMode;
     window.onKeyTrigger = onKeyTrigger;
+    window.toggleKeyboardDeck = toggleKeyboardDeck;
+    window.playSongDemo = playSongDemo;
+    window.cycleNextSong = cycleNextSong;
+    window.onSingerStageTap = onSingerStageTap;
+    window.closeVictoryModal = closeVictoryModal;
 
     // Khởi tạo trang
+    deckBtnLabel.innerText = `📚 Đổi Sang Từ Tuần ${currentWeek}`;
     renderPianoKeys();
+    updateSingerPod(rainbowNotes[0]);
 
     setTimeout(() => {
       AudioEngine.speak('Rainbow Animal Piano! Tap the animals to make music!');

@@ -295,7 +295,7 @@
       letter-spacing: 0.3px;
     }
 
-    /* Success / Error Card States */
+    /* Success / Error / Hint Card States */
     .choice-card.correct-pop {
       border-color: #4CAF50;
       background: #F1F8E9;
@@ -306,10 +306,75 @@
       animation: cardShake 0.4s ease-in-out;
       border-color: #FF9800;
     }
+    .choice-card.hint-glow {
+      border-color: #FFB300;
+      animation: hintPulse 1.3s infinite ease-in-out;
+    }
+    @keyframes hintPulse {
+      0%, 100% { box-shadow: 0 10px 24px rgba(255, 179, 0, 0.25); transform: scale(1); }
+      50% { box-shadow: 0 0 28px rgba(255, 193, 7, 0.72); transform: scale(1.06); }
+    }
     @keyframes cardShake {
       0%, 100% { transform: translateX(0); }
       25% { transform: translateX(-12px); }
       75% { transform: translateX(12px); }
+    }
+
+    /* Hatched Toy Shelf Pill in Radio Stage */
+    .toy-shelf {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.92);
+      border: 2.5px solid #FFD54F;
+      border-radius: 30px;
+      padding: 4px 14px;
+      margin-top: 8px;
+      min-height: 36px;
+      box-shadow: 0 4px 12px rgba(255, 193, 7, 0.22);
+      font-size: 0.85rem;
+      color: #6D4C41;
+      font-weight: 800;
+    }
+    .toy-shelf img {
+      width: 26px;
+      height: 26px;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.16));
+      animation: popBounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* Parent Tip & Next Button in Egg Modal */
+    .egg-parent-tip {
+      background: #FFF8E1;
+      border: 2.5px dashed #FFA000;
+      border-radius: 20px;
+      padding: 10px 14px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #5D4037;
+      margin: 10px 0 14px;
+      text-align: left;
+      line-height: 1.4;
+      display: none;
+    }
+    .btn-egg-next {
+      background: linear-gradient(135deg, #00E676 0%, #00C853 100%);
+      color: #FFF;
+      border: 3.5px solid #FFF;
+      border-radius: 40px;
+      padding: 10px 26px;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.1rem;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0, 200, 83, 0.35);
+      display: none;
+      margin: 4px auto 0;
+      transition: transform 0.15s;
+    }
+    .btn-egg-next:active {
+      transform: scale(0.94);
     }
 
     /* Footer Hint Tip */
@@ -486,16 +551,26 @@
         margin-bottom: 8px;
       }
       .choice-card {
-        height: 120px;
+        height: 128px;
         border-radius: 24px;
         border-width: 3px;
+        padding: 6px;
       }
       .choice-emoji {
         font-size: 3.2rem;
       }
+      .choice-emoji img.toddler-3d-word-icon {
+        width: 62px !important;
+        height: 62px !important;
+      }
       .choice-label {
         font-size: 0.95rem;
         margin-top: 4px;
+      }
+      .toy-shelf {
+        margin-top: 4px;
+        padding: 3px 10px;
+        font-size: 0.76rem;
       }
       .footer-tip {
         font-size: 0.8rem;
@@ -537,13 +612,16 @@
       .target-sub {
         font-size: 0.75rem;
       }
+      .toy-shelf {
+        display: none;
+      }
       .choices-row {
         gap: 12px;
         margin-bottom: 2px;
         max-width: 800px;
       }
       .choice-card {
-        height: min(120px, 34vh);
+        height: min(124px, 36vh);
         border-radius: 20px;
         border-width: 3px;
         padding: 4px 6px;
@@ -551,8 +629,12 @@
       .choice-emoji {
         font-size: min(3rem, 18vh);
       }
+      .choice-emoji img.toddler-3d-word-icon {
+        width: min(56px, 18vh) !important;
+        height: min(56px, 18vh) !important;
+      }
       .choice-label {
-        font-size: 0.88rem;
+        font-size: 0.86rem;
         margin-top: 2px;
       }
       .footer-tip {
@@ -573,7 +655,7 @@
     <a href="../index.html" class="btn-back">⬅ Menu</a>
 
     <!-- Center Banner -->
-    <div class="banner" id="banner-box">
+    <div class="banner" id="banner-box" title="Chạm để nghe lại từ">
       <h2 id="banner-title">🔍 Listen & Tap!</h2>
       <p id="banner-sub">👂 Nghe và chạm hình đúng!</p>
     </div>
@@ -599,9 +681,14 @@
         <div class="wave-bar"></div>
       </div>
       <div class="radio-content">
-        <div class="target-word-title" id="target-word">Apple</div>
+        <div class="target-word-title" id="target-word">🔊 Listen!</div>
         <div class="target-sub">🔊 Chạm đài nghe lại từ nhé!</div>
       </div>
+    </div>
+    <!-- Hatched Toy Shelf -->
+    <div class="toy-shelf" id="toy-shelf">
+      <span>🎁 Bộ sưu tập đồ chơi:</span>
+      <span id="toy-shelf-icons">🥚</span>
     </div>
   </div>
 
@@ -623,6 +710,8 @@
       <div class="egg-avatar" id="egg-avatar"><img src="../assets/icons/egg.png" style="width: 130px; height: 130px; object-fit: contain; filter: drop-shadow(0 14px 28px rgba(0,0,0,0.25));" alt="🥚"></div>
 
       <div class="toy-reveal-box" id="toy-name-reveal"></div>
+      <div class="egg-parent-tip" id="egg-parent-tip"></div>
+      <button class="btn-egg-next" id="btn-egg-next">🎁 Chơi Tiếp Nào!</button>
     </div>
   </div>
 
@@ -631,10 +720,11 @@
 
   <script src="../shared/audio.js"></script>
   <script src="../shared/vocabulary.js"></script>
+  <script src="../shared/profile.js"></script>
+  <script src="../shared/missions.js"></script>
   <script>
     // -------------------------------------------------------------
     // WEBAUDIO EGG KNOCK & CRACK SYNTHESIZER
-    // (Khắc phục hoàn toàn lỗi playKnock và playBoing is not a function)
     // -------------------------------------------------------------
     function playEggKnockSound(hitCount) {
       ToddlerAudio.init();
@@ -686,57 +776,85 @@
     }
 
     // -------------------------------------------------------------
-    // DYNAMIC VOCABULARY BANK (52-WEEK READY)
+    // DYNAMIC VOCABULARY BANK (52-WEEK READY & DEDUPLICATED)
     // -------------------------------------------------------------
     const urlParams = new URLSearchParams(window.location.search);
-    const queryWeek = parseInt(urlParams.get('week')) || 1;
+    const activeProfileWeek = (window.ToddlerProfile && ToddlerProfile.currentWeek)
+      ? ToddlerProfile.currentWeek
+      : ((window.ToddlerVocabulary && typeof ToddlerVocabulary.getCurrentWeek === 'function') ? ToddlerVocabulary.getCurrentWeek() : 1);
+    const queryWeek = parseInt(urlParams.get('week')) || activeProfileWeek || 1;
 
     let pool = [];
     if (window.ToddlerVocabulary && window.ToddlerVocabulary.build80_20Pack) {
       const pack = window.ToddlerVocabulary.build80_20Pack(queryWeek);
-      const combined = [...(pack.newWords || []), ...(pack.reviewWords || [])].filter(w => w && w.word && w.emoji && !w.hex);
-      if (combined.length >= 3) {
-        pool = combined.map(w => ({ name: w.word, emoji: w.emoji }));
-      }
+      const homeExtras = (window.ToddlerVocabulary.CATEGORIES && window.ToddlerVocabulary.CATEGORIES.toys_home)
+        ? window.ToddlerVocabulary.CATEGORIES.toys_home.filter(w => ['chair', 'table', 'cup', 'book', 'pen', 'pencil', 'fan', 'computer', 'backpack', 'plate'].includes(w.id))
+        : [];
+      const rawCombined = [...(pack.newWords || []), ...(pack.reviewWords || []), ...homeExtras].filter(w => w && w.word && w.emoji && !w.hex);
+      const seenKeys = new Set();
+      rawCombined.forEach(w => {
+        const key = (w.id || w.word).toLowerCase().trim();
+        if (!seenKeys.has(key)) {
+          seenKeys.add(key);
+          pool.push({
+            id: w.id || key,
+            word: w.word,
+            name: w.word,
+            emoji: w.emoji,
+            category: w.category || ''
+          });
+        }
+      });
     }
 
     if (pool.length < 3) {
       pool = [
-        { name: 'Apple', emoji: '🍎' },
-        { name: 'Cat', emoji: '🐱' },
-        { name: 'Dog', emoji: '🐶' },
-        { name: 'Duck', emoji: '🦆' },
-        { name: 'Car', emoji: '🚗' },
-        { name: 'Bus', emoji: '🚌' },
-        { name: 'Ball', emoji: '⚽' },
-        { name: 'Milk', emoji: '🥛' },
-        { name: 'Bread', emoji: '🍞' },
-        { name: 'Star', emoji: '⭐' }
+        { id: 'apple', word: 'Apple', name: 'Apple', emoji: '🍎', category: 'food' },
+        { id: 'cat', word: 'Cat', name: 'Cat', emoji: '🐱', category: 'animals' },
+        { id: 'dog', word: 'Dog', name: 'Dog', emoji: '🐶', category: 'animals' },
+        { id: 'duck', word: 'Duck', name: 'Duck', emoji: '🦆', category: 'animals' },
+        { id: 'car', word: 'Car', name: 'Car', emoji: '🚗', category: 'vehicles' },
+        { id: 'bus', word: 'Bus', name: 'Bus', emoji: '🚌', category: 'vehicles' },
+        { id: 'ball', word: 'Ball', name: 'Ball', emoji: '⚽', category: 'toys_home' },
+        { id: 'milk', word: 'Milk', name: 'Milk', emoji: '🥛', category: 'food' },
+        { id: 'bread', word: 'Bread', name: 'Bread', emoji: '🍞', category: 'food' },
+        { id: 'star', word: 'Star', name: 'Star', emoji: '⭐', category: 'nature' }
       ];
     }
 
-    // Surprise Toys Collection (Max 2 words focus)
+    // Surprise 3D Toys Collection (Verified 3D PNG Icons)
     const toyTreasures = [
       { name: 'Fire Truck', icon: 'firetruck', emoji: '🚒', voice: 'Fire Truck! Wee-woo!' },
       { name: 'Cute Robot', icon: 'robot', emoji: '🤖', voice: 'Robot! Beep beep!' },
-      { name: 'Teddy Bear', icon: 'bear', emoji: '🧸', voice: 'Teddy Bear!' },
-      { name: 'Toy Rocket', icon: 'rocket', emoji: '🚀', voice: 'Rocket! Zoom!' },
-      { name: 'Sweet Baby Doll', icon: 'doll', emoji: '🪆', voice: 'Baby Doll!' },
-      { name: 'Little Train', icon: 'train', emoji: '🚂', voice: 'Train! Choo-choo!' }
+      { name: 'Teddy Bear', icon: 'teddy', emoji: '🧸', voice: 'Teddy Bear! Soft hug!' },
+      { name: 'Toy Rocket', icon: 'rocket', emoji: '🚀', voice: 'Rocket! Zoom to the moon!' },
+      { name: 'Sweet Baby Doll', icon: 'doll', emoji: '🪆', voice: 'Baby Doll! Hello baby!' },
+      { name: 'Little Train', icon: 'train', emoji: '🚂', voice: 'Train! Choo-choo!' },
+      { name: 'Green Dinosaur', icon: 'dinosaur', emoji: '🦖', voice: 'Dinosaur! Roar!' },
+      { name: 'Police Car', icon: 'policecar', emoji: '🚓', voice: 'Police Car! Wee-woo!' }
     ];
+    let nextToyIdx = 0;
+    let collectedToys = [];
 
     let currentTarget = null;
+    let lastTargetName = '';
     let correctStreak = 0;
+    let wrongTapCount = 0;
     let eggHits = 0;
+    let isEggHatched = false;
+    let hatchedToy = null;
+    let eggCloseTimer = null;
     let isQuestionActive = true;
 
     // DOM Elements
+    const bannerBox = document.getElementById('banner-box');
     const magicRadio = document.getElementById('magic-radio');
     const targetWordElem = document.getElementById('target-word');
     const choicesRow = document.getElementById('choices-row');
     const bannerTitle = document.getElementById('banner-title');
     const bannerSub = document.getElementById('banner-sub');
     const tipText = document.getElementById('tip-text');
+    const toyShelfIcons = document.getElementById('toy-shelf-icons');
 
     const starIcons = [
       document.getElementById('star-1'),
@@ -749,33 +867,55 @@
     const eggTitle = document.getElementById('egg-title');
     const eggSub = document.getElementById('egg-sub');
     const toyReveal = document.getElementById('toy-name-reveal');
+    const eggParentTip = document.getElementById('egg-parent-tip');
+    const btnEggNext = document.getElementById('btn-egg-next');
     const confettiLayer = document.getElementById('confetti-layer');
 
     // -------------------------------------------------------------
-    // QUESTION LOOP
+    // QUESTION LOOP (Guaranteed 3 Unique Options & Non-Repeating Target)
     // -------------------------------------------------------------
     function nextQuestion() {
       isQuestionActive = true;
+      wrongTapCount = 0;
       choicesRow.innerHTML = '';
 
       const shuffled = [...pool].sort(() => Math.random() - 0.5);
-      const choices = shuffled.slice(0, 3);
+      const uniqueChoices = [];
+      const usedNames = new Set();
+      for (const item of shuffled) {
+        const key = item.name.toLowerCase();
+        if (!usedNames.has(key)) {
+          usedNames.add(key);
+          uniqueChoices.push(item);
+          if (uniqueChoices.length === 3) break;
+        }
+      }
 
-      currentTarget = choices[Math.floor(Math.random() * choices.length)];
-      targetWordElem.innerText = currentTarget.name;
+      // Pick target avoiding consecutive repeat
+      const nonRepeatCandidates = uniqueChoices.filter(c => c.name !== lastTargetName);
+      currentTarget = nonRepeatCandidates.length > 0
+        ? nonRepeatCandidates[Math.floor(Math.random() * nonRepeatCandidates.length)]
+        : uniqueChoices[Math.floor(Math.random() * uniqueChoices.length)];
+      lastTargetName = currentTarget.name;
 
-      bannerTitle.innerHTML = `🔍 Where is the <b>${currentTarget.name.toUpperCase()}</b>?`;
-      bannerSub.innerText = `👂 Chạm vào hình ${currentTarget.name}!`;
-      tipText.innerText = `Chạm đài để nghe lại: ${currentTarget.name} 🔊`;
+      // Ẩn chữ trên đài phát thanh trước khi bé chọn để bé luyện NGHE thay vì nhìn mặt chữ so khớp!
+      targetWordElem.innerHTML = '🔊 Listen!';
 
-      // Announce Motherese voice: 1-2 words focus
+      bannerTitle.innerHTML = `🎧 Listen & Find the Picture!`;
+      bannerSub.innerText = `👂 Bé lắng nghe loa đọc rồi chạm đúng hình nhé!`;
+      tipText.innerText = `Chạm vào chiếc đài cam để nghe lại âm thanh 🔊`;
+
+      // Announce Motherese voice
       setTimeout(() => {
-        ToddlerAudio.speak(currentTarget.name);
+        if (currentTarget) {
+          ToddlerAudio.speak(`Where is the ${currentTarget.name}?`);
+        }
       }, 350);
 
-      choices.forEach(item => {
+      uniqueChoices.forEach(item => {
         const card = document.createElement('div');
         card.className = 'choice-card';
+        card.dataset.word = item.name;
 
         const emoji = document.createElement('span');
         emoji.className = 'choice-emoji';
@@ -790,38 +930,60 @@
         card.appendChild(emoji);
         card.appendChild(label);
 
-        card.addEventListener('pointerdown', () => {
+        card.addEventListener('pointerdown', (e) => {
+          e.preventDefault();
           if (!isQuestionActive) return;
 
           ToddlerAudio.init();
 
           if (item.name === currentTarget.name) {
-            // MATCH!
+            // MATCH! Reveal 3D icon + word on radio!
             isQuestionActive = false;
+            const radioIcon = (window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon)
+              ? ToddlerVocabulary.renderWordIcon(currentTarget, 34)
+              : currentTarget.emoji;
+            targetWordElem.innerHTML = `${radioIcon} ${currentTarget.name}`;
+            card.classList.remove('hint-glow');
             card.classList.add('correct-pop');
 
             ToddlerAudio.playWin();
-            ToddlerAudio.speak(`${item.name}! Yay!`);
+            const contextPhrase = (window.ToddlerVocabulary && ToddlerVocabulary.getWordContextPhrase)
+              ? ToddlerVocabulary.getWordContextPhrase(item)
+              : `${item.name}! Yay!`;
+            ToddlerAudio.speak(contextPhrase);
 
             correctStreak++;
             updateStarsDisplay();
+            if (window.MissionEngine && MissionEngine.recordAction) {
+              MissionEngine.recordAction();
+            }
 
-            bannerSub.innerText = `Hoan hô! Đúng là ${item.name} rồi! 🎉`;
+            bannerSub.innerText = `Hoan hô! ${contextPhrase} 🎉`;
 
+            // Wait 2050ms so the full context sentence finishes speaking cleanly!
             setTimeout(() => {
-              // Cứ sau 3 câu đúng -> Mở Quả Trứng Thần Kỳ!
               if (correctStreak % 3 === 0) {
                 spawnSurpriseEgg();
               } else {
                 nextQuestion();
               }
-            }, 1200);
+            }, 2050);
 
           } else {
-            // MISMATCH (Montessori Gentle Shake)
+            // MISMATCH (Montessori Gentle Shake + Hint Glow on correct card)
+            wrongTapCount++;
             card.classList.remove('wrong-shake');
-            void card.offsetWidth; // trigger reflow
+            void card.offsetWidth;
             card.classList.add('wrong-shake');
+
+            if (wrongTapCount >= 1) {
+              const allCards = choicesRow.querySelectorAll('.choice-card');
+              allCards.forEach(c => {
+                if (c.dataset.word === currentTarget.name) {
+                  c.classList.add('hint-glow');
+                }
+              });
+            }
 
             ToddlerAudio.playTone(280, 'sine', 0.2, 0.3);
             ToddlerAudio.speak(currentTarget.name);
@@ -843,71 +1005,119 @@
       });
     }
 
-    // Replay Sound via Magic Radio Tap
-    magicRadio.addEventListener('pointerdown', () => {
+    function replayTargetAudio() {
       ToddlerAudio.init();
       magicRadio.style.transform = 'scale(1.12) rotate(-3deg)';
       setTimeout(() => magicRadio.style.transform = '', 250);
 
       if (currentTarget) {
-        ToddlerAudio.speak(currentTarget.name);
+        ToddlerAudio.speak(`Where is the ${currentTarget.name}?`);
       }
-    });
+    }
+
+    // Replay Sound via Magic Radio Tap or Banner Tap
+    magicRadio.addEventListener('pointerdown', replayTargetAudio);
+    bannerBox.addEventListener('pointerdown', replayTargetAudio);
 
     // -------------------------------------------------------------
-    // GIANT SURPRISE EGG REWARD SYSTEM
+    // GIANT SURPRISE EGG REWARD SYSTEM (Protected from Multi-Tap Re-Hatch)
     // -------------------------------------------------------------
     function spawnSurpriseEgg() {
       eggHits = 0;
+      isEggHatched = false;
+      hatchedToy = null;
+      clearTimeout(eggCloseTimer);
+
       eggAvatar.innerHTML = `<img src="../assets/icons/egg.png" style="width: 140px; height: 140px; object-fit: contain; filter: drop-shadow(0 14px 28px rgba(0,0,0,0.25));" alt="🥚">`;
       eggAvatar.style.transform = 'scale(1)';
       eggTitle.innerText = '🎁 Quả Trứng Bí Mật Của Bé!';
       eggSub.innerText = 'Bé chạm 3 lần "Cốc Cốc Cốc" để mở đồ chơi nhé!';
       toyReveal.style.display = 'none';
+      eggParentTip.style.display = 'none';
+      btnEggNext.style.display = 'none';
       eggModal.style.display = 'flex';
 
       ToddlerAudio.playChime();
-      ToddlerAudio.speak('Surprise Egg!');
+      ToddlerAudio.speak('Surprise Egg! Knock knock!');
     }
 
-    eggAvatar.addEventListener('pointerdown', () => {
+    eggAvatar.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      // If already hatched, tapping the toy makes it bounce and repeat its voice without re-rolling!
+      if (isEggHatched && hatchedToy) {
+        eggAvatar.classList.remove('jiggle');
+        void eggAvatar.offsetWidth;
+        eggAvatar.classList.add('jiggle');
+        ToddlerAudio.playPop(520);
+        ToddlerAudio.speak(hatchedToy.voice);
+        return;
+      }
+
       eggHits++;
       eggAvatar.classList.remove('jiggle');
-      void eggAvatar.offsetWidth; // trigger reflow
+      void eggAvatar.offsetWidth;
       eggAvatar.classList.add('jiggle');
 
       playEggKnockSound(eggHits);
 
       if (eggHits === 1) {
         eggAvatar.innerHTML = `<div style="position: relative; display: inline-block;"><img src="../assets/icons/egg.png" style="width: 140px; height: 140px; object-fit: contain; filter: drop-shadow(0 14px 28px rgba(0,0,0,0.25));" alt="🥚"><span style="position: absolute; top: -10px; right: -10px; font-size: 2rem;">✨</span></div>`;
-        eggSub.innerText = 'Gõ tiếp một lần nữa nào! Cốc!';
+        eggSub.innerText = 'Gõ tiếp một lần nữa nào! Cốc! (1 / 3)';
         ToddlerAudio.speak('One!');
       } else if (eggHits === 2) {
         eggAvatar.innerHTML = `<div style="position: relative; display: inline-block;"><img src="../assets/icons/egg.png" style="width: 148px; height: 148px; object-fit: contain; filter: drop-shadow(0 16px 30px rgba(255, 193, 7, 0.45));" alt="🥚"><span style="position: absolute; top: -14px; right: -14px; font-size: 2.2rem;">✨✨</span></div>`;
-        eggSub.innerText = 'Sắp mở ra rồi! Cố lên bé ơi!';
+        eggSub.innerText = 'Sắp mở ra rồi! Chạm thêm 1 lần nữa nhé! (2 / 3)';
         ToddlerAudio.speak('Two!');
-      } else if (eggHits >= 3) {
-        // HATCH TOY!
-        const toy = toyTreasures[Math.floor(Math.random() * toyTreasures.length)];
-        eggAvatar.innerHTML = `<img src="../assets/icons/${toy.icon}.png" style="width: 148px; height: 148px; object-fit: contain; filter: drop-shadow(0 16px 32px rgba(0,0,0,0.28));" alt="${toy.name}" onerror="this.outerHTML='${toy.emoji}'">`;
-        eggAvatar.style.transform = 'scale(1.35)';
-        eggTitle.innerText = '🎉 Oa! Bé Nhận Được Đồ Chơi!';
+      } else if (eggHits === 3) {
+        // HATCH TOY ONCE!
+        isEggHatched = true;
+        const toy = toyTreasures[nextToyIdx % toyTreasures.length];
+        nextToyIdx++;
+        hatchedToy = toy;
+
+        eggAvatar.innerHTML = `<img src="../assets/icons/${toy.icon}.png" style="width: 142px; height: 142px; object-fit: contain; filter: drop-shadow(0 16px 32px rgba(0,0,0,0.28));" alt="${toy.name}" onerror="this.outerHTML='${toy.emoji}'">`;
+        eggAvatar.style.transform = 'scale(1.22)';
+        eggTitle.innerText = '🎉 Oa! Bé Nhận Được Đồ Chơi Mới!';
         eggSub.innerText = `Chúc mừng bé đã mở được ${toy.name}!`;
         toyReveal.innerText = `⭐ ${toy.name.toUpperCase()} ⭐`;
         toyReveal.style.display = 'block';
+
+        // Add to Toy Collection Shelf
+        collectedToys.push(toy);
+        toyShelfIcons.innerHTML = collectedToys.map(t =>
+          `<img src="../assets/icons/${t.icon}.png" alt="${t.name}" title="${t.name}">`
+        ).join('');
+
+        // Show Parent Real-World Transfer Tip
+        if (window.ToddlerVocabulary && typeof ToddlerVocabulary.getRealWorldParentTip === 'function') {
+          const tip = ToddlerVocabulary.getRealWorldParentTip(queryWeek);
+          const tipStr = (tip && tip.tipText) ? tip.tipText : tip;
+          if (tipStr) {
+            eggParentTip.innerHTML = `💡 <b>Mẹo thực hành cùng ba mẹ (Tuần ${queryWeek}):</b> ${tipStr}`;
+            eggParentTip.style.display = 'block';
+          }
+        }
+        btnEggNext.style.display = 'inline-block';
 
         triggerConfetti();
         ToddlerAudio.playFanfare();
         ToddlerAudio.speak(toy.voice);
 
-        // Auto Close and Progress to Next Round after 2.8s (Không cần nút bấm người lớn)
-        setTimeout(() => {
+        clearTimeout(eggCloseTimer);
+        eggCloseTimer = setTimeout(() => {
           closeSurpriseEgg();
-        }, 2800);
+        }, 4200);
       }
     });
 
+    btnEggNext.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      clearTimeout(eggCloseTimer);
+      closeSurpriseEgg();
+    });
+
     function closeSurpriseEgg() {
+      clearTimeout(eggCloseTimer);
       eggModal.style.display = 'none';
       // Reset Stars
       starIcons.forEach(s => s.classList.remove('active'));
@@ -936,6 +1146,10 @@
         ToddlerAudio.startBGM('action');
       }
     }, { once: true });
+
+    if (window.MissionEngine && MissionEngine.initGameMission) {
+      MissionEngine.initGameMission('mission_day_4', '.hud');
+    }
 
     setTimeout(() => {
       ToddlerAudio.init();

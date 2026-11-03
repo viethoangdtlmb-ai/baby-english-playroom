@@ -172,6 +172,11 @@
       0% { transform: scale(0.9) rotate(-10deg); }
       100% { transform: scale(1.1) rotate(10deg); }
     }
+    .goal-action-badge img.toddler-3d-word-icon {
+      width: 20px !important;
+      height: 20px !important;
+      object-fit: contain;
+    }
 
     .goal-text-info {
       display: flex;
@@ -284,6 +289,14 @@
       color: #E65100;
       box-shadow: 0 4px 12px rgba(255, 160, 0, 0.25);
       transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .chip img.toddler-3d-word-icon {
+      width: 26px !important;
+      height: 26px !important;
+      object-fit: contain;
     }
 
     /* Character Container */
@@ -1132,6 +1145,8 @@
       <h2 class="modal-title" id="modal-title">Bé Ghép Đúng Rồi!</h2>
       <p class="modal-subtitle" id="modal-subtitle">Chính là bạn Blue Dog Jump thật tài ba!</p>
 
+      <div class="parent-tip-box" id="modal-parent-tip" style="background: #FFF8E1; border: 2.5px dashed #FFA000; border-radius: 20px; padding: 10px 14px; font-family: 'Nunito', sans-serif; font-size: 0.92rem; font-weight: 700; color: #5D4037; margin: 12px 0 20px; text-align: left; line-height: 1.4; display: none;"></div>
+
       <button type="button" class="btn-modal-action" id="btn-modal-action" onclick="advanceToNextRecipe()">
         <span>🎉 Ghép Bạn Tiếp Theo Nào ➜</span>
       </button>
@@ -1174,10 +1189,20 @@
     const confettiLayer = document.getElementById('confetti-layer');
 
     function updateVisuals() {
-      // 1. Update Chips
-      chipMod.innerText = currentMod.tag;
-      chipChar.innerText = currentChar.tag;
-      chipAct.innerText = currentAct.tag;
+      // 1. Update Chips with 3D Word Icons
+      const modIcon = (window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon)
+        ? ToddlerVocabulary.renderWordIcon(currentMod.word.toLowerCase(), 24)
+        : currentMod.tag.split(' ')[0];
+      const charIcon = (window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon)
+        ? ToddlerVocabulary.renderWordIcon(currentChar.id || currentChar.word.toLowerCase(), 24)
+        : currentChar.tag.split(' ')[0];
+      const actIcon = (window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon)
+        ? ToddlerVocabulary.renderWordIcon(currentAct.word.toLowerCase(), 24)
+        : currentAct.tag.split(' ')[0];
+
+      chipMod.innerHTML = `${modIcon}<span>${currentMod.word}</span>`;
+      chipChar.innerHTML = `${charIcon}<span>${currentChar.word}</span>`;
+      chipAct.innerHTML = `${actIcon}<span>${currentAct.word}</span>`;
 
       // 2. Set CSS root variables for COLOR and SCALE
       document.documentElement.style.setProperty('--char-color', currentMod.color);
@@ -1241,6 +1266,12 @@
       AudioEngine.init();
       const type = item.dataset.type;
 
+      // Play soft musical pop sound
+      if (window.ToddlerAudio && typeof ToddlerAudio.playPop === 'function') {
+        const freqMap = { mod: 520, char: 640, act: 760 };
+        ToddlerAudio.playPop(freqMap[type] || 560);
+      }
+
       item.parentElement.querySelectorAll('.tray-pill').forEach(s => s.classList.remove('active'));
       item.classList.add('active');
 
@@ -1275,8 +1306,10 @@
       item.addEventListener('pointerdown', () => handleChoiceSelect(item));
       const emojiSpan = item.querySelector('.pill-emoji');
       const word = item.dataset.word;
-      if (emojiSpan && word && window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon) {
-        emojiSpan.innerHTML = ToddlerVocabulary.renderWordIcon(word.toLowerCase(), 28);
+      const type = item.dataset.type;
+      const lookupKey = (type === 'char' && item.dataset.id) ? item.dataset.id : word.toLowerCase();
+      if (emojiSpan && lookupKey && window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon) {
+        emojiSpan.innerHTML = ToddlerVocabulary.renderWordIcon(lookupKey, 28);
       }
     });
 
@@ -1300,14 +1333,40 @@
       'White': '#ECEFF1'
     };
     const actionBadgeMap = {
-      'Jump': '⬆️',
-      'Dance': '🎵',
-      'Sleep': '💤',
+      'Jump': '🦘',
+      'Dance': '💃',
+      'Sleep': '😴',
       'Eat': '🍎',
       'Run': '🏃',
       'Sing': '🎤',
       'Clap': '👏',
       'Fly': '🚀'
+    };
+
+    function getProgressiveVerb(act) {
+      const map = {
+        'jump': 'jumping',
+        'dance': 'dancing',
+        'eat': 'eating',
+        'sleep': 'sleeping',
+        'run': 'running',
+        'sing': 'singing',
+        'clap': 'clapping',
+        'fly': 'flying'
+      };
+      return map[(act || '').toLowerCase()] || (act + 'ing');
+    }
+
+    const animalSoundMap = {
+      'cat': 'Meow! Meow!',
+      'dog': 'Woof! Woof!',
+      'frog': 'Ribbit! Ribbit!',
+      'duck': 'Quack! Quack!',
+      'bear': 'Roar! Big bear!',
+      'pig': 'Oink! Oink!',
+      'rabbit': 'Hop! Hop!',
+      'panda': 'Nom nom! Panda!',
+      'lion': 'Roar! King lion!'
     };
 
     // ĐỘNG CƠ SINH NHIỆM VỤ NGẪU NHIÊN VÔ TẬN (8 Màu x 9 Bạn Nhỏ x 8 Hành Động = 576 Biến Thể)
@@ -1332,6 +1391,12 @@
         animal: baseRecipe.animal || 'Dog',
         action: baseRecipe.action || 'Jump'
       };
+    }
+    // Đảm bảo quest đầu tiên khác với trạng thái mặc định (Red Cat Jump) để không bị auto-win ngay khi mở trang
+    if (challengeQuests[0].color.toLowerCase() === currentMod.word.toLowerCase() &&
+        challengeQuests[0].animal.toLowerCase() === currentChar.word.toLowerCase() &&
+        challengeQuests[0].action.toLowerCase() === currentAct.word.toLowerCase()) {
+      challengeQuests[0].color = (challengeQuests[0].color.toLowerCase() === 'red') ? 'Blue' : 'Red';
     }
 
     let currentQuestIdx = 0;
@@ -1475,9 +1540,13 @@
       // 1. Render Mini SVG con vật mục tiêu
       renderGoalMiniSvg(q.animal, colorHex);
 
-      // 2. Cập nhật Badge hành động trực quan
+      // 2. Cập nhật Badge hành động trực quan (đồng bộ 3D Icon nếu có)
       if (goalActionBadge) {
-        goalActionBadge.innerText = actionBadgeMap[q.action] || '✨';
+        const actKey = (q.action || '').toLowerCase();
+        const actionIconHtml = (window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon)
+          ? ToddlerVocabulary.renderWordIcon(actKey, 20)
+          : (actionBadgeMap[q.action] || '✨');
+        goalActionBadge.innerHTML = actionIconHtml;
       }
 
       // 3. Cập nhật cụm từ tên mục tiêu
@@ -1493,6 +1562,12 @@
 
     function announceTarget() {
       const q = challengeQuests[currentQuestIdx];
+      if (goalCard) {
+        goalCard.style.transform = 'scale(1.08)';
+        setTimeout(() => {
+          if (goalCard) goalCard.style.transform = '';
+        }, 300);
+      }
       if (AudioEngine.speak) {
         AudioEngine.speak(`Find the ${q.color} ${q.animal} ${q.action}!`);
       }
@@ -1507,10 +1582,12 @@
       }
     }
 
-    // Tap Actor to speak full sentence
+    // Tap Actor to speak full sentence with animal sound & correct progressive verb
     actorWrap.addEventListener('pointerdown', () => {
       AudioEngine.init();
-      AudioEngine.speak(`${currentMod.word} ${currentChar.word} is ${currentAct.word}ing!`);
+      const sound = animalSoundMap[currentChar.id] || 'Hello!';
+      const verb = getProgressiveVerb(currentAct.word);
+      AudioEngine.speak(`${sound} ${currentMod.word} ${currentChar.word} is ${verb}!`);
       actorWrap.style.transform = `scale(calc(${currentMod.scale} * 1.25))`;
       setTimeout(() => {
         actorWrap.style.transform = `scale(${currentMod.scale})`;
@@ -1543,13 +1620,14 @@
           MissionEngine.recordAction();
         }
 
-        // Show celebration victory modal with next challenge button
+        // Show celebration victory modal with next challenge button (2100ms delay to let fanfare finish)
         setTimeout(() => {
           const modal = document.getElementById('modal-celebration');
           const mTitle = document.getElementById('modal-title');
           const mSub = document.getElementById('modal-subtitle');
           const mBtn = document.getElementById('btn-modal-action');
           const mIcon = document.getElementById('modal-trophy-icon');
+          const mTip = document.getElementById('modal-parent-tip');
 
           if (currentQuestIdx < 2) {
             mIcon.innerText = '⭐';
@@ -1563,14 +1641,23 @@
             mBtn.innerHTML = '<span>🌟 Thử Thách Vòng Mới ➜</span>';
           }
 
+          if (mTip && window.ToddlerVocabulary && ToddlerVocabulary.getRealWorldParentTip) {
+            const tipObj = ToddlerVocabulary.getRealWorldParentTip(currentWeek);
+            mTip.innerHTML = `<strong>💡 Mẹo chuyển giao đời thực cho Ba Mẹ:</strong><br>${tipObj.tipText || tipObj}`;
+            mTip.style.display = 'block';
+          }
+
           modal.style.display = 'flex';
-        }, 1100);
+        }, 2100);
       }
     }
 
     function advanceToNextRecipe() {
       const modal = document.getElementById('modal-celebration');
       modal.style.display = 'none';
+
+      const mTip = document.getElementById('modal-parent-tip');
+      if (mTip) mTip.style.display = 'none';
 
       if (goalCard) goalCard.classList.remove('matched-bounce');
       if (stageArea) stageArea.classList.remove('matched-glow');
@@ -1606,9 +1693,11 @@
       }
     }
 
-    // Initialize Day 7 Mission
+    // Initialize Day 6 or Day 7 Mission
     if (window.MissionEngine && MissionEngine.initGameMission) {
-      MissionEngine.initGameMission('mission_day_7', '.hud');
+      const urlP = new URLSearchParams(window.location.search);
+      const mId = urlP.get('mission') || 'mission_day_6';
+      MissionEngine.initGameMission(mId, '.hud');
     }
 
     updateVisuals();

@@ -178,6 +178,11 @@
       box-shadow: 0 4px 14px rgba(0,0,0,0.08);
       max-width: 100%;
       overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .friends-selector-bar::-webkit-scrollbar {
+      display: none;
     }
     .btn-friend-pill {
       background: white;
@@ -628,6 +633,8 @@
       padding: 32px 28px;
       max-width: 540px;
       width: 100%;
+      max-height: 92vh;
+      overflow-y: auto;
       text-align: center;
       box-shadow: 0 24px 60px rgba(0,0,0,0.35);
       animation: popInModal 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -742,7 +749,7 @@
       .living-doll {
         transform: scale(0.75);
       }
-      .doll-controls-bar {
+      .runway-controls {
         margin-top: 4px;
         gap: 6px;
       }
@@ -763,7 +770,7 @@
         box-sizing: border-box;
         padding: 6px;
       }
-      .wardrobe-tabs {
+      .wardrobe-tabs-bar {
         padding: 2px;
         margin-bottom: 4px;
       }
@@ -991,6 +998,9 @@
       <h2 class="win-title" id="win-title">Nhà Thiết Kế Nhí!</h2>
       <p class="win-subtitle" id="win-subtitle">Bé đã phối đồ thật sành điệu cho bạn nhỏ! Bạn nhỏ vui sướng nhảy múa reo vang!</p>
 
+      <!-- Parent Real-World Transfer Tip -->
+      <div class="parent-tip-box" id="modal-parent-tip" style="background: #FFF8E1; border: 2.5px dashed #FFA000; border-radius: 20px; padding: 12px 16px; font-family: 'Nunito', sans-serif; font-size: 0.95rem; font-weight: 700; color: #5D4037; margin: 12px auto 18px; max-width: 480px; text-align: left; line-height: 1.4; display: none;"></div>
+
       <button type="button" class="btn-next-friend" onclick="goToNextFriend()">
         <span>🎉 Mặc Cho Bạn Tiếp Theo ➜</span>
       </button>
@@ -1005,7 +1015,19 @@
     // -------------------------------------------------------------
     // SAFE AUDIO FALLBACK & SYNTHESIZER
     // -------------------------------------------------------------
-    const AudioEngine = window.ToddlerAudio || {};
+    const AudioEngine = window.ToddlerAudio || {
+      init() {},
+      playChime() {},
+      playWin() {},
+      playFanfare() {},
+      playPop() {},
+      speak(t) {},
+      speakWord(w) {}
+    };
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const queryWeek = parseInt(urlParams.get('week'));
+    const currentWeek = queryWeek || ((window.MissionEngine && MissionEngine.getCurrentWeek) ? MissionEngine.getCurrentWeek() : 1);
 
     // Web Audio Synthesizer for fabric swoosh, zip, and sparkle pops
     function playSwooshZipSound() {
@@ -1222,27 +1244,45 @@
           <span class="card-item-name">${item.name}</span>
         `;
 
-        card.addEventListener('pointerdown', (e) => handleEquipItem(item, card, e));
-        card.addEventListener('click', (e) => handleEquipItem(item, card, e));
+        card.addEventListener('pointerdown', (e) => {
+          e.preventDefault();
+          handleEquipItem(item, card, e);
+        });
 
         wardrobeGrid.appendChild(card);
       });
     }
 
     // -------------------------------------------------------------
-    // EQUIP ITEM WITH FLYING PARTICLE ANIMATION
+    // EQUIP ITEM WITH FLYING PARTICLE ANIMATION & TOGGLE UNEQUIP
     // -------------------------------------------------------------
     let lastTapTime = 0;
     function handleEquipItem(item, cardElem, evt) {
       if (Date.now() - lastTapTime < 220) return;
       lastTapTime = Date.now();
 
-      // Audio feedback
       playSwooshZipSound();
-      if (AudioEngine.speakWord) {
+
+      // Check if already equipped -> Toggle unequip
+      const isAlreadyEquipped = (currentOutfits[currentCategory] && currentOutfits[currentCategory].id === item.id);
+      if (isAlreadyEquipped) {
+        currentOutfits[currentCategory] = null;
+        renderDollOutfit();
+        renderWardrobeGrid();
+        if (AudioEngine.speak) {
+          AudioEngine.speak(`Take off ${item.name}!`);
+        }
+        return;
+      }
+
+      // Audio feedback with full context phrase
+      const contextPhrase = (window.ToddlerVocabulary && ToddlerVocabulary.getWordContextPhrase)
+        ? ToddlerVocabulary.getWordContextPhrase(item.name)
+        : (item.voice || item.name);
+      if (AudioEngine.speak) {
+        AudioEngine.speak(contextPhrase);
+      } else if (AudioEngine.speakWord) {
         AudioEngine.speakWord(item.voice || item.name);
-      } else if (AudioEngine.speak) {
-        AudioEngine.speak(item.voice || item.name);
       }
 
       // Flying particle effect from card to character
@@ -1448,18 +1488,29 @@
         MissionEngine.recordAction();
       }
 
-      // Chỉ hiển thị modal nội bộ nếu MissionEngine không kích hoạt Modal chiến thắng (tránh đè nhau)
+      // Hiển thị modal sau khi bé thưởng thức điệu nhảy catwalk và âm thanh phát trọn vẹn
       setTimeout(() => {
         if (!window.MissionEngine || !MissionEngine.isCompleted) {
           document.getElementById('win-title').innerText = `✨ ${friend.name} So Stylish!`;
           document.getElementById('win-subtitle').innerText = `Bé đã phối đồ thật đẹp cho bạn ${friend.vnName}! Bạn nhỏ đang biểu diễn thời trang trên sàn catwalk!`;
+
+          // Nạp mẹo chuyển giao đời thực cho Ba Mẹ
+          const tipBox = document.getElementById('modal-parent-tip');
+          if (tipBox && window.ToddlerVocabulary && ToddlerVocabulary.getRealWorldParentTip) {
+            const tipObj = ToddlerVocabulary.getRealWorldParentTip(currentWeek);
+            tipBox.innerHTML = `<strong>💡 Mẹo chuyển giao đời thực cho Ba Mẹ:</strong><br>${tipObj.tipText || 'Mẹ hãy cùng bé chỉ vào trang phục bé đang mặc hàng ngày và đọc to tên tiếng Anh nhé!'}`;
+            tipBox.style.display = 'block';
+          }
+
           modalCelebration.style.display = 'flex';
         }
-      }, 1400);
+      }, 2400);
     }
 
     function goToNextFriend() {
       modalCelebration.style.display = 'none';
+      const tipBox = document.getElementById('modal-parent-tip');
+      if (tipBox) tipBox.style.display = 'none';
       livingDoll.classList.remove('runway-dance');
       const nextIdx = (currentFriendIdx + 1) % friendList.length;
       selectFriend(nextIdx);
@@ -1467,6 +1518,8 @@
 
     function closeCelebrationModal() {
       modalCelebration.style.display = 'none';
+      const tipBox = document.getElementById('modal-parent-tip');
+      if (tipBox) tipBox.style.display = 'none';
     }
 
     function updateStarsHud() {

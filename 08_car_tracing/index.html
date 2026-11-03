@@ -951,11 +951,18 @@
   <!-- MODAL 2: CELEBRATION ARRIVAL MODAL (Controlled by user, no abrupt jumps) -->
   <div class="modal-overlay" id="victory-modal" style="display: none;">
     <div class="quiz-card" style="border-color: #4CAF50; background: linear-gradient(135deg, #FFFFFF 0%, #E8F5E9 100%);">
-      <div style="font-size: 3.8rem; line-height: 1; margin-bottom: 6px;">👑</div>
+      <div id="vic-icon" style="font-size: 3.6rem; line-height: 1; margin-bottom: 8px; display: flex; justify-content: center; align-items: center; gap: 8px;">
+        <img src="../assets/icons/crown.png" style="width: 56px; height: 56px; object-fit: contain;" alt="👑">
+      </div>
       <h3 style="font-size: 1.45rem; color: #2E7D32; margin-bottom: 4px;" id="vic-title">Hoan Hô! Về Nhà An Toàn!</h3>
-      <p style="font-size: 0.95rem; color: #33691E; font-weight: 800; margin-bottom: 20px;" id="vic-subtitle">Bé đã giúp bạn nhỏ vượt qua cả 3 câu đố và thu thập đủ 3 ngôi sao xuất sắc!</p>
+      <p style="font-size: 0.95rem; color: #33691E; font-weight: 800; margin-bottom: 12px;" id="vic-subtitle">Bé đã giúp bạn nhỏ vượt qua cả 3 câu đố và thu thập đủ 3 ngôi sao xuất sắc!</p>
 
-      <div style="display: flex; gap: 10px; justify-content: center;">
+      <div style="background: #FFF8E1; border: 2px dashed #FFB300; border-radius: 20px; padding: 10px 14px; text-align: left; margin-bottom: 14px; font-size: 0.88rem; color: #4E342E; line-height: 1.4;">
+        <div style="font-weight: 900; color: #E65100; margin-bottom: 3px;">💡 Góc Đồng Hành Cùng Mẹ:</div>
+        <div id="vic-parent-tip">Mẹ hãy cùng bé gọi tên các đồ vật và phương tiện quanh nhà bằng câu tiếng Anh ngắn nhé!</div>
+      </div>
+
+      <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
         <button type="button" onclick="goToNextCharacter()" style="background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%); color: white; border: none; border-radius: 30px; padding: 12px 20px; font-size: 1rem; font-weight: 900; cursor: pointer; box-shadow: 0 4px 14px rgba(46, 125, 50, 0.35);">
           🎉 Đổi Bạn Nhỏ Khác ➜
         </button>
@@ -970,6 +977,7 @@
 
   <script src="../shared/audio.js"></script>
   <script src="../shared/vocabulary.js"></script>
+  <script src="../shared/missions.js"></script>
   <script>
     (function () {
       function getAudio() {
@@ -1847,9 +1855,37 @@
         initRound();
       }
 
+      let isQuizResolving = false;
+      let quizCloseTimer = null;
+      let victoryModalTimer = null;
+      let lastGateSpeechTime = 0;
+
+      function resolveIconName(itemOrId) {
+        let raw = '';
+        if (typeof itemOrId === 'string') {
+          raw = itemOrId;
+        } else if (itemOrId) {
+          raw = itemOrId.icon || itemOrId.id || itemOrId.word || itemOrId.name || '';
+        }
+        raw = raw.toLowerCase().trim().replace(/\s+/g, '_');
+        if (window.ToddlerVocabulary && ToddlerVocabulary.ICON_WORD_ALIASES && ToddlerVocabulary.ICON_WORD_ALIASES[raw]) {
+          return ToddlerVocabulary.ICON_WORD_ALIASES[raw];
+        }
+        return raw || 'star';
+      }
+
       function initRound() {
+        if (quizCloseTimer) {
+          clearTimeout(quizCloseTimer);
+          quizCloseTimer = null;
+        }
+        if (victoryModalTimer) {
+          clearTimeout(victoryModalTimer);
+          victoryModalTimer = null;
+        }
         isArrived = false;
         isQuizOpen = false;
+        isQuizResolving = false;
         currentT = 0;
         gatesCleared = [false, false, false];
         itemsCollected = [false, false, false];
@@ -1912,13 +1948,38 @@
       }
 
       // -------------------------------------------------------------
-      // ROBUST DRAG ENGINE (Clamped Speed & Gate Locking)
+      // ROBUST DRAG & TAP-ALONG ENGINE (Clamped Speed & Gate Locking)
       // -------------------------------------------------------------
       let isDragging = false;
       let dragStartX = 0;
       let dragStartY = 0;
       let hasMovedMuch = false;
       let throttleSound = 0;
+
+      function advanceCharacterToT(desiredT) {
+        if (isArrived || isQuizOpen) return;
+        let nextT = desiredT;
+
+        // CHECK 3 GATES: Stop at the next uncleared gate!
+        for (let g = 0; g < 3; g++) {
+          if (!gatesCleared[g] && nextT >= gateTs[g]) {
+            nextT = gateTs[g];
+            currentT = nextT;
+            setCharacterAtT(currentT);
+            isDragging = false;
+            triggerGateQuiz(g);
+            return;
+          }
+        }
+
+        currentT = Math.max(0, Math.min(1, nextT));
+        setCharacterAtT(currentT);
+        checkItemCollisions();
+
+        if (currentT >= 0.95 && !isArrived) {
+          onArrivedDestination();
+        }
+      }
 
       function handleDragStart(clientX, clientY, pointerId, targetEl) {
         if (isArrived || isQuizOpen) return;
@@ -1932,8 +1993,16 @@
         const charPos = getPointAtT(currentT, pts);
         const distToChar = Math.hypot(pointerX - charPos.x, pointerY - charPos.y);
 
-        // Anti-teleport tolerance: tap must be near character (<= 140px)
-        if (distToChar > 140) {
+        const audio = getAudio();
+        if (audio.init) audio.init();
+
+        // Nếu bé chạm vào mặt đường phía trước bạn nhỏ (> 165px): Hỗ trợ nhích tiến từng bước mượt mà (Tap-Along Assistance)
+        if (distToChar > 165) {
+          const clickedT = findClosestT(pointerX, pointerY, pts);
+          if (clickedT > currentT + 0.02) {
+            playMotionSound();
+            advanceCharacterToT(Math.min(clickedT, currentT + 0.11));
+          }
           return;
         }
 
@@ -1941,8 +2010,6 @@
         hasMovedMuch = false;
         dragStartX = clientX;
         dragStartY = clientY;
-        const audio = getAudio();
-        if (audio.init) audio.init();
 
         if (pointerId !== undefined && targetEl && targetEl.setPointerCapture) {
           try { targetEl.setPointerCapture(pointerId); } catch (e) {}
@@ -1967,36 +2034,17 @@
         const targetT = findClosestT(pointerX, pointerY, pts);
 
         // CLAMP STEP: Strictly limit advancement per frame
-        const maxForward = 0.038;
+        const maxForward = 0.042;
         const maxBackward = 0.045;
         const delta = Math.max(-maxBackward, Math.min(maxForward, targetT - currentT));
-        let nextT = currentT + delta;
-
-        // CHECK 3 GATES: Stop at the next uncleared gate!
-        for (let g = 0; g < 3; g++) {
-          if (!gatesCleared[g] && nextT >= gateTs[g]) {
-            nextT = gateTs[g];
-            currentT = nextT;
-            setCharacterAtT(currentT);
-            isDragging = false;
-            triggerGateQuiz(g);
-            return;
-          }
-        }
-
-        currentT = Math.max(0, Math.min(1, nextT));
-        setCharacterAtT(currentT);
+        const nextT = currentT + delta;
 
         throttleSound++;
         if (throttleSound % 10 === 0) {
           playMotionSound();
         }
 
-        checkItemCollisions();
-
-        if (currentT >= 0.95 && !isArrived) {
-          onArrivedDestination();
-        }
+        advanceCharacterToT(nextT);
       }
 
       function handleDragEnd() {
@@ -2040,9 +2088,56 @@
         });
       });
 
+      const SAFE_DISTRACTOR_POOL = [
+        { id: 'apple', name: 'Apple', icon: 'apple', emoji: '🍎' },
+        { id: 'banana', name: 'Banana', icon: 'banana', emoji: '🍌' },
+        { id: 'carrot', name: 'Carrot', icon: 'carrot', emoji: '🥕' },
+        { id: 'bone', name: 'Bone', icon: 'bone', emoji: '🦴' },
+        { id: 'flower', name: 'Flower', icon: 'flower', emoji: '🌸' },
+        { id: 'star', name: 'Star', icon: 'star', emoji: '⭐' },
+        { id: 'ball', name: 'Ball', icon: 'ball', emoji: '⚽' },
+        { id: 'book', name: 'Book', icon: 'book', emoji: '📖' },
+        { id: 'cup', name: 'Cup', icon: 'cup', emoji: '🥤' }
+      ];
+
+      function buildUniqueQuizOptions(quiz) {
+        const correct = {
+          ...quiz.correct,
+          icon: resolveIconName(quiz.correct)
+        };
+        const usedIds = new Set([
+          (correct.id || '').toLowerCase(),
+          (correct.name || '').toLowerCase(),
+          correct.icon
+        ]);
+        const validDistractors = [];
+        const candidates = [...(quiz.distractors || []), ...SAFE_DISTRACTOR_POOL];
+
+        for (const d of candidates) {
+          if (!d || !d.name) continue;
+          const dIcon = resolveIconName(d);
+          const dId = (d.id || d.name).toLowerCase();
+          const dName = d.name.toLowerCase();
+          if (!usedIds.has(dId) && !usedIds.has(dName) && !usedIds.has(dIcon)) {
+            usedIds.add(dId);
+            usedIds.add(dName);
+            usedIds.add(dIcon);
+            validDistractors.push({ ...d, icon: dIcon, isCorrect: false });
+          }
+          if (validDistractors.length >= 2) break;
+        }
+
+        const allOpts = [
+          { ...correct, isCorrect: true },
+          ...validDistractors
+        ];
+        return allOpts.sort(() => Math.random() - 0.5);
+      }
+
       function triggerGateQuiz(gateIdx) {
         if (gatesCleared[gateIdx] || isQuizOpen) return;
         isQuizOpen = true;
+        isQuizResolving = false;
         isDragging = false;
         currentActiveGateIdx = gateIdx;
 
@@ -2058,19 +2153,13 @@
         const optionsBox = document.getElementById('quiz-options');
 
         badge.innerText = `🚪 CỔNG THỬ THÁCH ${gateIdx + 1}/3`;
-        thoughtChar.innerText = c.emoji;
+        thoughtChar.innerHTML = `<img src="../assets/icons/${c.icon}.png" alt="${c.name}" style="width: 40px; height: 40px; object-fit: contain; vertical-align: middle;" onerror="this.outerHTML='<span>${c.emoji}</span>'">`;
         thoughtTarget.innerHTML = `<span style="font-size: 2.3rem; display: inline-block; animation: targetWiggle 1.4s infinite alternate ease-in-out;">❓</span>`;
 
-        qEn.innerText = `Listen & Find! 🎧`;
-        qVn.innerText = `Bé nghe loa đọc rồi chọn đúng hình nhé!`;
+        qEn.innerText = `Listen & Find: ${quiz.correct.name}! 🎧`;
+        qVn.innerText = `Bé nghe loa đọc rồi chọn đúng hình "${quiz.correct.name}" nhé!`;
 
-        // Shuffle options
-        const allOpts = [
-          { ...quiz.correct, isCorrect: true },
-          { ...quiz.distractors[0], isCorrect: false },
-          { ...quiz.distractors[1], isCorrect: false }
-        ];
-        allOpts.sort(() => Math.random() - 0.5);
+        const allOpts = buildUniqueQuizOptions(quiz);
 
         optionsBox.innerHTML = '';
         allOpts.forEach(opt => {
@@ -2088,10 +2177,10 @@
 
         modal.style.display = 'flex';
 
-        // Auto speak target item only for toddlers (no long sentences)
+        // Auto speak target item clearly for toddlers
         const audio = getAudio();
         if (audio.speak) {
-          audio.speak(quiz.correct.name);
+          audio.speak(`Find ${quiz.correct.name}!`);
         }
       }
 
@@ -2101,17 +2190,20 @@
         const quiz = c.quizzes[currentActiveGateIdx];
         const audio = getAudio();
         if (audio.speak) {
-          audio.speak(quiz.correct.name);
+          audio.speak(`Find ${quiz.correct.name}!`);
         }
       }
 
       function handleQuizOptionClick(opt, btnElem, gateIdx) {
+        if (isQuizResolving) return;
+
         const audio = getAudio();
         const thoughtTarget = document.getElementById('thought-target');
         const qEn = document.getElementById('quiz-question-en');
         const qVn = document.getElementById('quiz-question-vn');
 
         if (opt.isCorrect) {
+          isQuizResolving = true;
           btnElem.classList.add('correct');
           if (audio.playChime) audio.playChime();
           else if (audio.playWin) audio.playWin();
@@ -2119,29 +2211,44 @@
           // Reveal the mystery item in thought bubble upon winning!
           thoughtTarget.innerHTML = `<img src="../assets/icons/${opt.icon}.png" alt="${opt.name}" style="width: 44px; height: 44px; object-fit: contain; animation: targetWiggle 0.5s infinite alternate;" onerror="this.outerHTML='<span style=\\'font-size:2.4rem;\\'>${opt.emoji}</span>'">`;
           qEn.innerHTML = `Bingo! <b style="color: #2E7D32;">${opt.name}</b>!`;
-          qVn.innerText = `Đúng rồi! Bạn nhỏ tìm thấy ${opt.name} rồi!`;
+          qVn.innerText = `Đúng rồi! Cổng số ${gateIdx + 1} đã mở!`;
 
           if (audio.speak) {
-            audio.speak('Bingo! ' + opt.name + '! Great job!');
+            const lookupKey = opt.id || opt.name;
+            const phrase = (window.ToddlerVocabulary && ToddlerVocabulary.getWordContextPhrase)
+              ? ToddlerVocabulary.getWordContextPhrase(lookupKey)
+              : ('Bingo! ' + opt.name + '! Great job!');
+            lastGateSpeechTime = Date.now();
+            audio.speak(phrase);
           }
 
           gatesCleared[gateIdx] = true;
           gateElems[gateIdx].classList.add('cleared');
+          if (window.MissionEngine && MissionEngine.recordAction) {
+            MissionEngine.recordAction();
+          }
 
-          setTimeout(() => {
+          // Giữ hộp thoại 1650ms để bé nghe trọn vẹn câu mẫu ngữ cảnh và tự động nhích qua cổng nhận sao thưởng!
+          if (quizCloseTimer) clearTimeout(quizCloseTimer);
+          quizCloseTimer = setTimeout(() => {
             document.getElementById('quiz-modal').style.display = 'none';
             isQuizOpen = false;
+            isQuizResolving = false;
             currentActiveGateIdx = -1;
-            if (audio.speak) {
-              audio.speak('Gate is open! Keep going!');
+
+            // Tự động đưa bạn nhỏ lướt qua cổng vừa mở để ăn vật phẩm thưởng ngay sau cổng
+            if (currentT < itemTs[gateIdx]) {
+              currentT = itemTs[gateIdx];
+              setCharacterAtT(currentT);
+              checkItemCollisions(true);
             }
-          }, 1100);
+          }, 1650);
         } else {
           btnElem.classList.add('wrong');
           if (audio.playPop) audio.playPop();
           // Pronounce the item clicked so baby learns its name!
           if (audio.speak) {
-            audio.speak(opt.name + '! Try again, little baby!');
+            audio.speak(opt.name + '! Try again!');
           }
           setTimeout(() => {
             btnElem.classList.remove('wrong');
@@ -2199,13 +2306,13 @@
         setTimeout(() => ripple.remove(), 600);
       }
 
-      function checkItemCollisions() {
+      function checkItemCollisions(silentVoice = false) {
         const notes = [523.25, 659.25, 783.99];
         const c = getCurrentCharacter();
         const audio = getAudio();
 
         itemTs.forEach((t, idx) => {
-          if (!itemsCollected[idx] && Math.abs(currentT - t) < 0.08) {
+          if (!itemsCollected[idx] && Math.abs(currentT - t) < 0.085) {
             itemsCollected[idx] = true;
             itemElems[idx].classList.add('collected');
             hudStars[idx].classList.add('active');
@@ -2213,7 +2320,9 @@
             if (audio.playTone) {
               audio.playTone(notes[idx], 'triangle', 0.25, 0.35);
             }
-            if (audio.speak) {
+            // Không cắt ngang câu mẫu ngữ cảnh của cổng đố vui nếu vừa mới đọc dưới 1.9 giây
+            const elapsedSinceGateSpeech = Date.now() - lastGateSpeechTime;
+            if (!silentVoice && elapsedSinceGateSpeech > 1900 && audio.speak) {
               const countWords = ['One! ' + c.targetItem.name + '!', 'Two! Delicious!', 'Three! All collected! Awesome!'];
               audio.speak(countWords[idx]);
             }
@@ -2247,11 +2356,30 @@
           audio.speak(`Wonderful! Look at ${c.name} safe and sound at the ${c.destination.name}! You are amazing!`);
         }
 
-        setTimeout(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const curW = parseInt(urlParams.get('week'), 10) || ((window.MissionEngine && MissionEngine.getCurrentWeek) ? MissionEngine.getCurrentWeek() : 1);
+
+        if (victoryModalTimer) clearTimeout(victoryModalTimer);
+        victoryModalTimer = setTimeout(() => {
+          const vicIcon = document.getElementById('vic-icon');
+          if (vicIcon) {
+            vicIcon.innerHTML = `
+              <img src="../assets/icons/crown.png" style="width: 54px; height: 54px; object-fit: contain;" alt="👑">
+              <img src="../assets/icons/${c.icon}.png" style="width: 54px; height: 54px; object-fit: contain;" alt="${c.name}">
+              <img src="../assets/icons/${c.destination.icon}.png" style="width: 54px; height: 54px; object-fit: contain;" alt="${c.destination.name}">
+            `;
+          }
           document.getElementById('vic-title').innerText = `🎉 ${c.name} Đã Về Nhà!`;
           document.getElementById('vic-subtitle').innerText = `Bé đã giúp ${c.vnName} vượt qua cả 3 câu đố và thu thập đủ 3 ngôi sao xuất sắc!`;
+
+          const tipEl = document.getElementById('vic-parent-tip');
+          if (tipEl && window.ToddlerVocabulary && ToddlerVocabulary.getRealWorldParentTip) {
+            const tipInfo = ToddlerVocabulary.getRealWorldParentTip(curW);
+            tipEl.innerText = `${tipInfo.tipText} (Từ vựng tuần ${curW}: ${tipInfo.wordListStr})`;
+          }
+
           document.getElementById('victory-modal').style.display = 'flex';
-        }, 1500);
+        }, 1800);
       }
 
       function goToNextCharacter() {
@@ -2294,6 +2422,36 @@
       window.replayQuizAudio = replayQuizAudio;
 
       function initGame() {
+        if (window.MissionEngine && MissionEngine.initGameMission) {
+          MissionEngine.initGameMission('mission_day_3', '.hud');
+        }
+        // Kết hợp hài hòa 80/20: Giữ câu chuyện riêng của từng bạn nhỏ ở Cổng 1 (Món yêu thích) & Cổng 3 (Ngôi nhà),
+        // đồng thời lồng ghép Từ Mới / Từ Ôn Tập của Tuần hiện tại vào Cổng 2 (xoay vòng đa dạng qua 9 nhân vật)
+        try {
+          const urlParams = new URLSearchParams(window.location.search);
+          const w = parseInt(urlParams.get('week'), 10) || ((window.MissionEngine && MissionEngine.getCurrentWeek) ? MissionEngine.getCurrentWeek() : 1);
+          const pack = (window.ToddlerVocabulary && ToddlerVocabulary.build80_20Pack) ? ToddlerVocabulary.build80_20Pack(w) : null;
+          const weekVocabPool = [
+            ...(pack && pack.newWords ? pack.newWords : []),
+            ...(pack && pack.reviewWords ? pack.reviewWords : [])
+          ].filter(item => item && item.word);
+
+          if (weekVocabPool.length > 0) {
+            CHARACTERS.forEach((ch, cIdx) => {
+              const targetWord = weekVocabPool[cIdx % weekVocabPool.length];
+              if (ch.quizzes && ch.quizzes[1] && targetWord) {
+                const iconName = resolveIconName(targetWord);
+                ch.quizzes[1].correct = {
+                  id: targetWord.id || targetWord.word.toLowerCase(),
+                  name: targetWord.word,
+                  icon: iconName,
+                  emoji: targetWord.emoji || '⭐'
+                };
+              }
+            });
+          }
+        } catch (e) {}
+
         switchBiome('forest');
 
         window.addEventListener('resize', () => {

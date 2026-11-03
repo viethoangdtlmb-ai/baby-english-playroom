@@ -259,7 +259,50 @@ var ToddlerVocabulary = window.ToddlerVocabulary || {
       { id: 'ring', word: 'Ring', emoji: '💍' },
       { id: 'basket', word: 'Basket', emoji: '🧺' },
       { id: 'pot', word: 'Pot', emoji: '🍳' },
-      { id: 'pan', word: 'Pan', emoji: '🥘' }
+      { id: 'pan', word: 'Pan', emoji: '🥘' },
+      // Bàn học & Sáng tạo quanh bé
+      { id: 'pen', word: 'Pen', emoji: '🖋️' },
+      { id: 'pencil', word: 'Pencil', emoji: '✏️' },
+      { id: 'paper', word: 'Paper', emoji: '📄' },
+      { id: 'notebook', word: 'Notebook', emoji: '📓' },
+      { id: 'backpack', word: 'Backpack', emoji: '🎒' },
+      { id: 'bag', word: 'Bag', emoji: '👜' },
+      { id: 'scissors', word: 'Scissors', emoji: '✂️' },
+      { id: 'ruler', word: 'Ruler', emoji: '📏' },
+      { id: 'paintbrush', word: 'Paintbrush', emoji: '🖌️' },
+      // Đồ điện & Phòng khách gần gũi
+      { id: 'computer', word: 'Computer', emoji: '🖥️' },
+      { id: 'laptop', word: 'Laptop', emoji: '💻' },
+      { id: 'keyboard', word: 'Keyboard', emoji: '⌨️' },
+      { id: 'fan', word: 'Fan', emoji: '🪭' },
+      { id: 'sofa', word: 'Sofa', emoji: '🛋️' },
+      { id: 'camera', word: 'Camera', emoji: '📷' },
+      { id: 'flashlight', word: 'Flashlight', emoji: '🔦' },
+      // Bàn ăn & Vệ sinh cá nhân hàng ngày
+      { id: 'plate', word: 'Plate', emoji: '🍽️' },
+      { id: 'chopsticks', word: 'Chopsticks', emoji: '🥢' },
+      { id: 'bottle', word: 'Bottle', emoji: '🍼' },
+      { id: 'teacup', word: 'Teacup', emoji: '🍵' },
+      { id: 'toothbrush', word: 'Toothbrush', emoji: '🪥' },
+      { id: 'lotion', word: 'Lotion', emoji: '🧴' },
+      { id: 'sponge', word: 'Sponge', emoji: '🧽' },
+      { id: 'broom', word: 'Broom', emoji: '🧹' },
+      { id: 'toilet', word: 'Toilet', emoji: '🚽' },
+      { id: 'trashcan', word: 'Trash can', emoji: '🗑️' }
+    ],
+
+    // 7b. Chữ số đếm cơ bản (10 từ)
+    numbers: [
+      { id: 'one', word: 'One', emoji: '1️⃣' },
+      { id: 'two', word: 'Two', emoji: '2️⃣' },
+      { id: 'three', word: 'Three', emoji: '3️⃣' },
+      { id: 'four', word: 'Four', emoji: '4️⃣' },
+      { id: 'five', word: 'Five', emoji: '5️⃣' },
+      { id: 'six', word: 'Six', emoji: '6️⃣' },
+      { id: 'seven', word: 'Seven', emoji: '7️⃣' },
+      { id: 'eight', word: 'Eight', emoji: '8️⃣' },
+      { id: 'nine', word: 'Nine', emoji: '9️⃣' },
+      { id: 'ten', word: 'Ten', emoji: '🔟' }
     ],
 
     // 8. Phương tiện giao thông (24 từ)
@@ -388,65 +431,65 @@ var ToddlerVocabulary = window.ToddlerVocabulary || {
    * Phân bổ đều đặn 4 giai đoạn, từ thế giới gần gũi đến đại dương, vũ trụ
    */
   CURRICULUM_52_WEEKS: [
-    // GIAI ĐOẠN 1 (Tuần 1 - 13): Bé, Gia Đình & Nhu Cầu Đầu Đời
-    { week: 1, title: 'Bé & Gia Đình Thân Yêu', words: ['baby', 'mommy', 'daddy'], reviews: [] },
-    { week: 2, title: 'Bữa Ăn Ngon Miệng', words: ['apple', 'banana', 'milk'], reviews: ['baby', 'mommy'] },
-    { week: 3, title: 'Thú Cưng Quanh Bé', words: ['dog', 'cat', 'duck'], reviews: ['apple', 'milk', 'baby'] },
-    { week: 4, title: 'Xe Cộ & Đồ Chơi Bé Thích', words: ['car', 'bus', 'ball', 'box'], reviews: ['dog', 'cat', 'baby'] },
-    { week: 5, title: 'Khuôn Mặt Đáng Yêu', words: ['eye', 'nose', 'mouth', 'ear'], reviews: ['ball', 'box', 'car'] },
-    { week: 6, title: 'Anh Chị Em & Bạn Nhỏ', words: ['brother', 'sister', 'boy', 'girl'], reviews: ['mommy', 'daddy'] },
-    { week: 7, title: 'Nông Trại Vui Nhộn', words: ['cow', 'pig', 'sheep', 'chicken'], reviews: ['dog', 'cat', 'duck'] },
-    { week: 8, title: 'Món Ăn Ngọt Lành', words: ['honey', 'water', 'bread', 'egg'], reviews: ['milk', 'apple'] },
-    { week: 9, title: 'Hình Khối Diệu Kỳ', words: ['circle', 'square', 'triangle', 'star_shape'], reviews: ['ball', 'car'] },
-    { week: 10, title: 'Đôi Tay & Đôi Chân Bé', words: ['hand', 'foot', 'head', 'belly'], reviews: ['eye', 'nose', 'mouth'] },
-    { week: 11, title: 'Đồ Chơi Bé Thích', words: ['doll', 'balloon', 'book', 'toycar'], reviews: ['ball', 'box'] },
-    { week: 12, title: 'Đồ Dùng Bàn Ăn Của Bé', words: ['cup', 'spoon', 'bowl', 'rice'], reviews: ['water', 'bread'] },
-    { week: 13, title: 'Tổng Kết Giai Đoạn 1: Mái Ấm Gia Đình', words: ['house', 'room', 'bed', 'chair'], reviews: ['mommy', 'daddy', 'baby', 'dog'] },
+    // GIAI ĐOẠN 1 (Tuần 1 - 13): Bé, Gia Đình & Đồ Vật Sát Sườn Quanh Bé
+    { week: 1, title: 'Bé & Gia Đình Thân Yêu', words: ['baby', 'mommy', 'daddy', 'bottle'], reviews: [] },
+    { week: 2, title: 'Bàn Ăn Quen Thuộc Của Bé', words: ['cup', 'spoon', 'bowl', 'plate'], reviews: ['baby', 'mommy', 'bottle'] },
+    { week: 3, title: 'Đồ Vật Trong Phòng Khách', words: ['chair', 'table', 'fan', 'sofa'], reviews: ['cup', 'spoon', 'bowl'] },
+    { week: 4, title: 'Góc Học Tập & Đọc Sách', words: ['book', 'pen', 'pencil', 'paper'], reviews: ['chair', 'table', 'fan'] },
+    { week: 5, title: 'Khuôn Mặt Đáng Yêu Của Bé', words: ['eye', 'nose', 'mouth', 'ear'], reviews: ['book', 'pen', 'pencil'] },
+    { week: 6, title: 'Bữa Ăn Ngon Miệng', words: ['apple', 'banana', 'milk', 'rice'], reviews: ['cup', 'bowl', 'plate'] },
+    { week: 7, title: 'Thú Cưng Quanh Nhà', words: ['dog', 'cat', 'duck', 'rabbit'], reviews: ['apple', 'milk', 'baby'] },
+    { week: 8, title: 'Cặp Sách & Đồ Dùng Vẽ Vời', words: ['backpack', 'bag', 'crayon', 'scissors'], reviews: ['book', 'pen', 'paper'] },
+    { week: 9, title: 'Đồ Điện Quen Thuộc Trong Nhà', words: ['computer', 'laptop', 'phone', 'tv'], reviews: ['fan', 'chair', 'table'] },
+    { week: 10, title: 'Đôi Tay, Đôi Chân & Cơ Thể', words: ['hand', 'foot', 'head', 'belly'], reviews: ['eye', 'nose', 'mouth'] },
+    { week: 11, title: 'Phòng Ngủ Ấm Áp Của Bé', words: ['bed', 'pillow', 'blanket', 'lamp'], reviews: ['chair', 'table', 'sofa'] },
+    { week: 12, title: 'Vệ Sinh Cá Nhân Sạch Sẽ', words: ['toothbrush', 'soap', 'towel', 'toilet'], reviews: ['hand', 'foot', 'mouth'] },
+    { week: 13, title: 'Tổng Kết Giai Đoạn 1: Ngôi Nhà Thân Thương', words: ['house', 'door', 'window', 'clock'], reviews: ['chair', 'table', 'fan', 'computer'] },
 
-    // GIAI ĐOẠN 2 (Tuần 14 - 26): Thế Giới Trái Cây, Trang Phục & Muôn Loài
-    { week: 14, title: 'Trang Phục Của Bé', words: ['hat', 'shirt', 'pants', 'shoes'], reviews: ['ball', 'book', 'bed'] },
-    { week: 15, title: 'Rừng Xanh Kỳ Thú', words: ['lion', 'tiger', 'elephant', 'monkey'], reviews: ['cow', 'dog', 'cat'] },
-    { week: 16, title: 'Vườn Trái Cây Nhiệt Đới', words: ['mango', 'melon', 'strawberry', 'grape'], reviews: ['apple', 'banana'] },
-    { week: 17, title: 'Căn Phòng Ấm Áp', words: ['table', 'door', 'window', 'mirror'], reviews: ['book', 'ball'] },
-    { week: 18, title: 'Vật Dụng Phòng Ngủ', words: ['lamp', 'pillow', 'blanket', 'clock'], reviews: ['bed', 'door'] },
-    { week: 19, title: 'Ấm Áp Mùa Đông', words: ['socks', 'dress', 'jacket', 'boots'], reviews: ['hat', 'shoes'] },
-    { week: 20, title: 'Bạn Hươu & Ngựa Vằn', words: ['giraffe', 'zebra', 'hippo', 'kangaroo'], reviews: ['lion', 'elephant'] },
-    { week: 21, title: 'Rau Củ Tươi Ngon', words: ['carrot', 'tomato', 'corn', 'potato'], reviews: ['honey', 'egg'] },
-    { week: 22, title: 'Đồ Dùng Tiện Ích', words: ['phone', 'tv', 'key', 'drum'], reviews: ['cup', 'spoon'] },
-    { week: 23, title: 'Cơ Thể Khỏe Mạnh', words: ['arm', 'leg', 'hair', 'teeth'], reviews: ['hand', 'foot', 'head'] },
-    { week: 24, title: 'Đồ Chơi Thông Minh', words: ['block', 'robot', 'crayon', 'toycar'], reviews: ['ball', 'doll', 'book'] },
-    { week: 25, title: 'Ông Bà & Bạn Bè', words: ['grandma', 'grandpa', 'house', 'room'], reviews: ['mommy', 'daddy', 'boy'] },
-    { week: 26, title: 'Tổng Kết Giai Đoạn 2: Nhà Tắm & Đồ Dùng', words: ['bath', 'soap', 'towel', 'brush'], reviews: ['hat', 'shoes', 'lion', 'car'] },
+    // GIAI ĐOẠN 2 (Tuần 14 - 26): Đếm Số, Trang Phục, Đồ Chơi & Khu Vườn
+    { week: 14, title: 'Bé Tập Đếm Số (1 - 5)', words: ['one', 'two', 'three', 'four', 'five'], reviews: ['book', 'pen', 'apple'] },
+    { week: 15, title: 'Trang Phục Hàng Ngày Của Bé', words: ['hat', 'shirt', 'pants', 'shoes'], reviews: ['backpack', 'bag', 'clock'] },
+    { week: 16, title: 'Đồ Chơi Bé Yêu Thích', words: ['ball', 'balloon', 'doll', 'teddy'], reviews: ['one', 'two', 'three'] },
+    { week: 17, title: 'Dụng Cụ Học Tập & Sáng Tạo', words: ['notebook', 'ruler', 'paintbrush', 'box'], reviews: ['book', 'pen', 'pencil', 'scissors'] },
+    { week: 18, title: 'Bé Giữ Nhà Cửa Gọn Gàng', words: ['broom', 'trashcan', 'sponge', 'bucket'], reviews: ['door', 'window', 'table'] },
+    { week: 19, title: 'Nông Trại Vui Nhộn', words: ['cow', 'pig', 'sheep', 'chicken'], reviews: ['dog', 'cat', 'duck'] },
+    { week: 20, title: 'Bé Tập Đếm Số (6 - 10)', words: ['six', 'seven', 'eight', 'nine', 'ten'], reviews: ['one', 'two', 'three', 'four', 'five'] },
+    { week: 21, title: 'Vườn Trái Cây Nhiệt Đới', words: ['mango', 'watermelon', 'strawberry', 'grape'], reviews: ['apple', 'banana', 'orange_food'] },
+    { week: 22, title: 'Đồ Dùng Bếp & Bàn Ăn Gia Đình', words: ['chopsticks', 'fork', 'pot', 'pan'], reviews: ['cup', 'spoon', 'plate', 'bowl'] },
+    { week: 23, title: 'Xe Cộ Trên Đường Phố', words: ['car', 'bus', 'bike', 'motor'], reviews: ['hat', 'shoes', 'backpack'] },
+    { week: 24, title: 'Cơ Thể Khỏe Mạnh', words: ['arm', 'leg', 'hair', 'teeth'], reviews: ['toothbrush', 'soap', 'towel'] },
+    { week: 25, title: 'Ông Bà & Anh Chị Em', words: ['grandma', 'grandpa', 'brother', 'sister'], reviews: ['mommy', 'daddy', 'baby'] },
+    { week: 26, title: 'Tổng Kết Giai Đoạn 2: Góc Công Nghệ & Khám Phá', words: ['camera', 'flashlight', 'keyboard', 'mirror'], reviews: ['computer', 'laptop', 'phone', 'tv'] },
 
-    // GIAI ĐOẠN 3 (Tuần 27 - 39): Thiên Nhiên, Biển Cả & Phương Tiện
-    { week: 27, title: 'Xe Cộ Tốc Độ & Hành Trình', words: ['train', 'bike', 'truck', 'plane'], reviews: ['car', 'bus', 'ball'] },
-    { week: 28, title: 'Đại Dương Bao La', words: ['fish', 'whale', 'dolphin', 'octopus'], reviews: ['water', 'duck'] },
-    { week: 29, title: 'Bầu Trời & Thời Tiết', words: ['sun', 'moon', 'cloud', 'rain'], reviews: ['star_shape', 'rainbow'] },
-    { week: 30, title: 'Món Ngọt Tráng Miệng', words: ['cheese', 'cake', 'cookie', 'icecream'], reviews: ['milk', 'bread'] },
-    { week: 31, title: 'Phụ Kiện Xinh Xắn', words: ['cap', 'scarf', 'gloves', 'glasses'], reviews: ['hat', 'dress'] },
-    { week: 32, title: 'Thuyền Buồm & Máy Bay', words: ['plane', 'boat', 'ship', 'truck'], reviews: ['car', 'train'] },
-    { week: 33, title: 'Côn Trùng & Chim Ca', words: ['bird', 'frog', 'bee', 'butterfly'], reviews: ['duck', 'fish'] },
-    { week: 34, title: 'Cầu Vồng & Cây Xanh', words: ['rainbow', 'tree', 'flower', 'grass'], reviews: ['sun', 'cloud'] },
-    { week: 35, title: 'Vật Dụng Nhỏ Trong Nhà', words: ['box', 'pillow', 'blanket', 'lamp'], reviews: ['bed', 'clock'] },
-    { week: 36, title: 'Khớp Gối & Ngón Tay', words: ['knee', 'finger', 'toe', 'cheek'], reviews: ['eye', 'ear', 'arm'] },
-    { week: 37, title: 'Sinh Vật Biển Kỳ Thú', words: ['crab', 'turtle', 'penguin', 'sea'], reviews: ['fish', 'whale', 'dolphin'] },
-    { week: 38, title: 'Vườn Quả Mọng Nước', words: ['peach', 'cherry', 'melon', 'juice'], reviews: ['orange_food', 'strawberry'] },
-    { week: 39, title: 'Tổng Kết Giai Đoạn 3: Thiên Nhiên Kỳ Vĩ', words: ['sky', 'leaf', 'river', 'mountain'], reviews: ['plane', 'rainbow', 'whale', 'train'] },
+    // GIAI ĐOẠN 3 (Tuần 27 - 39): Hình Khối, Thiên Nhiên, Rừng Xanh & Đại Dương
+    { week: 27, title: 'Hình Khối Diệu Kỳ Quanh Bé', words: ['circle', 'square', 'triangle', 'star_shape'], reviews: ['clock', 'book', 'table'] },
+    { week: 28, title: 'Rừng Xanh Kỳ Thú', words: ['lion', 'tiger', 'elephant', 'monkey'], reviews: ['cow', 'pig', 'sheep'] },
+    { week: 29, title: 'Rau Củ Tươi Ngon Mẹ Nấu', words: ['carrot', 'tomato', 'corn', 'potato'], reviews: ['pot', 'pan', 'plate'] },
+    { week: 30, title: 'Ấm Áp Ngày Mưa & Mùa Đông', words: ['jacket', 'socks', 'rainboots', 'umbrella'], reviews: ['hat', 'shirt', 'shoes'] },
+    { week: 31, title: 'Đồ Chơi Lắp Ghép & Âm Nhạc', words: ['block', 'robot', 'drum', 'guitar'], reviews: ['ball', 'doll', 'teddy'] },
+    { week: 32, title: 'Bầu Trời & Thời Tiết', words: ['sun', 'moon', 'cloud', 'rain'], reviews: ['umbrella', 'window', 'fan'] },
+    { week: 33, title: 'Đại Dương Bao La', words: ['fish', 'whale', 'dolphin', 'octopus'], reviews: ['water', 'bath', 'sponge'] },
+    { week: 34, title: 'Bữa Sáng Đủ Chất', words: ['bread', 'egg', 'cheese', 'juice'], reviews: ['milk', 'rice', 'cup'] },
+    { week: 35, title: 'Phòng Tắm Thơm Tho', words: ['bath', 'lotion', 'brush', 'slippers'], reviews: ['toothbrush', 'soap', 'towel', 'toilet'] },
+    { week: 36, title: 'Khớp Gối, Ngón Tay & Má Hồng', words: ['knee', 'finger', 'toe', 'cheek'], reviews: ['arm', 'leg', 'teeth'] },
+    { week: 37, title: 'Côn Trùng & Khu Vườn Nhỏ', words: ['bird', 'frog', 'bee', 'butterfly'], reviews: ['tree', 'flower', 'grass'] },
+    { week: 38, title: 'Phương Tiện Đường Dài', words: ['train', 'plane', 'boat', 'ship'], reviews: ['car', 'bus', 'bike'] },
+    { week: 39, title: 'Tổng Kết Giai Đoạn 3: Thiên Nhiên Tươi Đẹp', words: ['rainbow', 'tree', 'flower', 'river'], reviews: ['sun', 'moon', 'cloud', 'camera'] },
 
-    // GIAI ĐOẠN 4 (Tuần 40 - 52): Thế Giới Mở Rộng, Nông Trại & Vũ Trụ
-    { week: 40, title: 'Những Bạn Thú Thân Thiết', words: ['horse', 'panda', 'rabbit', 'bear'], reviews: ['whale', 'fish', 'duck'] },
-    { week: 41, title: 'Phương Tiện Cứu Trợ & Phố Thị', words: ['chopper', 'taxi', 'motor', 'van'], reviews: ['car', 'bus', 'plane'] },
-    { week: 42, title: 'Băng Tuyết & Công Viên', words: ['snow', 'sand', 'park', 'tree'], reviews: ['rain', 'river', 'sun'] },
-    { week: 43, title: 'Bữa Tiệc Pizza Vui Vẻ', words: ['candy', 'pizza', 'soup', 'meat'], reviews: ['cake', 'cheese', 'bread'] },
-    { week: 44, title: 'Trang Phục Dự Tiệc', words: ['skirt', 'coat', 'jacket', 'belt'], reviews: ['jacket', 'boots', 'socks'] },
-    { week: 45, title: 'Biệt Đội Cứu Trợ Thành Phố', words: ['firetruck', 'ambulance', 'policecar', 'chopper'], reviews: ['car', 'truck', 'van'] },
-    { week: 46, title: 'Những Người Bạn Khổng Lồ', words: ['whale', 'turtle', 'hippo', 'elephant'], reviews: ['lion', 'horse', 'bear'] },
-    { week: 47, title: 'Thảo Nguyên Rực Rỡ', words: ['zebra', 'giraffe', 'tiger', 'monkey'], reviews: ['panda', 'rabbit', 'bear'] },
-    { week: 48, title: 'Phương Tiện Tốc Độ & Hành Trình Lớn', words: ['rocket', 'plane', 'ship', 'train'], reviews: ['truck', 'chopper', 'bus'] },
-    { week: 49, title: 'Góc Đồ Chơi Kỳ Diệu', words: ['key', 'toycar', 'robot', 'drum'], reviews: ['block', 'ball', 'balloon'] },
-    { week: 50, title: 'Trạm Cứu Hỏa & Khám Phá Không Gian', words: ['rocket', 'firetruck', 'policecar', 'train'], reviews: ['ambulance', 'chopper', 'ship'] },
-    { week: 51, title: 'Khu Vườn Côn Trùng & Hoa Lá', words: ['butterfly', 'bee', 'flower', 'leaf'], reviews: ['tree', 'grass', 'sun', 'rainbow'] },
-    { week: 52, title: 'Tốt Nghiệp 52 Tuần: Bé Là Nhà Vô Địch', words: ['baby', 'sun', 'rainbow', 'rocket'], reviews: ['star_shape', 'heart_shape', 'elephant', 'mommy'] }
+    // GIAI ĐOẠN 4 (Tuần 40 - 52): Thế Giới Mở Rộng, Biệt Đội Cứu Hộ & Vũ Trụ
+    { week: 40, title: 'Thảo Nguyên Rực Rỡ', words: ['giraffe', 'zebra', 'hippo', 'kangaroo'], reviews: ['lion', 'tiger', 'elephant'] },
+    { week: 41, title: 'Món Ngọt Tráng Miệng', words: ['cake', 'cookie', 'icecream', 'donut'], reviews: ['bread', 'egg', 'teacup'] },
+    { week: 42, title: 'Phụ Kiện Đi Chơi Của Bé', words: ['cap', 'glasses', 'sunglasses', 'scarf'], reviews: ['jacket', 'shoes', 'backpack'] },
+    { week: 43, title: 'Biệt Đội Xe Cứu Hộ', words: ['firetruck', 'ambulance', 'policecar', 'excavator'], reviews: ['car', 'truck', 'train'] },
+    { week: 44, title: 'Những Người Bạn Đáng Yêu', words: ['panda', 'koala', 'horse', 'bear'], reviews: ['dog', 'cat', 'rabbit'] },
+    { week: 45, title: 'Rau Xanh & Quả Ngọt', words: ['broccoli', 'cucumber', 'pumpkin', 'peach'], reviews: ['carrot', 'tomato', 'mango'] },
+    { week: 46, title: 'Sinh Vật Biển Kỳ Thú', words: ['crab', 'turtle', 'penguin', 'shark'], reviews: ['fish', 'whale', 'dolphin'] },
+    { week: 47, title: 'Đồ Vật Nhỏ Hữu Ích', words: ['key', 'bell', 'basket', 'kite'], reviews: ['door', 'bag', 'scissors', 'ruler'] },
+    { week: 48, title: 'Bữa Tiệc Cuối Tuần', words: ['pizza', 'noodles', 'sandwich', 'pancake'], reviews: ['plate', 'chopsticks', 'fork', 'cup'] },
+    { week: 49, title: 'Hành Động Vui Khỏe Mỗi Ngày', words: ['run', 'jump', 'dance', 'sing'], reviews: ['clap', 'smile', 'laugh'] },
+    { week: 50, title: 'Khám Phá Bầu Trời & Không Gian', words: ['rocket', 'helicopter', 'hotairballoon', 'submarine'], reviews: ['plane', 'ship', 'star_sky'] },
+    { week: 51, title: 'Núi Cao, Rừng Rậm & Bãi Biển', words: ['mountain', 'forest', 'sand', 'island'], reviews: ['rainbow', 'tree', 'river', 'sea'] },
+    { week: 52, title: 'Tốt Nghiệp 52 Tuần: Bé Yêu Khôn Lớn', words: ['crown', 'wand', 'friend', 'happy'], reviews: ['baby', 'mommy', 'daddy', 'book', 'computer'] }
   ],
 
   // Tra cứu từ theo ID trong danh mục
@@ -581,14 +624,115 @@ var ToddlerVocabulary = window.ToddlerVocabulary || {
   },
 
   // -------------------------------------------------------------
+  // CONTEXTUAL SENTENCE & REAL-WORLD PARENT-CHILD TRANSFER ENGINE
+  // -------------------------------------------------------------
+  CONTEXT_PHRASES: {
+    chair: 'Chair! Sit on the chair!',
+    table: 'Table! Put it on the table!',
+    fan: 'Fan! Cool wind from the fan!',
+    sofa: 'Sofa! Sit on the soft sofa!',
+    book: 'Book! Let us read a book!',
+    pen: 'Pen! Write with the pen!',
+    pencil: 'Pencil! Draw with the pencil!',
+    paper: 'Paper! White paper!',
+    notebook: 'Notebook! Open the notebook!',
+    backpack: 'Backpack! Carry your backpack!',
+    bag: 'Bag! Put it in the bag!',
+    scissors: 'Scissors! Cut with scissors!',
+    ruler: 'Ruler! Long ruler!',
+    paintbrush: 'Paintbrush! Paint a picture!',
+    computer: 'Computer! Look at the computer!',
+    laptop: 'Laptop! Mommy and Daddy laptop!',
+    keyboard: 'Keyboard! Tap the keyboard!',
+    phone: 'Phone! Hello on the phone!',
+    tv: 'TV! Watch the TV!',
+    camera: 'Camera! Smile for the camera!',
+    flashlight: 'Flashlight! Bright flashlight!',
+    cup: 'Cup! Drink water from the cup!',
+    spoon: 'Spoon! Eat with the spoon!',
+    bowl: 'Bowl! Yummy soup in the bowl!',
+    plate: 'Plate! Put food on the plate!',
+    chopsticks: 'Chopsticks! Pick up with chopsticks!',
+    fork: 'Fork! Eat with the fork!',
+    bottle: 'Bottle! Drink milk from the bottle!',
+    teacup: 'Teacup! Warm tea in the teacup!',
+    toothbrush: 'Toothbrush! Brush your teeth clean!',
+    soap: 'Soap! Wash hands with soap!',
+    towel: 'Towel! Dry your hands with a towel!',
+    toilet: 'Toilet! Flush the toilet!',
+    trashcan: 'Trash can! Put trash in the trash can!',
+    broom: 'Broom! Sweep the floor with a broom!',
+    sponge: 'Sponge! Scrub clean with a sponge!',
+    bed: 'Bed! Sleep tight in bed!',
+    pillow: 'Pillow! Soft pillow for your head!',
+    blanket: 'Blanket! Warm cozy blanket!',
+    lamp: 'Lamp! Turn on the bright lamp!',
+    clock: 'Clock! Tick tock goes the clock!',
+    door: 'Door! Knock knock on the door!',
+    window: 'Window! Look out the window!'
+  },
+
+  getWordContextPhrase(itemOrId) {
+    const id = (typeof itemOrId === 'string')
+      ? itemOrId.toLowerCase().trim().replace(/\s+/g, '_')
+      : (itemOrId && (itemOrId.id || itemOrId.word || itemOrId.name || '')).toLowerCase().trim().replace(/\s+/g, '_');
+    const resolvedId = this.ICON_WORD_ALIASES[id] || id;
+    if (this.CONTEXT_PHRASES[resolvedId]) {
+      return this.CONTEXT_PHRASES[resolvedId];
+    }
+    const found = this.findWordById(resolvedId);
+    const w = (found && found.word) ? found.word : (typeof itemOrId === 'string' ? itemOrId : 'Good job');
+    if (found && found.sound) return `${w}! ${found.sound}!`;
+    if (found && found.category === 'food') return `${w}! Yummy ${w.toLowerCase()}!`;
+    if (found && found.category === 'clothes') return `${w}! Put on your ${w.toLowerCase()}!`;
+    if (found && found.category === 'body') return `${w}! Touch your ${w.toLowerCase()}!`;
+    if (found && found.category === 'numbers') return `Number ${w}! Let us count ${w.toLowerCase()}!`;
+    return `${w}! Look at the ${w.toLowerCase()}!`;
+  },
+
+  getRealWorldParentTip(weekNum = 1) {
+    const pack = this.build80_20Pack(weekNum);
+    const words = (pack && pack.newWords && pack.newWords.length) ? pack.newWords : [];
+    const wordListStr = words.map(w => `${w.word} (${w.emoji})`).join(', ');
+    const firstWord = words[0] ? words[0].word : 'Chair';
+    const firstPhrase = words[0] ? this.getWordContextPhrase(words[0]) : 'Good job!';
+    return {
+      words,
+      wordListStr,
+      firstWord,
+      firstPhrase,
+      tipText: `Mẹ hãy cùng bé tìm quanh phòng hoặc chỉ vào hình "${firstWord}" ngoài đời thực và đọc to: "${firstPhrase}" nhé!`
+    };
+  },
+
+  // -------------------------------------------------------------
   // 3D CLAYMORPHIC ASSET MANAGER (Microsoft Fluent 3D Integration)
   // -------------------------------------------------------------
   iconCache: {},
+
+  ICON_WORD_ALIASES: {
+    sweet_potato: 'sweetpotato',
+    ice_cream: 'icecream',
+    rain_boots: 'rainboots',
+    teddy_bear: 'teddy',
+    toy_car: 'toycar',
+    magic_wand: 'wand',
+    water_gun: 'watergun',
+    fire_truck: 'firetruck',
+    police_car: 'policecar',
+    hot_air_balloon: 'hotairballoon',
+    trash_can: 'trashcan',
+    digger: 'excavator',
+    fly: 'rocket'
+  },
 
   getWordIconPath(itemOrId) {
     let id = (typeof itemOrId === 'string') ? itemOrId : (itemOrId && (itemOrId.id || itemOrId.word || itemOrId.name || ''));
     if (!id) return '';
     id = id.toLowerCase().trim().replace(/\s+/g, '_');
+    if (this.ICON_WORD_ALIASES[id]) {
+      id = this.ICON_WORD_ALIASES[id];
+    }
     
     // Path resolution: mini-game subdirectories require '../'
     let prefix = '';

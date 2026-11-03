@@ -179,11 +179,14 @@
       z-index: 2;
     }
 
-    /* Baby Wrapper */
+    /* Baby Wrapper - Aspect Ratio Locked so % Hitboxes Never Drift */
     .baby-wrap {
       position: relative;
-      width: 360px;
-      height: 420px;
+      aspect-ratio: 340 / 420;
+      height: 100%;
+      max-height: 410px;
+      width: auto;
+      max-width: 340px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -193,7 +196,7 @@
     }
     @keyframes babyBreathe {
       0% { transform: translateY(0) scale(1); }
-      100% { transform: translateY(-8px) scale(1.02); }
+      100% { transform: translateY(-6px) scale(1.015); }
     }
 
     /* SVG Baby Character */
@@ -204,6 +207,65 @@
       overflow: visible;
     }
 
+    /* Part-Specific SVG Micro-Animations */
+    #svg-ear-left, #svg-ear-right,
+    #svg-hand-left, #svg-hand-right,
+    #svg-foot-left, #svg-foot-right,
+    #svg-hair, #svg-teeth {
+      transform-box: fill-box;
+      transform-origin: center;
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.25s;
+    }
+    #svg-ear-left.wiggle {
+      animation: earWiggleLeft 0.32s ease-in-out 3;
+    }
+    #svg-ear-right.wiggle {
+      animation: earWiggleRight 0.32s ease-in-out 3;
+    }
+    @keyframes earWiggleLeft {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(-22deg) scale(1.22) translateX(-4px); }
+    }
+    @keyframes earWiggleRight {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(22deg) scale(1.22) translateX(4px); }
+    }
+    #svg-hand-left.clap {
+      animation: handClapLeft 0.35s ease-in-out 2;
+    }
+    #svg-hand-right.clap {
+      animation: handClapRight 0.35s ease-in-out 2;
+    }
+    @keyframes handClapLeft {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(42px, -18px) scale(1.2) rotate(18deg); }
+    }
+    @keyframes handClapRight {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-42px, -18px) scale(1.2) rotate(-18deg); }
+    }
+    #svg-foot-left.stomp {
+      animation: footStomp 0.32s ease-in-out 2;
+    }
+    #svg-foot-right.stomp {
+      animation: footStomp 0.32s ease-in-out 0.16s 2;
+    }
+    @keyframes footStomp {
+      0%, 100% { transform: translateY(0) scale(1); }
+      45% { transform: translateY(-20px) scale(1.18) rotate(-8deg); }
+    }
+    #svg-hair.bounce {
+      animation: hairBounce 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) 2;
+    }
+    @keyframes hairBounce {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      50% { transform: scale(1.22) translateY(-6px) rotate(6deg); }
+    }
+    #svg-teeth.gleam {
+      filter: drop-shadow(0 0 10px #FFF) brightness(1.2);
+      transform: scale(1.16);
+    }
+
     /* Slapstick Animations */
     .baby-wrap.anim-sneeze {
       animation: babySneeze 0.85s cubic-bezier(0.25, 1, 0.5, 1);
@@ -211,7 +273,7 @@
     @keyframes babySneeze {
       0% { transform: scale(1) translateY(0); }
       20% { transform: scale(0.9) translateY(18px) rotate(-6deg); }
-      40% { transform: scale(1.26) translateY(-32px) rotate(8deg); }
+      40% { transform: scale(1.22) translateY(-28px) rotate(8deg); }
       70% { transform: scale(0.95) translateY(8px) rotate(-3deg); }
       100% { transform: scale(1) translateY(0); }
     }
@@ -220,8 +282,8 @@
       animation: babyTickle 0.65s infinite alternate ease-in-out;
     }
     @keyframes babyTickle {
-      0% { transform: rotate(-9deg) scale(0.96) translateY(-4px); }
-      100% { transform: rotate(9deg) scale(1.06) translateY(4px); }
+      0% { transform: rotate(-8deg) scale(0.96) translateY(-4px); }
+      100% { transform: rotate(8deg) scale(1.05) translateY(4px); }
     }
 
     .baby-wrap.anim-jump {
@@ -229,137 +291,322 @@
     }
     @keyframes babyHappyJump {
       0% { transform: scale(1) translateY(0); }
-      40% { transform: scale(1.22) translateY(-40px); }
-      75% { transform: scale(1.1) translateY(-10px); }
+      40% { transform: scale(1.16) translateY(-28px); }
+      75% { transform: scale(1.06) translateY(-8px); }
       100% { transform: scale(1) translateY(0); }
     }
 
-    /* Fly-off Cap / Hat */
+    /* Fly-off Cap / Hat (Tilted slightly so Hair curls remain visible) */
     .baby-cap {
       position: absolute;
-      top: 10px;
-      left: 125px;
-      font-size: 5.2rem;
+      top: 0%;
+      left: 55%;
+      width: 24%;
+      font-size: 3.8rem;
       pointer-events: none;
       z-index: 25;
+      transform: rotate(18deg);
       transition: transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1);
       filter: drop-shadow(0 8px 16px rgba(0,0,0,0.18));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .baby-cap img.toddler-3d-word-icon,
+    .baby-sunglasses img.toddler-3d-word-icon,
+    .baby-lollipop img.toddler-3d-word-icon,
+    .baby-toothbrush img.toddler-3d-word-icon {
+      width: 100% !important;
+      height: auto !important;
+      object-fit: contain;
     }
     .baby-cap.fly-off {
-      transform: translateY(-130px) rotate(60deg) scale(1.35);
+      transform: translateY(-130px) rotate(68deg) scale(1.35);
     }
 
     /* Sunglasses for Eye FX */
     .baby-sunglasses {
       position: absolute;
-      top: 115px;
-      left: 105px;
-      font-size: 4.6rem;
+      top: 23%;
+      left: 25%;
+      width: 50%;
+      font-size: 4.4rem;
       pointer-events: none;
       z-index: 24;
       opacity: 0;
       transform: scale(0.2) rotate(-20deg);
       transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
       filter: drop-shadow(0 6px 12px rgba(0,0,0,0.25));
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .baby-sunglasses.show {
       opacity: 1;
-      transform: scale(1.15) rotate(0deg);
+      transform: scale(1.08) rotate(0deg);
     }
 
-    /* Lollipop for Mouth FX */
+    /* Ice Cream / Lollipop for Mouth FX */
     .baby-lollipop {
       position: absolute;
-      top: 175px;
-      left: 145px;
-      font-size: 4.2rem;
+      top: 43%;
+      left: 54%;
+      width: 22%;
+      font-size: 3.8rem;
       pointer-events: none;
       z-index: 24;
       opacity: 0;
       transform: scale(0.3) rotate(-30deg);
       transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
       filter: drop-shadow(0 6px 12px rgba(0,0,0,0.2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .baby-lollipop.show {
       opacity: 1;
-      transform: scale(1.1) rotate(15deg);
+      transform: scale(1.1) rotate(-12deg);
     }
 
-    /* Invisible Fat-Finger Hitboxes (Fat, forgiving, natural) */
+    /* Toothbrush for Teeth FX */
+    .baby-toothbrush {
+      position: absolute;
+      top: 41%;
+      left: 38%;
+      width: 24%;
+      font-size: 3.6rem;
+      pointer-events: none;
+      z-index: 26;
+      opacity: 0;
+      transform: scale(0.3);
+      transition: opacity 0.25s;
+      filter: drop-shadow(0 6px 12px rgba(0,0,0,0.22));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .baby-toothbrush.show {
+      opacity: 1;
+      animation: brushScrub 0.28s ease-in-out infinite alternate;
+    }
+    @keyframes brushScrub {
+      0% { transform: translateX(-14px) rotate(-15deg) scale(1.05); }
+      100% { transform: translateX(14px) rotate(15deg) scale(1.05); }
+    }
+
+    /* Invisible Fat-Finger Hitboxes (Percentage-based so they never drift) */
     .hitbox {
       position: absolute;
       cursor: pointer;
       touch-action: none;
       z-index: 20;
       border-radius: 50%;
-      background: rgba(255, 235, 59, 0); /* Invisible */
-      transition: background 0.15s, transform 0.15s;
+      background: rgba(255, 235, 59, 0);
+      transition: background 0.15s, transform 0.15s, box-shadow 0.2s;
     }
     .hitbox:active {
-      transform: scale(1.18);
-      background: rgba(255, 193, 7, 0.25);
+      transform: scale(1.14);
+      background: rgba(255, 193, 7, 0.28);
     }
 
-    /* Target Calling Pulse (In Quiz Mode) */
+    /* Target Calling Pulse (In Quiz Mode - Elevated z-index so active target is always on top) */
     .hitbox.target-calling {
-      animation: targetPulse 1.6s infinite ease-in-out;
+      z-index: 32 !important;
+      animation: targetPulse 1.5s infinite ease-in-out;
     }
     @keyframes targetPulse {
-      0%, 100% { background: rgba(255, 235, 59, 0.08); box-shadow: 0 0 12px rgba(255, 193, 7, 0.3); }
-      50% { background: rgba(255, 235, 59, 0.32); box-shadow: 0 0 28px rgba(255, 152, 0, 0.6); }
+      0%, 100% { background: rgba(255, 235, 59, 0.12); box-shadow: 0 0 12px rgba(255, 193, 7, 0.35); }
+      50% { background: rgba(255, 235, 59, 0.38); box-shadow: 0 0 28px rgba(255, 152, 0, 0.72); }
     }
 
-    /* Hitbox Precise Alignment with Baby Anatomy */
+    /* Hitbox Precise Percentage Alignment with Baby SVG (viewBox 340x420) */
+    #hitbox-hair {
+      top: 3%;
+      left: 29%;
+      width: 42%;
+      height: 15%;
+      border-radius: 30px;
+    }
     #hitbox-eye {
-      top: 100px;
-      left: 95px;
-      width: 170px;
-      height: 70px;
+      top: 23%;
+      left: 26%;
+      width: 48%;
+      height: 14%;
       border-radius: 35px;
     }
     #hitbox-nose {
-      top: 145px;
-      left: 145px;
-      width: 70px;
-      height: 70px;
+      top: 34%;
+      left: 41%;
+      width: 18%;
+      height: 11%;
+      z-index: 23;
+    }
+    #hitbox-teeth {
+      top: 44.5%;
+      left: 38%;
+      width: 24%;
+      height: 6.5%;
+      border-radius: 16px;
+      z-index: 22;
     }
     #hitbox-mouth {
-      top: 195px;
-      left: 130px;
-      width: 100px;
-      height: 65px;
-      border-radius: 30px;
+      top: 49.5%;
+      left: 34%;
+      width: 32%;
+      height: 8.5%;
+      border-radius: 26px;
+      z-index: 21;
     }
     #hitbox-ear-left {
-      top: 120px;
-      left: 35px;
-      width: 65px;
-      height: 80px;
+      top: 28%;
+      left: 9%;
+      width: 18%;
+      height: 18%;
     }
     #hitbox-ear-right {
-      top: 120px;
-      right: 35px;
-      width: 65px;
-      height: 80px;
+      top: 28%;
+      right: 9%;
+      width: 18%;
+      height: 18%;
     }
     #hitbox-belly {
-      top: 260px;
-      left: 110px;
-      width: 140px;
-      height: 110px;
+      top: 59%;
+      left: 30%;
+      width: 40%;
+      height: 23%;
       border-radius: 50px;
     }
     #hitbox-hand-left {
-      bottom: 80px;
-      left: 15px;
-      width: 80px;
-      height: 80px;
+      top: 58%;
+      left: 4%;
+      width: 23%;
+      height: 18%;
     }
     #hitbox-hand-right {
-      bottom: 80px;
-      right: 15px;
-      width: 80px;
-      height: 80px;
+      top: 58%;
+      right: 4%;
+      width: 23%;
+      height: 18%;
+    }
+    #hitbox-foot {
+      bottom: 1%;
+      left: 22%;
+      width: 56%;
+      height: 15%;
+      border-radius: 28px;
+    }
+
+    /* Interactive 3D Body-Part Quick-Tap Dock */
+    .part-dock {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      max-width: 96vw;
+      padding: 4px 10px;
+      z-index: 28;
+    }
+    .part-chip {
+      background: rgba(255, 255, 255, 0.94);
+      border: 2.5px solid #FFB74D;
+      border-radius: 24px;
+      padding: 4px 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: 'Fredoka One', cursive;
+      font-size: 0.85rem;
+      color: #5D4037;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(255, 152, 0, 0.16);
+      transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.2s, background 0.2s;
+    }
+    .part-chip:active {
+      transform: scale(0.92);
+    }
+    .part-chip.active-part {
+      background: #FFF8E1;
+      border-color: #FF4081;
+      color: #C2185B;
+      transform: scale(1.08);
+      box-shadow: 0 6px 14px rgba(255, 64, 129, 0.28);
+    }
+    .part-chip img.toddler-3d-word-icon {
+      width: 24px !important;
+      height: 24px !important;
+      object-fit: contain;
+    }
+
+    /* Victory Celebration Modal */
+    .victory-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(38, 50, 56, 0.68);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 120;
+      padding: 16px;
+    }
+    .victory-modal.show {
+      display: flex;
+    }
+    .victory-card {
+      background: #FFFDF7;
+      border: 5px solid #FFB300;
+      border-radius: 36px;
+      padding: 24px 28px;
+      max-width: 460px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+      animation: popInModal 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes popInModal {
+      0% { transform: scale(0.6); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .victory-card h3 {
+      font-size: 1.75rem;
+      color: #E65100;
+      margin-bottom: 6px;
+    }
+    .victory-card p {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      color: #6D4C41;
+      font-size: 1rem;
+      margin-bottom: 12px;
+    }
+    .parent-tip-box {
+      background: #FFF8E1;
+      border: 2.5px dashed #FFA000;
+      border-radius: 20px;
+      padding: 10px 14px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #5D4037;
+      margin-bottom: 16px;
+      text-align: left;
+      line-height: 1.4;
+    }
+    .btn-play-again {
+      background: linear-gradient(135deg, #00E676 0%, #00C853 100%);
+      color: #FFF;
+      border: 3.5px solid #FFF;
+      border-radius: 40px;
+      padding: 12px 30px;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.2rem;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0, 200, 83, 0.35);
+      transition: transform 0.15s;
+    }
+    .btn-play-again:active {
+      transform: scale(0.94);
     }
 
     /* Big 3D Marshmallow Word Popup */
@@ -497,16 +744,32 @@
       }
       .stage-container {
         max-width: 96vw;
-        height: 64%;
+        height: 58%;
       }
       .floor-mat {
         width: min(380px, 88vw);
-        height: 70px;
-        bottom: 15px;
+        height: 60px;
+        bottom: 10px;
+      }
+      .part-dock {
+        gap: 4px;
+        padding: 2px 6px;
+      }
+      .part-chip {
+        padding: 3px 8px;
+        font-size: 0.76rem;
+      }
+      .part-chip img.toddler-3d-word-icon {
+        width: 20px !important;
+        height: 20px !important;
+      }
+      .word-popup {
+        padding: 6px 20px;
+        font-size: 1.55rem;
       }
       .footer-tip {
-        font-size: 0.8rem;
-        padding: 6px 14px;
+        font-size: 0.78rem;
+        padding: 5px 12px;
         margin-bottom: 4px;
       }
     }
@@ -534,10 +797,18 @@
         display: none;
       }
       .stage-container {
-        height: min(220px, 68vh);
+        height: min(215px, 64vh);
       }
       .floor-mat {
-        height: 40px;
+        height: 36px;
+      }
+      .part-dock {
+        padding: 2px 4px;
+        gap: 4px;
+      }
+      .part-chip {
+        padding: 2px 7px;
+        font-size: 0.72rem;
       }
       .footer-tip {
         display: none;
@@ -557,7 +828,7 @@
     <a href="../index.html" class="btn-back">⬅ Menu</a>
 
     <!-- Center Banner / Prompt -->
-    <div class="banner" id="banner-box">
+    <div class="banner" id="banner-box" title="Chạm để nghe lại câu hỏi">
       <h2 id="banner-title">👶 Touch Baby's Body!</h2>
       <p id="banner-sub">👶 Chạm vào bạn nhỏ nhé!</p>
     </div>
@@ -590,13 +861,14 @@
 
     <!-- The Cute Baby Character -->
     <div class="baby-wrap" id="baby-wrap">
-      <!-- Accessories -->
+      <!-- 3D Accessories -->
       <div class="baby-cap" id="baby-cap">🧢</div>
       <div class="baby-sunglasses" id="baby-sunglasses">🕶️</div>
-      <div class="baby-lollipop" id="baby-lollipop">🍭</div>
+      <div class="baby-lollipop" id="baby-lollipop">🍦</div>
+      <div class="baby-toothbrush" id="baby-toothbrush">🪥</div>
 
-      <!-- High-Quality Scalable Baby SVG -->
-      <svg class="baby-svg" viewBox="0 0 340 400">
+      <!-- High-Quality Complete Anatomical Baby SVG -->
+      <svg class="baby-svg" viewBox="0 0 340 420">
         <defs>
           <linearGradient id="skinGrad" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" stop-color="#FFE0B2"/>
@@ -610,26 +882,50 @@
             <stop offset="0%" stop-color="#FF8A80"/>
             <stop offset="100%" stop-color="#FF5252"/>
           </linearGradient>
+          <linearGradient id="hairGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#6D4C41"/>
+            <stop offset="100%" stop-color="#3E2723"/>
+          </linearGradient>
         </defs>
+
+        <!-- Chubby Baby Legs & Feet with Little Toes -->
+        <g id="svg-feet">
+          <!-- Left Leg & Foot -->
+          <g id="svg-foot-left">
+            <rect x="108" y="344" width="34" height="32" rx="14" fill="url(#skinGrad)" stroke="#BCAAA4" stroke-width="4"/>
+            <path d="M 102 342 L 146 342 L 144 358 Q 124 363 104 358 Z" fill="#0277BD" stroke="#01579B" stroke-width="3.5"/>
+            <ellipse cx="118" cy="390" rx="30" ry="18" fill="url(#skinGrad)" stroke="#BCAAA4" stroke-width="4.5"/>
+            <circle cx="92" cy="382" r="7.5" fill="url(#skinGrad)" stroke="#BCAAA4" stroke-width="3"/>
+            <circle cx="103" cy="374" r="6.5" fill="url(#skinGrad)" stroke="#BCAAA4" stroke-width="3"/>
+            <circle cx="115" cy="372" r="5.5" fill="url(#skinGrad)" stroke="#BCAAA4" stroke-width="3"/>
+          </g>
+          <!-- Right Leg & Foot -->
+          <g id="svg-foot-right">
+            <rect x="198" y="344" width="34" height="32" rx="14" fill="url(#skinGrad)" stroke="#BCAAA4" stroke-width="4"/>
+            <path d="M 194 342 L 238 342 L 236 358 Q 216 363 196 358 Z" fill="#0277BD" stroke="#01579B" stroke-width="3.5"/>
+            <ellipse cx="222" cy="390" rx="30" ry="18" fill="url(#skinGrad)" stroke="#BCAAA4" stroke-width="4.5"/>
+            <circle cx="248" cy="382" r="7.5" fill="url(#skinGrad)" stroke="#BCAAA4" stroke-width="3"/>
+            <circle cx="237" cy="374" r="6.5" fill="url(#skinGrad)" stroke="#BCAAA4" stroke-width="3"/>
+            <circle cx="225" cy="372" r="5.5" fill="url(#skinGrad)" stroke="#BCAAA4" stroke-width="3"/>
+          </g>
+        </g>
 
         <!-- Baby Body / Belly -->
         <g id="svg-body">
-          <path d="M 95 240 Q 170 210 245 240 L 255 355 Q 170 375 85 355 Z" fill="url(#shirtGrad)" stroke="#01579B" stroke-width="6"/>
+          <path d="M 95 240 Q 170 210 245 240 L 255 352 Q 170 370 85 352 Z" fill="url(#shirtGrad)" stroke="#01579B" stroke-width="6"/>
           <!-- Belly Patch with Teddy Bear -->
-          <ellipse id="svg-belly-patch" cx="170" cy="300" rx="42" ry="32" fill="#E1F5FE" stroke="#81D4FA" stroke-width="3"/>
-          <text id="svg-belly-icon" x="156" y="312" font-size="30">🧸</text>
+          <ellipse id="svg-belly-patch" cx="170" cy="298" rx="44" ry="33" fill="#E1F5FE" stroke="#81D4FA" stroke-width="3"/>
+          <text id="svg-belly-icon" x="155" y="310" font-size="30">🧸</text>
         </g>
 
         <!-- Cute Hands -->
         <g id="svg-hand-left">
           <circle cx="55" cy="285" r="30" fill="url(#skinGrad)" stroke="#BCAAA4" stroke-width="4"/>
-          <!-- Little thumb -->
-          <circle cx="70" cy="265" r="12" fill="url(#skinGrad)"/>
+          <circle cx="70" cy="265" r="12" fill="url(#skinGrad)" stroke="#BCAAA4" stroke-width="3"/>
         </g>
         <g id="svg-hand-right">
           <circle cx="285" cy="285" r="30" fill="url(#skinGrad)" stroke="#BCAAA4" stroke-width="4"/>
-          <!-- Little thumb -->
-          <circle cx="270" cy="265" r="12" fill="url(#skinGrad)"/>
+          <circle cx="270" cy="265" r="12" fill="url(#skinGrad)" stroke="#BCAAA4" stroke-width="3"/>
         </g>
 
         <!-- Wiggling Ears -->
@@ -645,6 +941,18 @@
         <!-- Big Chubby Head -->
         <circle cx="170" cy="155" r="98" fill="url(#skinGrad)" stroke="#BCAAA4" stroke-width="6"/>
 
+        <!-- Cute Baby Hair Curls on Top of Head -->
+        <g id="svg-hair">
+          <path d="M 118 76 Q 112 42 145 48 Q 165 24 192 44 Q 222 38 220 74 Q 192 62 170 68 Q 145 62 118 76 Z" fill="url(#hairGrad)" stroke="#3E2723" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M 155 44 Q 170 22 186 38" fill="none" stroke="#8D6E63" stroke-width="3.5" stroke-linecap="round"/>
+          <circle cx="136" cy="56" r="11" fill="url(#hairGrad)"/>
+          <circle cx="202" cy="56" r="10" fill="url(#hairGrad)"/>
+        </g>
+
+        <!-- Soft Eyebrows -->
+        <path d="M 112 112 Q 128 104 144 112" fill="none" stroke="#6D4C41" stroke-width="4" stroke-linecap="round"/>
+        <path d="M 196 112 Q 212 104 228 112" fill="none" stroke="#6D4C41" stroke-width="4" stroke-linecap="round"/>
+
         <!-- Rosy Cheeks -->
         <circle cx="105" cy="178" r="18" fill="url(#cheeksGrad)" opacity="0.65"/>
         <circle cx="235" cy="178" r="18" fill="url(#cheeksGrad)" opacity="0.65"/>
@@ -653,33 +961,50 @@
         <g id="svg-eyes">
           <!-- Left Eye -->
           <circle cx="128" cy="138" r="18" fill="#FFF" stroke="#5D4037" stroke-width="3"/>
-          <circle id="svg-pupil-left" cx="130" cy="140" r="12" fill="#3E2723"/>
-          <circle cx="126" cy="135" r="4.5" fill="#FFF"/>
+          <circle id="svg-pupil-left" cx="130" cy="140" r="11.5" fill="#3E2723"/>
+          <circle id="svg-glint-left" cx="126" cy="135" r="4.5" fill="#FFF"/>
 
           <!-- Right Eye -->
           <circle cx="212" cy="138" r="18" fill="#FFF" stroke="#5D4037" stroke-width="3"/>
-          <circle id="svg-pupil-right" cx="210" cy="140" r="12" fill="#3E2723"/>
-          <circle cx="206" cy="135" r="4.5" fill="#FFF"/>
+          <circle id="svg-pupil-right" cx="210" cy="140" r="11.5" fill="#3E2723"/>
+          <circle id="svg-glint-right" cx="206" cy="135" r="4.5" fill="#FFF"/>
         </g>
 
         <!-- Cute Button Nose -->
-        <circle id="svg-nose" cx="170" cy="165" r="11" fill="#FF7043" stroke="#D84315" stroke-width="3"/>
+        <circle id="svg-nose" cx="170" cy="164" r="11" fill="#FF7043" stroke="#D84315" stroke-width="3"/>
 
-        <!-- Smiling Animated Mouth -->
-        <path id="svg-mouth" d="M 145 198 Q 170 225 195 198" fill="#EF5350" stroke="#C62828" stroke-width="5" stroke-linecap="round"/>
+        <!-- Smiling Mouth with Gleaming White Baby Teeth & Tongue -->
+        <g id="svg-mouth-group">
+          <path id="svg-mouth" d="M 138 192 Q 170 236 202 192 Z" fill="#D32F2F" stroke="#B71C1C" stroke-width="4.5" stroke-linejoin="round"/>
+          <!-- Pink Tongue -->
+          <ellipse id="svg-tongue" cx="170" cy="211" rx="18" ry="8" fill="#FF8A80"/>
+          <!-- Gleaming White Baby Teeth Row -->
+          <g id="svg-teeth">
+            <rect x="148" y="192" width="11" height="10" rx="3" fill="#FFFFFF" stroke="#CFD8DC" stroke-width="1.2"/>
+            <rect x="159" y="192" width="11" height="11" rx="3" fill="#FFFFFF" stroke="#CFD8DC" stroke-width="1.2"/>
+            <rect x="170" y="192" width="11" height="11" rx="3" fill="#FFFFFF" stroke="#CFD8DC" stroke-width="1.2"/>
+            <rect x="181" y="192" width="11" height="10" rx="3" fill="#FFFFFF" stroke="#CFD8DC" stroke-width="1.2"/>
+          </g>
+        </g>
       </svg>
 
-      <!-- Fat-Finger Natural Hitboxes -->
+      <!-- Percentage-Aligned Fat-Finger Hitboxes (Zero Drift across all screen sizes) -->
+      <div class="hitbox" id="hitbox-hair" data-word="Hair" data-icon="💇"></div>
       <div class="hitbox" id="hitbox-eye" data-word="Eye" data-icon="👀"></div>
       <div class="hitbox" id="hitbox-nose" data-word="Nose" data-icon="👃"></div>
+      <div class="hitbox" id="hitbox-teeth" data-word="Teeth" data-icon="🦷"></div>
       <div class="hitbox" id="hitbox-mouth" data-word="Mouth" data-icon="👄"></div>
       <div class="hitbox" id="hitbox-ear-left" data-word="Ear" data-icon="👂"></div>
       <div class="hitbox" id="hitbox-ear-right" data-word="Ear" data-icon="👂"></div>
       <div class="hitbox" id="hitbox-belly" data-word="Belly" data-icon="🧸"></div>
       <div class="hitbox" id="hitbox-hand-left" data-word="Hand" data-icon="✋"></div>
       <div class="hitbox" id="hitbox-hand-right" data-word="Hand" data-icon="✋"></div>
+      <div class="hitbox" id="hitbox-foot" data-word="Foot" data-icon="🦶"></div>
     </div>
   </div>
+
+  <!-- 3D Body-Part Quick-Tap Dock -->
+  <div class="part-dock" id="part-dock"></div>
 
   <!-- Bottom Encouragement Tip -->
   <div class="footer-tip" id="footer-tip">
@@ -687,57 +1012,110 @@
     <span id="tip-text">Chạm vào Mũi xem bạn nhỏ Hắt Xì bay mũ nhé! 🤧🧢</span>
   </div>
 
+  <!-- Victory Celebration Modal -->
+  <div class="victory-modal" id="victory-modal">
+    <div class="victory-card">
+      <div style="font-size: 3.4rem; margin-bottom: 6px;">🏆👶⭐</div>
+      <h3>Hoan Hô! Đủ 5 Sao Rồi!</h3>
+      <p>Bé đã nhớ giỏi các bộ phận cơ thể bằng tiếng Anh!</p>
+      <div class="parent-tip-box" id="parent-tip-text">
+        💡 Mẹo thực hành cùng ba mẹ: Khi tắm hoặc mặc đồ cho bé, ba mẹ hãy chỉ vào Mũi, Mắt, Răng, Chân và đố bé gọi tên tiếng Anh nhé!
+      </div>
+      <button class="btn-play-again" id="btn-play-again">🔄 Chơi Lại Nào!</button>
+    </div>
+  </div>
+
   <!-- Confetti Layer -->
   <div class="confetti-layer" id="confetti-layer"></div>
 
   <script src="../shared/audio.js"></script>
   <script src="../shared/vocabulary.js"></script>
+  <script src="../shared/missions.js"></script>
   <script>
     // -------------------------------------------------------------
-    // BODY PARTS DATA & SLAPSTICK VOICES
+    // BODY PARTS DATA & SLAPSTICK VOICES (With 3D Icon IDs)
     // -------------------------------------------------------------
     const bodyParts = [
       { 
+        id: 'nose',
         word: 'Nose', 
+        vi: 'Mũi',
         icon: '👃', 
-        voice: 'Nose! Achoo!', 
-        quizPrompt: 'Nose!',
+        voice: 'Nose! Touch your nose! Achoo!', 
+        quizPrompt: 'Where is the Nose?',
         tip: 'Chạm vào Mũi xem bạn nhỏ Hắt Xì bay mũ nhé! 🤧🧢'
       },
       { 
+        id: 'eye',
         word: 'Eye', 
+        vi: 'Mắt',
         icon: '👀', 
-        voice: 'Eyes! Blink!', 
-        quizPrompt: 'Eyes!',
+        voice: 'Eyes! Blink your eyes!', 
+        quizPrompt: 'Where are the Eyes?',
         tip: 'Chạm vào Mắt xem bạn nhỏ nháy mắt đeo kính râm cool ngầu! 🕶️✨'
       },
       { 
+        id: 'mouth',
         word: 'Mouth', 
+        vi: 'Miệng',
         icon: '👄', 
-        voice: 'Mouth! Yum!', 
-        quizPrompt: 'Mouth!',
-        tip: 'Chạm vào Miệng xem bạn nhỏ liếm kẹo mút ngon tuyệt! 🍭😋'
+        voice: 'Mouth! Open your mouth! Yum!', 
+        quizPrompt: 'Where is the Mouth?',
+        tip: 'Chạm vào Miệng xem bạn nhỏ ăn kem ngon tuyệt! 🍦😋'
       },
       { 
+        id: 'teeth',
+        word: 'Teeth', 
+        vi: 'Răng',
+        icon: '🦷', 
+        voice: 'Teeth! Brush your teeth clean!', 
+        quizPrompt: 'Where are the Teeth?',
+        tip: 'Chạm vào Răng xem bàn chải đánh răng trắng sáng lấp lánh! 🦷🪥'
+      },
+      { 
+        id: 'ear',
         word: 'Ear', 
+        vi: 'Tai',
         icon: '👂', 
-        voice: 'Ears! Wiggle!', 
-        quizPrompt: 'Ears!',
+        voice: 'Ears! Wiggle your ears!', 
+        quizPrompt: 'Where are the Ears?',
         tip: 'Chạm vào Tai xem đôi tai ve vẩy uốn éo phát nhạc! 👂🎶'
       },
       { 
+        id: 'hair',
+        word: 'Hair', 
+        vi: 'Tóc',
+        icon: '💇', 
+        voice: 'Hair! Brush your soft hair!', 
+        quizPrompt: 'Where is the Hair?',
+        tip: 'Chạm vào Tóc để chải tóc xoăn bồng bềnh cho bạn nhỏ nhé! 💇✨'
+      },
+      { 
+        id: 'hand',
+        word: 'Hand', 
+        vi: 'Tay',
+        icon: '✋', 
+        voice: 'Hand! Clap your hands!', 
+        quizPrompt: 'Where is the Hand?',
+        tip: 'Chạm vào Tay để cùng vỗ tay High Five ăn mừng nhé! ✋✨'
+      },
+      { 
+        id: 'belly',
         word: 'Belly', 
+        vi: 'Bụng',
         icon: '🧸', 
-        voice: 'Belly! Giggle!', 
-        quizPrompt: 'Belly!',
+        voice: 'Belly! Tickle your belly! Giggle!', 
+        quizPrompt: 'Where is the Belly?',
         tip: 'Chạm vào Bụng xem bạn nhỏ cười nắc nẻ vì bị cù nhột! 🤣💖'
       },
       { 
-        word: 'Hand', 
-        icon: '✋', 
-        voice: 'Hand! High five!', 
-        quizPrompt: 'Hand!',
-        tip: 'Chạm vào Tay để cùng đập tay High Five ăn mừng nhé! ✋✨'
+        id: 'foot',
+        word: 'Foot', 
+        vi: 'Chân',
+        icon: '🦶', 
+        voice: 'Foot! Stomp your feet!', 
+        quizPrompt: 'Where is the Foot?',
+        tip: 'Chạm vào Chân xem đôi bàn chân nhỏ dậm chân nhảy múa! 🦶🎵'
       }
     ];
 
@@ -745,15 +1123,28 @@
     let currentMode = 'free';
     let targetQuizPart = null;
     let quizStarsCount = 0;
+    let isQuizResolving = false;
     const MAX_STARS = 5;
+    let currentWeek = 1;
 
     // DOM Elements
     const babyWrap = document.getElementById('baby-wrap');
     const babyCap = document.getElementById('baby-cap');
     const babySunglasses = document.getElementById('baby-sunglasses');
     const babyLollipop = document.getElementById('baby-lollipop');
+    const babyToothbrush = document.getElementById('baby-toothbrush');
     const svgMouth = document.getElementById('svg-mouth');
     const svgNose = document.getElementById('svg-nose');
+    const svgTeeth = document.getElementById('svg-teeth');
+    const svgHair = document.getElementById('svg-hair');
+    const svgEarLeft = document.getElementById('svg-ear-left');
+    const svgEarRight = document.getElementById('svg-ear-right');
+    const svgHandLeft = document.getElementById('svg-hand-left');
+    const svgHandRight = document.getElementById('svg-hand-right');
+    const svgFootLeft = document.getElementById('svg-foot-left');
+    const svgFootRight = document.getElementById('svg-foot-right');
+    const svgPupilLeft = document.getElementById('svg-pupil-left');
+    const svgPupilRight = document.getElementById('svg-pupil-right');
 
     const wordPopup = document.getElementById('word-popup');
     const popupIcon = document.getElementById('popup-icon');
@@ -764,16 +1155,78 @@
     const bannerTitle = document.getElementById('banner-title');
     const bannerSub = document.getElementById('banner-sub');
     const tipText = document.getElementById('tip-text');
+    const partDock = document.getElementById('part-dock');
 
     const btnModeFree = document.getElementById('btn-mode-free');
     const btnModeQuiz = document.getElementById('btn-mode-quiz');
     const quizStarTracker = document.getElementById('quiz-star-tracker');
     const confettiLayer = document.getElementById('confetti-layer');
+    const victoryModal = document.getElementById('victory-modal');
+    const parentTipText = document.getElementById('parent-tip-text');
+    const btnPlayAgain = document.getElementById('btn-play-again');
 
     const hitboxes = document.querySelectorAll('.hitbox');
 
+    // Initialize 3D Accessories & Curriculum MissionEngine
+    function init3DAssetsAndCurriculum() {
+      if (window.MissionEngine && typeof MissionEngine.init === 'function') {
+        MissionEngine.init();
+      }
+      if (window.ToddlerVocabulary) {
+        if (typeof ToddlerVocabulary.getCurrentWeek === 'function') {
+          currentWeek = ToddlerVocabulary.getCurrentWeek() || 1;
+        }
+        if (typeof ToddlerVocabulary.renderWordIcon === 'function') {
+          babyCap.innerHTML = ToddlerVocabulary.renderWordIcon({ id: 'cap', word: 'Cap', icon: '🧢' }, 76);
+          babySunglasses.innerHTML = ToddlerVocabulary.renderWordIcon({ id: 'sunglasses', word: 'Sunglasses', icon: '🕶️' }, 140);
+          babyLollipop.innerHTML = ToddlerVocabulary.renderWordIcon({ id: 'icecream', word: 'Ice Cream', icon: '🍦' }, 72);
+          babyToothbrush.innerHTML = ToddlerVocabulary.renderWordIcon({ id: 'toothbrush', word: 'Toothbrush', icon: '🪥' }, 72);
+        }
+      }
+      renderPartDock();
+    }
+
+    function renderPartDock() {
+      partDock.innerHTML = '';
+      bodyParts.forEach(part => {
+        const btn = document.createElement('button');
+        btn.className = 'part-chip';
+        btn.dataset.word = part.word;
+        const iconMarkup = (window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon)
+          ? ToddlerVocabulary.renderWordIcon(part, 24)
+          : `<span>${part.icon}</span>`;
+        btn.innerHTML = `${iconMarkup}<span>${part.word}</span>`;
+        btn.addEventListener('pointerdown', (e) => {
+          e.preventDefault();
+          onBodyPartTapped(part.word, part.icon, true);
+        });
+        partDock.appendChild(btn);
+      });
+    }
+
+    function highlightActiveDockChip(word) {
+      const chips = partDock.querySelectorAll('.part-chip');
+      chips.forEach(c => {
+        c.classList.toggle('active-part', c.dataset.word.toLowerCase() === word.toLowerCase());
+      });
+    }
+
+    // Interactive Eye Pupil Tracking
+    window.addEventListener('pointermove', (e) => {
+      if (!svgPupilLeft || !svgPupilRight) return;
+      const rect = babyWrap.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height * 0.34;
+      const dx = Math.max(-4.5, Math.min(4.5, (e.clientX - centerX) / 45));
+      const dy = Math.max(-3.5, Math.min(3.5, (e.clientY - centerY) / 45));
+      svgPupilLeft.setAttribute('cx', (130 + dx).toFixed(1));
+      svgPupilLeft.setAttribute('cy', (140 + dy).toFixed(1));
+      svgPupilRight.setAttribute('cx', (210 + dx).toFixed(1));
+      svgPupilRight.setAttribute('cy', (140 + dy).toFixed(1));
+    });
+
     // -------------------------------------------------------------
-    // SLAPSTICK CARTOON REACTIONS
+    // SLAPSTICK CARTOON REACTIONS (Distinct for All 9 Parts)
     // -------------------------------------------------------------
     function triggerSlapstickReaction(word) {
       const w = word.toLowerCase();
@@ -784,7 +1237,7 @@
         babyWrap.classList.add('anim-sneeze');
         babyCap.classList.add('fly-off');
         spawnBurstFx('🤧💨');
-        
+
         ToddlerAudio.playHorn();
         setTimeout(() => ToddlerAudio.playCrash(), 220);
 
@@ -795,36 +1248,62 @@
         }, 950);
 
       } else if (w === 'eye') {
-        // Blink eyes, sunglasses on!
+        // Blink eyes, 3D sunglasses on!
         babySunglasses.classList.add('show');
-        spawnBurstFx('✨⭐');
+        spawnBurstFx('🕶️✨');
         ToddlerAudio.playChime();
 
         setTimeout(() => {
           babySunglasses.classList.remove('show');
-        }, 1100);
+        }, 1150);
 
       } else if (w === 'mouth') {
-        // Open wide, lollipop pops up!
-        svgMouth.setAttribute('d', 'M 140 190 Q 170 240 200 190');
+        // Open wide, 3D ice cream treat pops up!
+        svgMouth.setAttribute('d', 'M 134 188 Q 170 248 206 188 Z');
         babyLollipop.classList.add('show');
-        spawnBurstFx('🍭😋');
+        spawnBurstFx('🍦😋');
         ToddlerAudio.playPop();
 
         setTimeout(() => {
-          svgMouth.setAttribute('d', 'M 145 198 Q 170 225 195 198');
+          svgMouth.setAttribute('d', 'M 138 192 Q 170 236 202 192 Z');
           babyLollipop.classList.remove('show');
-        }, 1100);
+        }, 1150);
+
+      } else if (w === 'teeth') {
+        // Gleaming teeth + 3D toothbrush scrubbing back and forth!
+        svgTeeth.classList.add('gleam');
+        babyToothbrush.classList.add('show');
+        spawnBurstFx('🦷🪥');
+        ToddlerAudio.playChime();
+
+        setTimeout(() => {
+          svgTeeth.classList.remove('gleam');
+          babyToothbrush.classList.remove('show');
+        }, 1200);
 
       } else if (w === 'ear') {
-        // Wiggle ears & boing chime
-        babyWrap.classList.add('anim-jump');
+        // Wiggle both ears + musical note
+        svgEarLeft.classList.add('wiggle');
+        svgEarRight.classList.add('wiggle');
         spawnBurstFx('👂🎶');
         ToddlerAudio.playXylophone(659.25);
 
         setTimeout(() => {
-          babyWrap.classList.remove('anim-jump');
-        }, 650);
+          svgEarLeft.classList.remove('wiggle');
+          svgEarRight.classList.remove('wiggle');
+        }, 1050);
+
+      } else if (w === 'hair') {
+        // Hair curls bounce + cap lifts playfully
+        svgHair.classList.add('bounce');
+        babyCap.classList.add('fly-off');
+        spawnBurstFx('💇✨');
+        ToddlerAudio.playChime();
+
+        setTimeout(() => {
+          svgHair.classList.remove('bounce');
+          babyCap.classList.remove('fly-off');
+        }, 950);
 
       } else if (w === 'belly') {
         // Tickle wiggle laughing!
@@ -837,14 +1316,32 @@
         }, 1300);
 
       } else if (w === 'hand') {
-        // High five celebration
+        // Both hands clap together!
+        svgHandLeft.classList.add('clap');
+        svgHandRight.classList.add('clap');
         babyWrap.classList.add('anim-jump');
         spawnBurstFx('✋✨');
         ToddlerAudio.playChime();
 
         setTimeout(() => {
+          svgHandLeft.classList.remove('clap');
+          svgHandRight.classList.remove('clap');
           babyWrap.classList.remove('anim-jump');
-        }, 650);
+        }, 800);
+
+      } else if (w === 'foot') {
+        // Both chubby feet stomp!
+        svgFootLeft.classList.add('stomp');
+        svgFootRight.classList.add('stomp');
+        babyWrap.classList.add('anim-jump');
+        spawnBurstFx('🦶🎵');
+        ToddlerAudio.playHorn();
+
+        setTimeout(() => {
+          svgFootLeft.classList.remove('stomp');
+          svgFootRight.classList.remove('stomp');
+          babyWrap.classList.remove('anim-jump');
+        }, 950);
       }
     }
 
@@ -858,11 +1355,12 @@
       setTimeout(() => fx.remove(), 1200);
     }
 
-    function showWordPopup(word, icon) {
+    function showWordPopup(partObj, fallbackWord, fallbackIcon) {
+      const word = partObj ? partObj.word : fallbackWord;
       if (window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon) {
-        popupIcon.innerHTML = ToddlerVocabulary.renderWordIcon(word.toLowerCase(), 72);
+        popupIcon.innerHTML = ToddlerVocabulary.renderWordIcon(partObj || word.toLowerCase(), 68);
       } else {
-        popupIcon.innerText = icon;
+        popupIcon.innerText = partObj ? partObj.icon : fallbackIcon;
       }
       popupText.innerText = word;
       wordPopup.classList.add('show');
@@ -870,7 +1368,16 @@
       clearTimeout(popTimer);
       popTimer = setTimeout(() => {
         wordPopup.classList.remove('show');
-      }, 1300);
+      }, 1450);
+    }
+
+    function getRichPartSentence(partData) {
+      if (!partData) return '';
+      if (window.ToddlerVocabulary && typeof ToddlerVocabulary.getWordContextPhrase === 'function') {
+        const phrase = ToddlerVocabulary.getWordContextPhrase(partData);
+        if (phrase) return phrase;
+      }
+      return partData.voice;
     }
 
     // -------------------------------------------------------------
@@ -878,28 +1385,42 @@
     // -------------------------------------------------------------
     let lastTapTime = 0;
 
-    function onBodyPartTapped(word, icon) {
+    function onBodyPartTapped(rawWord, rawIcon, fromDock = false) {
       const now = Date.now();
       if (now - lastTapTime < 280) return;
       lastTapTime = now;
 
+      if (currentMode === 'quiz' && isQuizResolving) return;
+
       ToddlerAudio.init();
 
-      // Slapstick reaction & 3D Word Popup
-      triggerSlapstickReaction(word);
-      showWordPopup(word, icon);
+      let effectiveWord = rawWord;
+      // Smart Mouth/Teeth Disambiguation in Quiz Mode:
+      // Since Teeth sit inside the Mouth on the baby's face, if a toddler taps either #hitbox-mouth or #hitbox-teeth
+      // while the quiz asks for Mouth or Teeth, resolve to the active quiz target so they never get a false mismatch!
+      if (!fromDock && currentMode === 'quiz' && targetQuizPart) {
+        const tappedLow = rawWord.toLowerCase();
+        const targetLow = targetQuizPart.word.toLowerCase();
+        if ((tappedLow === 'mouth' || tappedLow === 'teeth') && (targetLow === 'mouth' || targetLow === 'teeth')) {
+          effectiveWord = targetQuizPart.word;
+        }
+      }
 
-      const partData = bodyParts.find(p => p.word.toLowerCase() === word.toLowerCase());
+      const partData = bodyParts.find(p => p.word.toLowerCase() === effectiveWord.toLowerCase());
+      const displayIcon = partData ? partData.icon : rawIcon;
+
+      // Slapstick reaction & 3D Word Popup
+      triggerSlapstickReaction(effectiveWord);
+      showWordPopup(partData, effectiveWord, displayIcon);
+      highlightActiveDockChip(effectiveWord);
 
       if (currentMode === 'free') {
-        // Free Exploration: Speak part voice
         if (partData) {
-          ToddlerAudio.speak(partData.voice);
-          tipText.innerText = partData.tip;
+          ToddlerAudio.speak(getRichPartSentence(partData));
+          tipText.innerText = `${partData.word} (${partData.vi}): ${partData.tip}`;
         }
       } else {
-        // Quiz Mode: Check Match!
-        handleQuizMatch(word, partData);
+        handleQuizMatch(effectiveWord, partData);
       }
     }
 
@@ -908,18 +1429,19 @@
     // -------------------------------------------------------------
     function setMode(mode) {
       currentMode = mode;
+      isQuizResolving = false;
+      victoryModal.classList.remove('show');
       btnModeFree.classList.toggle('active', mode === 'free');
       btnModeQuiz.classList.toggle('active', mode === 'quiz');
 
-      // Clear any callings
       hitboxes.forEach(h => h.classList.remove('target-calling'));
 
       if (mode === 'free') {
         quizStarTracker.style.display = 'none';
         bannerTitle.innerHTML = '👶 Touch Baby\'s Body!';
-        bannerSub.innerText = '👶 Chạm vào bạn nhỏ nhé!';
-        tipText.innerText = 'Chạm vào Mũi xem bạn nhỏ Hắt Xì nhé! 🤧';
-        ToddlerAudio.speak('Play!');
+        bannerSub.innerText = '👶 Chạm vào bạn nhỏ hoặc thanh bên dưới nhé!';
+        tipText.innerText = 'Chạm vào Mũi xem bạn nhỏ Hắt Xì nhé! 🤧🧢';
+        ToddlerAudio.speak('Touch baby!');
       } else {
         quizStarTracker.style.display = 'flex';
         quizStarsCount = 0;
@@ -929,23 +1451,22 @@
     }
 
     function pickNextQuizTarget() {
-      // Pick random target
+      isQuizResolving = false;
       let nextPart;
       do {
         nextPart = bodyParts[Math.floor(Math.random() * bodyParts.length)];
       } while (targetQuizPart && nextPart.word === targetQuizPart.word && bodyParts.length > 1);
 
       targetQuizPart = nextPart;
+      highlightActiveDockChip('');
 
-      // Update Banner with 3D icon
       const iconHtml = (window.ToddlerVocabulary && ToddlerVocabulary.renderWordIcon)
-        ? ToddlerVocabulary.renderWordIcon(targetQuizPart.word.toLowerCase(), 36)
+        ? ToddlerVocabulary.renderWordIcon(targetQuizPart, 36)
         : targetQuizPart.icon;
       bannerTitle.innerHTML = `⭐ Find the <b>${targetQuizPart.word.toUpperCase()}</b> ${iconHtml}!`;
-      bannerSub.innerText = `🔍 Tìm ${targetQuizPart.word} của bạn nhỏ!`;
-      tipText.innerText = `Đang tìm: ${targetQuizPart.word} ${targetQuizPart.icon}`;
+      bannerSub.innerText = `🔍 Đố bé tìm: ${targetQuizPart.word} (${targetQuizPart.vi}) của bạn nhỏ!`;
+      tipText.innerText = `Đang tìm: ${targetQuizPart.word} (${targetQuizPart.vi}) ${targetQuizPart.icon}`;
 
-      // Subtle breath pulse on target hitbox
       hitboxes.forEach(h => {
         if (h.dataset.word.toLowerCase() === targetQuizPart.word.toLowerCase()) {
           h.classList.add('target-calling');
@@ -954,34 +1475,42 @@
         }
       });
 
-      // Voice prompt: Direct keyword
       ToddlerAudio.speak(targetQuizPart.quizPrompt);
     }
 
     function handleQuizMatch(tappedWord, partData) {
-      if (!targetQuizPart) return;
+      if (!targetQuizPart || isQuizResolving) return;
 
       if (tappedWord.toLowerCase() === targetQuizPart.word.toLowerCase()) {
         // CORRECT MATCH!
+        isQuizResolving = true;
         quizStarsCount++;
         updateQuizStars();
 
+        if (window.MissionEngine && typeof MissionEngine.recordAction === 'function') {
+          MissionEngine.recordAction();
+        }
+
         hitboxes.forEach(h => h.classList.remove('target-calling'));
 
-        ToddlerAudio.speak(`${tappedWord}! Super!`);
-        setTimeout(() => ToddlerAudio.playWin(), 300);
+        const fullPhrase = getRichPartSentence(partData || targetQuizPart);
+        ToddlerAudio.speak(fullPhrase || `${tappedWord}! Super!`);
+        setTimeout(() => ToddlerAudio.playWin(), 280);
 
         if (quizStarsCount >= MAX_STARS) {
-          // CELEBRATION WIN!
-          setTimeout(onQuizCompleted, 800);
+          // Wait 2000ms so the 5th body part's context sentence finishes speaking cleanly!
+          setTimeout(onQuizCompleted, 2000);
         } else {
-          setTimeout(pickNextQuizTarget, 1600);
+          // Wait 2100ms before speaking the next question prompt
+          setTimeout(pickNextQuizTarget, 2100);
         }
       } else {
-        // MISMATCH (Gentle repeat of target)
+        // GENTLE MISMATCH PROMPT
         setTimeout(() => {
-          ToddlerAudio.speak(targetQuizPart.word);
-        }, 500);
+          if (currentMode === 'quiz' && targetQuizPart && !isQuizResolving) {
+            ToddlerAudio.speak(targetQuizPart.quizPrompt);
+          }
+        }, 750);
       }
     }
 
@@ -997,17 +1526,22 @@
     function onQuizCompleted() {
       triggerConfetti();
       babyWrap.classList.add('anim-jump');
-      ToddlerAudio.speak('Yay! All stars!');
+      ToddlerAudio.speak('Yay! All 5 stars! You know your body parts!');
       bannerTitle.innerHTML = '🎉 Hooray! All 5 Stars Won!';
-      bannerSub.innerText = 'Bé giỏi quá! Bạn nhỏ nhảy múa chúc mừng bé!';
+      bannerSub.innerText = 'Bé giỏi quá! Đã tìm đúng cả 5 bộ phận cơ thể!';
 
+      if (window.ToddlerVocabulary && typeof ToddlerVocabulary.getRealWorldParentTip === 'function') {
+        const tip = ToddlerVocabulary.getRealWorldParentTip(currentWeek);
+        const tipStr = (tip && tip.tipText) ? tip.tipText : tip;
+        if (tipStr) {
+          parentTipText.innerHTML = `💡 <b>Mẹo thực hành cùng ba mẹ (Tuần ${currentWeek}):</b> ${tipStr}`;
+        }
+      }
+
+      victoryModal.classList.add('show');
       setTimeout(() => {
         babyWrap.classList.remove('anim-jump');
-        // Reset quiz stars
-        quizStarsCount = 0;
-        updateQuizStars();
-        pickNextQuizTarget();
-      }, 3200);
+      }, 1200);
     }
 
     function triggerConfetti() {
@@ -1031,7 +1565,7 @@
     hitboxes.forEach(hitbox => {
       hitbox.addEventListener('pointerdown', (e) => {
         e.preventDefault();
-        onBodyPartTapped(hitbox.dataset.word, hitbox.dataset.icon);
+        onBodyPartTapped(hitbox.dataset.word, hitbox.dataset.icon, false);
       });
     });
 
@@ -1048,11 +1582,21 @@
     btnModeFree.addEventListener('pointerdown', () => setMode('free'));
     btnModeQuiz.addEventListener('pointerdown', () => setMode('quiz'));
 
+    btnPlayAgain.addEventListener('pointerdown', () => {
+      victoryModal.classList.remove('show');
+      quizStarsCount = 0;
+      updateQuizStars();
+      pickNextQuizTarget();
+    });
+
+    // Boot
+    init3DAssetsAndCurriculum();
+
     // Welcome Motherese Voice
     setTimeout(() => {
       ToddlerAudio.init();
       ToddlerAudio.speak('Touch Nose!');
-    }, 450);
+    }, 550);
   </script>
 </body>
 </html>

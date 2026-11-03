@@ -1,0 +1,24 @@
+{
+  "name": "Baby English Playroom - Học Tiếng Anh Cho Bé",
+  "short_name": "Baby English",
+  "description": "Khu vui chơi học tiếng Anh 52 tuần với 317 từ vựng 3D gần gũi cho bé 2-6 tuổi.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#FFFDF7",
+  "theme_color": "#FFFDF7",
+  "icons": [
+    {
+      "src": "assets/icons/baby.png",
+      "sizes": "256x256",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/crown.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    }
+  ]
+}
+
