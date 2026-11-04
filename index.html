@@ -1104,18 +1104,34 @@
 </head>
 <body>
 
-  <!-- TOP BAR: SOUND, BABY PROFILE & PARENT GATE -->
+  <!-- TOP BAR: SOUND, VOICE, BABY PROFILE & PARENT GATE -->
   <div class="top-bar">
-    <div class="bgm-volume-pill" id="bgm-volume-pill" title="Điều chỉnh âm lượng nhạc nền">
-      <button type="button" class="bgm-vol-btn" id="btn-toggle-sound" onclick="toggleMuteAudio()" title="Bật/Tắt nhạc nền">
-        <span id="sound-icon">🎵</span>
-      </button>
-      <input type="range" id="bgm-volume-slider" min="0" max="100" value="45" class="bgm-slider" oninput="changeBgmVolume(this.value)" title="Kéo để chỉnh to/nhỏ">
-      <span class="bgm-vol-text" id="vol-percent">45%</span>
-      <button type="button" class="bgm-track-next-btn" onclick="switchNextTrack()" title="Đổi bài nhạc khác">
-        <span>⏭️</span>
-        <span id="bgm-track-label">March</span>
-      </button>
+    <div class="top-bar-audio-group" style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+      <!-- BGM Music Volume Pill -->
+      <div class="bgm-volume-pill" id="bgm-volume-pill" title="Điều chỉnh âm lượng nhạc nền">
+        <button type="button" class="bgm-vol-btn" id="btn-toggle-sound" onclick="toggleMuteAudio()" title="Bật/Tắt nhạc nền">
+          <span id="sound-icon">🎵</span>
+        </button>
+        <input type="range" id="bgm-volume-slider" min="0" max="100" value="45" class="bgm-slider" oninput="changeBgmVolume(this.value)" title="Kéo để chỉnh to/nhỏ nhạc">
+        <span class="bgm-vol-text" id="vol-percent">45%</span>
+        <button type="button" class="bgm-track-next-btn" onclick="switchNextTrack()" title="Đổi bài nhạc khác">
+          <span>⏭️</span>
+          <span id="bgm-track-label">March</span>
+        </button>
+      </div>
+
+      <!-- Voice Volume Pill (Preschool Teacher Voice) -->
+      <div class="voice-volume-pill" id="voice-volume-pill" title="Điều chỉnh âm lượng giọng đọc của Cô giáo">
+        <button type="button" class="voice-vol-btn" id="btn-toggle-voice" onclick="toggleMuteVoice()" title="Bật/Tắt giọng đọc cô giáo">
+          <span id="voice-sound-icon">🗣️</span>
+        </button>
+        <input type="range" id="voice-volume-slider" min="0" max="100" value="100" class="voice-slider" oninput="changeVoiceVolume(this.value)" title="Kéo để chỉnh to/nhỏ giọng đọc">
+        <span class="voice-vol-text" id="voice-vol-percent">100%</span>
+        <button type="button" class="voice-test-btn" onclick="testVoiceAudio()" title="Nghe thử giọng cô giáo">
+          <span>🌸</span>
+          <span>Thử giọng</span>
+        </button>
+      </div>
     </div>
 
     <div class="top-bar-right">
@@ -1525,6 +1541,60 @@
       }
     }
 
+    function changeVoiceVolume(val) {
+      const vol = parseFloat(val) / 100;
+      if (window.ToddlerAudio && ToddlerAudio.setVoiceVolume) {
+        ToddlerAudio.setVoiceVolume(vol);
+      }
+      const percentEl = document.getElementById('voice-vol-percent');
+      if (percentEl) percentEl.innerText = `${Math.round(val)}%`;
+      const icon = document.getElementById('voice-sound-icon');
+      if (icon) {
+        icon.innerText = (val == 0) ? '🔇' : '🗣️';
+      }
+    }
+
+    function toggleMuteVoice() {
+      if (window.ToddlerAudio && ToddlerAudio.toggleVoiceMute) {
+        const isUnmuted = ToddlerAudio.toggleVoiceMute();
+        updateVoiceButtonUi(!isUnmuted);
+        if (isUnmuted) {
+          ToddlerAudio.testVoice();
+        }
+      }
+    }
+
+    function testVoiceAudio() {
+      if (window.ToddlerAudio && ToddlerAudio.testVoice) {
+        ToddlerAudio.testVoice();
+      }
+    }
+
+    function updateVoiceButtonUi(isMuted) {
+      const icon = document.getElementById('voice-sound-icon');
+      const slider = document.getElementById('voice-volume-slider');
+      const percentEl = document.getElementById('voice-vol-percent');
+
+      if (!isMuted) {
+        const curVol = (window.ToddlerAudio && ToddlerAudio.voiceVolume !== undefined) ? Math.round(ToddlerAudio.voiceVolume * 100) : 100;
+        if (slider) slider.value = curVol;
+        if (percentEl) percentEl.innerText = `${curVol}%`;
+        if (icon) icon.innerText = (curVol === 0) ? '🔇' : '🗣️';
+      } else {
+        if (icon) icon.innerText = '🔇';
+        if (slider) slider.value = 0;
+        if (percentEl) percentEl.innerText = '0%';
+      }
+    }
+
+    window.addEventListener('toddler-voice-volume-change', (e) => {
+      updateVoiceButtonUi(e.detail.muted);
+      const slider = document.getElementById('voice-volume-slider');
+      const percentEl = document.getElementById('voice-vol-percent');
+      if (slider && !e.detail.muted) slider.value = Math.round(e.detail.volume * 100);
+      if (percentEl && !e.detail.muted) percentEl.innerText = `${Math.round(e.detail.volume * 100)}%`;
+    });
+
     function updateAudioButtonUi(isEnabled) {
       const icon = document.getElementById('sound-icon');
       const slider = document.getElementById('bgm-volume-slider');
@@ -1561,6 +1631,12 @@
         if (slider) slider.value = curVol;
         if (percentEl) percentEl.innerText = `${curVol}%`;
         updateAudioButtonUi(ToddlerAudio.bgmEnabled);
+        const curVoiceVol = (ToddlerAudio.voiceVolume !== undefined) ? Math.round(ToddlerAudio.voiceVolume * 100) : 100;
+        const voiceSlider = document.getElementById('voice-volume-slider');
+        const voicePercentEl = document.getElementById('voice-vol-percent');
+        if (voiceSlider) voiceSlider.value = curVoiceVol;
+        if (voicePercentEl) voicePercentEl.innerText = `${curVoiceVol}%`;
+        updateVoiceButtonUi(ToddlerAudio.voiceMuted);
       }
     });
 

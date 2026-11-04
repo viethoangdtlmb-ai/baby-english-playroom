@@ -438,6 +438,106 @@ html, body {
   transform: scale(0.9);
 }
 
+/* 6.1 Interactive Voice Volume Slider Pill (Preschool Teacher Voice) */
+.voice-volume-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #FFFFFF;
+  border: 2.5px solid var(--toddler-berry, #FF6B8B);
+  border-radius: var(--radius-xl, 36px);
+  padding: 6px 14px;
+  box-shadow: 0 4px 14px rgba(255, 107, 139, 0.18);
+  font-family: var(--font-toddler);
+  user-select: none;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.voice-volume-pill:hover {
+  box-shadow: 0 6px 18px rgba(255, 107, 139, 0.28);
+  transform: translateY(-1px);
+}
+.voice-vol-btn {
+  background: #FCE4EC;
+  border: 1.5px solid #F48FB1;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  transition: transform 0.15s;
+}
+.voice-vol-btn:active {
+  transform: scale(0.88);
+}
+.voice-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 75px;
+  height: 7px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #FF80AB 0%, #FF4081 100%);
+  outline: none;
+  cursor: pointer;
+  margin: 0 2px;
+}
+.voice-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #D81B60;
+  border: 2.5px solid #FFFFFF;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  cursor: grab;
+  transition: transform 0.15s;
+}
+.voice-slider::-webkit-slider-thumb:active {
+  transform: scale(1.25);
+  cursor: grabbing;
+}
+.voice-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #D81B60;
+  border: 2.5px solid #FFFFFF;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  cursor: grab;
+}
+.voice-vol-text {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #C2185B;
+  min-width: 36px;
+  text-align: right;
+}
+.voice-test-btn {
+  background: #FCE4EC;
+  border: 1.5px solid #F48FB1;
+  border-radius: 14px;
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #C2185B;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: transform 0.15s, background 0.15s;
+}
+.voice-test-btn:active {
+  transform: scale(0.9);
+  background: #F8BBD0;
+}
+
 /* =============================================================
    7. BABY PROFILE & CERTIFICATE STYLING (Claymorphic Pastel)
    ============================================================= */
@@ -978,6 +1078,29 @@ html, body {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+  .voice-volume-pill {
+    padding: 4px 8px;
+    gap: 6px;
+    max-width: 100%;
+  }
+  .voice-vol-btn {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    min-height: 36px;
+  }
+  .voice-slider {
+    width: 50px;
+  }
+  .voice-vol-text {
+    font-size: 0.75rem;
+    min-width: 28px;
+  }
+  .voice-test-btn {
+    padding: 5px 8px;
+    font-size: 0.8rem;
+    min-height: 36px;
   }
   .baby-profile-pill {
     padding: 4px 8px 4px 4px;

@@ -10,6 +10,8 @@ var ToddlerAudio = window.ToddlerAudio || {
   bgmStep: 0,
   bgmEnabled: true,
   bgmTargetVolume: 0.48, // Joyful, audible preschool toy band volume
+  voiceVolume: 1.0,      // Clear, crystal audible Motherese teacher volume
+  voiceMuted: false,
   bestVoice: null,
   voicesInitialized: false,
 
@@ -27,6 +29,14 @@ var ToddlerAudio = window.ToddlerAudio || {
       const savedVol = localStorage.getItem('baby_playroom_bgm_vol');
       if (savedVol !== null) {
         this.bgmTargetVolume = Math.max(0, Math.min(1, parseFloat(savedVol)));
+      }
+      const savedVoiceVol = localStorage.getItem('baby_playroom_voice_vol');
+      if (savedVoiceVol !== null) {
+        this.voiceVolume = Math.max(0, Math.min(1, parseFloat(savedVoiceVol)));
+      }
+      const savedVoiceMute = localStorage.getItem('baby_playroom_voice_muted');
+      if (savedVoiceMute === 'true') {
+        this.voiceMuted = true;
       }
     } catch (e) {}
     this.initVoices();
@@ -68,6 +78,54 @@ var ToddlerAudio = window.ToddlerAudio || {
 
   getBgmVolume() {
     return this.bgmTargetVolume;
+  },
+
+  setVoiceVolume(val) {
+    let num = parseFloat(val);
+    if (isNaN(num)) num = 1.0;
+    num = Math.max(0, Math.min(1, num));
+    this.voiceVolume = num;
+    if (num > 0) {
+      this.voiceMuted = false;
+    }
+    try {
+      localStorage.setItem('baby_playroom_voice_vol', num.toString());
+      localStorage.setItem('baby_playroom_voice_muted', this.voiceMuted ? 'true' : 'false');
+    } catch (e) {}
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('toddler-voice-volume-change', {
+        detail: { volume: num, muted: this.voiceMuted }
+      }));
+    }
+    return num;
+  },
+
+  getVoiceVolume() {
+    return this.voiceMuted ? 0 : this.voiceVolume;
+  },
+
+  toggleVoiceMute() {
+    this.voiceMuted = !this.voiceMuted;
+    try {
+      localStorage.setItem('baby_playroom_voice_muted', this.voiceMuted ? 'true' : 'false');
+    } catch (e) {}
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('toddler-voice-volume-change', {
+        detail: { volume: this.voiceVolume, muted: this.voiceMuted }
+      }));
+    }
+    return !this.voiceMuted;
+  },
+
+  testVoice() {
+    const greetings = [
+      "Hello baby! 🌸",
+      "Let's play together! ✨",
+      "Great job! 🌟",
+      "You are wonderful! 💖"
+    ];
+    const phrase = greetings[Math.floor(Math.random() * greetings.length)];
+    this.speakWord(phrase);
   },
 
   nextTrack() {
@@ -550,37 +608,66 @@ var ToddlerAudio = window.ToddlerAudio || {
       const voices = window.speechSynthesis.getVoices();
       if (!voices || voices.length === 0) return null;
 
-      // Priority 1: Microsoft Zira (guaranteed built-in female voice on Windows 10/11)
+      // Priority 1: Top-tier Microsoft Neural / Natural Online voices (Jenny = Preschool Teacher #1, Ana = Cute Cartoon Storyteller, Aria/Ava)
       let chosen = voices.find(v => {
         const name = (v.name || '').toLowerCase();
-        return name.includes('zira') && !ToddlerAudio.isMaleVoice(v);
+        return (name.includes('jenny') || name.includes('ana')) && 
+               (name.includes('natural') || name.includes('online')) && 
+               !ToddlerAudio.isMaleVoice(v);
       });
 
-      // Priority 2: Edge / Windows Natural Online Female voices (Jenny, Aria, Michelle)
+      // Priority 2: Other Microsoft Natural Online Female voices (Aria, Ava, Michelle, Emma)
       if (!chosen) {
         chosen = voices.find(v => {
           const name = (v.name || '').toLowerCase();
-          return (name.includes('jenny') || name.includes('aria') || name.includes('michelle') || name.includes('ava')) && !ToddlerAudio.isMaleVoice(v);
+          return (name.includes('aria') || name.includes('ava') || name.includes('michelle') || name.includes('emma')) && 
+                 (name.includes('natural') || name.includes('online')) && 
+                 !ToddlerAudio.isMaleVoice(v);
         });
       }
 
-      // Priority 3: Google US English (Standard Chrome female voice) or Samantha / Victoria (Mac)
+      // Priority 3: Any en-US voice explicitly tagged 'Natural' or 'Neural' (Edge/Chrome/Windows)
       if (!chosen) {
         chosen = voices.find(v => {
           const name = (v.name || '').toLowerCase();
-          return (name.includes('google us english') || name.includes('samantha') || name.includes('victoria') || name.includes('karen')) && !ToddlerAudio.isMaleVoice(v);
+          const lang = (v.lang || '').toLowerCase();
+          return (lang.startsWith('en') && (name.includes('natural') || name.includes('neural'))) && !ToddlerAudio.isMaleVoice(v);
         });
       }
 
-      // Priority 4: Any en-US voice that passes isFemaleVoice
+      // Priority 4: Google US English (Standard smooth Chrome female voice)
+      if (!chosen) {
+        chosen = voices.find(v => {
+          const name = (v.name || '').toLowerCase();
+          return name.includes('google us english') && !ToddlerAudio.isMaleVoice(v);
+        });
+      }
+
+      // Priority 5: Apple / Mac / iOS Enhanced voices (Samantha, Victoria, Karen)
+      if (!chosen) {
+        chosen = voices.find(v => {
+          const name = (v.name || '').toLowerCase();
+          return (name.includes('samantha') || name.includes('victoria') || name.includes('karen')) && !ToddlerAudio.isMaleVoice(v);
+        });
+      }
+
+      // Priority 6: Any English female voice (en-US / en-GB)
       if (!chosen) {
         chosen = voices.find(v => {
           const lang = (v.lang || '').toLowerCase();
-          return (lang === 'en-us' || lang === 'en_us') && ToddlerAudio.isFemaleVoice(v);
+          return lang.startsWith('en') && ToddlerAudio.isFemaleVoice(v) && !v.name.toLowerCase().includes('zira');
         });
       }
 
-      // Priority 5: Any voice matching femaleKeywords
+      // Priority 7: Microsoft Zira (Offline Windows desktop fallback if no Natural voices exist)
+      if (!chosen) {
+        chosen = voices.find(v => {
+          const name = (v.name || '').toLowerCase();
+          return name.includes('zira') && !ToddlerAudio.isMaleVoice(v);
+        });
+      }
+
+      // Priority 8: Any female voice across all languages
       if (!chosen) {
         chosen = voices.find(v => ToddlerAudio.isFemaleVoice(v));
       }
@@ -632,6 +719,7 @@ var ToddlerAudio = window.ToddlerAudio || {
 
   speakWord(word) {
     if (!word || !window.speechSynthesis) return;
+    if (this.voiceMuted || this.voiceVolume <= 0) return;
     window.speechSynthesis.cancel();
 
     this.ensureVoiceReady((voice) => {
@@ -640,11 +728,26 @@ var ToddlerAudio = window.ToddlerAudio || {
       if (voice) {
         u.voice = voice;
       }
-      u.rate = 0.88; // Gentle, clear rhythm for toddler listening
+
+      // Dynamic volume respect
+      u.volume = Math.max(0, Math.min(1, this.voiceVolume));
+
+      // Gentle, clear rhythm for toddler listening (Preschool pace ~0.86)
+      u.rate = 0.86;
       
       // Sweet, warm feminine pitch:
-      // If voice is male (rare fallback), push pitch to 1.55 to make it sound like a cute high-pitched cartoon mascot!
-      u.pitch = (voice && this.isMaleVoice(voice)) ? 1.55 : 1.15;
+      // For Natural / Neural voices, keep pitch near 1.06 for authentic sweet warmth without robotic artifacts.
+      // If voice is male fallback, push pitch to 1.48 to sound like a cute cartoon mascot.
+      const vName = (voice && voice.name) ? voice.name.toLowerCase() : '';
+      const isNatural = vName.includes('natural') || vName.includes('neural') || vName.includes('online') || vName.includes('google');
+
+      if (voice && this.isMaleVoice(voice)) {
+        u.pitch = 1.48;
+      } else if (isNatural) {
+        u.pitch = 1.06;
+      } else {
+        u.pitch = 1.15;
+      }
 
       // Duck BGM so speech is crystal clear
       this.duckBGM(true);
