@@ -533,20 +533,136 @@
     /* Canopy Forest Critters: Squirrel, Monkey, Bird, Bee, Butterfly */
     .forest-critter {
       position: absolute;
+      z-index: 28;
+      filter: drop-shadow(0 8px 16px rgba(0,0,0,0.25));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    /* Slapstick Comedy Critter (Monkey / Squirrel) */
+    .comic-critter-wrap {
+      cursor: pointer;
+      pointer-events: auto;
+      transform-origin: bottom center;
+    }
+    .comic-critter-body {
+      font-size: 4.8rem;
+      line-height: 1;
+      display: inline-block;
+      transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .comic-dizzy-stars {
+      font-size: 1.6rem;
+      opacity: 0;
+      transform: scale(0.3);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      margin-bottom: -6px;
       pointer-events: none;
-      z-index: 25;
-      font-size: 2.6rem;
-      filter: drop-shadow(0 6px 12px rgba(0,0,0,0.2));
+      filter: drop-shadow(0 2px 6px rgba(255, 215, 0, 0.6));
     }
-    .critter-tumble {
-      animation: critterTumbleDown 1.1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    .comic-critter-bubble {
+      opacity: 0;
+      transform: scale(0.4) translateY(10px);
+      transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      background: white;
+      border: 3px solid #FF9800;
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: #E65100;
+      white-space: nowrap;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+      pointer-events: none;
+      margin-bottom: 2px;
+      position: relative;
     }
-    @keyframes critterTumbleDown {
-      0% { transform: translateY(0) rotate(0deg) scale(0.6); opacity: 1; }
-      40% { transform: translateY(110px) rotate(180deg) scale(1.1); }
-      75% { transform: translateY(200px) rotate(360deg) scale(1); }
-      85% { transform: translateY(190px) rotate(360deg) scale(1); }
-      100% { transform: translateY(200px) translateX(110px) rotate(360deg) scale(0.4); opacity: 0; }
+    .comic-critter-bubble::after {
+      content: '';
+      position: absolute;
+      bottom: -7px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 7px 6px 0;
+      border-style: solid;
+      border-color: #FF9800 transparent;
+      display: block;
+      width: 0;
+    }
+
+    /* Phase 1: Slip and wobble on branch */
+    .critter-slip {
+      animation: critterSlipWobble 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
+    }
+    @keyframes critterSlipWobble {
+      0% { transform: translateY(0) rotate(0deg) scale(0.8); }
+      30% { transform: translateY(-12px) rotate(-26deg) scale(1.15); }
+      65% { transform: translateY(-8px) rotate(28deg) scale(1.2); }
+      85% { transform: translateY(-4px) rotate(-16deg) scale(1.1); }
+      100% { transform: translateY(0) rotate(8deg) scale(1); }
+    }
+
+    /* Phase 2: Tumble and double bounce down to the grass */
+    .critter-falling-down {
+      animation: critterTumbleBounce 0.75s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    }
+    @keyframes critterTumbleBounce {
+      0% { transform: translateY(0) rotate(8deg) scale(1); }
+      55% { transform: translateY(215px) rotate(360deg) scale(1.28, 0.72); } /* Land & squash */
+      72% { transform: translateY(178px) rotate(390deg) scale(0.88, 1.15); } /* Rebound bounce */
+      88% { transform: translateY(215px) rotate(360deg) scale(1.18, 0.82); } /* 2nd squash */
+      100% { transform: translateY(210px) rotate(360deg) scale(1, 1); }      /* Settle */
+    }
+
+    /* Phase 3: Sitting on grass rubbing bum */
+    .critter-rubbing-bum .comic-critter-body {
+      animation: critterRubBum 0.8s infinite ease-in-out alternate;
+    }
+    .critter-rubbing-bum .comic-dizzy-stars {
+      opacity: 1;
+      transform: scale(1);
+      animation: dizzyStarsSpin 1.8s infinite linear;
+    }
+    .critter-rubbing-bum .comic-critter-bubble {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+    @keyframes critterRubBum {
+      0% { transform: rotate(-14deg) scale(1, 0.94) translateX(-4px); }
+      50% { transform: rotate(0deg) scale(0.96, 1.04) translateY(-3px); }
+      100% { transform: rotate(14deg) scale(1, 0.94) translateX(4px); }
+    }
+    @keyframes dizzyStarsSpin {
+      0% { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(180deg) scale(1.15); }
+      100% { transform: rotate(360deg) scale(1); }
+    }
+
+    /* Phase 4: Tickle escape when baby taps */
+    .critter-tickle-escape {
+      animation: critterTickleRocket 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards !important;
+      pointer-events: none !important;
+    }
+    @keyframes critterTickleRocket {
+      0% { transform: translateY(210px) scale(1); }
+      30% { transform: translateY(140px) scale(1.4) rotate(-20deg); }
+      60% { transform: translateY(40px) scale(1.5) rotate(360deg); }
+      100% { transform: translateY(-160px) scale(0.2) rotate(720deg); opacity: 0; }
+    }
+
+    /* Auto walk away */
+    .critter-walk-away {
+      animation: critterWalkOff 0.7s ease-in forwards;
+      pointer-events: none;
+    }
+    @keyframes critterWalkOff {
+      0% { transform: translateY(210px) scale(1); opacity: 1; }
+      50% { transform: translateY(205px) translateX(60px) scale(0.85) rotate(15deg); }
+      100% { transform: translateY(215px) translateX(160px) scale(0.2); opacity: 0; }
     }
     .critter-fly-away {
       animation: critterFlyAway 1.4s ease-out forwards;
@@ -1354,21 +1470,108 @@
       critterCycle++;
       const critter = document.createElement('div');
       critter.className = 'forest-critter';
-      const type = critterCycle % 3;
+      const type = critterCycle % 2; // Luân phiên để bé thường xuyên thấy chú khỉ / chú sóc hài hước
 
       if (type === 0) {
-        // Tumbling Squirrel or Monkey (Chú Sóc / Chú Khỉ nhào lộn khi rung cây)
+        // Tumbling Monkey or Squirrel (Chú Sóc / Chú Khỉ nhào lộn khi rung cây - Hài hước Slapstick 3 Pha)
         const isSquirrel = Math.random() > 0.5;
-        critter.innerText = isSquirrel ? '🐿️' : '🐒';
-        critter.className = 'forest-critter critter-tumble';
-        critter.style.left = `${80 + Math.random() * 120}px`;
-        critter.style.top = '60px';
-        treeCanopy.appendChild(critter);
+        const emoji = isSquirrel ? '🐿️' : '🐒';
+        
+        const wrap = document.createElement('div');
+        wrap.className = 'forest-critter comic-critter-wrap critter-slip';
+        wrap.style.left = `${75 + Math.random() * 110}px`;
+        wrap.style.top = '50px';
 
-        if (window.AudioEngine && AudioEngine.playBoing) {
-          setTimeout(() => AudioEngine.playBoing(), 250);
+        const dizzyStars = document.createElement('div');
+        dizzyStars.className = 'comic-dizzy-stars';
+        dizzyStars.innerText = '💫💫💫';
+
+        const bubble = document.createElement('div');
+        bubble.className = 'comic-critter-bubble';
+        bubble.innerText = isSquirrel ? 'Oops! Dizzy squirrel! 🌰' : 'Oops! Silly monkey! 🍌';
+
+        const body = document.createElement('div');
+        body.className = 'comic-critter-body';
+        body.innerText = emoji;
+
+        wrap.appendChild(dizzyStars);
+        wrap.appendChild(bubble);
+        wrap.appendChild(body);
+        treeCanopy.appendChild(wrap);
+
+        // Pha 1: Trượt chân chới với trên cành cây (0 - 450ms)
+        if (window.AudioEngine) {
+          if (AudioEngine.playBoing) AudioEngine.playBoing();
+          if (AudioEngine.playSqueak) setTimeout(() => AudioEngine.playSqueak(), 180);
         }
-        setTimeout(() => critter.remove(), 1200);
+
+        // Pha 2: Rơi nhào lộn và đập mông nảy tưng trên bãi cỏ (450ms - 1200ms)
+        setTimeout(() => {
+          if (!wrap.isConnected) return;
+          wrap.classList.remove('critter-slip');
+          wrap.classList.add('critter-falling-down');
+
+          // Tiếng va chạm đập mông và nảy tưng
+          setTimeout(() => {
+            if (window.AudioEngine) {
+              if (AudioEngine.playThud) AudioEngine.playThud(140);
+              else if (AudioEngine.playPop) AudioEngine.playPop(260);
+            }
+          }, 420);
+
+          setTimeout(() => {
+            if (window.AudioEngine && AudioEngine.playPop) AudioEngine.playPop(340);
+          }, 580);
+        }, 450);
+
+        // Pha 3: Ngồi xoa mông, sao hoa mắt xoay tít, bong bóng thoại hài hước (1200ms - 4200ms)
+        let hasEscaped = false;
+        setTimeout(() => {
+          if (!wrap.isConnected || hasEscaped) return;
+          wrap.classList.remove('critter-falling-down');
+          wrap.style.transform = 'translateY(210px)';
+          wrap.classList.add('critter-rubbing-bum');
+
+          if (window.AudioEngine) {
+            if (AudioEngine.playChime) AudioEngine.playChime();
+            if (AudioEngine.speak) {
+              const phrase = isSquirrel ? "Oops! Dizzy squirrel! Hahaha!" : "Oops! Silly monkey! Hahaha!";
+              setTimeout(() => AudioEngine.speak(phrase), 200);
+            }
+          }
+        }, 1200);
+
+        // Tương tác chạm: Bé chọc lét / cù chú khỉ chú sóc nhảy vọt lên cười khúc khích
+        wrap.onclick = (e) => {
+          e.stopPropagation();
+          if (hasEscaped) return;
+          hasEscaped = true;
+
+          bubble.innerText = 'Wheeee! Hihihi! 💨';
+          wrap.classList.remove('critter-rubbing-bum');
+          wrap.classList.add('critter-tickle-escape');
+
+          if (window.AudioEngine) {
+            if (AudioEngine.playBoing) AudioEngine.playBoing();
+            if (AudioEngine.playSqueak) setTimeout(() => AudioEngine.playSqueak(), 120);
+            if (AudioEngine.speak) {
+              setTimeout(() => AudioEngine.speak("Wheeee! Hahaha!"), 150);
+            }
+          }
+
+          setTimeout(() => wrap.remove(), 850);
+        };
+
+        // Nếu bé không chạm, sau 4.2 giây chú khỉ tự đứng dậy phủi mông chuồn đi
+        setTimeout(() => {
+          if (!wrap.isConnected || hasEscaped) return;
+          hasEscaped = true;
+          bubble.style.opacity = '0';
+          dizzyStars.style.opacity = '0';
+          wrap.classList.remove('critter-rubbing-bum');
+          wrap.classList.add('critter-walk-away');
+          setTimeout(() => wrap.remove(), 750);
+        }, 4200);
       } else if (type === 1) {
         // Buzzing Bumblebee (Chú Ong vù ra)
         critter.innerText = '🐝';
