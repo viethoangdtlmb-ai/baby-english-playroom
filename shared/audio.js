@@ -851,6 +851,171 @@ var ToddlerAudio = window.ToddlerAudio || {
     if (!wordsArray || !wordsArray.length || !window.speechSynthesis) return;
     window.speechSynthesis.cancel();
     this.speakWord(wordsArray.join(', '));
+  },
+
+  // -----------------------------------------------------------------
+  // UNIVERSAL IN-GAME FLOATING AUDIO PILL (18 Mini-Games Support)
+  // -----------------------------------------------------------------
+  mountInGameAudioWidget() {
+    if (typeof document === 'undefined' || !document.body) return;
+    // Neu la Sanh chinh (da co san bgm-volume-pill) thi khong hien thi
+    if (document.getElementById('bgm-volume-pill') || document.getElementById('ingame-audio-widget')) {
+      return;
+    }
+
+    const widget = document.createElement('div');
+    widget.id = 'ingame-audio-widget';
+    widget.className = 'ingame-audio-widget';
+
+    const bgmPercent = Math.round((this.bgmEnabled ? this.bgmTargetVolume : 0) * 100);
+    const voicePercent = Math.round((this.voiceMuted ? 0 : this.voiceVolume) * 100);
+    const isMutedAll = !this.bgmEnabled && this.voiceMuted;
+
+    widget.innerHTML = `
+      <button type="button" class="ingame-audio-trigger" id="ingame-audio-trigger" title="Điều chỉnh âm lượng nhạc & tiếng" aria-label="Âm lượng">
+        <span id="ingame-main-icon">${isMutedAll ? '🔇' : '🔊'}</span>
+      </button>
+
+      <div class="ingame-audio-popover" id="ingame-audio-popover">
+        <div class="ingame-pop-header">
+          <div class="ingame-pop-title">
+            <span>🎛️</span>
+            <span>Âm Lượng Trò Chơi</span>
+          </div>
+          <button type="button" class="ingame-pop-close" id="ingame-pop-close" title="Đóng">✕</button>
+        </div>
+
+        <!-- BGM Row -->
+        <div class="ingame-audio-row">
+          <button type="button" class="ingame-row-btn" id="ingame-btn-bgm" title="Bật/Tắt Nhạc">
+            <span id="ingame-bgm-icon">${this.bgmEnabled ? '🎵' : '🔇'}</span>
+          </button>
+          <input type="range" min="0" max="100" value="${bgmPercent}" class="ingame-row-slider orange" id="ingame-slider-bgm" title="Kéo chỉnh nhạc">
+          <span class="ingame-row-percent" id="ingame-text-bgm">${bgmPercent}%</span>
+        </div>
+        <div class="ingame-sub-actions">
+          <button type="button" class="ingame-sub-btn" id="ingame-btn-next-track" title="Đổi bài nhạc khác">
+            <span>⏭️</span>
+            <span id="ingame-track-name">${(this.TRACK_NAMES[this.currentTrackName] || 'Nhạc').split(' ')[0]}</span>
+          </button>
+        </div>
+
+        <!-- Voice Row -->
+        <div class="ingame-audio-row" style="margin-top: 4px;">
+          <button type="button" class="ingame-row-btn pink" id="ingame-btn-voice" title="Bật/Tắt Giọng cô giáo">
+            <span id="ingame-voice-icon">${this.voiceMuted ? '🔇' : '🗣️'}</span>
+          </button>
+          <input type="range" min="0" max="100" value="${voicePercent}" class="ingame-row-slider pink" id="ingame-slider-voice" title="Kéo chỉnh giọng nói">
+          <span class="ingame-row-percent pink" id="ingame-text-voice">${voicePercent}%</span>
+        </div>
+        <div class="ingame-sub-actions">
+          <button type="button" class="ingame-sub-btn pink" id="ingame-btn-test-voice" title="Thử giọng cô giáo">
+            <span>🌸</span>
+            <span>Thử giọng</span>
+          </button>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(widget);
+
+    // Event wiring
+    const trigger = document.getElementById('ingame-audio-trigger');
+    const popover = document.getElementById('ingame-audio-popover');
+    const closeBtn = document.getElementById('ingame-pop-close');
+    const btnBgm = document.getElementById('ingame-btn-bgm');
+    const sliderBgm = document.getElementById('ingame-slider-bgm');
+    const textBgm = document.getElementById('ingame-text-bgm');
+    const btnNext = document.getElementById('ingame-btn-next-track');
+    const trackLabel = document.getElementById('ingame-track-name');
+    const btnVoice = document.getElementById('ingame-btn-voice');
+    const sliderVoice = document.getElementById('ingame-slider-voice');
+    const textVoice = document.getElementById('ingame-text-voice');
+    const btnTestVoice = document.getElementById('ingame-btn-test-voice');
+    const mainIcon = document.getElementById('ingame-main-icon');
+
+    const updateMainIcon = () => {
+      const isMuted = !ToddlerAudio.bgmEnabled && ToddlerAudio.voiceMuted;
+      mainIcon.innerText = isMuted ? '🔇' : '🔊';
+    };
+
+    const togglePopover = (show) => {
+      const willShow = (typeof show === 'boolean') ? show : !popover.classList.contains('show');
+      if (willShow) {
+        popover.classList.add('show');
+        trigger.classList.add('open');
+      } else {
+        popover.classList.remove('show');
+        trigger.classList.remove('open');
+      }
+    };
+
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      togglePopover();
+    });
+
+    closeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      togglePopover(false);
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!widget.contains(e.target)) {
+        togglePopover(false);
+      }
+    });
+
+    // BGM Controls
+    btnBgm.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const enabled = ToddlerAudio.toggleBGM();
+      const vol = enabled ? Math.round(ToddlerAudio.getBgmVolume() * 100) : 0;
+      sliderBgm.value = vol;
+      textBgm.innerText = `${vol}%`;
+      document.getElementById('ingame-bgm-icon').innerText = enabled ? '🎵' : '🔇';
+      updateMainIcon();
+    });
+
+    sliderBgm.addEventListener('input', (e) => {
+      e.stopPropagation();
+      const val = parseInt(e.target.value, 10);
+      ToddlerAudio.setBgmVolume(val / 100);
+      textBgm.innerText = `${val}%`;
+      document.getElementById('ingame-bgm-icon').innerText = (val === 0) ? '🔇' : '🎵';
+      updateMainIcon();
+    });
+
+    btnNext.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const nextId = ToddlerAudio.nextTrack();
+      trackLabel.innerText = (ToddlerAudio.TRACK_NAMES[nextId] || nextId).split(' ')[0];
+    });
+
+    // Voice Controls
+    btnVoice.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const unmuted = ToddlerAudio.toggleVoiceMute();
+      const vol = unmuted ? Math.round(ToddlerAudio.voiceVolume * 100) : 0;
+      sliderVoice.value = vol;
+      textVoice.innerText = `${vol}%`;
+      document.getElementById('ingame-voice-icon').innerText = unmuted ? '🗣️' : '🔇';
+      updateMainIcon();
+    });
+
+    sliderVoice.addEventListener('input', (e) => {
+      e.stopPropagation();
+      const val = parseInt(e.target.value, 10);
+      ToddlerAudio.setVoiceVolume(val / 100);
+      textVoice.innerText = `${val}%`;
+      document.getElementById('ingame-voice-icon').innerText = (val === 0) ? '🔇' : '🗣️';
+      updateMainIcon();
+    });
+
+    btnTestVoice.addEventListener('click', (e) => {
+      e.stopPropagation();
+      ToddlerAudio.testVoice();
+    });
   }
 };
 
@@ -910,3 +1075,12 @@ if (typeof window !== 'undefined') {
   });
 }
 
+
+  // Auto-mount in-game audio controller if not on main hub
+  if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => ToddlerAudio.mountInGameAudioWidget());
+    } else {
+      ToddlerAudio.mountInGameAudioWidget();
+    }
+  }
