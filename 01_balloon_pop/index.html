@@ -813,7 +813,7 @@
             b.hits++;
             if (b.hits < b.hitsNeeded) {
               ToddlerAudio.playChime();
-              ToddlerAudio.speak('Tickle tickle! Tap again!');
+              ToddlerAudio.speak('Tickle tickle! 🎈');
               for (let p = 0; p < 12; p++) {
                 particles.push(new Particle(b.x, b.y, '#FFD600'));
               }
@@ -821,7 +821,7 @@
             } else {
               // Giant Pop Explosion & Candy Storm!
               ToddlerAudio.playFanfare();
-              ToddlerAudio.speak('Rainbow Surprise! Candy storm!');
+              ToddlerAudio.speak('Rainbow! Yay! 🌈');
               for (let p = 0; p < 45; p++) {
                 const rainCols = ['#FF4081', '#FFD600', '#00E676', '#00B0FF', '#E040FB'];
                 particles.push(new Particle(b.x, b.y, rainCols[p % rainCols.length]));
@@ -901,7 +901,7 @@
               ToddlerAudio.playFanfare();
 
               setTimeout(() => {
-                AudioEngine.speak('Yay! All balloons!');
+                AudioEngine.speak('Yay! All done! ⭐');
                 const modal = document.getElementById('modal-celebration');
                 const modalTitle = document.getElementById('modal-title');
                 const modalSubtitle = document.getElementById('modal-subtitle');
@@ -1083,7 +1083,7 @@
       ensureTargetOnScreen();
 
       if (window.ToddlerAudio) ToddlerAudio.playBoing();
-      AudioEngine.speak(`New balloons! Find ${targetItem.name}!`);
+      AudioEngine.speak(`Find ${targetItem.name}!`);
       resetIdleTimer();
     }
 

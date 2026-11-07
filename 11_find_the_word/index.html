@@ -827,7 +827,7 @@
       { name: 'Fire Truck', icon: 'firetruck', emoji: '🚒', voice: 'Fire Truck! Wee-woo!' },
       { name: 'Cute Robot', icon: 'robot', emoji: '🤖', voice: 'Robot! Beep beep!' },
       { name: 'Teddy Bear', icon: 'teddy', emoji: '🧸', voice: 'Teddy Bear! Soft hug!' },
-      { name: 'Toy Rocket', icon: 'rocket', emoji: '🚀', voice: 'Rocket! Zoom to the moon!' },
+      { name: 'Toy Rocket', icon: 'rocket', emoji: '🚀', voice: 'Rocket! Zoom zoom! 🚀' },
       { name: 'Sweet Baby Doll', icon: 'doll', emoji: '🪆', voice: 'Baby Doll! Hello baby!' },
       { name: 'Little Train', icon: 'train', emoji: '🚂', voice: 'Train! Choo-choo!' },
       { name: 'Green Dinosaur', icon: 'dinosaur', emoji: '🦖', voice: 'Dinosaur! Roar!' },
@@ -908,7 +908,7 @@
       // Announce Motherese voice
       setTimeout(() => {
         if (currentTarget) {
-          ToddlerAudio.speak(`Where is the ${currentTarget.name}?`);
+          ToddlerAudio.speak(`Find ${currentTarget.name}! 🔍`);
         }
       }, 350);
 
@@ -1011,7 +1011,7 @@
       setTimeout(() => magicRadio.style.transform = '', 250);
 
       if (currentTarget) {
-        ToddlerAudio.speak(`Where is the ${currentTarget.name}?`);
+        ToddlerAudio.speak(`Find ${currentTarget.name}! 🔍`);
       }
     }
 

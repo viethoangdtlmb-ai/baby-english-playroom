@@ -627,49 +627,49 @@ var ToddlerVocabulary = window.ToddlerVocabulary || {
   // CONTEXTUAL SENTENCE & REAL-WORLD PARENT-CHILD TRANSFER ENGINE
   // -------------------------------------------------------------
   CONTEXT_PHRASES: {
-    chair: 'Chair! Sit on the chair!',
-    table: 'Table! Put it on the table!',
-    fan: 'Fan! Cool wind from the fan!',
-    sofa: 'Sofa! Sit on the soft sofa!',
-    book: 'Book! Let us read a book!',
-    pen: 'Pen! Write with the pen!',
-    pencil: 'Pencil! Draw with the pencil!',
-    paper: 'Paper! White paper!',
-    notebook: 'Notebook! Open the notebook!',
-    backpack: 'Backpack! Carry your backpack!',
-    bag: 'Bag! Put it in the bag!',
-    scissors: 'Scissors! Cut with scissors!',
-    ruler: 'Ruler! Long ruler!',
-    paintbrush: 'Paintbrush! Paint a picture!',
-    computer: 'Computer! Look at the computer!',
-    laptop: 'Laptop! Mommy and Daddy laptop!',
-    keyboard: 'Keyboard! Tap the keyboard!',
-    phone: 'Phone! Hello on the phone!',
-    tv: 'TV! Watch the TV!',
-    camera: 'Camera! Smile for the camera!',
-    flashlight: 'Flashlight! Bright flashlight!',
-    cup: 'Cup! Drink water from the cup!',
-    spoon: 'Spoon! Eat with the spoon!',
-    bowl: 'Bowl! Yummy soup in the bowl!',
-    plate: 'Plate! Put food on the plate!',
-    chopsticks: 'Chopsticks! Pick up with chopsticks!',
-    fork: 'Fork! Eat with the fork!',
-    bottle: 'Bottle! Drink milk from the bottle!',
-    teacup: 'Teacup! Warm tea in the teacup!',
-    toothbrush: 'Toothbrush! Brush your teeth clean!',
-    soap: 'Soap! Wash hands with soap!',
-    towel: 'Towel! Dry your hands with a towel!',
-    toilet: 'Toilet! Flush the toilet!',
-    trashcan: 'Trash can! Put trash in the trash can!',
-    broom: 'Broom! Sweep the floor with a broom!',
-    sponge: 'Sponge! Scrub clean with a sponge!',
-    bed: 'Bed! Sleep tight in bed!',
-    pillow: 'Pillow! Soft pillow for your head!',
-    blanket: 'Blanket! Warm cozy blanket!',
-    lamp: 'Lamp! Turn on the bright lamp!',
-    clock: 'Clock! Tick tock goes the clock!',
-    door: 'Door! Knock knock on the door!',
-    window: 'Window! Look out the window!'
+    chair: 'Chair! Sit sit!',
+    table: 'Table! Put here!',
+    fan: 'Fan! Cool cool!',
+    sofa: 'Sofa! Soft sofa!',
+    book: 'Book! Read book!',
+    pen: 'Pen! Draw draw!',
+    pencil: 'Pencil! Draw draw!',
+    paper: 'Paper! Draw here!',
+    notebook: 'Notebook! Open open!',
+    backpack: 'Backpack! Wear it!',
+    bag: 'Bag! Open bag!',
+    scissors: 'Scissors! Snip snip!',
+    ruler: 'Ruler! Measure!',
+    paintbrush: 'Paintbrush! Paint paint!',
+    computer: 'Computer! Beep boop!',
+    laptop: 'Laptop! Tap tap!',
+    keyboard: 'Keyboard! Type type!',
+    phone: 'Phone! Ring ring!',
+    tv: 'TV! Watch watch!',
+    camera: 'Camera! Say cheese!',
+    flashlight: 'Flashlight! Light up!',
+    cup: 'Cup! Drink water!',
+    spoon: 'Spoon! Yum yum!',
+    bowl: 'Bowl! Yummy soup!',
+    plate: 'Plate! Food here!',
+    chopsticks: 'Chopsticks! Pick up!',
+    fork: 'Fork! Yum yum!',
+    bottle: 'Bottle! Drink milk!',
+    teacup: 'Teacup! Sip sip!',
+    toothbrush: 'Toothbrush! Brush brush!',
+    soap: 'Soap! Wash hands!',
+    towel: 'Towel! Dry dry!',
+    toilet: 'Toilet! Flush flush!',
+    trashcan: 'Trash can! Throw here!',
+    broom: 'Broom! Sweep sweep!',
+    sponge: 'Sponge! Wipe wipe!',
+    bed: 'Bed! Sleep tight!',
+    pillow: 'Pillow! Soft soft!',
+    blanket: 'Blanket! Warm warm!',
+    lamp: 'Lamp! Light up!',
+    clock: 'Clock! Tick tock!',
+    door: 'Door! Knock knock!',
+    window: 'Window! Look out!'
   },
 
   getWordContextPhrase(itemOrId) {
@@ -683,11 +683,11 @@ var ToddlerVocabulary = window.ToddlerVocabulary || {
     const found = this.findWordById(resolvedId);
     const w = (found && found.word) ? found.word : (typeof itemOrId === 'string' ? itemOrId : 'Good job');
     if (found && found.sound) return `${w}! ${found.sound}!`;
-    if (found && found.category === 'food') return `${w}! Yummy ${w.toLowerCase()}!`;
-    if (found && found.category === 'clothes') return `${w}! Put on your ${w.toLowerCase()}!`;
-    if (found && found.category === 'body') return `${w}! Touch your ${w.toLowerCase()}!`;
-    if (found && found.category === 'numbers') return `Number ${w}! Let us count ${w.toLowerCase()}!`;
-    return `${w}! Look at the ${w.toLowerCase()}!`;
+    if (found && found.category === 'food') return `${w}! Yum yum!`;
+    if (found && found.category === 'clothes') return `${w}! Put on!`;
+    if (found && found.category === 'body') return `${w}! Touch touch!`;
+    if (found && found.category === 'numbers') return `${w}! One, two!`;
+    return `${w}! Yay!`;
   },
 
   getRealWorldParentTip(weekNum = 1) {

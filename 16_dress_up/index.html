@@ -1395,7 +1395,7 @@
       renderDollOutfit();
       renderWardrobeGrid();
       if (AudioEngine.speak) {
-        AudioEngine.speak('Ready to dress up again!');
+        AudioEngine.speak('Dress up! 👗');
       }
     }
 
@@ -1443,7 +1443,7 @@
         triggerFashionRunwayShow();
       } else {
         if (AudioEngine.speak) {
-          AudioEngine.speak(`Hello! Dress me up!`);
+          AudioEngine.speak(`Dress up! 👗`);
         }
       }
     }
@@ -1457,7 +1457,7 @@
 
       if (equippedCount < 1) {
         if (AudioEngine.speak) {
-          AudioEngine.speak(`Pick a hat or dress for ${friend.name} first!`);
+          AudioEngine.speak(`Hat please! 🧢`);
         }
         return;
       }
@@ -1473,7 +1473,7 @@
       // Announce outfit items in English Motherese
       const itemsNamed = Object.values(currentOutfits).filter(Boolean).map(i => i.name).join(' and ');
       if (AudioEngine.speak) {
-        AudioEngine.speak(`Wonderful! Look at ${friend.name} in the ${itemsNamed}! So stylish!`);
+        AudioEngine.speak(`Yay! Beautiful! ✨`);
       }
 
       // Launch Confetti

@@ -1012,7 +1012,7 @@
       { id: 'turtle', name: 'Turtle', vnName: 'Bạn Rùa', emoji: '🐢', voice: 'Slow Turtle!' },
       { id: 'dolphin', name: 'Dolphin', vnName: 'Cá Heo', emoji: '🐬', voice: 'Happy Dolphin!' },
       { id: 'whale', name: 'Whale', vnName: 'Cá Voi', emoji: '🐋', voice: 'Big Whale!' },
-      { id: 'duck', name: 'Duck', vnName: 'Chú Vịt', emoji: '🦆', voice: 'Cute Duck! Quack quack!' },
+      { id: 'duck', name: 'Duck', vnName: 'Chú Vịt', emoji: '🦆', voice: 'Duck! Quack quack! 🦆' },
       { id: 'octopus', name: 'Octopus', vnName: 'Bạch Tuộc', emoji: '🐙', voice: 'Funny Octopus!' },
       { id: 'penguin', name: 'Penguin', vnName: 'Chim Cánh Cụt', emoji: '🐧', voice: 'Waddle Penguin!' },
       { id: 'hippo', name: 'Hippo', vnName: 'Hà Mã', emoji: '🦛', voice: 'Big Hippo!' },
@@ -1084,7 +1084,7 @@
 
       setTimeout(() => {
         if (AudioEngine.speak) {
-          AudioEngine.speak(`Pop the ${currentTarget.name}! ${currentTarget.name}!`);
+          AudioEngine.speak(`Pop ${currentTarget.name}! 🫧`);
         }
       }, 350);
 
@@ -1110,7 +1110,7 @@
       if (!currentTarget) return;
       playRubberDuckSqueak();
       if (AudioEngine.speak) {
-        AudioEngine.speak(`Pop the ${currentTarget.name}! ${currentTarget.name}!`);
+        AudioEngine.speak(`Pop ${currentTarget.name}! 🫧`);
       }
     }
 
@@ -1283,7 +1283,7 @@
       }, 250);
 
       if (AudioEngine.speak) {
-        AudioEngine.speak('Quack quack! I love bubbles!');
+        AudioEngine.speak('Duck! Quack quack! 🦆');
       }
 
       // Spurt out 2 little surprise bubbles from duck (with guaranteed target)
@@ -1434,7 +1434,7 @@
       }
 
       if (AudioEngine.speak) {
-        AudioEngine.speak('Hooray! 5 Stars! You saved all the friends! Good job!');
+        AudioEngine.speak('Yay! 5 Stars! ⭐');
       }
 
       launchBathConfetti();

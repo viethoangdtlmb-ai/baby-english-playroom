@@ -631,7 +631,7 @@
     // Lấy đúng đối tượng tắm của tuần từ ngân hàng 16 đối tượng xoay vòng
     const activeTarget = (weekData && weekData.cleanTarget)
       ? weekData.cleanTarget
-      : { id: 'pig', name: 'Dirty Pig', vnTitle: 'Tắm cho bạn Heo lấm bùn', emoji: '🐷', voice: 'Wash the Dirty Pig! Make it clean and pink!' };
+      : { id: 'pig', name: 'Dirty Pig', vnTitle: 'Tắm cho bạn Heo lấm bùn', emoji: '🐷', voice: 'Wash Pig! Oink! 🐷' };
 
     const canvas = document.getElementById('mud-canvas');
     const ctx = canvas.getContext('2d');
@@ -661,13 +661,13 @@
       if (AudioEngine.playPop) AudioEngine.playPop();
 
       if (currentToolMode === 'soap') {
-        AudioEngine.speak('Soap! Make rainbow bubbles! 🧼');
+        AudioEngine.speak('Soap! Bubbles! 🧼');
         if (statusFooterText) statusFooterText.innerText = '🧼 Xoa xà bông bọt tuyết bồng bềnh!';
       } else if (currentToolMode === 'brush') {
-        AudioEngine.speak('Brush! Scrub the mud! 🪥');
+        AudioEngine.speak('Brush! Scrub scrub! 🪥');
         if (statusFooterText) statusFooterText.innerText = '🪥 Dùng bàn chải cọ sạch vết bùn đất!';
       } else {
-        AudioEngine.speak('Sponge! Wipe it clean! 🧽');
+        AudioEngine.speak('Sponge! Wipe wipe! 🧽');
         if (statusFooterText) statusFooterText.innerText = '🧽 Dùng bọt biển lau sạch bong kin kít!';
       }
     };
@@ -936,7 +936,7 @@
 
         if (window.ToddlerAudio) {
           ToddlerAudio.playChime();
-          ToddlerAudio.speak('Good job! Now tap the shower!');
+          ToddlerAudio.speak('Shower time! 🚿');
         }
 
         // Tự động nhắc nhở sau 4s nếu bé chưa bấm vòi sen
@@ -1049,13 +1049,13 @@
     const cleanTargetList = (window.ToddlerVocabulary && ToddlerVocabulary.CLEANING_TARGETS && ToddlerVocabulary.CLEANING_TARGETS.length)
       ? ToddlerVocabulary.CLEANING_TARGETS
       : [
-          { id: 'pig', name: 'Dirty Pig', vnTitle: 'Tắm cho bạn Heo lấm bùn', emoji: '🐷', voice: 'Wash the Dirty Pig! Make it clean and pink!' },
-          { id: 'dog', name: 'Muddy Dog', vnTitle: 'Tắm cho bạn Cún lấm lem', emoji: '🐶', voice: 'Wash the Muddy Dog! Good puppy!' },
-          { id: 'car', name: 'Dusty Car', vnTitle: 'Rửa xe ô tô dính bụi', emoji: '🚗', voice: 'Clean the Dusty Car! Brum brum shiny car!' },
-          { id: 'cat', name: 'Muddy Cat', vnTitle: 'Tắm cho bạn Mèo con', emoji: '🐱', voice: 'Clean the Cute Cat! Soft and fluffy!' },
-          { id: 'duck', name: 'Muddy Duck', vnTitle: 'Tắm cho bạn Vịt con', emoji: '🦆', voice: 'Wash the Muddy Duck! Quack quack clean duck!' },
-          { id: 'bear', name: 'Muddy Bear', vnTitle: 'Tắm cho bạn Gấu nâu', emoji: '🐻', voice: 'Wash the Big Bear! Soft warm fur!' },
-          { id: 'elephant', name: 'Muddy Elephant', vnTitle: 'Tắm cho bạn Voi con', emoji: '🐘', voice: 'Wash the Big Elephant with water!' }
+          { id: 'pig', name: 'Dirty Pig', vnTitle: 'Tắm cho bạn Heo lấm bùn', emoji: '🐷', voice: 'Wash Pig! Oink! 🐷' },
+          { id: 'dog', name: 'Muddy Dog', vnTitle: 'Tắm cho bạn Cún lấm lem', emoji: '🐶', voice: 'Wash Dog! Woof woof! 🐶' },
+          { id: 'car', name: 'Dusty Car', vnTitle: 'Rửa xe ô tô dính bụi', emoji: '🚗', voice: 'Clean Car! Vroom vroom! 🚗' },
+          { id: 'cat', name: 'Muddy Cat', vnTitle: 'Tắm cho bạn Mèo con', emoji: '🐱', voice: 'Clean Cat! Meow! 🐱' },
+          { id: 'duck', name: 'Muddy Duck', vnTitle: 'Tắm cho bạn Vịt con', emoji: '🦆', voice: 'Wash Duck! Quack quack! 🦆' },
+          { id: 'bear', name: 'Muddy Bear', vnTitle: 'Tắm cho bạn Gấu nâu', emoji: '🐻', voice: 'Wash Bear! Grrr! 🐻' },
+          { id: 'elephant', name: 'Muddy Elephant', vnTitle: 'Tắm cho bạn Voi con', emoji: '🐘', voice: 'Elephant! Splash! 🐘' }
         ];
     let currentTargetIdx = 0;
     let currentActiveTarget = activeTarget;
@@ -1103,7 +1103,7 @@
       ghostHand.style.left = '42%';
       ghostHand.style.top = '40%';
       ghostHand.style.display = 'block';
-      AudioEngine.speak(`Rub, rub! Wash the ${currentActiveTarget.name}!`);
+      AudioEngine.speak(`Wash ${currentActiveTarget.name}! 🧼`);
       scheduleIdleHint();
     }
 
@@ -1164,7 +1164,7 @@
       if (isCleaned) {
         AudioEngine.speak(`Clean ${cleanNoun}!`);
       } else {
-        AudioEngine.speak(`Wash the ${currentActiveTarget.name}! Make it clean!`);
+        AudioEngine.speak(`Wash ${currentActiveTarget.name}! 🧼`);
       }
     });
 

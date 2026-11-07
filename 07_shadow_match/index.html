@@ -1033,7 +1033,7 @@
             }
           } else {
             // Chạm bóng khi chưa chọn thẻ: Gợi ý tìm bạn
-            AudioEngine.speak(`Where is ${item.name}? Tap ${item.name}!`);
+            AudioEngine.speak(`Tap ${item.name}!`);
             highlightMatchingCard(item.id);
           }
         }
@@ -1118,7 +1118,7 @@
       setTimeout(() => slot.style.transform = '', 160);
       if (AudioEngine.playBoing) AudioEngine.playBoing();
       promptPill.innerText = `🔍 Đó là bóng của ${slot.dataset.name}! Hãy tìm bóng của ${expectedCardName} nhé!`;
-      AudioEngine.speak(`No, find ${expectedCardName}'s shadow!`);
+      AudioEngine.speak(`Find ${expectedCardName}! 🔍`);
     }
 
     function announceNextUnmatchedShadow(withWelcomePrefix = false) {
@@ -1130,7 +1130,7 @@
       const targetName = unmatchedSlot.dataset.name;
       promptPill.innerText = `🔍 Đố bé bóng đen của ${targetName} ở đâu nhỉ?`;
       const prefix = withWelcomePrefix ? 'Shadow Match! ' : '';
-      AudioEngine.speak(`${prefix}Where is ${targetName}? Find ${targetName}'s shadow!`);
+      AudioEngine.speak(`Find ${targetName}! 🔍`);
     }
 
     function highlightMatchingCard(itemId) {
@@ -1203,7 +1203,7 @@
 
       levelWinTimer = setTimeout(() => {
         if (AudioEngine.playFanfare) AudioEngine.playFanfare();
-        AudioEngine.speak('Wonderful! All shadows matched! You did it!');
+        AudioEngine.speak('Yay! You did it! ⭐');
 
         // 3 bạn nhỏ cùng nhảy múa chiến thắng
         document.querySelectorAll('.shadow-slot').forEach(slot => {

@@ -566,7 +566,7 @@
     const towerThemes = [
       {
         name: 'Số Đếm 1 - 5',
-        intro: 'Count the blocks! One, two, three!',
+        intro: 'Count blocks! 1, 2, 3! 🧱',
         blocks: [
           { id: 'one', word: 'One', num: 'ONE', count: 1, color: '#FF5252', icon: '1️⃣' },
           { id: 'two', word: 'Two', num: 'TWO', count: 2, color: '#FFA726', icon: '2️⃣' },
@@ -577,7 +577,7 @@
       },
       {
         name: 'Chữ Cái Vàng A - E',
-        intro: 'Alphabet tower! Apple, Ball, Cat, Dog, Elephant!',
+        intro: 'ABC Blocks! 🔤',
         blocks: [
           { id: 'apple', word: 'Apple', num: 'A • APPLE', count: 'A', color: '#E91E63', icon: '🍎' },
           { id: 'ball', word: 'Ball', num: 'B • BALL', count: 'B', color: '#9C27B0', icon: '⚽' },
@@ -588,7 +588,7 @@
       },
       {
         name: 'Sắc Màu Cầu Vồng',
-        intro: 'Rainbow colors! Red, Blue, Yellow, Green, Purple!',
+        intro: 'Rainbow Blocks! 🌈',
         blocks: [
           { id: 'red', word: 'Red', num: 'RED', count: '1', color: '#FF5252', icon: '🔴' },
           { id: 'blue', word: 'Blue', num: 'BLUE', count: '2', color: '#448AFF', icon: '🔵' },
@@ -599,7 +599,7 @@
       },
       {
         name: 'Bạn Thú Đáng Yêu',
-        intro: 'Animal friends tower! Dog, Cat, Duck, Pig, Bear!',
+        intro: 'Animal Blocks! 🐶',
         blocks: [
           { id: 'dog', word: 'Dog', num: 'DOG', count: '1', color: '#FFA726', icon: '🐶' },
           { id: 'cat', word: 'Cat', num: 'CAT', count: '2', color: '#EC407A', icon: '🐱' },
@@ -610,7 +610,7 @@
       },
       {
         name: 'Trái Cây Tươi Ngon',
-        intro: 'Yummy fruits tower! Apple, Banana, Orange, Strawberry, Grape!',
+        intro: 'Fruit Blocks! 🍎',
         blocks: [
           { id: 'apple', word: 'Apple', num: 'APPLE', count: '1', color: '#FF5252', icon: '🍎' },
           { id: 'banana', word: 'Banana', num: 'BANANA', count: '2', color: '#FBC02D', icon: '🍌' },
@@ -627,7 +627,7 @@
       if (combinedWeekWords.length === 5) {
         towerThemes.unshift({
           name: `Từ Vựng Tuần ${currentWeek}`,
-          intro: `Let us stack Week ${currentWeek} words!`,
+          intro: `Stack blocks! 🧱`,
           blocks: combinedWeekWords.map((w, idx) => ({
             id: w.id,
             word: w.word,
@@ -679,7 +679,7 @@
       if (currentMode === 'numbers') {
         AudioEngine.speak(towerThemes[currentThemeIdx].intro);
       } else {
-        AudioEngine.speak('Build the Rocket! Cloud, Sun, Moon, Star, Rocket!');
+        AudioEngine.speak('Rocket! Stack up! 🚀');
       }
       scheduleIdleHint();
     }
@@ -756,7 +756,7 @@
           promptPill.innerText = '💥 Tháp Cao 5 Tầng! Chọn vũ khí xô đổ nào!';
           readyPromptTimer = setTimeout(() => {
             if (!isBusy && currentStack.length >= pool.length) {
-              AudioEngine.speak('So tall! Choose a tool to crash!');
+              AudioEngine.speak('Crash time! Boom! 💥');
             }
           }, 1850);
         }
@@ -845,7 +845,7 @@
 
       if (window.ToddlerAudio) {
         ToddlerAudio.playFanfare();
-        ToddlerAudio.speak('Three! Two! One! Blast off! Rocket fly high!');
+        ToddlerAudio.speak('3, 2, 1! Blast off! 🚀');
       }
 
       // Rung lắc tên lửa chuẩn bị vút bay
@@ -972,7 +972,7 @@
         stage.appendChild(actor);
         if (window.ToddlerAudio) {
           if (ToddlerAudio.playCheer) ToddlerAudio.playCheer();
-          ToddlerAudio.speak('Strike! Bowling ball roll!');
+          ToddlerAudio.speak('Strike! Roll roll! 🎳');
         }
         requestAnimationFrame(() => {
           actor.style.right = '42%';

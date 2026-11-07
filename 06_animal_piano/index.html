@@ -1077,7 +1077,7 @@
         deckBtnLabel.innerText = `📚 Đổi Sang Từ Tuần ${currentWeek}`;
         promptPill.innerText = '🎵 Bấm hoặc lướt phím nghe bạn thú hát!';
         updateSingerPod(rainbowNotes[0]);
-        AudioEngine.speak('Animal Band! Tap the animals!');
+        AudioEngine.speak('Animal Band! 🎶');
       }
 
       if (currentMode === 'song') {
@@ -1111,7 +1111,7 @@
         singerTitle.innerText = 'STAGE READY';
         singerSub.innerText = 'Tap any key to make music! 🎶';
         singerAvatar.innerHTML = render3dIconOrEmoji({ id: 'bell', word: 'Bell', emoji: '🔔' }, 44, '🎵');
-        AudioEngine.speak('Free play! Tap the keys!');
+        AudioEngine.speak('Play keys! 🎹');
       } else {
         songStep = 0;
         const curSong = songPlaylists[currentSongIdx];
@@ -1123,7 +1123,7 @@
         singerTitle.innerText = curSong.title.toUpperCase();
         singerSub.innerText = `${curSong.vietTitle} 🌟`;
         singerAvatar.innerHTML = render3dIconOrEmoji({ id: 'star', word: 'Star', emoji: '⭐' }, 44, '⭐');
-        AudioEngine.speak(`Song mode! Follow the star! ${curSong.title}!`);
+        AudioEngine.speak(`Follow star! ⭐`);
         highlightCurrentSongKey();
       }
     }
@@ -1147,7 +1147,7 @@
       singerAvatar.innerHTML = render3dIconOrEmoji({ id: 'star', word: 'Star', emoji: '⭐' }, 44, '⭐');
       updateSongProgressUi();
       highlightCurrentSongKey();
-      AudioEngine.speak(`${curSong.title}! Follow the star!`);
+      AudioEngine.speak(`Follow star! ⭐`);
     }
 
     // -------------------------------------------------------------
@@ -1395,7 +1395,7 @@
         ? ToddlerVocabulary.getWordContextPhrase(firstNoteObj)
         : '';
 
-      AudioEngine.speak(`Wonderful! You played ${song.title}! ${contextPhrase}`);
+      AudioEngine.speak(`Yay! Good job! 🎵`);
 
       // Bắn pháo hoa ngôi sao cầu vồng
       spawnRainbowCelebration();
@@ -1558,7 +1558,7 @@
     updateSingerPod(rainbowNotes[0]);
 
     setTimeout(() => {
-      AudioEngine.speak('Rainbow Animal Piano! Tap the animals to make music!');
+      AudioEngine.speak('Music time! 🎶');
     }, 600);
   </script>
 </body>

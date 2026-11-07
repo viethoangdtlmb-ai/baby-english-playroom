@@ -770,7 +770,7 @@
         // Wait 1600ms so contextPhrase finishes speaking before Full Tummy celebration
         setTimeout(() => {
           AudioEngine.playFanfare();
-          AudioEngine.speak(`Full tummy! Yum! Thank you!`);
+          AudioEngine.speak(`Yum yum! Thank you! 😋`);
           for (let i = 0; i < 6; i++) {
             setTimeout(() => {
               spawnFloatingFx(['💖', '⭐', '🍭', '🎉', '🥰'][i % 5], targetX + (Math.random() * 80 - 40), targetY - 60 - i * 20);
@@ -968,7 +968,7 @@
     const queryWeek = parseInt(urlParams.get('week'));
     const currentWeek = queryWeek || ((window.MissionEngine && MissionEngine.getCurrentWeek) ? MissionEngine.getCurrentWeek() : 1);
     const weekData = (window.ToddlerVocabulary) ? window.ToddlerVocabulary.build80_20Pack(currentWeek) : null;
-    let activeChar = (weekData && weekData.feedingChar) ? weekData.feedingChar : { id: 'bear', name: 'Bear', vnName: 'Gấu Bự', emoji: '🐻', voice: 'Grrr! I am Bear!' };
+    let activeChar = (weekData && weekData.feedingChar) ? weekData.feedingChar : { id: 'bear', name: 'Bear', vnName: 'Gấu Bự', emoji: '🐻', voice: 'Bear! Grrr! 🐻' };
 
     // Function to generate distinct high-quality SVG storybook face for all 16 rotating animals
     function getAnimalSvg(id) {
@@ -1343,7 +1343,7 @@
       charPillElem.addEventListener('pointerdown', (e) => {
         e.stopPropagation();
         AudioEngine.init();
-        AudioEngine.speak(activeChar.voice || `Hello! I am ${activeChar.name}!`);
+        AudioEngine.speak(activeChar.voice || `${activeChar.name}!`);
       });
     }
 
@@ -1554,7 +1554,7 @@
       updateThoughtBubble(targetFood, false);
 
       // Phát câu chào của bạn thú mới trước, sau đó 1.7s đọc tên món ăn đầu tiên
-      AudioEngine.speak(`Hello! I am ${activeChar.name}!`);
+      AudioEngine.speak(`${activeChar.name}!`);
       if (nextPromptTimer) clearTimeout(nextPromptTimer);
       nextPromptTimer = setTimeout(() => {
         if (targetFood && feedCount === 0) {

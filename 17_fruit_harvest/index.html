@@ -1442,7 +1442,7 @@
             fruit.style.transform = 'scale(1.2) rotate(-15deg)';
             setTimeout(() => { fruit.style.transform = ''; }, 300);
             if (AudioEngine.playPop) AudioEngine.playPop();
-            if (AudioEngine.speak) AudioEngine.speak(`That is ${fItem}! Find ${round.fruit}!`);
+            if (AudioEngine.speak) AudioEngine.speak(`${round.fruit} please!`);
             return;
           }
           dropFruitFromTree(fruit);
@@ -1452,7 +1452,7 @@
       // Play Intro Announcement
       setTimeout(() => {
         if (AudioEngine.speak) {
-          AudioEngine.speak(`Shake the tree! Harvest ${round.fruit} for ${round.animal}!`);
+          AudioEngine.speak(`Shake tree! 🌳`);
         }
       }, 400);
     }
@@ -1460,7 +1460,7 @@
     function replayPromptAudio() {
       const round = harvestRounds[currentRoundIdx];
       if (AudioEngine.speak) {
-        AudioEngine.speak(`Shake the tree! Harvest ${round.fruit}!`);
+        AudioEngine.speak(`Shake tree! 🌳`);
       }
       triggerCanopyShake();
     }
@@ -1653,7 +1653,7 @@
       playRainbowShowerSound();
 
       if (AudioEngine.speak) {
-        AudioEngine.speak('Rainbow fruit rain! Look at the yummy fruits!');
+        AudioEngine.speak('Rainbow fruits! 🌈');
       }
 
       const rainEmojis = ['🍎', '🍊', '🍌', '🍓', '🍇', '🍉', '🥝'];
@@ -1769,7 +1769,7 @@
           }
 
           if (AudioEngine.speak) {
-            AudioEngine.speak(`Excuse me! Full tummy! Thank you!`);
+            AudioEngine.speak(`Full tummy! Yum! 😋`);
           }
 
           // Launch Fireworks Confetti
@@ -1813,7 +1813,7 @@
       const round = harvestRounds[currentRoundIdx];
       const vnLabel = getAnimalVnName(round.animal);
       if (AudioEngine.speak) {
-        AudioEngine.speak(`Hello! I am ${round.animal}! I love ${round.fruit}! Please shake the tree!`);
+        AudioEngine.speak(`${round.fruit}! 🍎 Shake shake!`);
       }
     }
 

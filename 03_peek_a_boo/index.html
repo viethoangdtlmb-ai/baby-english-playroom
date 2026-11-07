@@ -965,7 +965,7 @@
         isBusy = false;
 
         // Speak target prompt right as the boxes finish closing
-        AudioEngine.speak(`Where is ${targetAnimal.word}?`);
+        AudioEngine.speak(`Find ${targetAnimal.word}! 🔍`);
         scheduleIdleHint();
       }, 1250);
     }
@@ -1138,7 +1138,7 @@
               }
               if (modal) modal.classList.add('active');
               if (window.ToddlerAudio) ToddlerAudio.playFanfare();
-              AudioEngine.speak('Hooray! Peek-a-boo! Good job!');
+              AudioEngine.speak('Hooray! Peek-a-boo! ⭐');
             }, 1850);
           } else {
             // Còn bạn nhỏ tiếp theo trong vòng: Chờ 2100ms để câu ngữ cảnh đọc trọn vẹn
@@ -1153,7 +1153,7 @@
           // -----------------------------------------------------------
           // CASE 2: MISMATCH (Hướng dẫn tích cực, không quở mắng)
           // -----------------------------------------------------------
-          AudioEngine.speak(`Peek-a-boo! ${item.word}! Find ${targetAnimal.word}!`);
+          AudioEngine.speak(`Peek-a-boo! ${targetAnimal.word}! ✨`);
 
           // Để bạn nhỏ xuất hiện chào bé 1.9 giây rồi nhẹ nhàng thụt xuống
           setTimeout(() => {
@@ -1193,7 +1193,7 @@
     document.getElementById('peek-target-box').addEventListener('pointerdown', (e) => {
       e.stopPropagation();
       hideGhostHint();
-      AudioEngine.speak(`Where is ${targetAnimal.word}?`);
+      AudioEngine.speak(`Find ${targetAnimal.word}! 🔍`);
       scheduleIdleHint();
     });
 
