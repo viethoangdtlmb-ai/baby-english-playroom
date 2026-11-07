@@ -1385,11 +1385,12 @@
 
     // Khởi tạo 3 Quests đầu tiên (ưu tiên baseRecipe của tuần nếu có)
     let challengeQuests = generate3FreshQuests();
-    if (baseRecipe && baseRecipe.animal) {
+    // BẢO VỆ 100%: Chỉ nhận con vật nếu con vật đó có mặt trên khay 9 nút bấm (availableAnimals)
+    if (baseRecipe && baseRecipe.animal && availableAnimals.includes(baseRecipe.animal)) {
       challengeQuests[0] = {
-        color: baseRecipe.color || 'Blue',
-        animal: baseRecipe.animal || 'Dog',
-        action: baseRecipe.action || 'Jump'
+        color: availableColors.includes(baseRecipe.color) ? baseRecipe.color : 'Blue',
+        animal: baseRecipe.animal,
+        action: availableActions.includes(baseRecipe.action) ? baseRecipe.action : 'Jump'
       };
     }
     // Đảm bảo quest đầu tiên khác với trạng thái mặc định (Red Cat Jump) để không bị auto-win ngay khi mở trang

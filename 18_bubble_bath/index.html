@@ -1038,11 +1038,7 @@
     // -------------------------------------------------------------
     // DYNAMIC 52-WEEK SYNC: Nạp trọn vẹn bộ từ vựng theo tuần vào bong bóng
     // -------------------------------------------------------------
-    const urlParams = new URLSearchParams(window.location.search);
-    const queryWeek = parseInt(urlParams.get('week'), 10);
-    const currentWeek = (!isNaN(queryWeek) && queryWeek >= 1 && queryWeek <= 52)
-      ? queryWeek
-      : ((window.MissionEngine && MissionEngine.getCurrentWeek) ? MissionEngine.getCurrentWeek() : 1);
+    // Tái sử dụng urlParams và currentWeek đã được khai báo ở đầu script
 
     if (window.ToddlerVocabulary && ToddlerVocabulary.build80_20Pack) {
       const pack = ToddlerVocabulary.build80_20Pack(currentWeek);

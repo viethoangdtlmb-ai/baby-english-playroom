@@ -1177,14 +1177,12 @@
     // -------------------------------------------------------------
     // DYNAMIC 52-WEEK SYNC: Nạp trang phục & phụ kiện theo tuần
     // -------------------------------------------------------------
-    const urlParams = new URLSearchParams(window.location.search);
-    const queryWeek = parseInt(urlParams.get('week'), 10);
-    const currentWeek = (!isNaN(queryWeek) && queryWeek >= 1 && queryWeek <= 52)
+    const currentWeekForDress = (!isNaN(queryWeek) && queryWeek >= 1 && queryWeek <= 52)
       ? queryWeek
       : ((window.MissionEngine && MissionEngine.getCurrentWeek) ? MissionEngine.getCurrentWeek() : 1);
 
     if (window.ToddlerVocabulary && ToddlerVocabulary.build80_20Pack) {
-      const pack = ToddlerVocabulary.build80_20Pack(currentWeek);
+      const pack = ToddlerVocabulary.build80_20Pack(currentWeekForDress);
       const weekWords = [...(pack.newWords || []), ...(pack.reviewWords || [])].filter(w => w && w.id);
       
       weekWords.forEach(w => {
@@ -1195,7 +1193,7 @@
           wardrobeCatalog.clothes = [itemObj, ...wardrobeCatalog.clothes.filter(x => x.id !== w.id)];
         } else if (['shoes', 'boots', 'socks', 'slippers', 'rainboots'].includes(w.id)) {
           wardrobeCatalog.shoes = [itemObj, ...wardrobeCatalog.shoes.filter(x => x.id !== w.id)];
-        } else {
+        } else if (['sunglasses', 'wand', 'balloon', 'candy', 'scarf', 'teddy', 'backpack', 'book'].includes(w.id)) {
           wardrobeCatalog.prop = [itemObj, ...wardrobeCatalog.prop.filter(x => x.id !== w.id)];
         }
       });

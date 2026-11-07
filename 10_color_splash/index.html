@@ -792,7 +792,7 @@
     <div class="car-container" id="car-container">
       <div class="headlight-glow"></div>
       <!-- 3D Door Decal Sticker -->
-      <div class="car-decal-badge" id="car-decal-badge"></div>
+      
 
       <svg class="car-svg" viewBox="0 0 380 240">
         <defs>
@@ -1289,19 +1289,12 @@
         : ((window.MissionEngine && MissionEngine.getCurrentWeek) ? MissionEngine.getCurrentWeek() : 1);
 
       if (window.ToddlerVocabulary) {
-        // DYNAMIC 52-WEEK SYNC: Lấy từ vựng tuần này dán huy hiệu decal nổi lên mô hình
-        const pack = (typeof ToddlerVocabulary.build80_20Pack === 'function') ? ToddlerVocabulary.build80_20Pack(currentWeek) : null;
-        const stickerId = (pack && pack.newWords && pack.newWords[0]) ? pack.newWords[0].id : 'star';
-        updateCarDecalSticker(stickerId);
+        // Giữ bề mặt tô màu sạch sẽ, thông thoáng cho bé
       }
     }
 
     function updateCarDecalSticker(iconId) {
-      if (!carDecalBadge || !window.ToddlerVocabulary || !ToddlerVocabulary.renderWordIcon) return;
-      carDecalBadge.innerHTML = ToddlerVocabulary.renderWordIcon(iconId, 42);
-      carDecalBadge.classList.remove('pop');
-      void carDecalBadge.offsetWidth;
-      carDecalBadge.classList.add('pop');
+      // Đã gỡ bỏ decal đè ở giữa theo yêu cầu để tranh vẽ thông thoáng 100%
     }
 
     function getRichColorPhrase(cData) {

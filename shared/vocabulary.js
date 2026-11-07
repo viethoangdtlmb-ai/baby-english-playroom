@@ -572,7 +572,7 @@ var ToddlerVocabulary = window.ToddlerVocabulary || {
 
     // 10. Game 12: Thử thách Mix & Match (Recipe Card)
     const colorsList = ['Red', 'Blue', 'Green', 'Yellow', 'Pink', 'Purple', 'Orange'];
-    const charsList = ['Frog', 'Bear', 'Cat', 'Dog', 'Panda', 'Lion', 'Rabbit', 'Elephant'];
+    const charsList = ['Frog', 'Bear', 'Cat', 'Dog', 'Panda', 'Lion', 'Rabbit', 'Duck', 'Pig'];
     const actsList = ['Dance', 'Jump', 'Sleep', 'Eat', 'Run', 'Sing', 'Clap'];
     const recipeMod = colorsList[(safeWeek - 1) % colorsList.length];
     const recipeChar = charsList[(safeWeek - 1) % charsList.length];

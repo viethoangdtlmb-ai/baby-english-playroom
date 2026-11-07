@@ -900,9 +900,9 @@
               executeFeeding(card, cardName, targetX, targetY);
             }, 360);
           } else {
-            // Biểu cảm lắc đầu hóm hỉnh khi chạm nhầm món
+            // Biểu cảm lắc đầu hóm hỉnh khi chạm nhầm món: Đọc tên món bé vừa bấm trước để bé học từ!
             ToddlerAudio.playBoing();
-            ToddlerAudio.speak(targetFood.name);
+            AudioEngine.speak(`${cardName}! No, ${targetFood.name} please!`);
             card.style.transform = 'scale(1.15) rotate(8deg)';
             setTimeout(() => {
               card.style.transform = 'scale(1.15) rotate(-8deg)';
@@ -920,12 +920,12 @@
             executeFeeding(card, cardName, targetX, targetY);
           } else {
             closeMouth();
-            // Thú phụng phịu lắc đầu nguây nguẩy
+            // Thú phụng phịu lắc đầu nguây nguẩy: Đọc tên món vừa kéo sai để bé học từ!
             animal.style.transform = 'scale(0.95) rotate(-14deg)';
             setTimeout(() => { animal.style.transform = 'scale(0.95) rotate(14deg)'; }, 140);
             setTimeout(() => { animal.style.transform = ''; }, 280);
             ToddlerAudio.playBoing();
-            ToddlerAudio.speak(targetFood.name);
+            AudioEngine.speak(`${cardName}! No, ${targetFood.name} please!`);
             resetCard(card);
           }
         } else {
