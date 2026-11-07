@@ -1175,6 +1175,33 @@
     };
 
     // -------------------------------------------------------------
+    // DYNAMIC 52-WEEK SYNC: Nạp trang phục & phụ kiện theo tuần
+    // -------------------------------------------------------------
+    const urlParams = new URLSearchParams(window.location.search);
+    const queryWeek = parseInt(urlParams.get('week'), 10);
+    const currentWeek = (!isNaN(queryWeek) && queryWeek >= 1 && queryWeek <= 52)
+      ? queryWeek
+      : ((window.MissionEngine && MissionEngine.getCurrentWeek) ? MissionEngine.getCurrentWeek() : 1);
+
+    if (window.ToddlerVocabulary && ToddlerVocabulary.build80_20Pack) {
+      const pack = ToddlerVocabulary.build80_20Pack(currentWeek);
+      const weekWords = [...(pack.newWords || []), ...(pack.reviewWords || [])].filter(w => w && w.id);
+      
+      weekWords.forEach(w => {
+        const itemObj = { id: w.id, name: w.word, icon: w.id, emoji: w.emoji, voice: `${w.word}! ✨` };
+        if (['hat', 'cap', 'crown', 'party_hat', 'sun_hat'].includes(w.id)) {
+          wardrobeCatalog.hat = [itemObj, ...wardrobeCatalog.hat.filter(x => x.id !== w.id)];
+        } else if (['shirt', 'dress', 'coat', 'jacket', 'pants'].includes(w.id)) {
+          wardrobeCatalog.clothes = [itemObj, ...wardrobeCatalog.clothes.filter(x => x.id !== w.id)];
+        } else if (['shoes', 'boots', 'socks', 'slippers', 'rainboots'].includes(w.id)) {
+          wardrobeCatalog.shoes = [itemObj, ...wardrobeCatalog.shoes.filter(x => x.id !== w.id)];
+        } else {
+          wardrobeCatalog.prop = [itemObj, ...wardrobeCatalog.prop.filter(x => x.id !== w.id)];
+        }
+      });
+    }
+
+    // -------------------------------------------------------------
     // GAME STATE & HUD PROGRESS
     // -------------------------------------------------------------
     let currentFriendIdx = 0;

@@ -1282,11 +1282,17 @@
       if (window.MissionEngine && typeof MissionEngine.init === 'function') {
         MissionEngine.init();
       }
+      const urlParams = new URLSearchParams(window.location.search);
+      const queryWeek = parseInt(urlParams.get('week'), 10);
+      currentWeek = (!isNaN(queryWeek) && queryWeek >= 1 && queryWeek <= 52)
+        ? queryWeek
+        : ((window.MissionEngine && MissionEngine.getCurrentWeek) ? MissionEngine.getCurrentWeek() : 1);
+
       if (window.ToddlerVocabulary) {
-        if (typeof ToddlerVocabulary.getCurrentWeek === 'function') {
-          currentWeek = ToddlerVocabulary.getCurrentWeek() || 1;
-        }
-        updateCarDecalSticker('star');
+        // DYNAMIC 52-WEEK SYNC: Lấy từ vựng tuần này dán huy hiệu decal nổi lên mô hình
+        const pack = (typeof ToddlerVocabulary.build80_20Pack === 'function') ? ToddlerVocabulary.build80_20Pack(currentWeek) : null;
+        const stickerId = (pack && pack.newWords && pack.newWords[0]) ? pack.newWords[0].id : 'star';
+        updateCarDecalSticker(stickerId);
       }
     }
 

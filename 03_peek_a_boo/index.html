@@ -863,6 +863,14 @@
       ]
     ];
 
+    // DYNAMIC 52-WEEK SYNC: Nạp đúng 3 từ mới của tuần làm chủ đề Vòng 1 cho hộp quà!
+    if (weekData && weekData.newWords && weekData.newWords.length >= 3) {
+      const validNew = weekData.newWords.filter(w => w && w.id && !w.hex).slice(0, 3);
+      if (validNew.length === 3) {
+        peekThemes.unshift(validNew.map(w => ({ id: w.id, word: w.word, emoji: w.emoji, sound: w.sound || w.word })));
+      }
+    }
+
     // If weekData has reviewWords >= 3, insert them as the 2nd round theme for 80/20 spaced repetition!
     if (weekData && weekData.reviewWords && weekData.reviewWords.length >= 3) {
       const validReviews = weekData.reviewWords.filter(w => w && w.id && !w.hex).slice(0, 3);

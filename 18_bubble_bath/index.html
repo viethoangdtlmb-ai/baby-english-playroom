@@ -1004,7 +1004,7 @@
     // -------------------------------------------------------------
     // BUBBLE RESIDENTS CATALOG (18 Rich Water & Friendly Animals & Bath Toys)
     // -------------------------------------------------------------
-    const bubbleTargets = [
+    let bubbleTargets = [
       { id: 'frog', name: 'Frog', vnName: 'Chú Ếch', emoji: '🐸', voice: 'Frog! Ribbit ribbit!' },
       { id: 'fish', name: 'Fish', vnName: 'Cá Vàng', emoji: '🐟', voice: 'Little Fish! Splash!' },
       { id: 'star', name: 'Star', vnName: 'Sao Biển', emoji: '⭐', voice: 'Golden Star!' },
@@ -1034,6 +1034,31 @@
     let isSpawning = true;
     let spawnTimer = null;
     let bubbleBag = [];
+
+    // -------------------------------------------------------------
+    // DYNAMIC 52-WEEK SYNC: Nạp trọn vẹn bộ từ vựng theo tuần vào bong bóng
+    // -------------------------------------------------------------
+    const urlParams = new URLSearchParams(window.location.search);
+    const queryWeek = parseInt(urlParams.get('week'), 10);
+    const currentWeek = (!isNaN(queryWeek) && queryWeek >= 1 && queryWeek <= 52)
+      ? queryWeek
+      : ((window.MissionEngine && MissionEngine.getCurrentWeek) ? MissionEngine.getCurrentWeek() : 1);
+
+    if (window.ToddlerVocabulary && ToddlerVocabulary.build80_20Pack) {
+      const pack = ToddlerVocabulary.build80_20Pack(currentWeek);
+      const weekWords = [...(pack.newWords || []), ...(pack.reviewWords || [])].filter(w => w && w.id);
+      if (weekWords.length > 0) {
+        const dynamicList = weekWords.map(w => ({
+          id: w.id,
+          name: w.word,
+          vnName: w.word,
+          emoji: w.emoji,
+          voice: `${w.word}! Pop pop! 🫧`
+        }));
+        // Đặt từ vựng tuần này lên đầu danh sách bong bóng mục tiêu
+        bubbleTargets = [...dynamicList, ...bubbleTargets.filter(bt => !dynamicList.some(dt => dt.id === bt.id))];
+      }
+    }
 
     // -------------------------------------------------------------
     // SHUFFLE BAG ALGORITHM (Đúng chuẩn 1/18 = 5.55% cho mọi con vật)

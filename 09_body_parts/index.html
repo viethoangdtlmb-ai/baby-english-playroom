@@ -1119,13 +1119,20 @@
       }
     ];
 
+    // DYNAMIC 52-WEEK SYNC: Nhận diện tuần để ưu tiên câu hỏi cho bộ phận tuần đó
+    const urlParams = new URLSearchParams(window.location.search);
+    const queryWeek = parseInt(urlParams.get('week'), 10);
+    const currentWeek = (!isNaN(queryWeek) && queryWeek >= 1 && queryWeek <= 52)
+      ? queryWeek
+      : ((window.MissionEngine && MissionEngine.getCurrentWeek) ? MissionEngine.getCurrentWeek() : 1);
+    const weekData = (window.ToddlerVocabulary && ToddlerVocabulary.build80_20Pack) ? ToddlerVocabulary.build80_20Pack(currentWeek) : null;
+
     // Game Mode State: 'free' or 'quiz'
     let currentMode = 'free';
     let targetQuizPart = null;
     let quizStarsCount = 0;
     let isQuizResolving = false;
     const MAX_STARS = 5;
-    let currentWeek = 1;
 
     // DOM Elements
     const babyWrap = document.getElementById('baby-wrap');
@@ -1453,9 +1460,14 @@
     function pickNextQuizTarget() {
       isQuizResolving = false;
       let nextPart;
+      // DYNAMIC 52-WEEK SYNC: Nếu tuần này có bộ phận cơ thể trong từ vựng tuần, ưu tiên đố trước!
+      const weekPartIds = (weekData && weekData.newWords) ? weekData.newWords.map(w => w.id) : [];
+      const priorityParts = bodyParts.filter(bp => weekPartIds.includes(bp.id));
+      const pool = (priorityParts.length > 0 && Math.random() > 0.3) ? priorityParts : bodyParts;
+
       do {
-        nextPart = bodyParts[Math.floor(Math.random() * bodyParts.length)];
-      } while (targetQuizPart && nextPart.word === targetQuizPart.word && bodyParts.length > 1);
+        nextPart = pool[Math.floor(Math.random() * pool.length)];
+      } while (targetQuizPart && nextPart.word === targetQuizPart.word && pool.length > 1);
 
       targetQuizPart = nextPart;
       highlightActiveDockChip('');

@@ -1364,6 +1364,27 @@
     let roundShift = 0;
 
     function buildFoodListForRound(shift = 0) {
+      // DYNAMIC 52-WEEK SYNC: Nếu tuần này có món ăn/đồ uống trong từ mới, ưu tiên đặt ngay lên khay!
+      if (shift === 0 && weekData && weekData.newWords) {
+        const weekFoodWords = weekData.newWords.filter(w => w && (w.category === 'food' || ['bottle', 'apple', 'banana', 'milk', 'rice'].includes(w.id)));
+        if (weekFoodWords.length > 0) {
+          const matched = weekFoodWords.map(f => ({
+            id: f.id,
+            word: f.word,
+            name: f.word,
+            emoji: f.emoji,
+            sound: 'crunch'
+          }));
+          const defaults = (weekData.foods || []).filter(df => !matched.some(m => m.id === df.id));
+          return [...matched, ...defaults].slice(0, 5).map(f => ({
+            id: f.id,
+            word: f.word,
+            name: f.word,
+            emoji: f.emoji,
+            sound: f.soundType || 'crunch'
+          }));
+        }
+      }
       if (shift === 0 && weekData && weekData.foods && weekData.foods.length) {
         return weekData.foods.map(f => ({
           id: f.id,
