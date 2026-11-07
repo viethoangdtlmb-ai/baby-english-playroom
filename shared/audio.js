@@ -118,14 +118,15 @@ var ToddlerAudio = window.ToddlerAudio || {
   },
 
   testVoice() {
-    const greetings = [
-      "Hello baby! 🌸",
-      "Let's play together! ✨",
-      "Great job! 🌟",
-      "You are wonderful! 💖"
+    const samples = [
+      "dog",
+      "baby",
+      "apple",
+      "cat",
+      "hello_baby"
     ];
-    const phrase = greetings[Math.floor(Math.random() * greetings.length)];
-    this.speakWord(phrase);
+    const item = samples[Math.floor(Math.random() * samples.length)];
+    this.speakWord(item);
   },
 
   nextTrack() {
@@ -221,27 +222,33 @@ var ToddlerAudio = window.ToddlerAudio || {
   },
 
   duckBGM(isDucked) {
-    const target = isDucked ? 0.08 : (this.bgmEnabled ? this.bgmTargetVolume : 0.0001);
+    const target = isDucked ? 0.02 : (this.bgmEnabled ? this.bgmTargetVolume : 0.0001);
     if (this._duckTimer) {
       clearInterval(this._duckTimer);
       this._duckTimer = null;
     }
     if (this.bgmAudioEl) {
-      try {
-        const start = this.bgmAudioEl.volume;
-        const diff = target - start;
-        let step = 0;
-        const steps = 8;
-        this._duckTimer = setInterval(() => {
-          step++;
-          this.bgmAudioEl.volume = Math.max(0, Math.min(1, start + (diff * (step / steps))));
-          if (step >= steps) {
-            clearInterval(this._duckTimer);
-            this._duckTimer = null;
-          }
-        }, 15);
-      } catch (e) {
-        try { this.bgmAudioEl.volume = target; } catch (err) {}
+      if (isDucked) {
+        // Cắt nhạc nền tức thì: triệt tiêu độ trễ để từ vựng không bị nuốt phụ âm đầu
+        try { this.bgmAudioEl.volume = target; } catch (e) {}
+      } else {
+        // Nâng lại nhạc nền êm ái
+        try {
+          const start = this.bgmAudioEl.volume;
+          const diff = target - start;
+          let step = 0;
+          const steps = 8;
+          this._duckTimer = setInterval(() => {
+            step++;
+            this.bgmAudioEl.volume = Math.max(0, Math.min(1, start + (diff * (step / steps))));
+            if (step >= steps) {
+              clearInterval(this._duckTimer);
+              this._duckTimer = null;
+            }
+          }, 18);
+        } catch (e) {
+          try { this.bgmAudioEl.volume = target; } catch (err) {}
+        }
       }
     }
   },
@@ -717,42 +724,101 @@ var ToddlerAudio = window.ToddlerAudio || {
     }, 40);
   },
 
-  speakWord(word) {
+  currentWordAudio: null,
+
+  getWordAudioUrl(word) {
+    if (!word || typeof word !== 'string') return null;
+    let clean = word.toLowerCase().trim();
+    // Bỏ emoji và ký tự đặc biệt
+    clean = clean.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]|[\u2600-\u27BF]|[!.,?✨🌸🎉❤️⭐]/g, '').trim();
+    // Giữ chữ cái, số, gạch dưới, khoảng trắng
+    clean = clean.replace(/[^a-z0-9_\s-]/g, '').trim();
+    const slug = clean.replace(/[\s-]+/g, '_');
+    if (!slug) return null;
+
+    // Phân giải đường dẫn tương đối cho các mini-game nằm trong thư mục con
+    let prefix = '';
+    if (typeof window !== 'undefined' && window.location && window.location.pathname) {
+      const p = window.location.pathname.replace(/\\/g, '/');
+      if (/\/(0[1-9]|1[0-8])_[a-z0-9_]+\//i.test(p) || p.includes('/13_weekend_test/')) {
+        prefix = '../';
+      }
+    }
+    return `${prefix}assets/audio/words/${slug}.mp3`;
+  },
+
+  playWordMp3(url, fallbackWord) {
+    if (this.currentWordAudio) {
+      try {
+        this.currentWordAudio.pause();
+        this.currentWordAudio.currentTime = 0;
+      } catch (e) {}
+      this.currentWordAudio = null;
+    }
+
+    const audio = new Audio();
+    this.currentWordAudio = audio;
+    audio.volume = Math.max(0, Math.min(1, this.voiceVolume));
+
+    this.duckBGM(true);
+
+    let finished = false;
+    const onFinished = () => {
+      if (finished) return;
+      finished = true;
+      setTimeout(() => {
+        this.duckBGM(false);
+      }, 150);
+    };
+
+    audio.onended = onFinished;
+    audio.onerror = () => {
+      onFinished();
+      // Nếu file MP3 chưa có hoặc lỗi, tự động fallback sang Web Speech API
+      this.speakWithSpeechSynthesis(fallbackWord);
+    };
+
+    audio.src = url;
+    const p = audio.play();
+    if (p !== undefined) {
+      p.catch(() => {
+        onFinished();
+        this.speakWithSpeechSynthesis(fallbackWord);
+      });
+    }
+  },
+
+  speakWithSpeechSynthesis(word) {
     if (!word || !window.speechSynthesis) return;
     if (this.voiceMuted || this.voiceVolume <= 0) return;
     window.speechSynthesis.cancel();
 
     this.ensureVoiceReady((voice) => {
-      const u = new SpeechSynthesisUtterance(word);
+      // Bổ sung dấu chấm than để kích hoạt ngữ điệu hào hứng, tròn vành rõ chữ, không hạ giọng hụt hơi
+      const spokenText = (word.endsWith('!') || word.endsWith('?')) ? word : `${word}!`;
+      const u = new SpeechSynthesisUtterance(spokenText);
       u.lang = 'en-US';
       if (voice) {
         u.voice = voice;
       }
 
-      // Dynamic volume respect
       u.volume = Math.max(0, Math.min(1, this.voiceVolume));
+      u.rate = 0.95; // Nhịp độ căng đầy, dứt khoát
 
-      // Gentle, clear rhythm for toddler listening (Preschool pace ~0.86)
-      u.rate = 0.86;
-      
-      // Sweet, warm feminine pitch:
-      // For Natural / Neural voices, keep pitch near 1.06 for authentic sweet warmth without robotic artifacts.
-      // If voice is male fallback, push pitch to 1.48 to sound like a cute cartoon mascot.
       const vName = (voice && voice.name) ? voice.name.toLowerCase() : '';
       const isNatural = vName.includes('natural') || vName.includes('neural') || vName.includes('online') || vName.includes('google');
 
       if (voice && this.isMaleVoice(voice)) {
-        u.pitch = 1.48;
+        u.pitch = 1.45;
       } else if (isNatural) {
-        u.pitch = 1.06;
+        u.pitch = 1.0;
       } else {
-        u.pitch = 1.15;
+        u.pitch = 1.12;
       }
 
-      // Duck BGM so speech is crystal clear
       this.duckBGM(true);
       u.onend = () => {
-        this.duckBGM(false);
+        setTimeout(() => this.duckBGM(false), 150);
       };
       u.onerror = () => {
         this.duckBGM(false);
@@ -760,6 +826,21 @@ var ToddlerAudio = window.ToddlerAudio || {
 
       window.speechSynthesis.speak(u);
     });
+  },
+
+  speakWord(word) {
+    if (!word) return;
+    if (this.voiceMuted || this.voiceVolume <= 0) return;
+
+    // Ưu tiên số 1: Phát trực tiếp file âm thanh Studio MP3 nếu có
+    const url = this.getWordAudioUrl(word);
+    if (url) {
+      this.playWordMp3(url, word);
+      return;
+    }
+
+    // Dự phòng fallback: Web Speech API
+    this.speakWithSpeechSynthesis(word);
   },
 
   speak(text) {
